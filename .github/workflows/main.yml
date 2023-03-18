@@ -13,5 +13,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v5 # use the explicit version number
         with:
-          build: cd frontend && next build
-          start: cd frontend && next start
+          working-directory: frontend
+          build: npm build
+          start: npm start
