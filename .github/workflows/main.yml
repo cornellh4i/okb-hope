@@ -14,4 +14,4 @@ jobs:
         uses: cypress-io/github-action@v5 # use the explicit version number
         with:
           build: cd frontend && next build
-          start: next start
+          start: cd frontend && next start
