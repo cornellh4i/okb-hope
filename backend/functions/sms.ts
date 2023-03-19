@@ -1,9 +1,10 @@
 //Created Twilio Number, authToken, accountSid; Currently on free trial.
+require('dotenv').config()
 const twilio = require('twilio');
-const accountSid = "AC543c381c5688cda47bf5a20ba6748ace";
-const authToken = "50a7887a0b7a76e46980d9590b9ec9d8";
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
-const twilioNumber = '+18885215943';
+const twilioNumber = process.env.TWILIO_PHONE_NUMBER;
 
 
 //TESTING WITH STANDALONE FUNCTION

@@ -2,3 +2,5 @@ nvm install v18.12.1
 npm install typescript@latest
 tsc sms.ts
 node sms.js
+
+make sure to update authToken as it resets

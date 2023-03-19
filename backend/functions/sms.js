@@ -35,11 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 //Created Twilio Number, authToken, accountSid; Currently on free trial.
+require('dotenv').config();
 var twilio = require('twilio');
-var accountSid = "AC543c381c5688cda47bf5a20ba6748ace";
-var authToken = "50a7887a0b7a76e46980d9590b9ec9d8";
+var accountSid = process.env.TWILIO_ACCOUNT_SID;
+var authToken = process.env.TWILIO_AUTH_TOKEN;
 var client = require('twilio')(accountSid, authToken);
-var twilioNumber = '+18885215943';
+var twilioNumber = process.env.TWILIO_PHONE_NUMBER;
 function sendSMS(user, message_body) {
     return __awaiter(this, void 0, void 0, function () {
         var userPhone, error_1;
