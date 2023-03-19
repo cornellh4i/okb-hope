@@ -1,0 +1,4 @@
+nvm install v18.12.1
+npm install typescript@latest
+tsc sms.ts
+node sms.js
