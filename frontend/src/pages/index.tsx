@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 
 import { logout, signInWithGoogle } from "../../../backend/firebase/firebase";
-import { AuthProvider } from '../../../backend/firebase/AuthContext'
+import { AuthProvider } from '../../contexts/AuthContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
