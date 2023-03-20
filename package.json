@@ -1,7 +1,17 @@
 {
   "dependencies": {
     "firebase": "^9.18.0",
+    "firebase-functions": "^4.2.1",
     "react-firebase-hooks": "^5.1.1",
     "react-router-dom": "^6.9.0"
+  },
+  "scripts": {
+    "dev": "yarn next dev",
+    "build": "yarn next build",
+    "start": "yarn next start",
+    "lint": "yarn next lint"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.3"
   }
 }
