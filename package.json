@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "firebase": "^9.18.0",
+    "react-firebase-hooks": "^5.1.1",
+    "react-router-dom": "^6.9.0"
+  }
+}
