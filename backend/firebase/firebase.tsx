@@ -7,13 +7,13 @@ import { addDoc, collection, getDocs, getFirestore, query, where } from "firebas
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyAWCKEkLBpYgN_dIJl6ncEHPngL21j3kz4",
+  authDomain: "okb-hope.firebaseapp.com",
+  projectId: "okb-hope",
+  storageBucket: "okb-hope.appspot.com",
+  messagingSenderId: "321787147976",
+  appId: "1:321787147976:web:faae136e03900bd47b97fd",
+  measurementId: "G-V7SV4XK6GC"
 };
 
 // Initialize Firebase
