@@ -9,9 +9,5 @@ const msg = {
 }
 sgMail
   .send(msg)
-  .then(() => {
-    console.log('Email sent')
-  })
-  .catch((error) => {
-    console.error(error)
-  })
+  .then(() => console.log('Email sent'))
+  .catch((error) => console.error(error))
