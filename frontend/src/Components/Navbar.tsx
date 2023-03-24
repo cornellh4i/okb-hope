@@ -11,7 +11,7 @@ export default function Navbar() {
           <div className="flex-none">
             <ul className="menu menu-horizontal px-1">
               <li><Link href="/About-Us" className="">About Us</Link></li>
-              <li><button className="btn w-24 rounded-full bg-base-100">Login</button></li>
+              <li><button className="btn w-24 rounded-full bg-base-100" onClick={signInWithGoogle}>Login</button></li>
             </ul>
           </div>
         </div>
