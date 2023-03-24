@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode, useContext } from 'react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -27,3 +27,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => {
+  const context = useContext(AuthContext)
+  if (!context) throw new Error("AuthUserContext has no value")
+  return context
+}

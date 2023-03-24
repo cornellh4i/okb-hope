@@ -1,7 +1,9 @@
 import { logout, signInWithGoogle } from "../../../backend/firebase/firebase";
+import { useAuth } from "../../contexts/AuthContext";
 import Link from 'next/link';
 
 export default function Navbar() {
+  const { isAuthenticated } = useAuth();
   return (
     <header>
       <nav className="">
@@ -11,7 +13,7 @@ export default function Navbar() {
           <div className="flex-none">
             <ul className="menu menu-horizontal px-1">
               <li><Link href="/About-Us" className="">About Us</Link></li>
-              {/* <li><button className="btn w-24 rounded-full bg-base-100" onClick={signInWithGoogle}>Login</button></li> */}
+              <li><button className="btn w-24 rounded-full bg-base-100" onClick={signInWithGoogle}>Login</button></li>
             </ul>
           </div>
         </div>
