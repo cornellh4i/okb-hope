@@ -44,6 +44,8 @@ const QuestionnaireCarousel = () => {
 
   // This is the amount of questions there are
   const maxQuestionCount = questions.length;
+  // This indicates the current question we are on.
+  const questionCounter = `${currentQuestionIndex + 1} of ${maxQuestionCount}`
 
   // Updates the question index to go to the previous question.
   const goBack = () => {
@@ -61,6 +63,7 @@ const QuestionnaireCarousel = () => {
 
   return (
     <div>
+      <div className="text-center text-xl mb-4">{questionCounter}</div>
       <QuestionCard
         question={questions[currentQuestionIndex].question}
         option1={questions[currentQuestionIndex].option1}
@@ -69,7 +72,7 @@ const QuestionnaireCarousel = () => {
         option4={questions[currentQuestionIndex].option4}
         option5={questions[currentQuestionIndex].option5}
       />
-      <div className="h-6"></div>
+      <div className="h-3"></div>
       <NavigationButtons goBack={goBack} goNext={goNext} />
     </div>
   )
