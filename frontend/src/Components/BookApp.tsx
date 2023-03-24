@@ -14,12 +14,12 @@ type DropdownProp = {
 function Dropdown(props: DropdownProp) {
   return (
     <div className="dropdown">
-      
-      <label tabIndex={0} className="btn m-1 bg-white text-black"> {props.img}  {props.text} <br></br>{props.select} <Arrow /> </label>
-      {/* <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+
+      <label tabIndex={0} className="btn m-1 btn-ghost rounded-full bg-white text-black"> {props.img}  {props.text} <br></br>{props.select} <Arrow /> </label>
+      <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
         <li><a>Item 1</a></li>
         <li><a>Item 2</a></li>
-      </ul> */}
+      </ul>
     </div>
   )
 }
@@ -30,11 +30,15 @@ export default function BookApp() {
       <p>
         Book Appointment Now
       </p>
-      <Dropdown img={<CalendarIcon />} text = "Appointment Date" select = "Select Day" />
-      <Dropdown img={<ClockIcon />} text = "Appointment Time" select = "Select Time" />
-      <Dropdown img={<CameraIcon />} text = "Video Call" select = "Select Platform" />
-      <TempCalendar />
-      <button className='btn'>Next</button>
-    </div>
+      <div className="flex flex-row">
+        <Dropdown img={<CalendarIcon />} text="Appointment Date" select="Select Day" />
+        <Dropdown img={<ClockIcon />} text="Appointment Time" select="Select Time" />
+        <Dropdown img={<CameraIcon />} text="Video Call" select="Select Platform" />
+      </div>
+
+      <div className="flex flex-row">
+        <TempCalendar />
+        <button className='rounded-full btn bg-base-100 btn-ghost'><p>Next →</p></button>
+      </div></div>
   )
 }
