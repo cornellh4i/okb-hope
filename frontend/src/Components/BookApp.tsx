@@ -17,9 +17,9 @@ type DropdownProp = {
  */
 function Dropdown(props: DropdownProp) {
   return (
-    <div className="dropdown flex-row items-center p-0 gap-5 order-none grow-0 h-70 shadow-md rounded-3xl">
+    <div className="dropdown flex-row p-0 gap-5 order-none grow-0 h-70 shadow-md rounded-3xl">
       <label tabIndex={0} className="btn btn-wide btn-ghost rounded-full bg-white text-black shadow-lg">
-        <div className="flex flex-none order-0 grow-0 px-26">
+        <div className="flex flex-none order-0 grow-0 w-14">
           {props.img}
         </div>
         <div className="flex flex-col items-start p-0 gap-2 normal-case order-1 grow-0 flex-none">
