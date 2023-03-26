@@ -1,14 +1,8 @@
-import Image from 'next/image'
 import CalendarIcon from '../Assets/calendar_icon.svg'
 import CameraIcon from '../Assets/camera_icon.svg'
 import ClockIcon from '../Assets/clock_icon.svg'
 import Arrow from '../Assets/arrow.svg'
 import TempCalendar from '../Assets/temp_calendar.svg'
-// import { Inter } from 'next/font/google'
-
-// const inter = Inter({
-//   variable: '--font-inter',
-// });
 
 type DropdownProp = {
   img: any,
@@ -16,12 +10,31 @@ type DropdownProp = {
   select: string
 }
 
+/**
+ * Creates a template for a dropdown with respect to the booking page
+ * @param props contains icon image, text, and select text
+ * @returns TSX of a dropdown item
+ */
 function Dropdown(props: DropdownProp) {
   return (
-    <div className="dropdown">
+    <div className="dropdown flex-row items-center p-0 gap-5 order-none grow-0 h-70 shadow-md rounded-3xl">
+      <label tabIndex={0} className="btn btn-wide btn-ghost rounded-full bg-white text-black shadow-lg">
+        <div className="flex flex-none order-0 grow-0 px-26">
+          {props.img}
+        </div>
+        <div className="flex flex-col items-start p-0 gap-2 normal-case order-1 grow-0 flex-none">
+          <div className="flex-none order-0 grow-0">
+            {props.text}
+          </div>
+          <div className="flex flex-row items-center p-0 gap-2 flex-none order-1 grow-0">
+            <div className="flex-none order-0 grow-0">
+              {props.select}
+            </div>
+            <Arrow />
+          </div>
+        </div>
+      </label>
 
-      <label tabIndex={0} className="btn btn-wide btn-ghost rounded-full bg-white text-black shadow-lg"> {props.img}  {props.text} <br></br>{props.select} <Arrow /> </label>
-      {/* add classnames to label affect individual buttons */}
       <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
         <li><a><div className="">Item 1</div></a></li>
         <li><a>Item 2</a></li>
@@ -30,44 +43,36 @@ function Dropdown(props: DropdownProp) {
   )
 }
 
-// export default function BookApp() {
-//   return (
-//     <div className="bg-white py-16">
-//       <div className="relative flex text-2xl max-w-6xl mx-auto sm:truncate sm:text-3xl sm:tracking-tight flex-col items-center p-16 gap-2.5 bg-[#DEDEDE] shadow-lg rounded-3xl">
-//         <div className='container'>
-//           Book Appointment Now
-//         </div>
-//         <div className="flex flex-row">
-//           {/* <div className="shadow-lg"></div> */}
-//           <div className=""><Dropdown img={<CalendarIcon />} text="Appointment Date" select="Select Day" /></div>
-//           <Dropdown img={<ClockIcon />} text="Appointment Time" select="Select Time" />
-//           <Dropdown img={<CameraIcon />} text="Video Call" select="Select Platform" />
-//         </div>
-
-//         <div className="flex flex-row">
-//           <TempCalendar className="" />
-//           <button className='rounded-full btn bg-base-100 btn-ghost shadow-lg'><p>Next →</p></button>
-//         </div></div></div >
-//   )
-// }
-
 export default function BookApp() {
   return (
-    <div className="bg-white">
+    <div className="bg-white p-16">
       <div className="max-w-6xl w-500 mx-auto p-16 bg-[#DEDEDE] shadow-lg rounded-3xl">
-        <div className='sm:text-3xl pb-4'>
-          Book Appointment Now
+        <div className='sm:text-3xl pb-4 gap-8 capitalize'>
+          Book Appointment now
         </div>
         <div className="flex">
-          {/* <div className="shadow-lg"></div> */}
-          <div className="pr-28 pb-1.5"><Dropdown img={<CalendarIcon />} text="Appointment Date" select="Select Day" /></div>
-          <div className="pr-28"><Dropdown img={<ClockIcon />} text="Appointment Time" select="Select Time" /></div>
-          <div className=""><Dropdown img={<CameraIcon />} text="Video Call" select="Select Platform" /></div>
+          <div className="flex flex-col items-start p-7 gap-2.5 self-stretch flex-none order-0 grow-0">
+            <Dropdown img={<CalendarIcon />} text="Appointment Date" select="Select Day" />
+          </div>
+          <div className="flex flex-col items-start p-7 gap-2.5 self-stretch flex-none order-1 grow-0">
+            <Dropdown img={<ClockIcon />} text="Appointment Time" select="Select Time" />
+          </div>
+          <div className="flex flex-col items-start p-7 gap-2.5 self-stretch flex-none order-2 grow-0">
+            <Dropdown img={<CameraIcon />} text="Video Call" select="Select Platform" />
+          </div>
         </div>
 
-        <div className="flex flex-row">
-          <TempCalendar />
-          <div className="pl-80"><button className='rounded-full btn bg-base-100 btn-ghost shadow-lg'>Next →</button></div>
-        </div></div></div >
+        <div className="flex flex-row justify-between">
+          <div className="flex p-5">
+            <TempCalendar />
+          </div>
+          <div className="flex">
+            <button className='rounded-full btn bg-base-100 btn-ghost shadow-lg normal-case text-#[C1C1C1]'>
+              Next →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div >
   )
 }
