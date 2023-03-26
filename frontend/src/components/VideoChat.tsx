@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
-import Peer from "peerjs";
 import { db } from "../../../backend/firebase/firebase";
+import { collection, doc, addDoc, setDoc, updateDoc, onSnapshot, getDoc } from "firebase/firestore";
+
 
 const VideoChat: React.FC = () => {
   const webcamButton = useRef<HTMLButtonElement>(null);
@@ -65,17 +66,19 @@ const VideoChat: React.FC = () => {
   };
 
   const createOffer = async () => {
-    const callDoc = firestore.collection("calls").doc();
-    const offerCandidates = callDoc.collection("offerCandidates");
-    const answerCandidates = callDoc.collection("answerCandidates");
+    const callDoc = doc(collection(db, 'calls'));
+    const offerCandidates = collection(callDoc, "offerCandidates");
+    const answerCandidates = collection(callDoc, "answerCandidates");    
   
     if (callInput.current) {
       callInput.current.value = callDoc.id;
     }
   
-    pc.onicecandidate = (event) => {
-      event.candidate && offerCandidates.add(event.candidate.toJSON());
-    };
+    pc.onicecandidate = async (event) => {
+      if (event.candidate) {
+        await addDoc(offerCandidates, event.candidate.toJSON());
+      }
+    };    
   
     const offerDescription = await pc.createOffer();
     await pc.setLocalDescription(offerDescription);
@@ -85,25 +88,24 @@ const VideoChat: React.FC = () => {
       type: offerDescription.type,
     };
   
-    await callDoc.set({ offer });
-  
-    callDoc.onSnapshot((snapshot) => {
+    await setDoc(callDoc, { offer });
+    
+    onSnapshot(callDoc, (snapshot) => {
       const data = snapshot.data();
       if (!pc.currentRemoteDescription && data?.answer) {
         const answerDescription = new RTCSessionDescription(data.answer);
         pc.setRemoteDescription(answerDescription);
       }
     });
-  
-    answerCandidates.onSnapshot((snapshot) => {
+    
+    onSnapshot(answerCandidates, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
+        if (change.type === 'added') {
           const candidate = new RTCIceCandidate(change.doc.data());
           pc.addIceCandidate(candidate);
         }
       });
     });
-  
     if (hangupButton.current) {
       hangupButton.current.disabled = false;
     }
@@ -113,15 +115,16 @@ const VideoChat: React.FC = () => {
     const callId = callInput.current?.value;
     if (!callId) return;
   
-    const callDoc = firestore.collection("calls").doc(callId);
-    const answerCandidates = callDoc.collection("answerCandidates");
-    const offerCandidates = callDoc.collection("offerCandidates");
+    const callDoc = doc(db, 'calls', callId);
+    const answerCandidates = collection(callDoc, 'answerCandidates');
+    const offerCandidates = collection(callDoc, 'offerCandidates');
   
     pc.onicecandidate = (event) => {
-      event.candidate && answerCandidates.add(event.candidate.toJSON());
+      event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
     };
   
-    const callData = (await callDoc.get()).data();
+    const callDocSnapshot = await getDoc(callDoc);
+    const callData = callDocSnapshot.data();
   
     if (!callData) return;
   
@@ -136,11 +139,12 @@ const VideoChat: React.FC = () => {
       sdp: answerDescription.sdp,
     };
   
-    await callDoc.update({ answer });
+    await updateDoc(callDoc, { answer });
   
-    offerCandidates.onSnapshot((snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
+    onSnapshot(offerCandidates, (snapshot) => {
+      const changes = snapshot.docChanges();
+      changes.forEach((change) => {
+        if (change.type === 'added') {
           let data = change.doc.data();
           pc.addIceCandidate(new RTCIceCandidate(data));
         }
