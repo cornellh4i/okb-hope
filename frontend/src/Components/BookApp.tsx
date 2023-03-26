@@ -62,7 +62,7 @@ export default function BookApp() {
           </div>
         </div>
 
-        <div className="flex flex-row justify-between">
+        <div className="flex  justify-between">
           <div className="flex p-5">
             <TempCalendar />
           </div>
