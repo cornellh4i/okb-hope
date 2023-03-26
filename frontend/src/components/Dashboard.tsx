@@ -15,19 +15,40 @@ const dummy_title = "This is the title of a mental health resource article";
 const Dashboard = () => {
 
 
-  return <div className="grid grid-cols-4 gap-4 items-center pb-1/12 shrink">
-    <AppointmentCard p_name={names[0]} start={new Date(starts[0])} end={new Date(ends[0])} description={dummy_descrip}>
-    </AppointmentCard>
-    <AppointmentCard p_name={names[1]} start={new Date(starts[1])} end={new Date(ends[1])} description={dummy_descrip}>
-    </AppointmentCard>
-    <AppointmentCard p_name={names[2]} start={new Date(starts[2])} end={new Date(ends[2])} description={dummy_descrip}>
-    </AppointmentCard>
-    <AppointmentCard p_name={names[3]} start={new Date(starts[3])} end={new Date(ends[3])} description={dummy_descrip}>
-    </AppointmentCard>
+  return <div>
+    <div className="grid grid-cols-4 gap-4 items-center pb-1/12 shrink">
 
-    <PyschiatristCard p_name={names[0]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
-    <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
-  </div>
+      <AppointmentCard p_name={names[0]} start={new Date(starts[0])} end={new Date(ends[0])} description={dummy_descrip}>
+      </AppointmentCard>
+      <AppointmentCard p_name={names[1]} start={new Date(starts[1])} end={new Date(ends[1])} description={dummy_descrip}>
+      </AppointmentCard>
+      <AppointmentCard p_name={names[2]} start={new Date(starts[2])} end={new Date(ends[2])} description={dummy_descrip}>
+      </AppointmentCard>
+      <AppointmentCard p_name={names[3]} start={new Date(starts[3])} end={new Date(ends[3])} description={dummy_descrip}>
+      </AppointmentCard>
+
+
+
+
+    </div>
+    <div className="grid grid-cols-4 gap-4 items-center pb-1/12 shrink">
+      <PyschiatristCard p_name={names[0]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
+      {/* <PyschiatristCard p_name={names[1]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
+      <PyschiatristCard p_name={names[2]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
+      <PyschiatristCard p_name={names[3]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard> */}
+    </div>
+
+    <div className="grid grid-cols-4 gap-4 margin-top: 100 items-center pb-1/12 shrink">
+
+      <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
+      {/* <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
+      <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
+      <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard> */}
+    </div>
+
+  </div >
+
+
   // return <div> 
   //    <AppointmentCard p_name = 'Erica Smith' start = {new Date('2016-01-04 13:30')} end = {new Date('2016-01-04 14:30')}>
   //    </AppointmentCard>
