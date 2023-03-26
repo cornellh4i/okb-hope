@@ -2,7 +2,7 @@ import CalendarIcon from '../Assets/calendar_icon.svg'
 import CameraIcon from '../Assets/camera_icon.svg'
 import ClockIcon from '../Assets/clock_icon.svg'
 import Arrow from '../Assets/arrow.svg'
-import TempCalendar from '../Assets/temp_calendar.svg'
+// import TempCalendar from '../Assets/temp_calendar.svg'
 
 type DropdownProp = {
   img: any,
@@ -35,7 +35,7 @@ function Dropdown(props: DropdownProp) {
         </div>
       </label>
 
-      <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+      <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-64">
         <li><a><div className="">Item 1</div></a></li>
         <li><a>Item 2</a></li>
       </ul>
@@ -50,24 +50,24 @@ export default function BookApp() {
         <div className='sm:text-3xl pb-4 gap-8 capitalize'>
           Book Appointment now
         </div>
-        <div className="flex">
-          <div className="flex flex-col items-start p-7 gap-2.5 self-stretch flex-none order-0 grow-0">
+        <div className="flex justify-between">
+          <div className="flex flex-col items-start p-7 gap-2.5 flex-none order-0 grow-0">
             <Dropdown img={<CalendarIcon />} text="Appointment Date" select="Select Day" />
           </div>
-          <div className="flex flex-col items-start p-7 gap-2.5 self-stretch flex-none order-1 grow-0">
+          <div className="flex flex-col items-start p-7 gap-2.5 flex-none order-1 grow-0">
             <Dropdown img={<ClockIcon />} text="Appointment Time" select="Select Time" />
           </div>
-          <div className="flex flex-col items-start p-7 gap-2.5 self-stretch flex-none order-2 grow-0">
+          <div className="flex flex-col items-start p-7 gap-2.5 flex-none order-2 grow-0">
             <Dropdown img={<CameraIcon />} text="Video Call" select="Select Platform" />
           </div>
         </div>
 
-        <div className="flex  justify-between">
-          <div className="flex p-5">
+        <div className="flex justify-between">
+          {/* <div className="flex p-5">
             <TempCalendar />
-          </div>
-          <div className="flex">
-            <button className='rounded-full btn bg-base-100 btn-ghost shadow-lg normal-case text-#[C1C1C1]'>
+          </div> */}
+          <div className="flex p-7">
+            <button className='rounded-full btn bg-base-100 btn-ghost shadow-lg normal-case text-#[C1C1C1] gap-2.5'>
               Next →
             </button>
           </div>
