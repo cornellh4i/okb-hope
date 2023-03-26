@@ -6,7 +6,8 @@ const QuestionCard = ({ question, options }: { question: string, options: string
   const OptionButton = ({ onClick, text }) =>
     <button className="btn bg-gray-500 w-full justify-start normal-case border-transparent hover:border-transparent"
       onClick={onClick}>{text}</button>
-
+      
+  // Creates an array [0, 1, ..., options.length-1]
   const optionArray = Array.from(Array(options.length).keys())
 
   return (
