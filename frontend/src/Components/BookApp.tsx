@@ -2,7 +2,7 @@ import CalendarIcon from '../Assets/calendar_icon.svg'
 import CameraIcon from '../Assets/camera_icon.svg'
 import ClockIcon from '../Assets/clock_icon.svg'
 import Arrow from '../Assets/arrow.svg'
-import TempCalendar from '../Assets/temp_calendar.svg'
+// import TempCalendar from '../Assets/temp_calendar.svg'
 
 type DropdownProp = {
   img: any,
@@ -63,9 +63,9 @@ export default function BookApp() {
         </div>
 
         <div className="flex justify-between">
-          <div className="flex pl-6">
+          {/* <div className="flex pl-6">
             <TempCalendar />
-          </div>
+          </div> */}
           <div className="flex p-7">
             <button className='rounded-full btn bg-base-100 btn-ghost shadow-lg normal-case text-#[C1C1C1] gap-2.5'>
               Next →
