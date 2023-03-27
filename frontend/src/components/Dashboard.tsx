@@ -16,34 +16,45 @@ const Dashboard = () => {
 
 
   return <div>
-    <div className="grid grid-cols-4 gap-4 items-center pb-1/12 shrink">
-
-      <AppointmentCard p_name={names[0]} start={new Date(starts[0])} end={new Date(ends[0])} description={dummy_descrip}>
-      </AppointmentCard>
-      <AppointmentCard p_name={names[1]} start={new Date(starts[1])} end={new Date(ends[1])} description={dummy_descrip}>
-      </AppointmentCard>
-      <AppointmentCard p_name={names[2]} start={new Date(starts[2])} end={new Date(ends[2])} description={dummy_descrip}>
-      </AppointmentCard>
-      <AppointmentCard p_name={names[3]} start={new Date(starts[3])} end={new Date(ends[3])} description={dummy_descrip}>
-      </AppointmentCard>
-
-
-
-
-    </div>
-    <div className="grid grid-cols-4 gap-4 items-center pb-1/12 shrink">
-      <PyschiatristCard p_name={names[0]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
-      {/* <PyschiatristCard p_name={names[1]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
-      <PyschiatristCard p_name={names[2]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
-      <PyschiatristCard p_name={names[3]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard> */}
+    <div className="card w-full bg-base-100 shadow-xl">
+      <div className="card-body">
+        <h1 className="card-title pt-1/15">Upcoming Appointments</h1>
+          <div className="grid grid-cols-4 gap-4 items-center pb-1/12 shrink">
+            <AppointmentCard p_name={names[0]} start={new Date(starts[0])} end={new Date(ends[0])} description={dummy_descrip}>
+            </AppointmentCard>
+            <AppointmentCard p_name={names[1]} start={new Date(starts[1])} end={new Date(ends[1])} description={dummy_descrip}>
+            </AppointmentCard>
+            <AppointmentCard p_name={names[2]} start={new Date(starts[2])} end={new Date(ends[2])} description={dummy_descrip}>
+            </AppointmentCard>
+            <AppointmentCard p_name={names[3]} start={new Date(starts[3])} end={new Date(ends[3])} description={dummy_descrip}>
+            </AppointmentCard>
+          </div>
+      </div>
     </div>
 
-    <div className="grid grid-cols-4 gap-4 margin-top: 100 items-center pb-1/12 shrink">
+    <div className="card w-full bg-base-100 shadow-xl">
+      <div className="card-body">
+        <h1 className="card-title pt-1/15">My Saved Psychiatrists</h1>
+        <div className="grid grid-cols-4 gap-4 items-center pb-1/12 shrink">
+          <PyschiatristCard p_name={names[0]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
+          <PyschiatristCard p_name={names[1]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
+          <PyschiatristCard p_name={names[2]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
+          <PyschiatristCard p_name={names[3]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
+        </div>
+      </div>
+    </div>
 
-      <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
-      {/* <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
-      <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
-      <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard> */}
+    <div className="card w-full bg-base-100 shadow-xl">
+      <div className="card-body">
+        <h1 className="card-title pt-1/15">Additional Resources</h1>
+          <div className="grid grid-cols-4 gap-4 items-center pb-1/12 shrink"></div>
+            <div className="grid grid-cols-4 gap-4 margin-top: 100 items-center pb-1/12 shrink">
+              <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
+              <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
+              <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
+              <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
+            </div>
+      </div>
     </div>
 
   </div >

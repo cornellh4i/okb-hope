@@ -18,7 +18,7 @@ const PyschiatristCard = ({ p_name, p_certifications, size }: { p_name: string, 
         <h2>{p_certifications}</h2>
 
         <div className="card-actions justify-left">
-          <button className="btn w-7/12" onClick={handleClick}>View Profile</button>
+          <button className="btn w-8/12" onClick={handleClick}>View Profile</button>
           <button className="btn w-3/12 class = btn glass" >
             <BookmarkIcon></BookmarkIcon>
           </button>
@@ -31,8 +31,6 @@ const PyschiatristCard = ({ p_name, p_certifications, size }: { p_name: string, 
                 </button>
               </div>
               <h2 className="card-title">{p_name}</h2>
-
-
               <p>Pyschiatrist Profile</p>
             </div>
           </div>}

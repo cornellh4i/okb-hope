@@ -11,27 +11,27 @@ import { AuthProvider } from '../../contexts/AuthContext'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
+    // // <BrowserRouter>
+    // //   <Route path="/" element={<Home />} />
+    // // </BrowserRouter>
+    // // <BrowserRouter>
+
     // <BrowserRouter>
-    //   <Route path="/" element={<Home />} />
+    //   <Routes>
+    //     <Route path="/" element={<Home />}>
+
+    //       <Route path="home" index element={<Home />} />
+    //       {/* <Route path="appointment" element={<Appt />} />
+    //     <Route path="heroes/:id" element={<Appt />} /> */}
+
+    //     </Route>
+    //   </Routes>
     // </BrowserRouter>
-    // <BrowserRouter>
-
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />}>
-
-          <Route path="home" index element={<Home />} />
-          {/* <Route path="appointment" element={<Appt />} />
-        <Route path="heroes/:id" element={<Appt />} /> */}
-
-        </Route>
-      </Routes>
-    </BrowserRouter>
 
     // </BrowserRouter >
-    // <AuthProvider>
-    //   <Component {...pageProps} />
-    // </AuthProvider>
+    <AuthProvider>
+      <Component {...pageProps} />
+    </AuthProvider>
   );
 }
 

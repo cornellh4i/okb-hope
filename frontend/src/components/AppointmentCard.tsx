@@ -50,8 +50,6 @@ const AppointmentCard = ({ children, p_name, start, end, description }: { childr
           <div className="hero-content text-center">
             <div className="max-w-md">
               <button className="btn btn-square btn-sm" onClick={handleClick}>
-                {/* <ArrowIcon></ArrowIcon> */}
-                {/* Go Back */}
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
               <h1 className="text-2xl font-bold"> Meeting with {p_name}</h1>
@@ -61,34 +59,10 @@ const AppointmentCard = ({ children, p_name, start, end, description }: { childr
                 <div className="col-span-1 shrink"><ClockIcon></ClockIcon></div>
                 <div className="col-span-4"><p>{start.getHours()}:{start.getMinutes()} - {end.getHours()}:{end.getMinutes()}</p></div>
               </div>
-
-              {/* <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p> */}
-
             </div>
           </div>
         </div>
-        // <div className="card w-96 bg-base-100 shadow-xl">
-        //   <div className="card-body">
-        //     <div className="card-actions justify-end">
-        //       <button className="btn btn-square btn-sm" onClick={handleClick}>
-        //         <ArrowIcon></ArrowIcon>
-        //         {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg> */}
-        //       </button>
-        //     </div>
-        //     <h2 className="card-title">Meeting with {p_name}</h2>
-
-        //     <div className="grid grid-cols-5 grid-rows-2 gap-4 items-center pb-1/12">
-        //       <div className="col-span-1 shrink"><CalendarIcon></CalendarIcon></div>
-        //       <div className="col-span-4"><p>{day}, {month} {start.getDay()}, {start.getUTCFullYear()}</p></div>
-        //       <div className="col-span-1 shrink"><ClockIcon></ClockIcon></div>
-        //       <div className="col-span-4"><p>{start.getHours()}:{start.getMinutes()} - {end.getHours()}:{end.getMinutes()}</p></div>
-        //     </div>
-        //     <p>Description: {description} </p>
-        //   </div>
-        // </div>
-
       }
-
     </div>
 
   );

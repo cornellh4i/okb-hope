@@ -3,10 +3,6 @@ import ArticleIcon from '../assets/article.svg'
 
 
 const ArticleCard = ({ title, body }: { title: string, body: string }) => {
-
-
-
-
   return (
     <div className="card w-11/12 bg-base-100 shadow-xl">
       <div className="card-body justify-center">
