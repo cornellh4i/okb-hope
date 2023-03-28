@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react'
+import React, { useState } from 'react'
 import BookmarkIcon from '../assets/bookmark.svg'
 import PsychiatristIcon from '../assets/psychiatrist.svg'
 

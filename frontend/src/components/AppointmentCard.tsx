@@ -1,10 +1,7 @@
-import Image from 'next/image'
 import CalendarIcon from '../assets/calendar.svg'
 import ClockIcon from '../assets/clock.svg'
-import ArrowIcon from '../assets/arrow.svg'
-import React, { ReactNode, useState } from 'react'
-// import { StyleSheet, View } from 'react-native'
-// import Flex from 'typescript-styled-flex'
+import React, { ReactNode } from 'react'
+
 
 interface AppointmentCard {
   p_name: string,

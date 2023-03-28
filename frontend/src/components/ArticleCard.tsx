@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react'
+import React from 'react'
 import ArticleIcon from '../assets/article.svg'
 
 
