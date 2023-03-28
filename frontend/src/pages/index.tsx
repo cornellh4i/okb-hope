@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import NavBar from '../components/NavBar'
 import BookApp from '../components/BookApp'
@@ -16,8 +15,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <NavBar />
-        <BookApp />
+        {/* <NavBar />
+        <BookApp /> */}
       </main>
     </>
   )

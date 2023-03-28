@@ -2,7 +2,7 @@ import CalendarIcon from '../Assets/calendar_icon.svg'
 import CameraIcon from '../Assets/camera_icon.svg'
 import ClockIcon from '../Assets/clock_icon.svg'
 import Arrow from '../Assets/arrow.svg'
-import TempCalendar from '../Assets/temp_calendar.svg'
+// import TempCalendar from '../Assets/temp_calendar.svg'
 
 type DropdownProp = {
   img: any,
@@ -19,7 +19,7 @@ function Dropdown(props: DropdownProp) {
   return (
     <div className="dropdown flex-row p-0 gap-5 order-none grow-0 h-70 shadow-md rounded-3xl">
       <label tabIndex={0} className="btn btn-wide btn-ghost rounded-full bg-white text-black shadow-lg">
-        <div className="flex flex-none order-0 grow-0 w-14">
+        <div className="flex  flex-none order-0 grow-0 w-14">
           {props.img}
         </div>
         <div className="flex flex-col items-start p-0 gap-2 normal-case order-1 grow-0 flex-none">
@@ -35,7 +35,7 @@ function Dropdown(props: DropdownProp) {
         </div>
       </label>
 
-      <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+      <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-64">
         <li><a><div className="">Item 1</div></a></li>
         <li><a>Item 2</a></li>
       </ul>
@@ -47,27 +47,27 @@ export default function BookApp() {
   return (
     <div className="bg-white p-16">
       <div className="max-w-6xl w-500 mx-auto p-16 bg-[#DEDEDE] shadow-lg rounded-3xl">
-        <div className='sm:text-3xl pb-4 gap-8 capitalize'>
+        <div className='sm:text-3xl pb-4 gap-8 capitalize pl-6'>
           Book Appointment now
         </div>
-        <div className="flex">
-          <div className="flex flex-col items-start p-7 gap-2.5 self-stretch flex-none order-0 grow-0">
-            <Dropdown img={<CalendarIcon />} text="Appointment Date" select="Select Day" />
+        <div className="flex justify-between">
+          <div className="flex flex-col items-start p-7 gap-2.5 flex-none order-0 grow-0">
+            <Dropdown img={<CalendarIcon className="" viewBox="0 0 48 40" />} text="Appointment Date" select="Select Day" />
           </div>
-          <div className="flex flex-col items-start p-7 gap-2.5 self-stretch flex-none order-1 grow-0">
-            <Dropdown img={<ClockIcon />} text="Appointment Time" select="Select Time" />
+          <div className="flex flex-col items-start p-7 gap-2.5 flex-none order-1 grow-0">
+            <Dropdown img={<ClockIcon className="" viewBox="0 0 48 40" />} text="Appointment Time" select="Select Time" />
           </div>
-          <div className="flex flex-col items-start p-7 gap-2.5 self-stretch flex-none order-2 grow-0">
-            <Dropdown img={<CameraIcon />} text="Video Call" select="Select Platform" />
+          <div className="flex flex-col items-start p-7 gap-2.5 flex-none order-2 grow-0">
+            <Dropdown img={<CameraIcon className="" viewBox="0 0 48 40" />} text="Video Call" select="Select Platform" />
           </div>
         </div>
 
-        <div className="flex  justify-between">
-          <div className="flex p-5">
+        <div className="flex justify-between">
+          {/* <div className="flex pl-6">
             <TempCalendar />
-          </div>
-          <div className="flex">
-            <button className='rounded-full btn bg-base-100 btn-ghost shadow-lg normal-case text-#[C1C1C1]'>
+          </div> */}
+          <div className="flex p-7">
+            <button className='rounded-full btn bg-base-100 btn-ghost shadow-lg normal-case text-#[C1C1C1] gap-2.5'>
               Next →
             </button>
           </div>
