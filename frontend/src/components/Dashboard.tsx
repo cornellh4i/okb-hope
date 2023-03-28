@@ -3,7 +3,6 @@ import AppointmentCard from './AppointmentCard';
 import PyschiatristCard from './PsychiatristCard';
 import ArticleCard from './ArticleCard';
 
-const style = require("@/styles/Home.module.css");
 const names = ["Erica Smithson", "Ronald River", "Hermes Heroic", "Pomelo Pigskin"]
 const starts = ['2023-04-10 13:30', '2023-05-10 12:30', '2023-06-15 14:15', '2023-06-20 14:15']
 const ends = ['2023-04-10 14:30', '2023-05-10 13:30', '2023-06-15 15:15', '2023-06-20 15:15']
