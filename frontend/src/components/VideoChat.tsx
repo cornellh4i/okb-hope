@@ -68,28 +68,28 @@ const VideoChat: React.FC = () => {
   const createOffer = async () => {
     const callDoc = doc(collection(db, 'calls'));
     const offerCandidates = collection(callDoc, "offerCandidates");
-    const answerCandidates = collection(callDoc, "answerCandidates");    
-  
+    const answerCandidates = collection(callDoc, "answerCandidates");
+
     if (callInput.current) {
       callInput.current.value = callDoc.id;
     }
-  
+
     pc.onicecandidate = async (event) => {
       if (event.candidate) {
         await addDoc(offerCandidates, event.candidate.toJSON());
       }
-    };    
-  
+    };
+
     const offerDescription = await pc.createOffer();
     await pc.setLocalDescription(offerDescription);
-  
+
     const offer = {
       sdp: offerDescription.sdp,
       type: offerDescription.type,
     };
-  
+
     await setDoc(callDoc, { offer });
-    
+
     onSnapshot(callDoc, (snapshot) => {
       const data = snapshot.data();
       if (!pc.currentRemoteDescription && data?.answer) {
@@ -97,7 +97,7 @@ const VideoChat: React.FC = () => {
         pc.setRemoteDescription(answerDescription);
       }
     });
-    
+
     onSnapshot(answerCandidates, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added') {
@@ -110,37 +110,39 @@ const VideoChat: React.FC = () => {
       hangupButton.current.disabled = false;
     }
   };
-  
+
   const answerCall = async () => {
     const callId = callInput.current?.value;
     if (!callId) return;
-  
+
     const callDoc = doc(db, 'calls', callId);
     const answerCandidates = collection(callDoc, 'answerCandidates');
     const offerCandidates = collection(callDoc, 'offerCandidates');
-  
+
     pc.onicecandidate = (event) => {
       event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
     };
-  
+
     const callDocSnapshot = await getDoc(callDoc);
     const callData = callDocSnapshot.data();
-  
+
     if (!callData) return;
-  
+
     const offerDescription = callData.offer;
     await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
-  
+
+    //create offer method as local description on peer connection
+    // object contains sdp value (session description protocol)
     const answerDescription = await pc.createAnswer();
     await pc.setLocalDescription(answerDescription);
-  
+
     const answer = {
-      type: answerDescription.type,
-      sdp: answerDescription.sdp,
+      type: answerDescription.type, // convert to ts object
+      sdp: answerDescription.sdp, // convert to ts object
     };
-  
-    await updateDoc(callDoc, { answer });
-  
+
+    await updateDoc(callDoc, { answer }); // 
+
     onSnapshot(offerCandidates, (snapshot) => {
       const changes = snapshot.docChanges();
       changes.forEach((change) => {
@@ -151,30 +153,30 @@ const VideoChat: React.FC = () => {
       });
     });
   };
-  
+
   const hangupCall = () => {
     pc.close();
-  
+
     if (webcamButton.current) {
       webcamButton.current.disabled = false;
     }
-  
+
     if (callButton.current && answerButton.current && hangupButton.current) {
       callButton.current.disabled = true;
       answerButton.current.disabled = true;
       hangupButton.current.disabled = true;
     }
-  
+
     if (callInput.current) {
       callInput.current.value = "";
     }
-  
+
     setLocalStream(null);
     setRemoteStream(null);
     if (webcamVideo.current) {
       webcamVideo.current.srcObject = null;
     }
-  
+
     if (remoteVideo.current) {
       remoteVideo.current.srcObject = null;
     }
