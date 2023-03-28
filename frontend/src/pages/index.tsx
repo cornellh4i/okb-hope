@@ -15,8 +15,6 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <NavBar />
-        <BookApp />
       </main>
     </>
   )
