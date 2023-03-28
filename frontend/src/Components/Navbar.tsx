@@ -1,4 +1,4 @@
-import { logout, signInWithGoogle } from "../../../backend/firebase/firebase";
+import { logout, signInWithGoogle } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/AuthContext";
 import Link from "next/link";
 

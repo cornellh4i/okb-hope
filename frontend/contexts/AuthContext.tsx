@@ -1,6 +1,6 @@
 import React, { createContext, useState, ReactNode, useContext, useEffect, FC } from 'react';
 import { User } from "firebase/auth"
-import { auth } from "../../backend/firebase/firebase"
+import { auth } from "../firebase/firebase"
 
 type AuthUser = User | null;
 type AuthData = { user?: AuthUser }
