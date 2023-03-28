@@ -3,7 +3,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import Link from "next/link";
 
 export default function NavBar() {
-  const { isAuthenticated } = useAuth();
+  const { user } = useAuth();
   return (
     <header>
       <nav className="">
@@ -16,12 +16,19 @@ export default function NavBar() {
               </Link>
             </li>
             <li>
+              {user ? 
+              <button
+                className="btn bg-[#E6E6E6] btn-ghost glass w-18 rounded-full bg-base-100"
+                onClick={logout}
+              >
+                Logout
+              </button> : 
               <button
                 className="btn bg-[#E6E6E6] btn-ghost glass w-18 rounded-full bg-base-100"
                 onClick={signInWithGoogle}
               >
                 Login
-              </button>
+              </button>}
             </li>
           </ul>
         </div>
