@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { db } from "../../../backend/firebase/firebase";
 import { collection, doc, addDoc, setDoc, updateDoc, onSnapshot, getDoc } from "firebase/firestore";
 
@@ -13,6 +13,7 @@ const VideoChat: React.FC = () => {
   const remoteVideo = useRef<HTMLVideoElement>(null);
   const callInput = useRef<HTMLInputElement>(null);
 
+  const [pc, setPC] = useState<RTCPeerConnection | null>(null);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
 
@@ -33,7 +34,10 @@ const VideoChat: React.FC = () => {
     iceCandidatePoolSize: 10,
   };
 
-  const pc = new RTCPeerConnection(servers);
+  useEffect(() => {
+    setPC(new RTCPeerConnection(servers));
+  }, [])
+  
 
   /**
    * Sets up the media sources for a video call by requesting user permission 
