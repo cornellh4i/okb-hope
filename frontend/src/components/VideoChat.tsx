@@ -16,6 +16,11 @@ const VideoChat: React.FC = () => {
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
 
+  /**
+   * Stun servers used to setup Peer-to-Peer connection
+   * URLs chosen below are free provided by Google
+   * Allows peer to determine its public facing IP address
+   */
   const servers = {
     iceServers: [
       {
@@ -30,6 +35,11 @@ const VideoChat: React.FC = () => {
 
   const pc = new RTCPeerConnection(servers);
 
+  /**
+   * Sets up the media sources for a video call by requesting user permission 
+   * to access the camera and microphone and creating a new MediaStream object 
+   * for the remote stream.
+   */
   const setupMediaSources = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
@@ -65,6 +75,11 @@ const VideoChat: React.FC = () => {
     }
   };
 
+  /**
+   * Sets up a WebRTC call by creating a local offer, updating the Firestore database with 
+   * the offer, setting up listeners for changes, and adding remote candidates to the 
+   * peer connection object. If available, the function enables the hangupButton.
+   */
   const createOffer = async () => {
     const callDoc = doc(collection(db, 'calls'));
     const offerCandidates = collection(callDoc, "offerCandidates");
@@ -111,6 +126,13 @@ const VideoChat: React.FC = () => {
     }
   };
 
+  /**
+   * Retrieves the call document from Firestore and the "answerCandidates" and 
+   * "offerCandidates" collections within the document.
+   * 
+   * Gets an offer description, sets it as remote, creates an answer, sets 
+   * local description, and updates call document. Sets up a listener for changes. 
+   */
   const answerCall = async () => {
     const callId = callInput.current?.value;
     if (!callId) return;
@@ -154,6 +176,10 @@ const VideoChat: React.FC = () => {
     });
   };
 
+  /**
+   * Closes the peer connection and disables the webcam button. Disables 
+   * all the buttons and clears the call input fields. Resets to default values.
+   */
   const hangupCall = () => {
     pc.close();
 
