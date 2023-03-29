@@ -4,13 +4,13 @@ import ConversationList from "./ConversationList";
 import Fuse from 'fuse.js'; // install fuse.js
 
 const psychiatrists = [
-    // Your list of psychiatrists/counselors
-  ];
+  // fetch from firestore
+];
 
 const fuseOptions = {
-    keys: ['name', 'specialty', 'location'], 
-    threshold: 0.3,
-  };
+  keys: ['name', 'specialty', 'location'],
+  threshold: 0.3,
+};
 
 const Sidebar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
