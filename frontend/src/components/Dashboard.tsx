@@ -2,6 +2,8 @@ import React from 'react';
 import AppointmentCard from './AppointmentCard';
 import PyschiatristCard from './PsychiatristCard';
 import ArticleCard from './ArticleCard';
+import AppointmentList from './AppointmentList';
+import appointments_list from '../../appointments.json';
 
 const names = ["Erica Smithson", "Ronald River", "Hermes Heroic", "Pomelo Pigskin"]
 const starts = ['2023-04-10 13:30', '2023-05-10 12:30', '2023-06-15 14:15', '2023-06-20 14:15']
@@ -10,25 +12,21 @@ const dummy_descrip = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 const dummy_title = "This is the title of a mental health resource article";
 
 
+
 const Dashboard = () => {
 
 
   return <div>
-    <div className="card w-full bg-base-100 shadow-xl">
+    {/* <div className="card w-full bg-base-100 shadow-xl">
       <div className="card-body">
         <h1 className="card-title pt-1/15">Upcoming Appointments</h1>
         <div className="grid grid-cols-4 gap-4 items-center pb-1/12 shrink">
-          <AppointmentCard p_name={names[0]} start={new Date(starts[0])} end={new Date(ends[0])} description={dummy_descrip}>
-          </AppointmentCard>
-          <AppointmentCard p_name={names[1]} start={new Date(starts[1])} end={new Date(ends[1])} description={dummy_descrip}>
-          </AppointmentCard>
-          <AppointmentCard p_name={names[2]} start={new Date(starts[2])} end={new Date(ends[2])} description={dummy_descrip}>
-          </AppointmentCard>
-          <AppointmentCard p_name={names[3]} start={new Date(starts[3])} end={new Date(ends[3])} description={dummy_descrip}>
-          </AppointmentCard>
+          <AppointmentList results={appointments_list} />
         </div>
       </div>
-    </div>
+    </div> */}
+    <AppointmentList results={appointments_list} />
+    console.log(appointsments_list);
 
     <div className="card w-full bg-base-100 shadow-xl">
       <div className="card-body">

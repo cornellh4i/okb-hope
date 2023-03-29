@@ -1,0 +1,16 @@
+{
+  "Appointment1": {
+    "id": "appt1",
+    "name": "Erica Smithson",
+    "start": "2023-04-10 13:30",
+    "end": "2023-04-10 14:30",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim efficitur sapien id facilisis. In imperdiet ante ac fermentum aliquet. Nam pellentesque vestibulum nisl quis facilisis. Sed eget magna auctor."
+  },
+  "Appointment2": {
+    "id": "appt2",
+    "name": "Erica Smithson",
+    "start": "2023-04-10 13:30",
+    "end": "2023-04-10 14:30",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim efficitur sapien id facilisis. In imperdiet ante ac fermentum aliquet. Nam pellentesque vestibulum nisl quis facilisis. Sed eget magna auctor."
+  }
+}

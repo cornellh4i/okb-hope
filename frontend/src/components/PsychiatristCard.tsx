@@ -3,6 +3,7 @@ import BookmarkIcon from '../assets/bookmark.svg'
 import PsychiatristIcon from '../assets/psychiatrist.svg'
 
 const PyschiatristCard = ({ p_name, p_certifications, size }: { p_name: string, p_certifications: string, size: number }) => {
+  // toggles whether to show psychiatrist profile or not
   const [isShown, setIsShown] = useState(false);
 
   const handleClick = event => {
@@ -13,16 +14,19 @@ const PyschiatristCard = ({ p_name, p_certifications, size }: { p_name: string, 
   return (
     <div className="card w-11/12 bg-base-100 shadow-xl">
       <div className="card-body">
-        <div><PsychiatristIcon></PsychiatristIcon></div>
+        {/* image of psychiatrist */}
+        <PsychiatristIcon />
         <h2 className="card-title">{p_name}</h2>
         <h2>{p_certifications}</h2>
 
+        {/* view profile button */}
         <div className="card-actions justify-left">
           <button className="btn w-8/12">View Profile</button>
           <button className="btn w-3/12 class = btn glass" >
-            <BookmarkIcon></BookmarkIcon>
+            <BookmarkIcon />
           </button>
 
+          {/* dummy component when view profile is pressed */}
           {isShown && <div className="card w-96 bg-base-100 shadow-xl">
             <div className="card-body">
               <div className="card-actions justify-end">
