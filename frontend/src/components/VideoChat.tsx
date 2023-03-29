@@ -52,10 +52,10 @@ const VideoChat: React.FC = () => {
     const remoteStream = new MediaStream();
 
     stream.getTracks().forEach((track) => {
-      pc.addTrack(track, stream);
+      pc!.addTrack(track, stream);
     });
 
-    pc.ontrack = (event) => {
+    pc!.ontrack = (event) => {
       event.streams[0].getTracks().forEach((track) => {
         remoteStream.addTrack(track);
       });
@@ -93,14 +93,14 @@ const VideoChat: React.FC = () => {
       callInput.current.value = callDoc.id;
     }
 
-    pc.onicecandidate = async (event) => {
+    pc!.onicecandidate = async (event) => {
       if (event.candidate) {
         await addDoc(offerCandidates, event.candidate.toJSON());
       }
     };
 
-    const offerDescription = await pc.createOffer();
-    await pc.setLocalDescription(offerDescription);
+    const offerDescription = await pc!.createOffer();
+    await pc!.setLocalDescription(offerDescription);
 
     const offer = {
       sdp: offerDescription.sdp,
@@ -111,9 +111,9 @@ const VideoChat: React.FC = () => {
 
     onSnapshot(callDoc, (snapshot) => {
       const data = snapshot.data();
-      if (!pc.currentRemoteDescription && data?.answer) {
+      if (!pc!.currentRemoteDescription && data?.answer) {
         const answerDescription = new RTCSessionDescription(data.answer);
-        pc.setRemoteDescription(answerDescription);
+        pc!.setRemoteDescription(answerDescription);
       }
     });
 
@@ -121,7 +121,7 @@ const VideoChat: React.FC = () => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added') {
           const candidate = new RTCIceCandidate(change.doc.data());
-          pc.addIceCandidate(candidate);
+          pc!.addIceCandidate(candidate);
         }
       });
     });
@@ -145,7 +145,7 @@ const VideoChat: React.FC = () => {
     const answerCandidates = collection(callDoc, 'answerCandidates');
     const offerCandidates = collection(callDoc, 'offerCandidates');
 
-    pc.onicecandidate = (event) => {
+    pc!.onicecandidate = (event) => {
       event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
     };
 
@@ -155,12 +155,12 @@ const VideoChat: React.FC = () => {
     if (!callData) return;
 
     const offerDescription = callData.offer;
-    await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
+    await pc!.setRemoteDescription(new RTCSessionDescription(offerDescription));
 
     //create offer method as local description on peer connection
     // object contains sdp value (session description protocol)
-    const answerDescription = await pc.createAnswer();
-    await pc.setLocalDescription(answerDescription);
+    const answerDescription = await pc!.createAnswer();
+    await pc!.setLocalDescription(answerDescription);
 
     const answer = {
       type: answerDescription.type, // convert to ts object
@@ -174,7 +174,7 @@ const VideoChat: React.FC = () => {
       changes.forEach((change) => {
         if (change.type === 'added') {
           let data = change.doc.data();
-          pc.addIceCandidate(new RTCIceCandidate(data));
+          pc!.addIceCandidate(new RTCIceCandidate(data));
         }
       });
     });
@@ -185,7 +185,7 @@ const VideoChat: React.FC = () => {
    * all the buttons and clears the call input fields. Resets to default values.
    */
   const hangupCall = () => {
-    pc.close();
+    pc!.close();
 
     if (webcamButton.current) {
       webcamButton.current.disabled = false;
