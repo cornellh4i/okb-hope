@@ -39,7 +39,6 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
           </div>
         </div>
       </div>}
-
     </div>
 
   );
