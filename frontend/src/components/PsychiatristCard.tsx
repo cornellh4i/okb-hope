@@ -5,7 +5,6 @@ import PsychiatristIcon from '../assets/psychiatrist.svg'
 const PyschiatristCard = ({ p_name, p_certifications }: { p_name: string, p_certifications: string }) => {
   // toggles whether to show psychiatrist profile or not
   const [isShown, setIsShown] = useState(false);
-
   const handleClick = event => {
     setIsShown(!isShown);
   };
@@ -17,14 +16,12 @@ const PyschiatristCard = ({ p_name, p_certifications }: { p_name: string, p_cert
         <PsychiatristIcon />
         <h2 className="card-title">{p_name}</h2>
         <h2>{p_certifications}</h2>
-
         {/* view profile button */}
         <div className="card-actions justify-left">
           <button className="btn w-8/12">View Profile</button>
           <button className="btn w-3/12 class = btn glass" >
             <BookmarkIcon />
           </button>
-
           {/* dummy component when view profile is pressed */}
           {/* note: right now, this won't execute because button's onClick isn't initiated to setIsShown */}
           {isShown && <div className="card w-96 bg-base-100 shadow-xl">
