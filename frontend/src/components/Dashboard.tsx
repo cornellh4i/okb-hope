@@ -1,60 +1,14 @@
 import React from 'react';
-import AppointmentCard from './AppointmentCard';
-import PyschiatristCard from './PsychiatristCard';
-import ArticleCard from './ArticleCard';
 import AppointmentList from './AppointmentList';
-import appointments_list from '../../appointments.json';
-
-const names = ["Erica Smithson", "Ronald River", "Hermes Heroic", "Pomelo Pigskin"]
-const starts = ['2023-04-10 13:30', '2023-05-10 12:30', '2023-06-15 14:15', '2023-06-20 14:15']
-const ends = ['2023-04-10 14:30', '2023-05-10 13:30', '2023-06-15 15:15', '2023-06-20 15:15']
-const dummy_descrip = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim efficitur sapien id facilisis. In imperdiet ante ac fermentum aliquet. Nam pellentesque vestibulum nisl quis facilisis. Sed eget magna auctor."
-const dummy_title = "This is the title of a mental health resource article";
-
-
+import PsychiatristList from './PsychiatristList';
+import ArticleList from './ArticleList';
 
 const Dashboard = () => {
-
-
   return <div>
-    {/* <div className="card w-full bg-base-100 shadow-xl">
-      <div className="card-body">
-        <h1 className="card-title pt-1/15">Upcoming Appointments</h1>
-        <div className="grid grid-cols-4 gap-4 items-center pb-1/12 shrink">
-          <AppointmentList results={appointments_list} />
-        </div>
-      </div>
-    </div> */}
-    <AppointmentList results={appointments_list} />
-    console.log(appointsments_list);
-
-    <div className="card w-full bg-base-100 shadow-xl">
-      <div className="card-body">
-        <h1 className="card-title pt-1/15">My Saved Psychiatrists</h1>
-        <div className="grid grid-cols-4 gap-4 items-center pb-1/12 shrink">
-          <PyschiatristCard p_name={names[0]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
-          <PyschiatristCard p_name={names[1]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
-          <PyschiatristCard p_name={names[2]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
-          <PyschiatristCard p_name={names[3]} p_certifications="Certifications Certifications" size={1}></PyschiatristCard>
-        </div>
-      </div>
-    </div>
-
-    <div className="card w-full bg-base-100 shadow-xl">
-      <div className="card-body">
-        <h1 className="card-title pt-1/15">Additional Resources</h1>
-        <div className="grid grid-cols-4 gap-4 items-center pb-1/12 shrink"></div>
-        <div className="grid grid-cols-4 gap-4 margin-top: 100 items-center pb-1/12 shrink">
-          <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
-          <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
-          <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
-          <ArticleCard title={dummy_title} body={dummy_descrip}></ArticleCard>
-        </div>
-      </div>
-    </div>
+    <AppointmentList />
+    <PsychiatristList max_size={10} />
+    <ArticleList />
   </div>
-
-
 }
 
 export default Dashboard;

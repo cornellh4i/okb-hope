@@ -1,14 +1,12 @@
 import CalendarIcon from '../assets/calendar.svg'
 import ClockIcon from '../assets/clock.svg'
-import React, { ReactNode } from 'react'
-
+import React from 'react'
 
 interface AppointmentCard {
   p_name: string,
   start: Date,
   end: Date
 }
-
 
 
 const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, start: Date, end: Date, description: string }) => {
@@ -35,15 +33,12 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
 
           <div className="card-actions justify-center">
             <button className="btn w-7/12" >More Info</button>
-
           </div>
         </div>
       </div>}
     </div>
-
   );
 };
-
 
 
 export default AppointmentCard;

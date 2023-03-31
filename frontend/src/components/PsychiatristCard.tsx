@@ -2,14 +2,13 @@ import React, { useState } from 'react'
 import BookmarkIcon from '../assets/bookmark.svg'
 import PsychiatristIcon from '../assets/psychiatrist.svg'
 
-const PyschiatristCard = ({ p_name, p_certifications, size }: { p_name: string, p_certifications: string, size: number }) => {
+const PyschiatristCard = ({ p_name, p_certifications }: { p_name: string, p_certifications: string }) => {
   // toggles whether to show psychiatrist profile or not
   const [isShown, setIsShown] = useState(false);
 
   const handleClick = event => {
     setIsShown(!isShown);
   };
-
 
   return (
     <div className="card w-11/12 bg-base-100 shadow-xl">
@@ -27,6 +26,7 @@ const PyschiatristCard = ({ p_name, p_certifications, size }: { p_name: string, 
           </button>
 
           {/* dummy component when view profile is pressed */}
+          {/* note: right now, this won't execute because button's onClick isn't initiated to setIsShown */}
           {isShown && <div className="card w-96 bg-base-100 shadow-xl">
             <div className="card-body">
               <div className="card-actions justify-end">
@@ -43,7 +43,5 @@ const PyschiatristCard = ({ p_name, p_certifications, size }: { p_name: string, 
     </div>
   );
 };
-
-
 
 export default PyschiatristCard;
