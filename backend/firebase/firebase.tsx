@@ -2,7 +2,7 @@
 import { FirebaseApp, getApps, initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { FacebookAuthProvider, getAuth, GoogleAuthProvider, TwitterAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-import { addDoc, collection, getDocs, getFirestore, query, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, getFirestore, query, where, orderBy, limit, DocumentData } from "firebase/firestore";
 import firebaseConfig from "../../frontend/serviceAccount.json"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -49,5 +49,6 @@ const signInWithGoogle = async () => {
 };
 
 const logout = () => signOut(auth);
+
 
 export { auth, db, app, analytics, signInWithGoogle, logout };

@@ -4,7 +4,7 @@ import ChatArea from './ChatArea';
 
 const ChatApp: React.FC = () => {
   return (
-    <div className="chat-app">
+    <div className="chat-app flex">
       <SideBar />
       <ChatArea />
     </div>

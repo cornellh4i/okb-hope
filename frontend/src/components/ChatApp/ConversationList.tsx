@@ -17,7 +17,7 @@ type ConversationListProps = {
 
 const ConversationList: React.FC<ConversationListProps> = ({ conversations }) => {
   return (
-    <div className="conversation-list">
+    <div className="conversation-list bg-blue-300 h-full">
       {conversations.map((conversation, index) => (
         <ConversationItem key={index} conversation={conversation} />
       ))}
