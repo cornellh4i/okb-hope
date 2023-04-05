@@ -2,10 +2,24 @@ import React, { useState, useMemo } from 'react';
 import SearchBar from "./SearchBar";
 import ConversationList from "./ConversationList";
 import Fuse from 'fuse.js'; // install fuse.js
+import { db } from '../../../../backend/firebase/firebase';
+import { collection } from "firebase/firestore";
 
-const psychiatrists = [
-  // fetch from firestore
-];
+const psychiatrists: any[] = [];
+
+async function getMessages() {
+  const chats = db.collection('Chats');
+  const snapshot = await chats.get();
+  if (snapshot.empty) {
+    console.log('no matching docs');
+    return;
+  }
+  snapshot.forEach(doc => {
+    psychiatrists.push(doc);
+  });
+}
+
+
 
 const fuseOptions = {
   keys: ['name', 'specialty', 'location'],
