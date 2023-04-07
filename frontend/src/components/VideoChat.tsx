@@ -4,14 +4,14 @@ import { collection, doc, addDoc, setDoc, updateDoc, onSnapshot, getDoc } from "
 
 
 const VideoChat: React.FC = () => {
-  const webcamButton = useRef<HTMLButtonElement>(null);
-  const callButton = useRef<HTMLButtonElement>(null);
-  const answerButton = useRef<HTMLButtonElement>(null);
-  const hangupButton = useRef<HTMLButtonElement>(null);
+  const webcamButton = useRef<HTMLButtonElement>(null); /** grabs html elements */
+  const callButton = useRef<HTMLButtonElement>(null); /** grabs html elements */
+  const answerButton = useRef<HTMLButtonElement>(null); /** grabs html elements */
+  const hangupButton = useRef<HTMLButtonElement>(null); /** grabs html elements */
 
-  const webcamVideo = useRef<HTMLVideoElement>(null);
-  const remoteVideo = useRef<HTMLVideoElement>(null);
-  const callInput = useRef<HTMLInputElement>(null);
+  const webcamVideo = useRef<HTMLVideoElement>(null); /** grabs html elements */
+  const remoteVideo = useRef<HTMLVideoElement>(null); /** grabs html elements */
+  const callInput = useRef<HTMLInputElement>(null); /** grabs html elements */
 
   const [pc, setPC] = useState<RTCPeerConnection | null>(null);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
@@ -32,12 +32,14 @@ const VideoChat: React.FC = () => {
       },
     ],
     iceCandidatePoolSize: 10,
-  };
+  }; /** generating ice (Interactive Connectivity Establishment) candidates 
+  aka, a list of possible IP addresses and ports that a device might use to connect
+   to another device.*/
 
   useEffect(() => {
-    setPC(new RTCPeerConnection(servers));
+    setPC(new RTCPeerConnection(servers)); /** creates rtc peer connection*/
   }, [])
-  
+
 
   /**
    * Sets up the media sources for a video call by requesting user permission 
@@ -48,25 +50,32 @@ const VideoChat: React.FC = () => {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: true,
-    });
+    }); /** sets event for clicking button, obtains user's stream using getusermedia
+    promise will resolve once permission is granted to get audio and video */
     const remoteStream = new MediaStream();
+    /** sets up media stream, an empty media stream  */
 
     stream.getTracks().forEach((track) => {
       pc!.addTrack(track, stream);
-    });
+    }); /** takes user and media stream and makes available on peer connection,
+   as well as showing them in the dom */
 
     pc!.ontrack = (event) => {
       event.streams[0].getTracks().forEach((track) => {
         remoteStream.addTrack(track);
       });
-    };
+    }; /** updates remote stream by peer connection
+    do this by listening on the track event on pure connection
+    get tracks from stream
+    loop over them
+    add them to remote stream */
 
     setLocalStream(stream);
     setRemoteStream(remoteStream);
 
     if (webcamVideo.current) {
       webcamVideo.current.srcObject = stream;
-    }
+    } /** applies user stream to video elements in dom */
 
     if (remoteVideo.current) {
       remoteVideo.current.srcObject = remoteStream;
@@ -85,13 +94,16 @@ const VideoChat: React.FC = () => {
    * peer connection object. If available, the function enables the hangupButton.
    */
   const createOffer = async () => {
-    const callDoc = doc(collection(db, 'calls'));
+    const callDoc = doc(collection(db, 'calls')); /** manages answer and offer 
+    from both users */
     const offerCandidates = collection(callDoc, "offerCandidates");
+    /** subcollections under calldoc that contain all cofferCandidates */
     const answerCandidates = collection(callDoc, "answerCandidates");
+    /** subcollections under calldoc that contain all answerCandidates */
 
     if (callInput.current) {
       callInput.current.value = callDoc.id;
-    }
+    } /** sets firebase generated random id and populate an input in ui */
 
     pc!.onicecandidate = async (event) => {
       if (event.candidate) {
@@ -99,27 +111,34 @@ const VideoChat: React.FC = () => {
       }
     };
 
-    const offerDescription = await pc!.createOffer();
-    await pc!.setLocalDescription(offerDescription);
+    const offerDescription = await pc!.createOffer(); /** returns offer description */
+    await pc!.setLocalDescription(offerDescription); /** sets offer description as
+    local description on peer conenction */
 
     const offer = {
       sdp: offerDescription.sdp,
       type: offerDescription.type,
-    };
+    }; /** sets sdp value to js object */
 
-    await setDoc(callDoc, { offer });
+    await setDoc(callDoc, { offer }); /** call document set with that js object */
 
     onSnapshot(callDoc, (snapshot) => {
       const data = snapshot.data();
       if (!pc!.currentRemoteDescription && data?.answer) {
-        const answerDescription = new RTCSessionDescription(data.answer);
+        const answerDescription = new RTCSessionDescription(data.answer); /** 
+        set answer description on peer connection locally
+        listens to database for answer
+        once answer is recieved, update that on peer connection */
         pc!.setRemoteDescription(answerDescription);
       }
     });
 
-    onSnapshot(answerCandidates, (snapshot) => {
+    onSnapshot(answerCandidates, (snapshot) => { /** when answered, 
+    add candidate to peer connection */
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added') {
+          /** create new ice candidate with document data
+           * add candidate to peer connection */
           const candidate = new RTCIceCandidate(change.doc.data());
           pc!.addIceCandidate(candidate);
         }
@@ -156,6 +175,7 @@ const VideoChat: React.FC = () => {
 
     const offerDescription = callData.offer;
     await pc!.setRemoteDescription(new RTCSessionDescription(offerDescription));
+    /** sets remote description on peer connection */
 
     //create offer method as local description on peer connection
     // object contains sdp value (session description protocol)
@@ -163,11 +183,11 @@ const VideoChat: React.FC = () => {
     await pc!.setLocalDescription(answerDescription);
 
     const answer = {
-      type: answerDescription.type, // convert to ts object
-      sdp: answerDescription.sdp, // convert to ts object
+      type: answerDescription.type, // convert to js object
+      sdp: answerDescription.sdp, // convert to js object
     };
 
-    await updateDoc(callDoc, { answer }); // 
+    await updateDoc(callDoc, { answer });
 
     onSnapshot(offerCandidates, (snapshot) => {
       const changes = snapshot.docChanges();
@@ -175,7 +195,8 @@ const VideoChat: React.FC = () => {
         if (change.type === 'added') {
           let data = change.doc.data();
           pc!.addIceCandidate(new RTCIceCandidate(data));
-        }
+        } /** when new ice candidate is added to that collection
+        create ice candidate locally */
       });
     });
   };
@@ -201,8 +222,8 @@ const VideoChat: React.FC = () => {
       callInput.current.value = "";
     }
 
-    setLocalStream(null);
-    setRemoteStream(null);
+    setLocalStream(null); /** setting values for local stream (user webcam) */
+    setRemoteStream(null); /** setting values for remote stream (other's webcam) */
     if (webcamVideo.current) {
       webcamVideo.current.srcObject = null;
     }
