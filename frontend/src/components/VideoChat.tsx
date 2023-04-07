@@ -18,6 +18,8 @@ const VideoChat: React.FC = () => {
   const [pc, setPC] = useState<RTCPeerConnection | null>(null);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+  const [isVideoEnabled, setisVideoEnabled] = useState(false);
+  const [isAudioEnabled, setisAudioEnabled] = useState(false);
 
   /**
    * Stun servers used to setup Peer-to-Peer connection
@@ -54,11 +56,18 @@ const VideoChat: React.FC = () => {
       audio: true,
     }); /** sets event for clicking button, obtains user's stream using getusermedia
     promise will resolve once permission is granted to get audio and video */
+
     const remoteStream = new MediaStream();
     /** sets up media stream, an empty media stream  */
 
     stream.getTracks().forEach((track) => {
       pc!.addTrack(track, stream);
+
+      // making setIsAudioEnabled in the loop means its going to run twice,
+      // once for audio,once for video. might be inefficient to call 
+      // state updater function twice with same value
+      setisAudioEnabled(true);
+      setisVideoEnabled(true); // booleans for checking if video on/off
     }); /** takes user and media stream and makes available on peer connection,
    as well as showing them in the dom */
 
@@ -81,14 +90,19 @@ const VideoChat: React.FC = () => {
 
     if (remoteVideo.current) {
       remoteVideo.current.srcObject = remoteStream;
-    }
+    } /** applies callee's stream to video elements in dom */
 
+    // checks if buttons exist after gaining access to webcam/audio
     if (callButton.current && answerButton.current && webcamButton.current && toggleVideoButton.current && toggleAudioButton.current) {
-      callButton.current.disabled = false;
-      answerButton.current.disabled = false;
-      webcamButton.current.disabled = true;
-      toggleAudioButton.current.disabled = false;
-      toggleVideoButton.current.disabled = false;
+      callButton.current.disabled = false; // enables buttons
+      answerButton.current.disabled = false; // enables buttons
+      webcamButton.current.disabled = true; // disables buttons
+
+      // toggleAudioButton.current.disabled = true; // disables buttons. setupMediaSources is 
+      // //called when you start your webcam before you start any call, so you shouldn't
+      // // be able to toggle audio or video if you're not in a call
+      // toggleVideoButton.current.disabled = true; // disables buttons. see above
+      // // this is true if you want this feature accessible to patients/psychiatrists
     }
   };
 
@@ -148,9 +162,17 @@ const VideoChat: React.FC = () => {
         }
       });
     });
-    if (hangupButton.current) {
-      hangupButton.current.disabled = false;
+
+    // when all buttons are on dom and call is answered, aka people are 
+    // video chatting
+    if (hangupButton.current && toggleAudioButton.current && toggleVideoButton.current) {
+      hangupButton.current.disabled = false; //enable hangup button
+
+      // uncomment if patient/psychiatrist should be able to toggle audio/video before call starts
+      // toggleAudioButton.current.disabled = false; //enable toggleaudio button
+      // toggleVideoButton.current.disabled = false; //enable togglevideo button
     }
+
   };
 
   /**
@@ -211,17 +233,23 @@ const VideoChat: React.FC = () => {
    */
   const hangupCall = () => {
     pc!.close();
+    setisVideoEnabled(false); // booleans for checking if video/audio on/off
+    setisAudioEnabled(false);
+
+    //after hanging up, doesnt let you make another call. TODO might need to fix this
 
     if (webcamButton.current) {
       webcamButton.current.disabled = false;
     }
 
     if (callButton.current && toggleAudioButton.current && answerButton.current && hangupButton.current && toggleVideoButton.current) {
+      //checking if all buttons exist
       callButton.current.disabled = true;
       answerButton.current.disabled = true;
       hangupButton.current.disabled = true;
-      toggleVideoButton.current.disabled = true;
-      toggleAudioButton.current.disabled = true;
+      // toggleVideoButton.current.disabled = true;
+      // toggleAudioButton.current.disabled = true;
+      // unsure about if we want disabling on for toggling buttons
     }
 
     if (callInput.current) {
@@ -230,6 +258,12 @@ const VideoChat: React.FC = () => {
 
     setLocalStream(null); /** setting values for local stream (user webcam) */
     setRemoteStream(null); /** setting values for remote stream (other's webcam) */
+
+    // uncomment if patient/psychiatrist should be able to toggle audio/video before call starts
+    // toggleAudioButton.current.disabled = true; //enable toggleaudio button
+    // toggleVideoButton.current.disabled = true; //enable togglevideo button
+
+
 
     if (webcamVideo.current) {
       webcamVideo.current.srcObject = null;
@@ -241,32 +275,51 @@ const VideoChat: React.FC = () => {
   };
 
   const toggleAudio = () => { /** button for toggling user's outgoing audio */
-    // if audio is on
-    if (localStream!.getTracks().find(track => track.kind === 'audio')) {
+    if (localStream) {
+      //gets audiotrack from user (localStream)
       const audioTrack = localStream!.getAudioTracks()[0];
-      localStream!.removeTrack(audioTrack);
+      if (isAudioEnabled) {
+        audioTrack.enabled = false;
+        setisAudioEnabled(false);
+        //there is no indication for muted
+      } else {
+        audioTrack.enabled = true;
+        setisAudioEnabled(true);
+        //there is no indication for unmuted
+      }
     }
-    else { /** if audio off */
-      localStream!.getTracks().forEach((track) => {
-        if (track.kind === 'audio') {
-          pc!.addTrack(track, localStream!);
-        }
-      });
+    else {
+      alert("please allow access to camera/audio before toggling");
     }
   };
 
-  const toggleVideo = () => { /** button for toggling user's outgoing audio */
-    // if video is on
-    if (localStream!.getTracks().find(track => track.kind === 'video')) {
+  const toggleVideo = () => {
+    // gets videotrack from user (localStream)
+    if (localStream) {
       const videoTrack = localStream!.getVideoTracks()[0];
-      localStream!.removeTrack(videoTrack);
+      if (isVideoEnabled) {
+        videoTrack.enabled = false; // turns off camera, shows black box
+        setisVideoEnabled(false);
+
+        // webcamVideo.current!.srcObject = null; // removes black screen from line above.
+        // uncomment out if thats a feature we want
+
+        // videoTrack!.stop(); // this line pauses the video
+        // on the dom and stops sharing instead of getting rid of the box
+        // pauses on screen
+        // need to add more to else block if we are to use stop() instead
+      } else {
+        videoTrack.enabled = true;
+
+        // webcamVideo.current!.srcObject = localStream; // adds screen back from 
+        // corresponding line in if block.
+        // uncomment out if thats a feature we want
+
+        setisVideoEnabled(true);
+      }
     }
-    else { /** if video is  off */
-      localStream!.getTracks().forEach((track) => {
-        if (track.kind === 'video') {
-          pc!.addTrack(track, localStream!);
-        }
-      });
+    else {
+      alert("please allow access to camera/audio before toggling");
     }
   };
 
@@ -294,11 +347,19 @@ const VideoChat: React.FC = () => {
       <button ref={hangupButton} onClick={hangupCall} disabled>
         Hangup
       </button>
-      <button ref={toggleAudioButton} onClick={toggleAudio} disabled>
-        Toggle Audio
+      <button ref={toggleAudioButton} onClick={toggleAudio}>
+        {/* 
+        button disabled means patient/psychiatrist doesn't get to choose to 
+        go into call with audio on/off; it is on by default 
+        */}
+        {isAudioEnabled ? 'Toggle Audio Off' : 'Toggle Audio On'}
       </button>
-      <button ref={toggleVideoButton} onClick={toggleVideo} disabled>
-        Toggle Video
+      <button ref={toggleVideoButton} onClick={toggleVideo}>
+        {/* 
+        button disabled means patient/psychiatrist doesn't get to choose to 
+        go into call with video on/off; it is on by default 
+        */}
+        {isVideoEnabled ? 'Toggle Video Off' : 'Toggle Video On'}
       </button>
     </div>
   );
