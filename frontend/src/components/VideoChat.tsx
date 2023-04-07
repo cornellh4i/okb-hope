@@ -8,6 +8,8 @@ const VideoChat: React.FC = () => {
   const callButton = useRef<HTMLButtonElement>(null); /** grabs html elements */
   const answerButton = useRef<HTMLButtonElement>(null); /** grabs html elements */
   const hangupButton = useRef<HTMLButtonElement>(null); /** grabs html elements */
+  const toggleAudioButton = useRef<HTMLButtonElement>(null); /** grabs html elements */
+  const toggleVideoButton = useRef<HTMLButtonElement>(null); /** grabs html elements */
 
   const webcamVideo = useRef<HTMLVideoElement>(null); /** grabs html elements */
   const remoteVideo = useRef<HTMLVideoElement>(null); /** grabs html elements */
@@ -81,10 +83,12 @@ const VideoChat: React.FC = () => {
       remoteVideo.current.srcObject = remoteStream;
     }
 
-    if (callButton.current && answerButton.current && webcamButton.current) {
+    if (callButton.current && answerButton.current && webcamButton.current && toggleVideoButton.current && toggleAudioButton.current) {
       callButton.current.disabled = false;
       answerButton.current.disabled = false;
       webcamButton.current.disabled = true;
+      toggleAudioButton.current.disabled = false;
+      toggleVideoButton.current.disabled = false;
     }
   };
 
@@ -212,10 +216,12 @@ const VideoChat: React.FC = () => {
       webcamButton.current.disabled = false;
     }
 
-    if (callButton.current && answerButton.current && hangupButton.current) {
+    if (callButton.current && toggleAudioButton.current && answerButton.current && hangupButton.current && toggleVideoButton.current) {
       callButton.current.disabled = true;
       answerButton.current.disabled = true;
       hangupButton.current.disabled = true;
+      toggleVideoButton.current.disabled = true;
+      toggleAudioButton.current.disabled = true;
     }
 
     if (callInput.current) {
@@ -224,12 +230,43 @@ const VideoChat: React.FC = () => {
 
     setLocalStream(null); /** setting values for local stream (user webcam) */
     setRemoteStream(null); /** setting values for remote stream (other's webcam) */
+
     if (webcamVideo.current) {
       webcamVideo.current.srcObject = null;
     }
 
     if (remoteVideo.current) {
       remoteVideo.current.srcObject = null;
+    }
+  };
+
+  const toggleAudio = () => { /** button for toggling user's outgoing audio */
+    // if audio is on
+    if (localStream!.getTracks().find(track => track.kind === 'audio')) {
+      const audioTrack = localStream!.getAudioTracks()[0];
+      localStream!.removeTrack(audioTrack);
+    }
+    else { /** if audio off */
+      localStream!.getTracks().forEach((track) => {
+        if (track.kind === 'audio') {
+          pc!.addTrack(track, localStream!);
+        }
+      });
+    }
+  };
+
+  const toggleVideo = () => { /** button for toggling user's outgoing audio */
+    // if video is on
+    if (localStream!.getTracks().find(track => track.kind === 'video')) {
+      const videoTrack = localStream!.getVideoTracks()[0];
+      localStream!.removeTrack(videoTrack);
+    }
+    else { /** if video is  off */
+      localStream!.getTracks().forEach((track) => {
+        if (track.kind === 'video') {
+          pc!.addTrack(track, localStream!);
+        }
+      });
     }
   };
 
@@ -256,6 +293,12 @@ const VideoChat: React.FC = () => {
       </div>
       <button ref={hangupButton} onClick={hangupCall} disabled>
         Hangup
+      </button>
+      <button ref={toggleAudioButton} onClick={toggleAudio} disabled>
+        Toggle Audio
+      </button>
+      <button ref={toggleVideoButton} onClick={toggleVideo} disabled>
+        Toggle Video
       </button>
     </div>
   );
