@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { db } from "../../../backend/firebase/firebase";
 import { collection, doc, addDoc, setDoc, updateDoc, onSnapshot, getDoc } from "firebase/firestore";
+import Chat from "../Assets/chat.svg";
+import Audio from "../Assets/audio.svg";
+import Video from "../Assets/video.svg";
 
 
 const VideoChat: React.FC = () => {
@@ -274,7 +277,10 @@ const VideoChat: React.FC = () => {
     }
   };
 
-  const toggleAudio = () => { /** button for toggling user's outgoing audio */
+  /** 
+   * Toggling user's outgoing audio 
+   */
+  const toggleAudio = () => { 
     if (localStream) {
       //gets audiotrack from user (localStream)
       const audioTrack = localStream!.getAudioTracks()[0];
@@ -289,10 +295,13 @@ const VideoChat: React.FC = () => {
       }
     }
     else {
-      alert("please allow access to camera/audio before toggling");
+      alert("Please allow access to camera/audio before toggling");
     }
   };
 
+  /**
+   * Toggles user's outgoing video
+   */
   const toggleVideo = () => {
     // gets videotrack from user (localStream)
     if (localStream) {
@@ -324,8 +333,8 @@ const VideoChat: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Video Chat</h1>
+    <div className="flex flex-col">
+      <p className="flex">Meeting with [Psychiatrist]</p>
       <video ref={webcamVideo} autoPlay muted playsInline></video>
       <video ref={remoteVideo} autoPlay playsInline></video>
       <button ref={webcamButton} onClick={setupMediaSources}>
@@ -345,13 +354,14 @@ const VideoChat: React.FC = () => {
         </button>
       </div>
       <button ref={hangupButton} onClick={hangupCall} disabled>
-        Hangup
+        End Meeting
       </button>
       <button ref={toggleAudioButton} onClick={toggleAudio}>
         {/* 
         button disabled means patient/psychiatrist doesn't get to choose to 
         go into call with audio on/off; it is on by default 
         */}
+         <img src={Audio} alt="" width="48" height="48"/>
         {isAudioEnabled ? 'Toggle Audio Off' : 'Toggle Audio On'}
       </button>
       <button ref={toggleVideoButton} onClick={toggleVideo}>
@@ -359,6 +369,7 @@ const VideoChat: React.FC = () => {
         button disabled means patient/psychiatrist doesn't get to choose to 
         go into call with video on/off; it is on by default 
         */}
+        <img src={Video} alt="" width="48" height="48"/>
         {isVideoEnabled ? 'Toggle Video Off' : 'Toggle Video On'}
       </button>
     </div>
