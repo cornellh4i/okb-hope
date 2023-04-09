@@ -18,6 +18,7 @@ const SearchBar = ({ onSearch }) => {
     try {
       querySnapshot.forEach((doc) => {
         setUser(doc.data());
+        // console.log(user);
       });
     } catch (err) {
       setErr(true);
@@ -47,6 +48,7 @@ const SearchBar = ({ onSearch }) => {
       </div>
       {user && <div className="userChat">
         <div className="userChatInfo">
+          <span>Search is working</span>
           <ConversationItem conversation={user} ></ConversationItem>
         </div>
       </div>}
