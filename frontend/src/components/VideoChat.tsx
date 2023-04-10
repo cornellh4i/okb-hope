@@ -112,6 +112,7 @@ const VideoChat: React.FC = () => {
    * peer connection object. If available, the function enables the hangupButton.
    */
   const createOffer = async () => {
+    console.log("Creating offer")
     const callDoc = doc(collection(db, 'calls')); /** manages answer and offer 
     from both users */
     const offerCandidates = collection(callDoc, "offerCandidates");
@@ -324,20 +325,38 @@ const VideoChat: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Video Chat</h1>
-      <video ref={webcamVideo} autoPlay muted playsInline></video>
-      <video ref={remoteVideo} autoPlay playsInline></video>
-      <button ref={webcamButton} onClick={setupMediaSources}>
-        Start webcam
-      </button>
-      <div>
-        <input
-          ref={callInput}
-          type="text"
-          placeholder="Call ID"
-        />
-        <button ref={callButton} onClick={createOffer} disabled>
+    <div className="flex flex-col">
+      <div className="flex text-2xl justify-center items-center pt-20">
+        Meeting with [Psychiatrist]
+      </div>
+      <div className="flex justify-center items-center">
+        <video ref={webcamVideo} autoPlay muted playsInline className="w-1/2 h-1/2 m-8 bg-[#2c3e50]" />
+        <video ref={remoteVideo} autoPlay playsInline className="w-1/2 h-1/2 m-8 bg-[#2c3e50]" />
+      </div>
+      <div className="media-controls">
+        <button ref={toggleVideoButton} onClick={toggleVideo}>
+          <Video className="" />
+        </button>
+        <button ref={toggleAudioButton} onClick={toggleAudio}>
+          <Audio className="" />
+        </button>
+        <Chat />
+        <button ref={hangupButton} onClick={hangupCall} disabled>
+          End Meeting
+        </button>
+      </div>
+      <div className="testing">
+        <button ref={webcamButton} onClick={setupMediaSources}>
+          Start webcam
+        </button>
+        <div>
+          <input
+            ref={callInput}
+            type="text"
+            placeholder="Call ID"
+          />
+        </div>
+        <button ref={callButton} onClick={createOffer}>
           Call
         </button>
         <button ref={answerButton} onClick={answerCall} disabled>
