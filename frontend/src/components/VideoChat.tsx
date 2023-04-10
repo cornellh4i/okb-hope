@@ -115,6 +115,7 @@ const VideoChat: React.FC = () => {
    * peer connection object. If available, the function enables the hangupButton.
    */
   const createOffer = async () => {
+    console.log("Creating offer")
     const callDoc = doc(collection(db, 'calls')); /** manages answer and offer 
     from both users */
     const offerCandidates = collection(callDoc, "offerCandidates");
@@ -337,13 +338,9 @@ const VideoChat: React.FC = () => {
       <div className="flex text-2xl justify-center items-center pt-20">
         Meeting with [Psychiatrist]
       </div>
-      <div className="video-streams justify-between">
-        <div className="m-0 p-6">
-          <video ref={webcamVideo} autoPlay muted playsInline />
-        </div>
-        <div className="m-0 p-6">
-          <video ref={remoteVideo} autoPlay playsInline />
-        </div>
+      <div className="flex justify-center items-center">
+        <video ref={webcamVideo} autoPlay muted playsInline className="w-1/2 h-1/2 m-8 bg-[#2c3e50]" />
+        <video ref={remoteVideo} autoPlay playsInline className="w-1/2 h-1/2 m-8 bg-[#2c3e50]" />
       </div>
       <div className="media-controls">
         <button ref={toggleVideoButton} onClick={toggleVideo}>
@@ -368,7 +365,7 @@ const VideoChat: React.FC = () => {
             placeholder="Call ID"
           />
         </div>
-        <button ref={callButton} onClick={createOffer} disabled>
+        <button ref={callButton} onClick={createOffer}>
           Call
         </button>
         <button ref={answerButton} onClick={answerCall} disabled>
