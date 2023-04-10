@@ -19,15 +19,11 @@
     "encoding": "^0.1.13",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
-<<<<<<< HEAD
-    "fuse.js": "^6.6.2",
-    "next": "13.2.4",
-=======
     "firebase": "^9.18.0",
     "firebase-functions": "^4.2.1",
+    "fuse.js": "^6.6.2",
     "next": "^13.2.4",
     "postcss": "^8.4.21",
->>>>>>> 258d587a7e6f4a7d1b857f9e7aec959df82af986
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tailwind": "^4.0.0",

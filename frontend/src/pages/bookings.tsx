@@ -1,5 +1,5 @@
 import React from 'react'
-import NavBar from '../components/NavBar'
+import NavBar from '../components/Navbar'
 import BookApp from '../components/BookApp'
 
 export default function Bookings() {
@@ -9,4 +9,4 @@ export default function Bookings() {
             <BookApp />
         </div>
     )
-    }
+}

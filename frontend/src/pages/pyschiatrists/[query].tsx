@@ -5,18 +5,70 @@ import Fuse from 'fuse.js';
 import SearchBar from '../../components/SearchBar';
 import PsychiatristList from '../../components/PsychiatristList';
 
+enum Gender {
+  Male = 0,
+  Female = 1
+}
+
 interface Psychiatrist {
   id: number;
-  // Add other relevant properties for a psychiatrist
+  first_name: string;
+  last_name: string;
+  profile_pic: null;
+  availability: string[];
+  gender: Gender;
+  location: string;
+  language: string[];
+  specialty: string[];
 }
 
 const psychiatrists: Psychiatrist[] = [
-  // Your list of psychiatrists/counselors
+  {
+    id: 0,
+    first_name: "Bob",
+    last_name: "Smith",
+    profile_pic: null,
+    availability: [
+      "Sunday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    gender: 0,
+    location: "Wohiame Hospital",
+    language: [
+      "English",
+      "Ga"
+    ],
+    specialty: ["PTSD"]
+  },
+  {
+    id: 0,
+    first_name: "Bob",
+    last_name: "Smith",
+    profile_pic: null,
+    availability: [
+      "Sunday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    gender: 0,
+    location: "Wohiame Hospital",
+    language: [
+      "English",
+      "Twi",
+    ],
+    specialty: ["PTSD"]
+  }
 ];
 
 const fuseOptions = {
-  keys: ['name', 'specialty', 'location'], // Add any other relevant fields
+  keys: ['first_name', 'last_name', 'availability', 'location', 'language', 'specialty'], // Add any other relevant fields
   threshold: 0.3,
+  findAllMatches: true,
+  distance: 5,
+  useExtendedSearch: true,
 };
 
 const PsychiatristsPage: React.FC = () => {
@@ -33,6 +85,15 @@ const PsychiatristsPage: React.FC = () => {
   const searchResults = searchTerm
     ? fuse.search(searchTerm).map(({ item }) => item)
     : psychiatrists;
+
+  async function generateStaticParams() {
+    const psychiatrists = await fetch(searchResults).then((res) => res.json());
+
+    return (<div>
+      <SearchBar onSearch={handleSearch} />
+      <PsychiatristList results={searchResults} />
+    </div>);
+  }
 
   return (
     <div>
