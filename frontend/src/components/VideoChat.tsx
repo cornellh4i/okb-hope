@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { db } from "../../../backend/firebase/firebase";
 import { collection, doc, addDoc, setDoc, updateDoc, onSnapshot, getDoc } from "firebase/firestore";
-import Chat from "../Assets/chat.svg";
-import Audio from "../Assets/audio.svg";
-import Video from "../Assets/video.svg";
 
 
 const VideoChat: React.FC = () => {
@@ -277,10 +274,7 @@ const VideoChat: React.FC = () => {
     }
   };
 
-  /** 
-   * Toggling user's outgoing audio 
-   */
-  const toggleAudio = () => {
+  const toggleAudio = () => { /** button for toggling user's outgoing audio */
     if (localStream) {
       //gets audiotrack from user (localStream)
       const audioTrack = localStream!.getAudioTracks()[0];
@@ -295,13 +289,10 @@ const VideoChat: React.FC = () => {
       }
     }
     else {
-      alert("Please allow access to camera/audio before toggling");
+      alert("please allow access to camera/audio before toggling");
     }
   };
 
-  /**
-   * Toggles user's outgoing video
-   */
   const toggleVideo = () => {
     // gets videotrack from user (localStream)
     if (localStream) {
@@ -333,41 +324,19 @@ const VideoChat: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="flex text-2xl justify-center items-center pt-20">
-        Meeting with [Psychiatrist]
-      </div>
-      <div className="video-streams justify-between">
-        <div className="m-0 p-6">
-          <video ref={webcamVideo} autoPlay muted playsInline />
-        </div>
-        <div className="m-0 p-6">
-          <video ref={remoteVideo} autoPlay playsInline />
-        </div>
-      </div>
-      <div className="media-controls">
-        <button ref={toggleVideoButton} onClick={toggleVideo}>
-          <Video className="" />
-        </button>
-        <button ref={toggleAudioButton} onClick={toggleAudio}>
-          <Audio className="" />
-        </button>
-        <Chat />
-        <button ref={hangupButton} onClick={hangupCall} disabled>
-          End Meeting
-        </button>
-      </div>
-      <div className="testing">
-        <button ref={webcamButton} onClick={setupMediaSources}>
-          Start webcam
-        </button>
-        <div>
-          <input
-            ref={callInput}
-            type="text"
-            placeholder="Call ID"
-          />
-        </div>
+    <div>
+      <h1>Video Chat</h1>
+      <video ref={webcamVideo} autoPlay muted playsInline></video>
+      <video ref={remoteVideo} autoPlay playsInline></video>
+      <button ref={webcamButton} onClick={setupMediaSources}>
+        Start webcam
+      </button>
+      <div>
+        <input
+          ref={callInput}
+          type="text"
+          placeholder="Call ID"
+        />
         <button ref={callButton} onClick={createOffer} disabled>
           Call
         </button>
@@ -375,6 +344,23 @@ const VideoChat: React.FC = () => {
           Answer
         </button>
       </div>
+      <button ref={hangupButton} onClick={hangupCall} disabled>
+        Hangup
+      </button>
+      <button ref={toggleAudioButton} onClick={toggleAudio}>
+        {/* 
+        button disabled means patient/psychiatrist doesn't get to choose to 
+        go into call with audio on/off; it is on by default 
+        */}
+        {isAudioEnabled ? 'Toggle Audio Off' : 'Toggle Audio On'}
+      </button>
+      <button ref={toggleVideoButton} onClick={toggleVideo}>
+        {/* 
+        button disabled means patient/psychiatrist doesn't get to choose to 
+        go into call with video on/off; it is on by default 
+        */}
+        {isVideoEnabled ? 'Toggle Video Off' : 'Toggle Video On'}
+      </button>
     </div>
   );
 };
