@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { db } from "../../../backend/firebase/firebase";
 import { collection, doc, addDoc, setDoc, updateDoc, onSnapshot, getDoc } from "firebase/firestore";
+import Chat from "../Assets/chat.svg";
+import Audio from "../Assets/audio.svg";
+import Video from "../Assets/video.svg";
 
 
 const VideoChat: React.FC = () => {
