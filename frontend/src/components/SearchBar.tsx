@@ -14,13 +14,16 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   };
 
   return (
-    <div className="search-bar">
-      <input
-        type="text"
-        placeholder="Search for a psychiatrist or counselor..."
-        value={searchTerm}
-        onChange={handleChange}
-      />
+    <div className="card card-side bg-base-100 shadow-xl grid-cols-5">
+      <p className="col-span-1">Filter by</p>
+      <div className="search-bar col-span-3 gap-4 ">
+        <input
+          type="text"
+          placeholder="Search Name or Title"
+          value={searchTerm}
+          onChange={handleChange}
+        />
+      </div>
     </div>
   );
 };

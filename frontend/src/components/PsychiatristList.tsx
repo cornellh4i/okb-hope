@@ -12,17 +12,14 @@ interface Psychiatrist {
   id: number;
   first_name: string;
   last_name: string;
+  title: string;
   profile_pic: null;
   availability: string[];
   gender: Gender;
   location: string;
-  language: {
-    English: boolean;
-    Ga: boolean;
-    Twi: boolean;
-    Hausa: boolean;
-  };
-  speciality: string[]
+  language: string[];
+  specialty: string[];
+  description: string
 }
 
 
@@ -44,6 +41,8 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
                 <button className="btn col-span-1"><BookMark /> Save Psychiatrist</button>
                 <button className="btn col-span-1"><Message />Message</button>
               </div>
+              <p>{psychiatrist.title} at {psychiatrist.location}</p>
+              <p>{psychiatrist.description}</p>
             </div>
           </div>
         </div >

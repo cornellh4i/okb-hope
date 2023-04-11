@@ -1,9 +1,6 @@
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
-
-import BookApp from '../components/BookApp'
-import PsychiatristList from '@/components/PsychiatristList'
-import PsychiatristsPage from './pyschiatrists/[query]'
+import DiscoverPage from './discover'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -60,7 +57,8 @@ export default function Home() {
         {/* <PsychiatristList results={psych_list}></PsychiatristList> */}
       </Head>
       <main>
-        <PsychiatristsPage />
+        {/* <PsychiatristsPage /> */}
+        <DiscoverPage />
       </main>
     </>
   )

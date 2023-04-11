@@ -1,0 +1,46 @@
+{
+  "Psychiatrist1": {
+    "id": 0,
+    "first_name": "Bob",
+    "last_name": "Smith",
+    "title": "Doctor",
+    "profile_pic": null,
+    "availability": [
+      "Sunday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "gender": 0,
+    "location": "Wohiame Hospital",
+    "language": [
+      "English",
+      "Ga"
+    ],
+    "specialty": [
+      "PTSD"
+    ]
+  },
+  "Psychiatrist2": {
+    "id": 0,
+    "first_name": "Bob",
+    "last_name": "Smith",
+    "title": "Nurse",
+    "profile_pic": null,
+    "availability": [
+      "Sunday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "gender": 0,
+    "location": "Wohiame Hospital",
+    "language": [
+      "English",
+      "Twi"
+    ],
+    "specialty": [
+      "PTSD"
+    ]
+  }
+}
