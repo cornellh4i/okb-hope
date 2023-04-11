@@ -278,10 +278,7 @@ const VideoChat: React.FC = () => {
     }
   };
 
-  /** 
-   * Toggling user's outgoing audio 
-   */
-  const toggleAudio = () => {
+  const toggleAudio = () => { /** button for toggling user's outgoing audio */
     if (localStream) {
       //gets audiotrack from user (localStream)
       const audioTrack = localStream!.getAudioTracks()[0];
@@ -296,13 +293,10 @@ const VideoChat: React.FC = () => {
       }
     }
     else {
-      alert("Please allow access to camera/audio before toggling");
+      alert("please allow access to camera/audio before toggling");
     }
   };
 
-  /**
-   * Toggles user's outgoing video
-   */
   const toggleVideo = () => {
     // gets videotrack from user (localStream)
     if (localStream) {
@@ -377,6 +371,23 @@ const VideoChat: React.FC = () => {
           Answer
         </button>
       </div>
+      <button ref={hangupButton} onClick={hangupCall} disabled>
+        Hangup
+      </button>
+      <button ref={toggleAudioButton} onClick={toggleAudio}>
+        {/* 
+        button disabled means patient/psychiatrist doesn't get to choose to 
+        go into call with audio on/off; it is on by default 
+        */}
+        {isAudioEnabled ? 'Toggle Audio Off' : 'Toggle Audio On'}
+      </button>
+      <button ref={toggleVideoButton} onClick={toggleVideo}>
+        {/* 
+        button disabled means patient/psychiatrist doesn't get to choose to 
+        go into call with video on/off; it is on by default 
+        */}
+        {isVideoEnabled ? 'Toggle Video Off' : 'Toggle Video On'}
+      </button>
     </div>
   );
 };
