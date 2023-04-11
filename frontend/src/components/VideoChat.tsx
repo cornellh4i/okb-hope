@@ -328,7 +328,7 @@ const VideoChat: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       <div className="flex text-2xl justify-center items-center pt-20">
         Meeting with [Psychiatrist]
       </div>
@@ -336,22 +336,16 @@ const VideoChat: React.FC = () => {
         <video ref={webcamVideo} autoPlay muted playsInline className="w-1/2 m-8 bg-[#2c3e50]" />
         <video ref={remoteVideo} autoPlay playsInline className="w-1/2 m-8 bg-[#2c3e50]" />
       </div>
-      <div className="media-controls" dir="ltr">
-        <div className="media-buttons flex ml-auto me-auto justify-center items-center ">
-          <button ref={toggleVideoButton} onClick={toggleVideo} className="video m-2">
-            <Video />
-          </button>
-          <button ref={toggleAudioButton} onClick={toggleAudio} className="audio m-2">
-            <Audio className="" />
-          </button>
-          <button className="m-2">
-            <Chat className="m-0" />
-          </button>
-        </div>
-        <button ref={hangupButton} onClick={hangupCall} disabled className="pr-10">
-          End Meeting
-        </button>
-      </div>
+      <div className="media-controls " dir="ltr">
+        < div className="relative" >
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
+            <button ref={toggleVideoButton} onClick={toggleVideo} className="video mx-2"><Video /></button>
+            <button ref={toggleAudioButton} onClick={toggleAudio} className="audio mx-2"><Audio /></button>
+            <button ref={toggleVideoButton} onClick={toggleVideo} className="mx-2"><Chat /></button>
+          </div>
+          <button ref={hangupButton} onClick={hangupCall} disabled className="btn absolute right-0"> End Meeting</button>
+        </div >
+      </div >
       <div className="testing mt-20">
         <p>Below here is for testing purposes, these buttons were not incorporated into mid fi</p>
         <button ref={webcamButton} onClick={setupMediaSources} id="startWebcam">
@@ -371,7 +365,7 @@ const VideoChat: React.FC = () => {
           Answer
         </button>
       </div>
-    </div>
+    </div >
   );
 };
 
