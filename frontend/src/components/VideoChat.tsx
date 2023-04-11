@@ -338,10 +338,10 @@ const VideoChat: React.FC = () => {
       </div>
       <div className="media-controls flex flex-row items-center justify-between" dir="ltr">
         <div className="media-buttons flex ml-auto me-auto">
-          <button ref={toggleVideoButton} onClick={toggleVideo} className="m-2">
+          <button ref={toggleVideoButton} onClick={toggleVideo} className="video m-2">
             <Video />
           </button>
-          <button ref={toggleAudioButton} onClick={toggleAudio} className="m-2">
+          <button ref={toggleAudioButton} onClick={toggleAudio} className="audio m-2">
             <Audio className="" />
           </button>
           <button className="m-2">
@@ -354,7 +354,7 @@ const VideoChat: React.FC = () => {
       </div>
       <div className="testing mt-20">
         <p>Below here is for testing purposes, these buttons were not incorporated into mid fi</p>
-        <button ref={webcamButton} onClick={setupMediaSources}>
+        <button ref={webcamButton} onClick={setupMediaSources} id="startWebcam">
           Start webcam
         </button>
         <div>
@@ -371,23 +371,6 @@ const VideoChat: React.FC = () => {
           Answer
         </button>
       </div>
-      <button ref={hangupButton} onClick={hangupCall} disabled>
-        Hangup
-      </button>
-      <button ref={toggleAudioButton} onClick={toggleAudio}>
-        {/* 
-        button disabled means patient/psychiatrist doesn't get to choose to 
-        go into call with audio on/off; it is on by default 
-        */}
-        {isAudioEnabled ? 'Toggle Audio Off' : 'Toggle Audio On'}
-      </button>
-      <button ref={toggleVideoButton} onClick={toggleVideo}>
-        {/* 
-        button disabled means patient/psychiatrist doesn't get to choose to 
-        go into call with video on/off; it is on by default 
-        */}
-        {isVideoEnabled ? 'Toggle Video Off' : 'Toggle Video On'}
-      </button>
     </div>
   );
 };
