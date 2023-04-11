@@ -116,7 +116,7 @@ const VideoChat: React.FC = () => {
    */
   const createOffer = async () => {
     console.log("Creating offer")
-    const callDoc = doc(collection(db, 'calls')); /** manages answer and offer 
+    const callDoc = doc(collection(db, 'Calls')); /** manages answer and offer 
     from both users */
     const offerCandidates = collection(callDoc, "offerCandidates");
     /** subcollections under calldoc that contain all cofferCandidates */
@@ -339,22 +339,27 @@ const VideoChat: React.FC = () => {
         Meeting with [Psychiatrist]
       </div>
       <div className="flex justify-center items-center">
-        <video ref={webcamVideo} autoPlay muted playsInline className="w-1/2 h-1/2 m-8 bg-[#2c3e50]" />
-        <video ref={remoteVideo} autoPlay playsInline className="w-1/2 h-1/2 m-8 bg-[#2c3e50]" />
+        <video ref={webcamVideo} autoPlay muted playsInline className="w-1/2 m-8 bg-[#2c3e50]" />
+        <video ref={remoteVideo} autoPlay playsInline className="w-1/2 m-8 bg-[#2c3e50]" />
       </div>
-      <div className="media-controls">
-        <button ref={toggleVideoButton} onClick={toggleVideo}>
-          <Video className="" />
-        </button>
-        <button ref={toggleAudioButton} onClick={toggleAudio}>
-          <Audio className="" />
-        </button>
-        <Chat />
-        <button ref={hangupButton} onClick={hangupCall} disabled>
+      <div className="media-controls flex flex-row items-center justify-between" dir="ltr">
+        <div className="media-buttons flex ml-auto me-auto">
+          <button ref={toggleVideoButton} onClick={toggleVideo} className="m-2">
+            <Video />
+          </button>
+          <button ref={toggleAudioButton} onClick={toggleAudio} className="m-2">
+            <Audio className="" />
+          </button>
+          <button className="m-2">
+            <Chat className="m-0" />
+          </button>
+        </div>
+        <button ref={hangupButton} onClick={hangupCall} disabled className="pr-10">
           End Meeting
         </button>
       </div>
-      <div className="testing">
+      <div className="testing mt-20">
+        <p>Below here is for testing purposes, these buttons were not incorporated into mid fi</p>
         <button ref={webcamButton} onClick={setupMediaSources}>
           Start webcam
         </button>
