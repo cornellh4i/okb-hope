@@ -2,7 +2,7 @@ import { logout, signInWithGoogle } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/AuthContext";
 import Link from "next/link";
 
-export default function NavBar() {
+export default function Navbar() {
   const { user } = useAuth();
   return (
     <header>

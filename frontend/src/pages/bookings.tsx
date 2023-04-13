@@ -1,11 +1,11 @@
 import React from 'react'
-import NavBar from '../components/NavBar'
+import Navbar from '../components/Navbar'
 import BookApp from '../components/BookApp'
 
 export default function Bookings() {
     return (
         <div>
-            <NavBar />
+            <Navbar />
             <BookApp />
         </div>
     )
