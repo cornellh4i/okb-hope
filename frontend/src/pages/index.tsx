@@ -1,4 +1,5 @@
-import Head from 'next/head';
+import Head from 'next/head'
+import { Inter } from 'next/font/google'
 
 import QuestionnaireCarousel from '@/components/QuestionnaireCarousel';
 
