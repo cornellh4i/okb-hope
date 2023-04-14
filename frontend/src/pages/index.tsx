@@ -5,7 +5,7 @@ import Dashboard from '@/components/Dashboard';
 
 export default function Home() {
   return (
-    <div>
+    <div className="mx-auto">
       <Head>
         <title>Create Next App</title>
       </Head>
