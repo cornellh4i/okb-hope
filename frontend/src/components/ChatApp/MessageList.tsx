@@ -7,7 +7,8 @@ const MessageList: React.FC = () => {
   const messagesRef = collection(db, "Chats");
   const queryDoc = query(messagesRef, orderBy('createdAt'));
   const [messages, setMessages] = useState<DocumentData[]>([]);
-  const scrollEnd = useRef();
+  // Ref to scroll to most recent message in MessageList
+  const scrollEnd = useRef<null | HTMLDivElement>(null);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -22,14 +23,13 @@ const MessageList: React.FC = () => {
     // Render new messages every time db is updated
   }, [collection(db, "Chats")]);
 
+  // Scrolls to most recent message in MessageList every time there is an update to messages.
   useEffect(() => {
-    if (scrollEnd) {
-      scrollEnd.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      })
-    }
+    const inputElement = scrollEnd.current
 
+    if (inputElement) {
+      inputElement.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages])
 
   return (
@@ -40,6 +40,7 @@ const MessageList: React.FC = () => {
         {messages && messages.map((msg) => (
           <MessageItem key={msg.id} message={msg} />
         ))}
+        {/* HTML element to scroll to */}
         <div ref={scrollEnd}></div>
       </div>
     </div>
