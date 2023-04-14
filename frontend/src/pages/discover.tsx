@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import Fuse from 'fuse.js';
 import SearchBar from '../components/SearchBar';
 import PsychiatristList from '../components/PsychiatristList';
+import json_results from '../psychs.json';
 
 enum Gender {
   Male = 0,
@@ -22,55 +23,12 @@ interface Psychiatrist {
   description: string;
 }
 
-const psychiatrists: Psychiatrist[] = [
-  {
-    id: 0,
-    first_name: "Nicole",
-    last_name: "Johnson",
-    title: "Doctor",
-    profile_pic: null,
-    availability: [
-      "Sunday",
-      "Wednesday",
-      "Thursday",
-      "Friday"
-    ],
-    gender: 0,
-    location: "Wohiame Hospital",
-    language: [
-      "English",
-      "Ga"
-    ],
-    specialty: ["PTSD"],
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-  },
+const psychiatrists: Psychiatrist[] = Object.values(json_results)
 
-  {
-    id: 0,
-    first_name: "Bob",
-    last_name: "Smith",
-    title: "Nurse",
-    profile_pic: null,
-    availability: [
-      "Sunday",
-      "Wednesday",
-      "Thursday",
-      "Friday"
-    ],
-    gender: 0,
-    location: "Wohiame Hospital",
-    language: [
-      "English",
-      "Twi",
-    ],
-    specialty: ["PTSD"],
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-  }
-];
-
+// options for fuzzy search. currently only searches by name and title
 const fuseOptions = {
   keys: ['first_name', 'last_name', 'title'],
-  threshold: 0.4,
+  threshold: 0.5,
   findAllMatches: true,
   distance: 5,
   ignoreLocation: true,
