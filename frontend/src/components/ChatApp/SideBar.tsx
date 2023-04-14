@@ -40,7 +40,10 @@ const Sidebar: React.FC = () => {
 
   return (
     <div className="sidebar">
+
       <SearchBar onSearch={handleSearch} />
+      <hr />
+      <div className="conversation-list bg-gray-300"><b>All Messages</b></div>
       <ConversationList conversations={searchResults} />
     </div>
   );

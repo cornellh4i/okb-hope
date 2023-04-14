@@ -12,6 +12,7 @@ const ConversationItem: React.FC<{ conversation: any }> = ({ conversation }) => 
     <div className="conversation-item" >
       {/* <span>{conversation.name}</span> */}
       {/* <span>Convo Item</span> */}
+      <hr />
       <div className="conversation-item__title"><button><b>{conversation.name}</b></button><p>{conversation.last_message}</p></div>
       <hr />
       {/* <div className="conversation-item__last-message">{conversation.last_message}</div> */}

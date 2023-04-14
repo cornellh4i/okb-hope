@@ -47,7 +47,7 @@ const SearchBar = ({ onSearch }) => {
         />
       </div>
       {user && <div className="userChat">
-        <div className="userChatInfo bg-red-300">
+        <div className="userChatInfo bg-white">
           {/* <span>Search is working</span> */}
           <ConversationItem conversation={user} ></ConversationItem>
         </div>
