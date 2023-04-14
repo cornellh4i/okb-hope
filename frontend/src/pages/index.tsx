@@ -9,10 +9,6 @@ export default function Home() {
       <Head>
         <title>Create Next App</title>
       </Head>
-      <div className='ml-10'>
-        <QuestionnaireCarousel />
-      </div>
-
     </div>
   );
 }
