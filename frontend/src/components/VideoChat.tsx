@@ -188,7 +188,7 @@ const VideoChat: React.FC = () => {
    */
   const answerCall = async () => {
     const callId = callInput.current?.value;
-    if (!callId) return;
+    if (!callId) throw new Error("null call id");
 
     const callDoc = doc(db, 'calls', callId);
     const answerCandidates = collection(callDoc, 'answerCandidates');
