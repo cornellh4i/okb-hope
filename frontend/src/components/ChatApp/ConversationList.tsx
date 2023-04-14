@@ -38,7 +38,7 @@ const ConversationList: React.FC<ConversationListProps> = ({ conv }) => {
   }, [collection(db, "ChatUserPsychiatrists")]);
 
   return (
-    <div className="conversation-list bg-blue-300 h-full">
+    <div className="conversation-list bg-blue-300">
       {conversations.map((conversation, index) => (
         <ConversationItem key={index} conversation={conversation} />
       ))}

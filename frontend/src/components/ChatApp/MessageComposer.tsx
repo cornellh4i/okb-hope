@@ -48,7 +48,7 @@ const MessageComposer: React.FC = () => {
   };
 
   return (
-    <div className="message-composer bg-white py-2 rounded-l border-solid border-2 border-gray-400">
+    <div className="message-composer bg-white py-2 rounded-b-md border-solid border-2 border-gray-400">
       <div className="flex items-center rounded-2xl border-solid border-2 border-gray-400 pl-2 mx-4">
         {/* Input text area */}
         <textarea

@@ -1,13 +1,10 @@
 // This is a page to test the ChatPage Component
 
-import ChatPage from "@/components/ChatApp/ChatPage"
+import ChatApp from "@/components/ChatApp/ChatApp"
 
 const chatapp = () => {
   return (
-    <div className="max-w-screen-md max-h-screen">
-      chatapp
-      <ChatPage />
-    </div>
+    <ChatApp />
   )
 }
 

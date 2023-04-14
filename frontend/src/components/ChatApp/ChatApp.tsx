@@ -1,0 +1,36 @@
+import React from 'react';
+import SideBar from './SideBar';
+import ChatArea from './ChatArea';
+
+/** TitleArea represents the title at the top of the ChatPage which is
+ *  "Messages" and the button to the left "Back to Dashboard" */
+const TitleArea = () => {
+  return (
+    <div className='pt-2 pb-3'>
+      <button
+        className='rounded-xl bg-gray-100 px-2 py-1 ml-2 absolute hover:bg-gray-200'
+      // onClick={}
+      >Back to Dashboard</button>
+      <p className='font-semibold text-3xl text-center tracking-wide'>Messages</p>
+    </div>
+  )
+}
+
+/** The main Chat App. Contains the TitleArea, the SideBar, and the ChatArea. */
+const ChatApp: React.FC = () => {
+  return (
+    <div className="chat-app py-1 px-1 bg-gray-300 rounded-md w-9/12">
+      <TitleArea />
+      <div className="flex">
+        <div className='w-3/12'>
+          <SideBar />
+        </div>
+        <div className='w-9/12'>
+          <ChatArea />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ChatApp;
