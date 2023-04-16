@@ -109,20 +109,19 @@ const VideoChat: React.FC = () => {
     }
   };
 
+  const callDoc = doc(collection(db, 'Calls'));
+  /** manages answer and offer from both users */
+  const offerCandidates = collection(callDoc, "offerCandidates");
+  /** subcollections under calldoc that contain all cofferCandidates */
+  const answerCandidates = collection(callDoc, "answerCandidates");
+  /** subcollections under calldoc that contain all answerCandidates */
+
   /**
    * Sets up a WebRTC call by creating a local offer, updating the Firestore database with 
    * the offer, setting up listeners for changes, and adding remote candidates to the 
    * peer connection object. If available, the function enables the hangupButton.
    */
   const createOffer = async () => {
-    console.log("Creating offer")
-    const callDoc = doc(collection(db, 'Calls')); /** manages answer and offer 
-    from both users */
-    const offerCandidates = collection(callDoc, "offerCandidates");
-    /** subcollections under calldoc that contain all cofferCandidates */
-    const answerCandidates = collection(callDoc, "answerCandidates");
-    /** subcollections under calldoc that contain all answerCandidates */
-
     if (callInput.current) {
       callInput.current.value = callDoc.id;
     } /** sets firebase generated random id and populate an input in ui */
@@ -163,6 +162,7 @@ const VideoChat: React.FC = () => {
            * add candidate to peer connection */
           const candidate = new RTCIceCandidate(change.doc.data());
           pc!.addIceCandidate(candidate);
+
         }
       });
     });
@@ -188,9 +188,8 @@ const VideoChat: React.FC = () => {
    */
   const answerCall = async () => {
     const callId = callInput.current?.value;
-    if (!callId) throw new Error("null call id");
 
-    const callDoc = doc(db, 'calls', callId);
+    // const callDoc = doc(db, 'Calls', callId);
     const answerCandidates = collection(callDoc, 'answerCandidates');
     const offerCandidates = collection(callDoc, 'offerCandidates');
 
@@ -200,8 +199,6 @@ const VideoChat: React.FC = () => {
 
     const callDocSnapshot = await getDoc(callDoc);
     const callData = callDocSnapshot.data();
-
-    if (!callData) return;
 
     const offerDescription = callData.offer;
     await pc!.setRemoteDescription(new RTCSessionDescription(offerDescription));
@@ -227,6 +224,7 @@ const VideoChat: React.FC = () => {
           pc!.addIceCandidate(new RTCIceCandidate(data));
         } /** when new ice candidate is added to that collection
         create ice candidate locally */
+        // not working properly
       });
     });
   };
@@ -361,7 +359,7 @@ const VideoChat: React.FC = () => {
         <button ref={callButton} onClick={createOffer}>
           Call
         </button>
-        <button ref={answerButton} onClick={answerCall} disabled>
+        <button ref={answerButton} onClick={answerCall}>
           Answer
         </button>
       </div>
