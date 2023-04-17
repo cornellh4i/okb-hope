@@ -3,13 +3,14 @@ import SearchBar from "./SearchBar";
 import ConversationList from "./ConversationList";
 import Fuse from 'fuse.js'; // install fuse.js
 import { db } from '../../../../backend/firebase/firebase';
-import { collection } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
+import chevron_up from '@/assets/chevron_up';
 
 const psychiatrists: any[] = [];
 
 async function getMessages() {
-  const chats = db.collection('Chats');
-  const snapshot = await chats.get();
+  const chats = collection(db, 'Chats');
+  const snapshot = await getDocs(chats);
   if (snapshot.empty) {
     console.log('no matching docs');
     return;
@@ -18,7 +19,6 @@ async function getMessages() {
     psychiatrists.push(doc);
   });
 }
-
 
 
 const fuseOptions = {
@@ -39,13 +39,20 @@ const Sidebar: React.FC = () => {
     : psychiatrists;
 
   return (
-    <div className="sidebar">
-
+    <div className="sidebar border-r-4 border-gray-300 bg-white h-full">
       <SearchBar onSearch={handleSearch} />
-      <hr />
-      <div className="conversation-list bg-gray-300"><b>All Messages</b></div>
-      <ConversationList conversations={searchResults} />
-    </div>
+      <div className="conversation-list bg-white">
+        <div className='flex justify-between align-center bg-gray-300 rounded-full py-1 px-4 mx-2 my-2'>
+          <p className='font-bold'>All Messages</p>
+          <button
+          // onClick={ }
+          >{chevron_up}</button>
+        </div>
+        <div className='overflow-scroll h-96'>
+          <ConversationList conversations={searchResults} />
+        </div>
+      </div>
+    </div >
   );
 };
 

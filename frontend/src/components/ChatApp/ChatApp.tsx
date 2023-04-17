@@ -19,7 +19,7 @@ const TitleArea = () => {
 /** The main Chat App. Contains the TitleArea, the SideBar, and the ChatArea. */
 const ChatApp: React.FC = () => {
   return (
-    <div className="chat-app py-1 px-1 bg-gray-300 rounded-md w-9/12">
+    <div className="chat-app py-1 px-1 bg-gray-300 rounded-md w-full h-auto max-h-screen">
       <TitleArea />
       <div className="flex">
         <div className='w-3/12'>
