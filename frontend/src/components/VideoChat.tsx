@@ -200,7 +200,7 @@ const VideoChat: React.FC = () => {
     const callDocSnapshot = await getDoc(callDoc);
     const callData = callDocSnapshot.data();
 
-    const offerDescription = callData.offer;
+    const offerDescription = callData?.offer;
     await pc!.setRemoteDescription(new RTCSessionDescription(offerDescription));
     /** sets remote description on peer connection */
 
