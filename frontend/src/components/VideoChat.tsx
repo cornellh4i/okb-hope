@@ -24,6 +24,13 @@ const VideoChat: React.FC = () => {
   const [isVideoEnabled, setisVideoEnabled] = useState(false);
   const [isAudioEnabled, setisAudioEnabled] = useState(false);
 
+
+  const callDoc = doc(collection(db, 'Calls')); /** manages answer and offer 
+  from both users */
+  const offerCandidates = collection(callDoc, "offerCandidates");
+  /** subcollections under calldoc that contain all cofferCandidates */
+  const answerCandidates = collection(callDoc, "answerCandidates");
+
   /**
    * Stun servers used to setup Peer-to-Peer connection
    * URLs chosen below are free provided by Google
@@ -108,12 +115,11 @@ const VideoChat: React.FC = () => {
       // // this is true if you want this feature accessible to patients/psychiatrists
     }
   };
-
-  const callDoc = doc(collection(db, 'Calls'));
-  /** manages answer and offer from both users */
-  const offerCandidates = collection(callDoc, "offerCandidates");
-  /** subcollections under calldoc that contain all cofferCandidates */
-  const answerCandidates = collection(callDoc, "answerCandidates");
+  // const callDoc = doc(collection(db, 'Calls')); /** manages answer and offer 
+  // from both users */
+  // const offerCandidates = collection(callDoc, "offerCandidates");
+  // /** subcollections under calldoc that contain all cofferCandidates */
+  // const answerCandidates = collection(callDoc, "answerCandidates");
   /** subcollections under calldoc that contain all answerCandidates */
 
   /**
@@ -122,6 +128,14 @@ const VideoChat: React.FC = () => {
    * peer connection object. If available, the function enables the hangupButton.
    */
   const createOffer = async () => {
+    // console.log("Creating offer")
+    // const callDoc = doc(collection(db, 'Calls')); /** manages answer and offer 
+    // from both users */
+    // const offerCandidates = collection(callDoc, "offerCandidates");
+    // /** subcollections under calldoc that contain all cofferCandidates */
+    // const answerCandidates = collection(callDoc, "answerCandidates");
+    // /** subcollections under calldoc that contain all answerCandidates */
+
     if (callInput.current) {
       callInput.current.value = callDoc.id;
     } /** sets firebase generated random id and populate an input in ui */
@@ -162,7 +176,6 @@ const VideoChat: React.FC = () => {
            * add candidate to peer connection */
           const candidate = new RTCIceCandidate(change.doc.data());
           pc!.addIceCandidate(candidate);
-
         }
       });
     });
@@ -188,20 +201,29 @@ const VideoChat: React.FC = () => {
    */
   const answerCall = async () => {
     const callId = callInput.current?.value;
+    if (!callId) throw new Error("null call id");
 
-    // const callDoc = doc(db, 'Calls', callId);
-    // const answerCandidates = collection(callDoc, 'answerCandidates');
-    // const offerCandidates = collection(callDoc, 'offerCandidates');
+    const callDocAnswer = doc(db, 'Calls', callId);
+    const answerCandidates_Answer = collection(callDocAnswer, 'answerCandidates');
+    const offerCandidates_Answer = collection(callDocAnswer, 'offerCandidates');
 
     pc!.onicecandidate = (event) => {
-      event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
+      event.candidate && addDoc(answerCandidates_Answer, event.candidate.toJSON());
     };
 
-    const callDocSnapshot = await getDoc(callDoc);
+    const callDocSnapshot = await getDoc(callDocAnswer);
+    console.log(callDocSnapshot)
+    // console.log(callDocSnapshot)
     const callData = callDocSnapshot.data();
+    console.log(callData)
+
+    // if (!callData) throw new Error("null call data");
 
     const offerDescription = callData?.offer;
-    await pc!.setRemoteDescription(new RTCSessionDescription(offerDescription));
+    console.log(offerDescription)
+    // console.log(offerDescription)
+    await pc?.setRemoteDescription(new RTCSessionDescription(offerDescription));
+    // console.log(offerDescription)
     /** sets remote description on peer connection */
 
     //create offer method as local description on peer connection
@@ -214,9 +236,9 @@ const VideoChat: React.FC = () => {
       sdp: answerDescription.sdp, // convert to js object
     };
 
-    await updateDoc(callDoc, { answer });
+    await updateDoc(callDocAnswer, { answer });
 
-    onSnapshot(offerCandidates, (snapshot) => {
+    onSnapshot(offerCandidates_Answer, (snapshot) => {
       const changes = snapshot.docChanges();
       changes.forEach((change) => {
         if (change.type === 'added') {
@@ -224,7 +246,6 @@ const VideoChat: React.FC = () => {
           pc!.addIceCandidate(new RTCIceCandidate(data));
         } /** when new ice candidate is added to that collection
         create ice candidate locally */
-        // not working properly
       });
     });
   };
