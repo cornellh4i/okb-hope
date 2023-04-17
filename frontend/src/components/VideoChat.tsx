@@ -128,14 +128,6 @@ const VideoChat: React.FC = () => {
    * peer connection object. If available, the function enables the hangupButton.
    */
   const createOffer = async () => {
-    // console.log("Creating offer")
-    // const callDoc = doc(collection(db, 'Calls')); /** manages answer and offer 
-    // from both users */
-    // const offerCandidates = collection(callDoc, "offerCandidates");
-    // /** subcollections under calldoc that contain all cofferCandidates */
-    // const answerCandidates = collection(callDoc, "answerCandidates");
-    // /** subcollections under calldoc that contain all answerCandidates */
-
     if (callInput.current) {
       callInput.current.value = callDoc.id;
     } /** sets firebase generated random id and populate an input in ui */
@@ -201,32 +193,24 @@ const VideoChat: React.FC = () => {
    */
   const answerCall = async () => {
     const callId = callInput.current?.value;
-    if (!callId) throw new Error("null call id");
+    if (!callId) return;
 
-    const callDocAnswer = doc(db, 'Calls', callId);
-    const answerCandidates_Answer = collection(callDocAnswer, 'answerCandidates');
-    const offerCandidates_Answer = collection(callDocAnswer, 'offerCandidates');
+    const callRef = doc(db, 'Calls', callId);
+    const answerCandidates_ = collection(callRef, 'answerCandidates');
+    const offerCandidates_ = collection(callRef, 'offerCandidates');
 
     pc!.onicecandidate = (event) => {
-      event.candidate && addDoc(answerCandidates_Answer, event.candidate.toJSON());
+      event.candidate && addDoc(answerCandidates_, event.candidate.toJSON());
     };
 
-    const callDocSnapshot = await getDoc(callDocAnswer);
-    console.log(callDocSnapshot)
-    // console.log(callDocSnapshot)
+    const callDocSnapshot = await getDoc(callRef);
     const callData = callDocSnapshot.data();
-    console.log(callData)
-
-    // if (!callData) throw new Error("null call data");
 
     const offerDescription = callData?.offer;
-    console.log(offerDescription)
-    // console.log(offerDescription)
     await pc?.setRemoteDescription(new RTCSessionDescription(offerDescription));
-    // console.log(offerDescription)
     /** sets remote description on peer connection */
 
-    //create offer method as local description on peer connection
+    // create offer method as local description on peer connection
     // object contains sdp value (session description protocol)
     const answerDescription = await pc!.createAnswer();
     await pc!.setLocalDescription(answerDescription);
@@ -236,9 +220,9 @@ const VideoChat: React.FC = () => {
       sdp: answerDescription.sdp, // convert to js object
     };
 
-    await updateDoc(callDocAnswer, { answer });
+    await updateDoc(callRef, { answer });
 
-    onSnapshot(offerCandidates_Answer, (snapshot) => {
+    onSnapshot(offerCandidates_, (snapshot) => {
       const changes = snapshot.docChanges();
       changes.forEach((change) => {
         if (change.type === 'added') {
