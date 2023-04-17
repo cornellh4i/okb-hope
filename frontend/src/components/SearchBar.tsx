@@ -23,7 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
                 onKeyDown={event => {
                   if (event.key === 'Enter')
                     onSearch(searchTerm);
-                } }
+                }}
                 value={searchTerm}
                 // updates the search bar's text as the user types into it
                 onChange={handleChange} className="input input-bordered" />
@@ -33,84 +33,86 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
             </div>
           </div>
         </div>
+        {/* filter dropdowns for availability */}
         <div className="flex justify-end flex-1 px-8 gap-8">
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-outline">Weekly Availability</label>
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
               <div className="form-control">
-                  <label className="label cursor-pointer">
-                    <span className="label-text">Sunday</span> 
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                  <label className="label cursor-pointer">
-                    <span className="label-text">Monday</span> 
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                  <label className="label cursor-pointer">
-                    <span className="label-text">Tuesday</span> 
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                  <label className="label cursor-pointer">
-                    <span className="label-text">Wednesday</span> 
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                  <label className="label cursor-pointer">
-                    <span className="label-text">Thursday</span> 
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                  <label className="label cursor-pointer">
-                    <span className="label-text">Friday</span> 
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                  <label className="label cursor-pointer">
-                    <span className="label-text">Saturday</span> 
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </div>
+                <label className="label cursor-pointer">
+                  <span className="label-text">Sunday</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+                <label className="label cursor-pointer">
+                  <span className="label-text">Monday</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+                <label className="label cursor-pointer">
+                  <span className="label-text">Tuesday</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+                <label className="label cursor-pointer">
+                  <span className="label-text">Wednesday</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+                <label className="label cursor-pointer">
+                  <span className="label-text">Thursday</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+                <label className="label cursor-pointer">
+                  <span className="label-text">Friday</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+                <label className="label cursor-pointer">
+                  <span className="label-text">Saturday</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+              </div>
             </ul>
           </div>
-
+          {/* filter dropdowns for language */}
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-outline">Language</label>
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
               <div className="form-control">
-                  <label className="label cursor-pointer">
-                    <span className="label-text">English</span> 
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                  <label className="label cursor-pointer">
-                    <span className="label-text">Ga</span> 
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                  <label className="label cursor-pointer">
-                    <span className="label-text">Twi</span> 
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                  <label className="label cursor-pointer">
-                    <span className="label-text">Hausa</span> 
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </div>
+                <label className="label cursor-pointer">
+                  <span className="label-text">English</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+                <label className="label cursor-pointer">
+                  <span className="label-text">Ga</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+                <label className="label cursor-pointer">
+                  <span className="label-text">Twi</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+                <label className="label cursor-pointer">
+                  <span className="label-text">Hausa</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+              </div>
             </ul>
           </div>
-
+          {/* filter drop downs for gender */}
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-outline">Gender</label>
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
               <div className="form-control">
-                  <label className="label cursor-pointer">
-                    <span className="label-text">Male</span> 
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                  <label className="label cursor-pointer">
-                    <span className="label-text">Female</span> 
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </div>
+                <label className="label cursor-pointer">
+                  <span className="label-text">Male</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+                <label className="label cursor-pointer">
+                  <span className="label-text">Female</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+              </div>
             </ul>
           </div>
+          {/* filter button */}
           <div className="filter-button">
-              <label tabIndex={0} className="btn">Filter</label>
+            <label tabIndex={0} className="btn">Filter</label>
           </div>
         </div>
       </div>
