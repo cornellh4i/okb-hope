@@ -190,8 +190,8 @@ const VideoChat: React.FC = () => {
     const callId = callInput.current?.value;
 
     // const callDoc = doc(db, 'Calls', callId);
-    const answerCandidates = collection(callDoc, 'answerCandidates');
-    const offerCandidates = collection(callDoc, 'offerCandidates');
+    // const answerCandidates = collection(callDoc, 'answerCandidates');
+    // const offerCandidates = collection(callDoc, 'offerCandidates');
 
     pc!.onicecandidate = (event) => {
       event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
