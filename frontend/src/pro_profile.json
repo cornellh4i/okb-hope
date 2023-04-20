@@ -1,0 +1,164 @@
+{
+  "1": {
+    "certifications": "ABMS Certified",
+    "gender": "woman",
+    "languages": [
+      "english",
+      "akan",
+      "gbi"
+    ],
+    "dates": {
+      "monday": [
+        [
+          10,
+          12
+        ],
+        [
+          15,
+          17
+        ]
+      ],
+      "tuesday": [
+        [
+          15,
+          17
+        ]
+      ],
+      "wednesday": [
+        [
+          13,
+          15
+        ],
+        [
+          16,
+          17
+        ]
+      ],
+      "thursday": [],
+      "friday": [
+        [
+          9,
+          7
+        ]
+      ],
+      "saturday": [
+        [
+          9,
+          11
+        ],
+        [
+          15,
+          17
+        ]
+      ],
+      "sunday": [
+        [
+          16,
+          18
+        ]
+      ]
+    },
+    "link": "www.mentalhealthsite.com"
+  },
+  "2": {
+    "certifications": "ABMS Certified",
+    "gender": "woman",
+    "languages": [
+      "english",
+      "yoruba"
+    ],
+    "dates": {
+      "monday": [
+        [
+          10,
+          12
+        ],
+        [
+          15,
+          17
+        ]
+      ],
+      "tuesday": [
+        [
+          15,
+          17
+        ]
+      ],
+      "wednesday": [
+        [
+          13,
+          15
+        ],
+        [
+          16,
+          17
+        ]
+      ],
+      "thursday": [],
+      "friday": [
+        [
+          9,
+          7
+        ]
+      ],
+      "saturday": [
+        [
+          9,
+          11
+        ],
+        [
+          15,
+          17
+        ]
+      ],
+      "sunday": [
+        [
+          16,
+          18
+        ]
+      ]
+    },
+    "link": "www.mentalhealthsite.com"
+  },
+  "3": {
+    "certifications": "ABPN Certified",
+    "gender": "woman",
+    "languages": [
+      "igbo"
+    ],
+    "dates": {
+      "monday": [],
+      "tuesday": [
+        [
+          13,
+          15
+        ]
+      ],
+      "wednesday": [],
+      "thursday": [],
+      "friday": [
+        [
+          9,
+          11
+        ]
+      ],
+      "saturday": [
+        [
+          15,
+          17
+        ]
+      ],
+      "sunday": [
+        [
+          16,
+          18
+        ],
+        [
+          13,
+          15
+        ]
+      ]
+    },
+    "link": "www.mentalawarenesssite.com"
+  }
+}
