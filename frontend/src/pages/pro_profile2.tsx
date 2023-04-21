@@ -1,16 +1,16 @@
 import Navbar from '../components/Navbar'
 import Pro_Profile from '../components/Pro_Profile'
 import pro_profile from "../pro_profile.json"
-import { usePsychiatrist1 } from "../components/psych1";
+import { usePsychiatrist2 } from "../Components/dummy_psych";
 
-const languages: string[] = pro_profile[1].languages
-const gender: string = pro_profile[1].gender
-const link: string = pro_profile[1].link
-const certifications = pro_profile[1].certifications
-const times = pro_profile[1].dates
+const languages: string[] = pro_profile[2].languages
+const gender: string = pro_profile[2].gender
+const link: string = pro_profile[2].link
+const certifications = pro_profile[2].certifications
+const times = pro_profile[2].dates
 
 export default function PsychiatristProfile() {
-  const psychiatrist = usePsychiatrist1();
+  const psychiatrist = usePsychiatrist2();
   return (
     <div>
       <Navbar />
