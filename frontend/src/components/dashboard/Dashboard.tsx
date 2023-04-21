@@ -1,6 +1,6 @@
 import React from 'react';
 import AppointmentList from './AppointmentList';
-import PsychiatristList from '../psychiatrists/PsychiatristList';
+import PsychiatristList from '../psychiatrists/PsychiatristCardsListing';
 import ArticleList from './ArticleList';
 
 const Dashboard = () => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import ArticleIcon from '../assets/article.svg'
+import ArticleIcon from '../../assets/article.svg'
 
 
 const ArticleCard = ({ title, body }: { title: string, body: string }) => {

@@ -1,5 +1,5 @@
-import CalendarIcon from '../assets/calendar.svg'
-import ClockIcon from '../assets/clock.svg'
+import CalendarIcon from '../../assets/calendar.svg'
+import ClockIcon from '../../assets/clock.svg'
 import React from 'react'
 
 interface AppointmentCard {
