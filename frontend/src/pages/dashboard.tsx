@@ -1,7 +1,12 @@
+import React from "react";
 import Dashboard from "@/components/dashboard/Dashboard";
 
-export default function Home() {
+const DashboardPage: React.FC = () => {
     return (
-        <Dashboard />
+        <div>
+            <Dashboard />
+        </div>
     );
-    }
+};
+
+export default DashboardPage;
