@@ -1,4 +1,4 @@
-import QuestionnaireCarousel from "@/components/QuestionnaireCarousel";
+import QuestionnaireCarousel from "@/components/onboarding/QuestionnaireCarousel";
 
 export default function Onboarding() {
     return (

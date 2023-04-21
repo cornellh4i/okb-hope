@@ -2,7 +2,7 @@ import { useState } from "react";
 import QuestionCard from "./QuestionCard";
 import NavigationButtons from "./NavigationButtons";
 
-import questions from "../questions.json"
+import questions from "../../questions.json"
 
 const QuestionnaireCarousel = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

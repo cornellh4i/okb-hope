@@ -1,6 +1,6 @@
 import React from 'react'
-import Navbar from '../components/Navbar'
-import BookApp from '../components/BookApp'
+import Navbar from '../components/navbar/Navbar'
+import BookApp from '../components/bookings/BookApp'
 
 export default function Bookings() {
     return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import PyschiatristCard from './PsychiatristCard';
-import results from '../../psychiatrists.json';
+import results from '../../../psychiatrists.json';
 
 const PsychiatristList = ({ max_size }: { max_size: number }) => {
   // Convert the results object into an array

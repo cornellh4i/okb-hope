@@ -1,5 +1,5 @@
-import { logout, signInWithGoogle } from "../../firebase/firebase";
-import { useAuth } from "../../contexts/AuthContext";
+import { logout, signInWithGoogle } from "../../../firebase/firebase";
+import { useAuth } from "../../../contexts/AuthContext";
 import Link from "next/link";
 
 export default function Navbar() {

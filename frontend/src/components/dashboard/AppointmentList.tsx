@@ -1,6 +1,6 @@
 import React from 'react';
 import AppointmentCard from './AppointmentCard';
-import results from '../../appointments.json'; // appointment info 
+import results from '../../../appointments.json'; // appointment info 
 
 const AppointmentList = () => {
   // Convert the results object into an array
