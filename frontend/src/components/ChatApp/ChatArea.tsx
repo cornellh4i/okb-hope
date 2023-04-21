@@ -3,8 +3,13 @@ import MessageList from './MessageList';
 import MessageComposer from './MessageComposer';
 import ellipsis from '../../assets/ellipses'
 
+interface NameAreaType {
+  name: string;
+  credentials: string;
+}
+
 /** This is the area with Doctor Name, Credentials, and Ellipses button */
-const NameArea = ({ name, credentials }: { name: string, credentials: string }) => {
+const NameArea = ({ name, credentials }: NameAreaType) => {
   return (
     <div className='name-area flex justify-between w-full bg-white border-b-solid border-b-2 border-gray-400 rounded-b-md'>
       <div className='px-5 py-2'>
@@ -13,7 +18,7 @@ const NameArea = ({ name, credentials }: { name: string, credentials: string }) 
       </div>
       <button
         className='rounded-full hover:bg-gray-200'
-      // onClick={}
+      // onClick={TODO}
       >{ellipsis}</button>
     </div>
   );

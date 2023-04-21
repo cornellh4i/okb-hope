@@ -7,7 +7,6 @@ import { useState, useEffect } from 'react';
 
 const ConversationItem: React.FC<{ conversation: any }> = ({ conversation }) => {
   const { title } = conversation;
-  console.log(conversation);
   return (
     <div className="conversation-item bg-white border-b-4 rounded-b-md px-2 py-2">
       {/* <span>{conversation.name}</span> */}
