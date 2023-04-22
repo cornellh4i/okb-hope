@@ -10,8 +10,8 @@ const AppointmentList = () => {
     // renders a card containing all of the AppointmentCards 
     <div className="card w-full bg-base-100 shadow-xl">
       <div className="card-body">
-        <h1 className="card-title pt-1/15">Upcoming Appointments</h1>
-        <div className="grid grid-cols-4 gap-4 items-center pb-1/12 shrink">
+        <h1 className="card-title pt-1/15 text-[32px]">Upcoming Appointments</h1>
+        <div className="grid grid-row-4 gap-4 items-center pb-1/12 shrink">
           {/* map each JSON object to each individual AppointmentCard*/}
           {appointmentsArray.map(appointment => (
             <div key={appointment.id.toString()} className="appointment">
