@@ -9,6 +9,7 @@ export default function Navbar() {
     <header>
       <nav className="">
         <div className="navbar flex bg-[#C1C1C1] items-end">
+          {/* logo for website */}
           <Logo />
           <div className="flex-1"></div>
           <ul className="menu menu-horizontal px-1 gap-5">

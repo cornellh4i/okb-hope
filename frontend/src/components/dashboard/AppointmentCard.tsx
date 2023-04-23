@@ -35,6 +35,7 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
 
           <button className="btn w-12/12 bg-[#9A9A9A] border-transparent font-[400]" onClick={() => setShowModal(true)}> Appointment Details</button>
           {showModal ? (
+            // appointment details pop-up card
             <>
               <div
                 className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
@@ -48,21 +49,13 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
                         Meeting with {p_name}
                       </h3>
                       <br></br>
-
-                      <button
-                        className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                        onClick={() => setShowModal(false)}
-                      >
-                        <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                          ×
-                        </span>
-                      </button>
                     </div>
                     {/*body*/}
                     <div className="relative p-6 flex-auto">
                       <div className="col-span-4"><p>{day}, {month} {start.getDay()}</p></div>
                       <div className="col-span-4"><p>{start.getHours()}:{start.getMinutes()} - {end.getHours()}:{end.getMinutes()}</p></div>
                       <br></br>
+                      {/* button to start appointment */}
                       <button
                         className="bg-slate-200 text-black active:bg-gray-500 font-bold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full"
                         type="button"
@@ -71,6 +64,7 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
                       </button>
                       <br></br>
                       <br></br>
+                      {/* reschedule button */}
                       <div className="flex space-x-10">
                         <button
                           className="bg-slate-50 text-black active:bg-gray-500 text-sm px-6 py-3 rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2 outline outline-offset-2 outline-1 rounded-lg"
@@ -78,6 +72,7 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
                         >
                           Reschedule Appointment
                         </button>
+                        {/* delete appt button */}
                         <button
                           className="bg-slate-50 text-black active:bg-gray-500 text-sm px-6 py-3 rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2 outline outline-offset-2 outline-1 rounded-lg"
                           type="button"
@@ -86,7 +81,7 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
                         </button>
                       </div>
                       <br></br>
-
+                      {/* questionnaire answers */}
                       <p className="font-bold text-black text-lg">
                         Are there any specific concerns you would like to discuss with your counselor?
                       </p>
@@ -124,6 +119,7 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
                       <br></br><br></br>
 
                     </div>
+                    {/* button to close pop-up */}
                     <button
                       className="absolute top-0 right-0 h-16 w-16 text-black-800 background-transparent font-bold uppercase px-6 py-2 text-xl outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                       type="button"
