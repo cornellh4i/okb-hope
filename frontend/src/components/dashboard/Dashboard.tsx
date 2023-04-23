@@ -7,7 +7,7 @@ const Dashboard = () => {
   return <div>
     <div className="container mx-auto">
       <div className="flex flex-row flex-wrap py-4">
-        <aside className="w-full sm:w-1/4 md:w-1/4 px-2">
+        <aside className="w-full sm:w-1/4 md:w-1/4 px-2 z-40">
           <div className="sticky top-0 p-1 w-full">
 
             <ul className="flex flex-col overflow-hidden">
@@ -15,7 +15,7 @@ const Dashboard = () => {
             </ul>
           </div>
         </aside>
-        <main role="main" className="w-full sm:w-3/4 md:w-3/4 pt-1 px-2">
+        <main role="main" className="w-full sm:w-3/4 md:w-3/4 pt-1 px-2 z-30">
 
           <PsychiatristList max_size={10} />
           <ArticleList />

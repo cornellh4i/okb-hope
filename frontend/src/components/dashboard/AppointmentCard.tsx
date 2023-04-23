@@ -15,6 +15,8 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
   const daysTo = Math.floor((start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
   const month = start.toLocaleString('default', { month: 'long' });
   const day = start.toLocaleString('default', { weekday: 'long' });
+  const [showModal, setShowModal] = React.useState(false);
+  const [concerns, setConcerns] = React.useState("...")
   return (
     <div>
       <div className="card w-11/12 bg-base-100 shadow-xl">
@@ -31,11 +33,113 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
             <div className="col-span-3 text-[12px]"><p>{start.getHours()}:{start.getMinutes()} - {end.getHours()}:{end.getMinutes()}</p></div>
           </div>
 
-          <button className="btn w-12/12 bg-[#9A9A9A] border-transparent font-[400]" >Appointment Details</button>
+          <button className="btn w-12/12 bg-[#9A9A9A] border-transparent font-[400]" onClick={() => setShowModal(true)}> Appointment Details</button>
+          {showModal ? (
+            <>
+              <div
+                className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+              >
+                <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                  {/*content*/}
+                  <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                    {/*header*/}
+                    <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                      <h3 className="text-3xl font-bold">
+                        Meeting with {p_name}
+                      </h3>
+                      <br></br>
 
+                      <button
+                        className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                        onClick={() => setShowModal(false)}
+                      >
+                        <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                          ×
+                        </span>
+                      </button>
+                    </div>
+                    {/*body*/}
+                    <div className="relative p-6 flex-auto">
+                      <div className="col-span-4"><p>{day}, {month} {start.getDay()}</p></div>
+                      <div className="col-span-4"><p>{start.getHours()}:{start.getMinutes()} - {end.getHours()}:{end.getMinutes()}</p></div>
+                      <br></br>
+                      <button
+                        className="bg-slate-200 text-black active:bg-gray-500 font-bold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full"
+                        type="button"
+                      >
+                        Start Appointment
+                      </button>
+                      <br></br>
+                      <br></br>
+                      <div className="flex space-x-10">
+                        <button
+                          className="bg-slate-50 text-black active:bg-gray-500 text-sm px-6 py-3 rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2 outline outline-offset-2 outline-1 rounded-lg"
+                          type="button"
+                        >
+                          Reschedule Appointment
+                        </button>
+                        <button
+                          className="bg-slate-50 text-black active:bg-gray-500 text-sm px-6 py-3 rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2 outline outline-offset-2 outline-1 rounded-lg"
+                          type="button"
+                        >
+                          Delete Appointment
+                        </button>
+                      </div>
+                      <br></br>
+
+                      <p className="font-bold text-black text-lg">
+                        Are there any specific concerns you would like to discuss with your counselor?
+                      </p>
+                      <input className="outline-1 w-full" name='input1' placeholder='enter here'></input>
+                      <br></br><br></br>
+
+                      <p className="font-bold text-black text-lg">
+                        Have you spoken with a counselor/therapist before?
+                      </p>
+                      <input className="outline-1 w-full" name='input1' placeholder='enter here'></input>
+                      <br></br><br></br>
+
+                      <p className="font-bold text-black text-lg">
+                        If yes, when was the last time you spoke with one?
+                      </p>
+                      <input className="outline-1 w-full" name='input1' placeholder='enter here'></input>
+                      <br></br><br></br>
+
+                      <p className="font-bold text-black text-lg">
+                        What is your age?
+                      </p>
+                      <input className="outline-1 w-full" name='input1' placeholder='enter here'></input>
+                      <br></br><br></br>
+
+                      <p className="font-bold text-black text-lg">
+                        What kind of counselor do you want to speak with?
+                      </p>
+                      <input className="outline-1 w-full" name='input1' placeholder='enter here'></input>
+                      <br></br><br></br>
+
+                      <p className="font-bold text-black text-lg">
+                        What is your preferred language?
+                      </p>
+                      <input className="outline-1 w-full" name='input1' placeholder='enter here'></input>
+                      <br></br><br></br>
+
+                    </div>
+                    <button
+                      className="absolute top-0 right-0 h-16 w-16 text-black-800 background-transparent font-bold uppercase px-6 py-2 text-xl outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      type="button"
+                      onClick={() => setShowModal(false)}
+                    >
+                      X
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+            </>
+          ) : null}
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
