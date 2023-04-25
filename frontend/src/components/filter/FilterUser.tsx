@@ -39,7 +39,7 @@ export default function FilterUser() {
     // Records to be displayed on the current page filtered based on patientView
     const currentRecords = tabData.slice(indexOfFirstRecord, indexOfLastRecord);
     // The total number of pages
-    const numPages = Math.ceil(tabData.length / recordsPerPage)
+    const numPages = tabData.length == 0 ? 1 : Math.ceil(tabData.length / recordsPerPage)
 
     /** nextPage moves forward the index of the current page. */
     const nextPage = () => {
