@@ -28,7 +28,7 @@ export default function FilterUser() {
     const [currentPage, setCurrentPage] = useState(1);
 
     // Number of records to be displayed on each page   
-    const recordsPerPage = 10;
+    const recordsPerPage = 9;
     // Index of the last record on the current page
     const indexOfLastRecord = currentPage * recordsPerPage;
     // Index of the first record on the current page
