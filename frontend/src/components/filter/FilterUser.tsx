@@ -24,20 +24,22 @@ export default function FilterUser() {
      */
     const [patientView, setPatientView] = useState<boolean>(true);
     const [userData, setUserData] = useState<UserType[]>([]);
+    // Records for selected tab based on patientView
+    const tabData = userData.filter(u => (u.patient == patientView));
     // User is currently on this page
     const [currentPage, setCurrentPage] = useState(1);
 
     // Number of records to be displayed on each page   
-    const recordsPerPage = 9;
+    const [recordsPerPage, setRecordsPerPage] = useState(1);
     // Index of the last record on the current page
     const indexOfLastRecord = currentPage * recordsPerPage;
     // Index of the first record on the current page
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 
     // Records to be displayed on the current page filtered based on patientView
-    const currentRecords = userData.filter(u => (u.patient == patientView)).slice(indexOfFirstRecord, indexOfLastRecord);
+    const currentRecords = tabData.slice(indexOfFirstRecord, indexOfLastRecord);
     // The total number of pages
-    const numPages = Math.ceil(userData.length / recordsPerPage)
+    const numPages = Math.ceil(tabData.length / recordsPerPage)
 
     /** nextPage moves forward the index of the current page. */
     const nextPage = () => {
@@ -92,7 +94,7 @@ export default function FilterUser() {
             </div>
             <FilterBar />
             {/* Need to change this to the length of the query rather than just userData */}
-            <div className="text-lg font-bold ml-4">{currentRecords.length} results</div>
+            <div className="text-lg font-bold ml-4">{tabData.length} results</div>
             <div>
                 {currentRecords && currentRecords.map(user => (
                     <FilterCard
