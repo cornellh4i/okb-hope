@@ -1,36 +1,41 @@
-import { useEffect, useState } from "react";
-import { UserType } from "./FilterUser2";
+import { useState } from "react";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../../../firebase/firebase";
 
 export default function FilterUserTable({ currentRecords }) {
-  const [checkedState, setCheckedState] = useState<boolean[]>(
-    new Array(currentRecords.length).fill(false)
-  );
-
-  useEffect(() => {
-    console.log(checkedState)
-  }, [checkedState])
 
   // Contains all the selected Users (checked users)
-  const [isSelected, setIsSelected] = useState<UserType[]>([]);
+  const [isSelected, setIsSelected] = useState<string[]>([]);
 
-  const handleOnChange = (position: number, user: UserType) => {
-    const updatedCheckedState = checkedState.map((item, index) =>
-      index === position ? !item : item
-    );
-    setCheckedState(updatedCheckedState);
-
-    console.log(updatedCheckedState[position]);
-
-    if (updatedCheckedState[position] === true) setIsSelected([...isSelected, user])
-    if (updatedCheckedState[position] === false && isSelected.includes(user)) {
-      setIsSelected(isSelected.filter(function (this_user) {
-        return user.id != this_user.id;
-      }));
+  /**
+   * handleCheck handles when users are checked/unchecked and keeps track of 
+   * the checked users.
+   * @param event The checkbox event
+   */
+  const handleCheck = (event) => {
+    var updatedList = [...isSelected];
+    if (event.target.checked) {
+      updatedList = [...isSelected, event.target.value];
+    } else {
+      updatedList.splice(isSelected.indexOf(event.target.value), 1);
     }
+    setIsSelected(updatedList);
+    console.log(updatedList)
   };
+
+  /**
+   * This function removes selected users from the database.
+   * @param users An array of users to delete from the firebase collection
+   */
+  async function deleteUsers(userids: string[]) {
+    for (const uid of userids) {
+      await deleteDoc(doc(db, "Users", uid));
+    }
+  }
 
   return (
     <div className="overflow-x-auto">
+      <button className="btn" onClick={() => deleteUsers(isSelected)}>Delete</button>
       <table className="table w-full">
         {/* head */}
         <thead>
@@ -44,15 +49,16 @@ export default function FilterUserTable({ currentRecords }) {
         </thead>
         <tbody>
           {/* map rows */}
-          {currentRecords && currentRecords.map((user, index) => (
-            <tr className='hover' key={index}>
+          {currentRecords && currentRecords.map((user) => (
+            <tr className='hover' key={user.id}>
               <th>
                 <label>
                   <input
                     type="checkbox"
                     className="checkbox"
-                    checked={checkedState[index]}
-                    onChange={() => handleOnChange(index, user)} />
+                    value={user.id}
+                    onChange={handleCheck}
+                  />
                 </label>
               </th>
               <td>{user.name}</td>

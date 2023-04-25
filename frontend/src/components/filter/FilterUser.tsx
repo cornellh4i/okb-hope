@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { collection, deleteDoc, doc, getDocs, Timestamp } from "firebase/firestore";
+import { collection, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
-import FilterCard from "./FilterCard";
 import chevron_left from "@/assets/chevron_left";
 import chevron_right from "@/assets/chevron_right";
 import FilterBar from "./FilterBar";
 
+import FilterUserTable from "./FilterUserTable";
 
-interface UserType {
+export interface UserType {
     active: Timestamp;
     created: Timestamp;
     name: string;
@@ -70,16 +70,6 @@ export default function FilterUser() {
 
     }, [userRef]);
 
-    /**
-     * This function removes selected users from the database.
-     * @param users An array of users to delete from the firebase collection
-     */
-    async function deleteUsers(users: UserType[]) {
-        for (const u of users) {
-            await deleteDoc(doc(db, "Users", u.id));
-        }
-    }
-
     return (
         <div className="flex flex-col gap-8">
             <div className="m-auto">
@@ -95,17 +85,7 @@ export default function FilterUser() {
             <FilterBar />
             {/* Need to change this to the length of the query rather than just userData */}
             <div className="text-lg font-bold ml-4">{tabData.length} results</div>
-            <div>
-                {currentRecords && currentRecords.map(user => (
-                    <FilterCard
-                        key={user.id}
-                        name={user.name}
-                        username={user.username}
-                        created={user.created.toDate().toDateString()}
-                        active={user.active.toDate().toDateString()}
-                    />
-                ))}
-            </div>
+            <FilterUserTable currentRecords={currentRecords} />
             <div className="pagination flex items-center m-auto">
                 <div className="flex">
                     <button className="" onClick={prevPage}>{chevron_left}</button>
