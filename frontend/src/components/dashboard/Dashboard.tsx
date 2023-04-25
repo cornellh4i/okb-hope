@@ -4,7 +4,7 @@ import PsychiatristList from '../psychiatrists/PsychiatristCardsListing';
 import ArticleList from './ArticleList';
 
 const Dashboard = () => {
-  return <div>
+  return <React.Fragment>
     <div className="container mx-auto">
       <div className="flex flex-row flex-wrap py-4">
         <aside className="w-full sm:w-1/4 md:w-1/4 px-2 z-40">
@@ -22,7 +22,7 @@ const Dashboard = () => {
         </main>
       </div>
     </div>
-  </div>
+  </React.Fragment>
 }
 
 export default Dashboard;

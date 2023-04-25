@@ -1,5 +1,7 @@
 import CalendarIcon from '../../assets/calendar.svg'
 import ClockIcon from '../../assets/clock.svg'
+import questions from '../../../appointment_questions.json'
+import AppointmentQuestion from './AppointmentQuestion'
 import React from 'react'
 
 interface AppointmentCard {
@@ -8,6 +10,7 @@ interface AppointmentCard {
   end: Date
 }
 
+const questionsArr = Object.values(questions);
 
 const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, start: Date, end: Date, description: string }) => {
 
@@ -18,7 +21,7 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
   const [showModal, setShowModal] = React.useState(false);
   const [concerns, setConcerns] = React.useState("...")
   return (
-    <div>
+    <React.Fragment>
       <div className="card w-11/12 bg-base-100 shadow-xl">
         <div className="card-body">
           <p className="text-[12px]">In {daysTo} days</p>
@@ -81,43 +84,12 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
                         </button>
                       </div>
                       <br></br>
-                      {/* questionnaire answers */}
-                      <p className="font-bold text-black text-lg">
-                        Are there any specific concerns you would like to discuss with your counselor?
-                      </p>
-                      <input className="outline-1 w-full" name='input1' placeholder='enter here'></input>
-                      <br></br><br></br>
-
-                      <p className="font-bold text-black text-lg">
-                        Have you spoken with a counselor/therapist before?
-                      </p>
-                      <input className="outline-1 w-full" name='input1' placeholder='enter here'></input>
-                      <br></br><br></br>
-
-                      <p className="font-bold text-black text-lg">
-                        If yes, when was the last time you spoke with one?
-                      </p>
-                      <input className="outline-1 w-full" name='input1' placeholder='enter here'></input>
-                      <br></br><br></br>
-
-                      <p className="font-bold text-black text-lg">
-                        What is your age?
-                      </p>
-                      <input className="outline-1 w-full" name='input1' placeholder='enter here'></input>
-                      <br></br><br></br>
-
-                      <p className="font-bold text-black text-lg">
-                        What kind of counselor do you want to speak with?
-                      </p>
-                      <input className="outline-1 w-full" name='input1' placeholder='enter here'></input>
-                      <br></br><br></br>
-
-                      <p className="font-bold text-black text-lg">
-                        What is your preferred language?
-                      </p>
-                      <input className="outline-1 w-full" name='input1' placeholder='enter here'></input>
-                      <br></br><br></br>
-
+                      {/* questionnaire answers: map each JSON object to each individual Appointment Question */}
+                      {questionsArr.map(input => (
+                        <div key={input.id.toString()} className="appointment_question">
+                          <AppointmentQuestion name={input.id.toString()} question={input.question.toString()}></AppointmentQuestion>
+                        </div>
+                      ))}
                     </div>
                     {/* button to close pop-up */}
                     <button
@@ -135,7 +107,7 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
           ) : null}
         </div>
       </div>
-    </div >
+    </React.Fragment>
   );
 };
 
