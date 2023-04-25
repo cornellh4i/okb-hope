@@ -9,9 +9,9 @@ const FilterCard = ({ name, username, created, active }) => {
             <div className="font-medium">{created}</div>
             <div className="font-medium">{active}</div>
           </div>
-          <button className="btn btn-sm rounded-lg bg-gray-300 hover:bg-gray-200 border-none text-black normal-case ml-20" >
+          {/* <button className="btn btn-sm rounded-lg bg-gray-300 hover:bg-gray-200 border-none text-black normal-case ml-20" >
             View Profile
-          </button>
+          </button> */}
         </div>
       </div>
     )
