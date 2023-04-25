@@ -27,7 +27,7 @@ export default function FilterUser() {
     // Records for selected tab based on patientView
     const tabData = userData.filter(u => (u.patient == patientView));
     // User is currently on this page
-    const [currentPage, setCurrentPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
 
     // Number of records to be displayed on each page   
     const [recordsPerPage, setRecordsPerPage] = useState(10);
