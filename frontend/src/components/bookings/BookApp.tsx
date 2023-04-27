@@ -1,4 +1,4 @@
-import CalendarIcon from '../../assets/calendar_icon.svg'
+import CalendarIcon from '../../assets/calendar.svg'
 import CameraIcon from '../../assets/camera_icon.svg'
 import ClockIcon from '../../assets/clock_icon.svg'
 import Arrow from '../../assets/arrow.svg'
