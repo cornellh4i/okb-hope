@@ -1,0 +1,22 @@
+{
+  "Psychiatrist1": {
+    "id": "psych1",
+    "name": "Erica Smithson",
+    "certification": "Certifications"
+  },
+  "Psychiatrist2": {
+    "id": "psych2",
+    "name": "Ronald River",
+    "certification": "Certifications"
+  },
+  "Psychiatrist3": {
+    "id": "psych3",
+    "name": "Hermes Heroic",
+    "certification": "Certifications"
+  },
+  "Psychiatrist4": {
+    "id": "psych4",
+    "name": "Pomelo Pigskin",
+    "certification": "Certifications"
+  }
+}

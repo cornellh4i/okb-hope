@@ -1,0 +1,32 @@
+{
+  "0": {
+    "question": "How are you feeling about your mental health?",
+    "options": [
+      "Feeling great!",
+      "Could be better.",
+      "I'm not really sure.",
+      "I'm not doing too well."
+    ]
+  },
+  "1": {
+    "question": "Describe your happiness on a scale of 1-5.",
+    "options": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  "2": {
+    "question": "I want to know how your day is going!",
+    "options": [
+      "It couldn't be better!",
+      "It's off to a great start!"
+    ]
+  },
+  "3": {
+    "question": "I want to help! How can I best assist you today?",
+    "options": [
+      "Tell me more about mental health."
+    ]
+  }
+}

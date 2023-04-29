@@ -1,12 +1,13 @@
-import { Inter } from 'next/font/google'
-import DiscoverPage from './discover'
-const inter = Inter({ subsets: ['latin'] })
+import Head from 'next/head';
+import React from 'react';
 
 export default function Home() {
   return (
-    <main>
-      <DiscoverPage />
-    </main>
-  )
+    <div className="mx-auto">
+      <Head>
+        <title>Create Next App</title>
+      </Head>
+    </div>
+  );
 }
 
