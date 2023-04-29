@@ -10,9 +10,7 @@ export default function Navbar() {
       <nav className="">
         <div className="navbar flex bg-[#C1C1C1] items-end">
           <div className="flex-1">
-            <a className="btn btn-ghost normal-case text-xl">
-              <img src={wohohiame_logo} />
-            </a>
+            <img className="btn btn-circle" src={wohohiame_logo}></img>
           </div>
           <div className="flex-1"></div>
           <ul className="menu menu-horizontal px-1 gap-5">
@@ -33,35 +31,21 @@ export default function Navbar() {
             </li>
             <li>
               {user ?
-                <div className="dropdown dropdown-hover">
-                  <label tabIndex={0} className="btn btn-circle">Profile</label>
-                  <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a>Edit Profile</a></li>
+                <div className="dropdown dropdown-hover dropdown-bottom dropdown-end">
+                  <img tabIndex={0} className="btn btn-circle"></img>
+                  <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
+                    <Link href="edit_profile">
+                      <li><a>Edit Profile</a></li>
+                    </Link>
                     <li><a onClick={logout}>Log out</a></li>
                   </ul>
                 </div> :
-                <div className="dropdown dropdown-hover">
-                  <label tabIndex={0} className="btn btn-circle">Profile</label>
-                  <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-                    {/* <li><a>Edit Profile</a></li> */}
+                <div className="dropdown dropdown-hover dropdown-bottom dropdown-end">
+                  <img tabIndex={0} className="btn btn-circle"></img>
+                  <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
                     <li><a onClick={signInWithGoogle}>Log in</a></li>
                   </ul>
-                </div>
-              }
-
-
-              {/* <button
-                  className="btn bg-[#E6E6E6] btn-ghost glass w-18 rounded-full bg-base-100"
-                  onClick={logout}
-                >
-                  Logout
-                </button> :
-                <button
-                  className="btn bg-[#E6E6E6] btn-ghost glass w-18 rounded-full bg-base-100"
-                  onClick={signInWithGoogle}
-                >
-                  Login
-                </button>} */}
+                </div>}
             </li>
           </ul>
         </div>
