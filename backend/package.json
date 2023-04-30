@@ -1,6 +1,7 @@
 {
-    "dependencies": {
-      "firebase": "^9.17.2",
-      "firebase-functions": "^4.2.1"
-    }
+  "dependencies": {
+    "firebase": "^9.17.2",
+    "firebase-functions": "^4.2.1",
+    "firebase-tools": "^11.29.1"
   }
+}
