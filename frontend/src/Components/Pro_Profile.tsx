@@ -1,9 +1,9 @@
-import Left_Arrow from '../Assets/left_arrow.svg'
-import Link_Icon from '../Assets/link_icon.svg'
-import Saved from '../Assets/saved.svg'
-import Message from '../Assets/message.svg'
-import Unsaved from '../Assets/unsaved.svg'
-import Image from '../Assets/dummy_img.png'
+import Left_Arrow from '../assets/left_arrow.svg'
+import Link_Icon from '../assets/link_icon.svg'
+import Saved from '../assets/saved.svg'
+import Message from '../assets/message.svg'
+import Unsaved from '../assets/unsaved.svg'
+import Image from '../assets/dummy_img.png'
 import { useState } from 'react';
 import Link from 'next/link';
 import TimeTable from './TimeTable'
