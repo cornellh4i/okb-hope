@@ -10,8 +10,15 @@ export const createUserRecord = functions.auth.
 
         return userRef.set({
             name: user.displayName,
+            address: user.address,
             email: user.email,
             photoURL: user.photoURL,
             uid: user.uid,
+            age: user.age,
+            gender: user.gender,
+            phoneNumber: user.phoneNumber,
+            specialties: null,
+            username: user.username,
+            password: user.password
         });
     });
