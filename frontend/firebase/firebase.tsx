@@ -3,7 +3,8 @@ import { FirebaseApp, getApps, initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { FacebookAuthProvider, getAuth, GoogleAuthProvider, TwitterAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { addDoc, collection, getDocs, getFirestore, query, where } from "firebase/firestore";
-import firebaseConfig from "../serviceAccount.json"
+import firebaseConfig from "../serviceAccount.json";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
