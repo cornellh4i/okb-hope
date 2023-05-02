@@ -1,7 +1,14 @@
+import React from "react";
 import Dashboard from "@/components/dashboard/Dashboard";
+import Navbar from "@/components/navbar/Navbar";
 
-export default function Home() {
+const DashboardPage: React.FC = () => {
     return (
-        <Dashboard />
+        <div>
+            <Navbar />
+            <Dashboard />
+        </div>
     );
-    }
+};
+
+export default DashboardPage;
