@@ -1,7 +1,7 @@
 // import Navbar from '../components/Navbar'
 import Pro_Profile from '../components/Pro_Profile'
 import pro_profile from "../pro_profile.json"
-import { usePsychiatrist1 } from "../Components/dummy_psych";
+import { usePsychiatrist1 } from "../components/dummy_psych";
 
 const languages: string[] = pro_profile[1].languages
 const gender: string = pro_profile[1].gender
