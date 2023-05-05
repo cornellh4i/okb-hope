@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent } from 'react';
+import SearchIcon from '../assets/search.svg'
 
 interface SearchBarProps {
   onSearch: (searchTerm: string) => void;
@@ -13,10 +14,16 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
   return (
     <div>
-      <div className="navbar bg-base-300 rounded-box">
+      <div className="navbar">
+
         <div className="flex-1 px-2 lg:flex-none">
+
           <div className="form-control">
+
             <div className="input-group">
+              <span className="inset-y-0 left-0 flex items-center pl-2 bg-white">
+                <SearchIcon />
+              </span>
               <input type="text"
                 placeholder="Search Name or Title"
                 // only searches if the user presses 'enter'
@@ -27,18 +34,22 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
                 value={searchTerm}
                 // updates the search bar's text as the user types into it
                 onChange={handleChange} className="input input-bordered" />
-              <button className="btn btn-square">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-              </button>
+
             </div>
+
           </div>
         </div>
         {/* filter dropdowns for availability */}
         <div className="flex justify-end flex-1 px-8 gap-8">
           <div className="dropdown">
-            <label tabIndex={0} className="btn btn-outline">Weekly Availability</label>
+            <label tabIndex={0} className="btn btn-outline italic text-[#9A9A9A] font-[400]">Weekly Availability</label>
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
               <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text">Select All</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+                <div className="divider"></div>
                 <label className="label cursor-pointer">
                   <span className="label-text">Sunday</span>
                   <input type="checkbox" className="checkbox" />
@@ -72,9 +83,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           </div>
           {/* filter dropdowns for language */}
           <div className="dropdown">
-            <label tabIndex={0} className="btn btn-outline">Language</label>
+            <label tabIndex={0} className="btn btn-outline italic text-[#9A9A9A] font-[400]">Language</label>
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
               <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text">Select All</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+                <div className="divider"></div>
                 <label className="label cursor-pointer">
                   <span className="label-text">English</span>
                   <input type="checkbox" className="checkbox" />
@@ -96,9 +112,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           </div>
           {/* filter drop downs for gender */}
           <div className="dropdown">
-            <label tabIndex={0} className="btn btn-outline">Gender</label>
+            <label tabIndex={0} className="btn btn-outline italic text-[#9A9A9A] font-[400]">Gender</label>
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
               <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text">Select All</span>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+                <div className="divider"></div>
                 <label className="label cursor-pointer">
                   <span className="label-text">Male</span>
                   <input type="checkbox" className="checkbox" />
@@ -112,11 +133,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           </div>
           {/* filter button */}
           <div className="filter-button">
-            <label tabIndex={0} className="btn">Filter</label>
+            <label tabIndex={0} className="btn bg-[#DEDEDE] text-[#5F5F5F]">Filter</label>
           </div>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

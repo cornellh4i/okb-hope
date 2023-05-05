@@ -3,6 +3,7 @@ import Fuse from 'fuse.js';
 import SearchBar from '../components/SearchBar';
 import PsychiatristList from '../components/PsychiatristList';
 import json_results from '../psychs.json';
+import Navbar from '@/components/navbar/Navbar';
 
 enum Gender {
   Male = 0,
@@ -48,6 +49,7 @@ const DiscoverPage: React.FC = () => {
 
   return (
     <div>
+      <Navbar />
       <SearchBar onSearch={handleSearch} />
       <PsychiatristList results={searchResults} />
     </div>
