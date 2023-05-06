@@ -30,31 +30,29 @@ async function fetchAccessToken(authorizationCode: string): Promise<string> {
 /**
  * Fetch User Availabilities
  * @param {string} accessToken
- * @param {string} calendarUuid
+ * @param {string} availabilityUuid
  * @return {Promise} availabilities
  */
-async function fetchUserAvailabilities(accessToken: string,
-  calendarUuid: string): Promise<string> {
-  const response =
-    await axios.get(`https://api.calendly.com/calendars/${calendarUuid}/availability`, {
-      headers: {
-        "Authorization": `Bearer ${accessToken}`,
-      },
-    });
+async function fetchUserAvailabilities(accessToken: string, availabilityUuid: string): Promise<string> {
+  const response = await axios.get(`https://api.calendly.com/user_availability_schedules/${availabilityUuid}`, {
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+    },
+  });
 
   return response.data;
 }
 
 export const getAvailabilities = functions.https.onCall(async (data) => {
-  if (!data.authorizationCode || !data.calendarUuid) {
+  if (!data.authorizationCode || !data.availabilityUuid) {
     throw new functions.https.HttpsError("invalid-argument", "Authorization " +
-      "code and calendar UUID are required.");
+      "code and availabilityUuid are required.");
   }
 
   try {
     const accessToken = await fetchAccessToken(data.authorizationCode);
     const availabilities =
-      await fetchUserAvailabilities(accessToken, data.calendarUuid);
+      await fetchUserAvailabilities(accessToken, data.availabilityUuid);
 
     return availabilities;
   } catch (error) {

@@ -27,7 +27,7 @@ const CLIENT_SECRET = "qfnBvrqATUs9PFPo6eBXYEMLygcxJSPXl0oV3km-2WQ";
 const REDIRECT_URI = "http://localhost:3000/calendlyCallback";
 
 const Availabilities = () => {
-  const [availabilities, setAvailabilities] = useState<AvailabilitiesResponse[] | null>(null);
+  const [availabilities, setAvailabilities] = useState<AvailabilitiesResponse[]>([]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -48,10 +48,16 @@ const Availabilities = () => {
         redirectUri: REDIRECT_URI
       });
 
-      // Pass the fetched access token to getAvailabilities
-      const result = await getAvailabilities({ accessToken: access_token, calendarUuid });
-      console.log("User availabilities:", result.data);
-      setAvailabilities(result.data ? [result.data] : null);
+      // Pass the fetched access token and calendarUuid to getAvailabilities
+      const result = await getAvailabilities({
+        accessToken: access_token,
+        calendarUuid: calendarUuid
+      });
+      console.log("getAvailabilities result:", result.data);
+
+      // Set the state of availabilities with the received data
+      setAvailabilities((prevAvailabilities) => [...prevAvailabilities, result.data]);
+
     } catch (error) {
       console.error("Error fetching availabilities:", error);
     }
@@ -60,7 +66,7 @@ const Availabilities = () => {
   return (
     <div>
       <h1>Availabilities</h1>
-      {availabilities &&
+      {availabilities.length > 0 ? (
         availabilities.map((availability, index) => (
           <div key={index}>
             <h2>Date: {availability.date}</h2>
@@ -70,7 +76,11 @@ const Availabilities = () => {
               </p>
             ))}
           </div>
-        ))}
+        ))
+      ) : (
+        <p>No availabilities found.</p>
+      )}
+
     </div>
   );
 };
