@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "eslint-plugin-import": "^2.27.5",
     "firebase": "^9.19.1",
     "firebase-functions": "^4.2.1"
   },
