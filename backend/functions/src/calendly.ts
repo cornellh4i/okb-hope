@@ -6,10 +6,15 @@
 import * as functions from "firebase-functions";
 import axios from "axios";
 
-const CLIENT_ID = "YOUR_CLIENT_ID";
-const CLIENT_SECRET = "YOUR_CLIENT_SECRET";
-const REDIRECT_URI = "https://your-app-url.com/oauth2callback";
+const CLIENT_ID = "21GhUOzi7KHTsg2dmSCheBBaqNQUYg_KZyMqARo-n6o";
+const CLIENT_SECRET = "qfnBvrqATUs9PFPo6eBXYEMLygcxJSPXl0oV3km-2WQ";
+const REDIRECT_URI = "http://localhost:3000/calendlyCallback";
 
+/**
+ * Fetch Access Token
+ * @param {string} authorizationCode
+ * @return {Promise} access token
+ */
 async function fetchAccessToken(authorizationCode: string): Promise<string> {
   const response = await axios.post("https://auth.calendly.com/oauth/token", {
     grant_type: "authorization_code",
@@ -22,29 +27,40 @@ async function fetchAccessToken(authorizationCode: string): Promise<string> {
   return response.data.access_token;
 }
 
-async function fetchUserAvailabilities(accessToken: string, calendarUuid: string): Promise<any> {
-  const response = await axios.get(`https://api.calendly.com/calendars/${calendarUuid}/availability`, {
-    headers: {
-      "Authorization": `Bearer ${accessToken}`,
-    },
-  });
+/**
+ * Fetch User Availabilities
+ * @param {string} accessToken
+ * @param {string} calendarUuid
+ * @return {Promise} availabilities
+ */
+async function fetchUserAvailabilities(accessToken: string,
+  calendarUuid: string): Promise<string> {
+  const response =
+    await axios.get(`https://api.calendly.com/calendars/${calendarUuid}/availability`, {
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+      },
+    });
 
   return response.data;
 }
 
-export const getAvailabilities = functions.https.onCall(async (data, context) => {
+export const getAvailabilities = functions.https.onCall(async (data) => {
   if (!data.authorizationCode || !data.calendarUuid) {
-    throw new functions.https.HttpsError("invalid-argument", "Authorization code and calendar UUID are required.");
+    throw new functions.https.HttpsError("invalid-argument", "Authorization " +
+      "code and calendar UUID are required.");
   }
 
   try {
     const accessToken = await fetchAccessToken(data.authorizationCode);
-    const availabilities = await fetchUserAvailabilities(accessToken, data.calendarUuid);
+    const availabilities =
+      await fetchUserAvailabilities(accessToken, data.calendarUuid);
 
     return availabilities;
   } catch (error) {
     console.error(error);
-    throw new functions.https.HttpsError("unknown", "Could not fetch user availabilities.");
+    throw new functions.https.HttpsError("unknown", "Could not fetch user " +
+      "availabilities.");
   }
 });
 
@@ -58,7 +74,10 @@ export const getAvailabilities = functions.https.onCall(async (data, context) =>
 //   response.send("Hello from Firebase!");
 // });
 
-// A basic HTTP function that takes a name and returns a greeting. Test it in the browser by running `firebase serve --only functions --port=5002` and navigating to http://localhost:5002/your-project-id/us-central1/basicHTTP?name=your-name when inside the functions folder!
+// A basic HTTP function that takes a name and returns a greeting.
+// Test it in the browser by running `firebase serve --only functions \
+// --port=5002` and navigating to http://localhost:5002/your-project-id/ \
+// us-central1/basicHTTP?name=your-name when inside the functions folder!
 
 // export const basicHTTP = functions.https.onRequest((request, response) => {
 //     const name = request.query.name;
@@ -73,20 +92,24 @@ export const getAvailabilities = functions.https.onCall(async (data, context) =>
 // const clientSecret = "qfnBvrqATUs9PFPo6eBXYEMLygcxJSPXl0oV3km-2WQ";
 // const redirectUri = 'https://localhost:3000/calendlyCallback';
 
-// export const calendlyAuth = functions.https.onRequest(async (req: any, res: any) => {
-//   const authUrl = `https://auth.calendly.com/oauth/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}`;
+// export const calendlyAuth = functions.https.onRequest
+// (async (req: any, res: any) => {
+//   const authUrl = `https://auth.calendly.com/oauth/authorize?client_id \
+// =${clientId}&response_type=code&redirect_uri=${redirectUri}`;
 //   res.redirect(authUrl);
 // });
 
-// // calendly callback function to get access token and save it to db 
-// export const calendlyCallback = functions.https.onRequest(async (req, res) => {
+// // calendly callback function to get access token and save it to db
+// export const calendlyCallback = functions.https.onRequest \
+// (async (req, res) => {
 //   const code = req.query.code as string;
 
 //   try {
 //     const response = await axios.post('https://auth.calendly.com/oauth/token', null, {
 //       headers: {
 //         'Content-Type': 'application/x-www-form-urlencoded',
-//         'Authorization': 'Basic ' + Buffer.from(`${clientId}:${clientSecret}`).toString('base64'),
+//         'Authorization': 'Basic ' + Buffer.from(`${clientId}: \
+// ${clientSecret}`).toString('base64'),
 //       },
 //       params: {
 //         grant_type: 'authorization_code',
@@ -98,10 +121,12 @@ export const getAvailabilities = functions.https.onCall(async (data, context) =>
 //     // Get the access token from the response data
 //     const accessToken = response.data.access_token;
 
-//     // Save the access token to your database for future use (e.g., Firestore)
-//     // ... 
+//     // Save the access token to your database for future use \
+// (e.g., Firestore)
+//     // ...
 
-//     const currentUserResponse = await axios.get('https://api.calendly.com/v2/users/me', {
+//     const currentUserResponse = await axios.get \
+// ('https://api.calendly.com/v2/users/me', {
 //       headers: {
 //         'Content-Type': 'application/json',
 //         'Authorization': `Bearer ${accessToken}`,
