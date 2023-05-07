@@ -1,8 +1,8 @@
 {
   "Psychiatrist1": {
     "id": 0,
-    "first_name": "Nicole",
-    "last_name": "Johnson",
+    "first_name": "James",
+    "last_name": "Kim",
     "title": "Doctor",
     "profile_pic": null,
     "availability": [
@@ -24,8 +24,8 @@
   },
   "Psychiatrist2": {
     "id": 1,
-    "first_name": "Bob",
-    "last_name": "Smith",
+    "first_name": "Gloria",
+    "last_name": "Shi",
     "title": "Nurse",
     "profile_pic": null,
     "availability": [
@@ -47,9 +47,32 @@
   },
   "Psychiatrist3": {
     "id": 2,
-    "first_name": "Bob",
-    "last_name": "Johnson",
+    "first_name": "Dylan",
+    "last_name": "Tom",
     "title": "Nurse",
+    "profile_pic": null,
+    "availability": [
+      "Sunday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "gender": 0,
+    "location": "Wohiame Hospital",
+    "language": [
+      "Twi",
+      "Ga"
+    ],
+    "specialty": [
+      "PTSD"
+    ],
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+  },
+  "Psychiatrist4": {
+    "id": 4,
+    "first_name": "Naomi",
+    "last_name": "Rufian",
+    "title": "Doctor",
     "profile_pic": null,
     "availability": [
       "Sunday",

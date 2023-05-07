@@ -8,24 +8,24 @@ export default function Navbar() {
   return (
     <header>
       <nav className="">
-        <div className="navbar flex bg-[#C1C1C1] items-end">
+        <div className="navbar flex bg-[white] items-end shadow">
           {/* logo for website */}
           <Logo />
           <div className="flex-1"></div>
           <ul className="menu menu-horizontal px-1 gap-5">
             <li>
               <Link href="/discover" className="w-18">
-                <div className="text-[18px] font-[500]">Discover Professionals</div>
+                <div className="text-[18px] text-[#195BA5] font-[500]">Discover Professionals</div>
               </Link>
             </li>
             <li>
               <Link href="/messages" className="w-18">
-                <div className="text-[18px] font-[500]">Messages</div>
+                <div className="text-[18px] text-[#195BA5] font-[500]">Messages</div>
               </Link>
             </li>
             <li>
               <Link href="/about" className="w-18">
-                <div className="text-[18px] font-[500]">About Us</div>
+                <div className="text-[18px] text-[#195BA5] font-[500]">About Us</div>
               </Link>
             </li>
             <li>
@@ -37,7 +37,7 @@ export default function Navbar() {
                   Logout
                 </button> :
                 <button
-                  className="btn bg-[#E6E6E6] btn-ghost glass w-18 rounded-full bg-base-100"
+                  className="btn bg-[#E6E6E6] text-[#195BA5] btn-ghost glass w-18 rounded-full bg-base-100"
                   onClick={signInWithGoogle}
                 >
                   Login
