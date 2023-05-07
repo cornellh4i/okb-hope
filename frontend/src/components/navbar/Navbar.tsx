@@ -14,9 +14,11 @@ export default function Navbar() {
           <div className="flex-1"></div>
           <ul className="menu menu-horizontal px-1 gap-5">
             <li>
-              <Link href="/discover" className="w-18">
-                <div className="text-[18px] font-[500]">Discover Professionals</div>
-              </Link>
+              {user ? (
+                <Link href="/messages" className="w-18">
+                  <div className="text-[18px] font-[500]">Messages</div>
+                </Link>
+              ) : null}
             </li>
             <li>
               <Link href="/messages" className="w-18">

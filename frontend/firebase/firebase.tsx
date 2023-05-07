@@ -29,11 +29,11 @@ const signInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, providers.google);
     const user = res.user;
-    const q = query(collection(db, "User + Admin + Volunteer"), where("uid", "==", user.uid));
+    const q = query(collection(db, "users"), where("uid", "==", user.uid));
     const docs = await getDocs(q);
 
     if (docs.docs.length === 0) {
-      await addDoc(collection(db, "User + Admin + Volunteer"), {
+      await addDoc(collection(db, "users"), {
         user_id: user.uid,
         name: user.displayName,
         authProvider: "google",

@@ -25,7 +25,7 @@ const VideoChat: React.FC = () => {
   const [isAudioEnabled, setisAudioEnabled] = useState(false);
 
 
-  const callDoc = doc(collection(db, 'Calls')); /** manages answer and offer 
+  const callDoc = doc(collection(db, 'calls')); /** manages answer and offer 
   from both users */
   const offerCandidates = collection(callDoc, "offerCandidates");
   /** subcollections under calldoc that contain all cofferCandidates */
@@ -107,20 +107,8 @@ const VideoChat: React.FC = () => {
       callButton.current.disabled = false; // enables buttons
       answerButton.current.disabled = false; // enables buttons
       webcamButton.current.disabled = true; // disables buttons
-
-      // toggleAudioButton.current.disabled = true; // disables buttons. setupMediaSources is 
-      // //called when you start your webcam before you start any call, so you shouldn't
-      // // be able to toggle audio or video if you're not in a call
-      // toggleVideoButton.current.disabled = true; // disables buttons. see above
-      // // this is true if you want this feature accessible to patients/psychiatrists
     }
   };
-  // const callDoc = doc(collection(db, 'Calls')); /** manages answer and offer 
-  // from both users */
-  // const offerCandidates = collection(callDoc, "offerCandidates");
-  // /** subcollections under calldoc that contain all cofferCandidates */
-  // const answerCandidates = collection(callDoc, "answerCandidates");
-  /** subcollections under calldoc that contain all answerCandidates */
 
   /**
    * Sets up a WebRTC call by creating a local offer, updating the Firestore database with 
@@ -195,7 +183,7 @@ const VideoChat: React.FC = () => {
     const callId = callInput.current?.value;
     if (!callId) return;
 
-    const callRef = doc(db, 'Calls', callId);
+    const callRef = doc(db, 'calls', callId);
     const answerCandidates_ = collection(callRef, 'answerCandidates');
     const offerCandidates_ = collection(callRef, 'offerCandidates');
 
