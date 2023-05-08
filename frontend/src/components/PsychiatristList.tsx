@@ -57,7 +57,11 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
         <div key={psychiatrist.id} className="psychiatrist">
           {/* Display the psychiatrist's information here */}
           <div className="card card-side bg-base-100 shadow-xl grid-cols-5 hover:brightness-90">
-            <div className="col-span-1"><figure><img src="/" alt="Profile Pic" /></figure></div>
+          <div className="col-span-1 flex items-center justify-center">
+            <figure>
+              <img src="https://lh3.googleusercontent.com/a/AGNmyxZobZdPI78Xzk3dOtXciW5fAE3Wn-QIZYlJTdk_=s96-c" alt="Profile Pic" className="rounded-full w-20 h-20 object-cover ml-4"/>
+            </figure>
+          </div>
             <div className="card-body col-span-3">
               {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}
               <div className="grid grid-cols-4 gap-4 items-center pb-1/12">
