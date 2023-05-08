@@ -1,7 +1,7 @@
 // components/SearchBar.js
 import React, { useState } from 'react';
 import { DocumentData, collection, getDocs, query, where } from "firebase/firestore";
-import { db } from '../../../../backend/firebase/firebase';
+import { db } from '../../../firebase/firebase'
 import ConversationItem from './ConversationItem';
 import magnifyglass from '../../assets/magnifyglass'
 

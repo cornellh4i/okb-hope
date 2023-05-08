@@ -1,6 +1,6 @@
 import { serverTimestamp } from "firebase/firestore";
 import React, { useState } from "react";
-import { db, auth } from '../../../../backend/firebase/firebase'
+import { db, auth } from '../../../firebase/firebase'
 import { collection, addDoc } from "firebase/firestore"
 
 const MessageComposer: React.FC = () => {

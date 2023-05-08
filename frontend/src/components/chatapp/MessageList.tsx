@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import MessageItem from './MessageItem';
-import { db } from '../../../../backend/firebase/firebase'
+import { db } from '../../../firebase/firebase'
 import { collection, getDocs, query, orderBy, DocumentData } from "firebase/firestore"
 
 const MessageList: React.FC = () => {

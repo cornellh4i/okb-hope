@@ -1,5 +1,5 @@
 import React from "react";
-import { auth } from '../../../../backend/firebase/firebase'
+import { auth } from '../../../firebase/firebase'
 
 const MessageItem: React.FC<{ message: any }> = ({ message }) => {
   // Extract necessary props

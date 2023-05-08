@@ -1,6 +1,6 @@
 // import { DocumentData } from 'firebase/firestore';
 import React from 'react';
-import { db } from "../../../firebase/firebase"
+import { db } from '../../../firebase/firebase'
 import { collection, getDocs, query, orderBy, DocumentData } from "firebase/firestore"
 import { useState, useEffect } from 'react';
 

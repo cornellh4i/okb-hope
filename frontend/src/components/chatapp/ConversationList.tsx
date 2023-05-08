@@ -1,6 +1,6 @@
 import React from 'react';
 import ConversationItem from './ConversationItem';
-import { db } from "../../../firebase/firebase";
+import { db } from "../../../firebase/firebase"
 import { collection, getDocs, query, orderBy, DocumentData } from "firebase/firestore"
 import { useState, useEffect } from 'react';
 // Define the Conversation type

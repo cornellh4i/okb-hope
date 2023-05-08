@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import SearchBar from "./SearchBar";
 import ConversationList from "./ConversationList";
 import Fuse from 'fuse.js'; // install fuse.js
-import { db } from '../../../../backend/firebase/firebase';
+import { db } from '../../../firebase/firebase'
 import { collection, getDocs } from "firebase/firestore";
 import chevron_up from '@/assets/chevron_up';
 
