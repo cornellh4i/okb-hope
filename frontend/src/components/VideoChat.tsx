@@ -28,7 +28,6 @@ const VideoChat: React.FC = () => {
   const [dataChannel, setDataChannel] = useState<RTCDataChannel | null>(null);
   const [layoutOption, setLayoutOption] = useState('grid'); // 'grid' or 'spotlight'
 
-
   // add this component to a new data channel
   useEffect(() => {
     if (pc) {

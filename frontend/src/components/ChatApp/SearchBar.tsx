@@ -1,38 +1,22 @@
-// components/SearchBar.js
 import React, { useState } from 'react';
-import { DocumentData, collection, getDocs, query, where } from "firebase/firestore";
-import { db } from '../../../firebase/firebase'
-import ConversationItem from './ConversationItem';
 import magnifyglass from '../../assets/magnifyglass'
 
-const SearchBar = ({ onSearch }) => {
+type SearchBarProps = {
+  onSearch: (searchTerm: string) => void;
+};
+
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [user, setUser] = useState<(DocumentData)>();
-  const [err, setErr] = useState(false);
-
-
-  const handleSearch = async () => {
-    const q = query(collection(db, "ChatUserPsychiatrists"), where("name", "==", searchTerm))
-    const querySnapshot = await getDocs(q);
-
-    try {
-      querySnapshot.forEach((doc) => {
-        setUser(doc.data());
-        // console.log(user);
-      });
-    } catch (err) {
-      setErr(true);
-    }
-
-  }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
-    // onSearch(event.target.value);
+    onSearch(event.target.value);
   };
 
-  const handleKey = e => {
-    e.code === "Enter" && handleSearch();
+  const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === "Enter") {
+      onSearch(searchTerm);
+    }
   }
 
   return (
@@ -46,14 +30,9 @@ const SearchBar = ({ onSearch }) => {
           onChange={handleChange}
           onKeyDown={handleKey}
         />
-        <button onClick={handleSearch}>{magnifyglass}</button>
+        <button onClick={() => onSearch(searchTerm)}>{magnifyglass}</button>
       </div>
-      {user && <div className="userChat">
-        <div className="userChatInfo bg-white">
-          <ConversationItem conversation={user} ></ConversationItem>
-        </div>
-      </div>}
-    </div >
+    </div>
   );
 };
 

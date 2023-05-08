@@ -1,16 +1,22 @@
 import React from 'react';
+import Link from 'next/link';
 import SideBar from './SideBar';
 import ChatArea from './ChatArea';
+import { useAuth } from '../../../contexts/AuthContext';
+import { LoginPopup } from '../LoginPopup';
 
 /** TitleArea represents the title at the top of the ChatPage which is
  *  "Messages" and the button to the left "Back to Dashboard" */
 const TitleArea = () => {
   return (
     <div className='pt-2 pb-3'>
-      <button
-        className='rounded-xl bg-gray-100 px-2 py-1 ml-2 absolute hover:bg-gray-200'
-      // onClick={TODO}
-      >Back to Dashboard</button>
+      <Link href="/">
+          <button
+            className='rounded-xl bg-gray-100 px-2 py-1 ml-2 absolute hover:bg-gray-200'
+          >
+            Back to Dashboard
+          </button>
+      </Link>
       <p className='font-semibold text-3xl text-center tracking-wide'>Messages</p>
     </div>
   )

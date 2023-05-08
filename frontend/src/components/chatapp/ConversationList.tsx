@@ -1,7 +1,7 @@
 import React from 'react';
 import ConversationItem from './ConversationItem';
 import { db } from "../../../firebase/firebase"
-import { collection, getDocs, query, orderBy, DocumentData } from "firebase/firestore"
+import { collection, getDocs, query, orderBy, DocumentData, onSnapshot } from "firebase/firestore"
 import { useState, useEffect } from 'react';
 // Define the Conversation type
 type Conversation = {
@@ -20,22 +20,25 @@ type ConversationListProps = {
 const ConversationList: React.FC<ConversationListProps> = ({ }) => {
 
 
-  const conversationsRef = collection(db, "ChatUserPsychiatrists");
+  const conversationsRef = collection(db, "conversations");
   // const queryDoc = query(conversationsRef, orderBy('createdAt'));
   const [conversations, setConversations] = useState<DocumentData[]>([]);
 
   useEffect(() => {
-    const getConversations = async () => {
-      const querySnapShot = await getDocs(conversationsRef);
-      const conversationData = querySnapShot.docs.map((doc) => ({
+    const unsubscribe = onSnapshot(conversationsRef, (querySnapshot) => {
+      const conversationData = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
       setConversations(conversationData);
+    });
+  
+    return () => {
+      unsubscribe();
     };
-    getConversations();
-    // Render new messages every time db is updated
-  }, [collection(db, "ChatUserPsychiatrists")]);
+  }, []);
+  
+  
 
   return (
     <div className="conversation-list">

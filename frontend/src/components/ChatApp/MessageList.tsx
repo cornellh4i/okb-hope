@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import MessageItem from './MessageItem';
 import { db } from '../../../firebase/firebase'
-import { collection, getDocs, query, orderBy, DocumentData } from "firebase/firestore"
+import { collection, getDocs, query, orderBy, DocumentData, onSnapshot } from "firebase/firestore"
 
 const MessageList: React.FC = () => {
   const messagesRef = collection(db, "Chats");
@@ -11,17 +11,19 @@ const MessageList: React.FC = () => {
   const scrollEnd = useRef<null | HTMLDivElement>(null);
 
   useEffect(() => {
-    const getMessages = async () => {
-      const querySnapShot = await getDocs(queryDoc);
-      const messageData = querySnapShot.docs.map((doc) => ({
+    const unsubscribe = onSnapshot(queryDoc, (querySnapshot) => {
+      const messageData = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
       setMessages(messageData);
+    });
+  
+    return () => {
+      unsubscribe();
     };
-    getMessages();
-    // Render new messages every time db is updated
-  }, [collection(db, "Chats")]);
+  }, []);
+  
 
   // Scrolls to most recent message in MessageList every time there is an update to messages.
   useEffect(() => {
