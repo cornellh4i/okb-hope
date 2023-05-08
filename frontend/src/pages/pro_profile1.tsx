@@ -1,4 +1,4 @@
-// import Navbar from '../components/Navbar'
+import Navbar from '../components/navbar/Navbar'
 import Pro_Profile from '../components/Pro_Profile'
 import pro_profile from "../pro_profile.json"
 import { usePsychiatrist1 } from "../components/dummy_psych";
@@ -13,7 +13,7 @@ export default function PsychiatristProfile() {
   const psychiatrist = usePsychiatrist1();
   return (
     <div>
-      {/* <Navbar /> */}
+      <Navbar />
       <Pro_Profile name={psychiatrist?.name ?? ""}
         description={psychiatrist?.description ?? ""}
         title={psychiatrist?.title ?? ""} gender={gender}
