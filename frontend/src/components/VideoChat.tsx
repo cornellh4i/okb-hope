@@ -396,17 +396,36 @@ const VideoChat: React.FC = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center justify-between bg-blue-400 p-4">
-        <div className="font-semibold text-xl">
-          <span>[Psychiatrist's Name]</span> and <span>[Patient's Name]</span>'s meeting
+      <div className="flex items-start justify-between bg-blue-400 px-4 py-2">
+        <div>
+          <div className="font-semibold text-xl text-white">
+            <span>[Psychiatrist's Name]</span> and <span>[Patient's Name]</span>'s meeting
+          </div>
+          <div className="text-white">
+            <span>2 participants</span> | <span>{formatTime(timer)}</span>
+          </div>
         </div>
-        <div className="text-white">
-          <span>2 participants</span> | <span>{formatTime(timer)}</span>
+        <div className="text-white flex items-center">
+          {layoutOption === "grid" ? (
+            <>
+              <span
+                onClick={() => setLayoutOption("spotlight")}
+                className="cursor-pointer border-b border-white mr-4"
+              >
+                Grid View
+              </span>
+            </>
+          ) : (
+            <>
+              <span
+                onClick={() => setLayoutOption("grid")}
+                className="cursor-pointer border-b border-white mr-4"
+              >
+                Spotlight View
+              </span>
+            </>
+          )}
         </div>
-        <div className="text-white">Current view: {layoutOption === 'grid' ? 'Grid view' : 'Spotlight view'}</div>
-        <button onClick={() => setLayoutOption(layoutOption === 'grid' ? 'spotlight' : 'grid')} className="btn text-white">
-          Toggle Layout
-        </button>
       </div>
       {layoutOption === 'grid' ? (
         <div className="flex justify-center items-center mt-6">
