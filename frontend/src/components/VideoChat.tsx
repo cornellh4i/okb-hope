@@ -437,8 +437,8 @@ const VideoChat: React.FC = () => {
         </div>
       ) : (
         <div className="relative mt-6">
-          <video ref={remoteVideo} autoPlay playsInline className="w-full h-screen bg-[#2c3e50]" />
-          <video ref={webcamVideo} autoPlay muted playsInline className="absolute bottom-6 right-6 w-1/4 h-auto bg-[#2c3e50]" />
+          <video ref={remoteVideo} autoPlay playsInline className="w-10/12 h-screen m-8 bg-[#2c3e50] border-black border-2" />
+          <video ref={webcamVideo} autoPlay muted playsInline className="absolute bottom-6 right-6 w-1/4 h-auto bg-[#2c3e50] border-black border-2" />
         </div>
       )}
       <div className="media-controls flex justify-between items-center bg-gray-200 p-4">
