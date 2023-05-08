@@ -68,11 +68,11 @@ const Pro_Profile: React.FC<Props> = ({ name, description, title, gender, langua
                   {certifications}
           </p>
           <div>{tagsList}</div>
-          <div>Intro Paragraph. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.</div>
+          <div>Intro Paragraph. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.</div>
           
           <div>
           <button className="btn btn-outline bg-[#E5E5E5]">
-            <Link href={link} className="w-18 flex items-center">
+            <Link href={link} className="w-18 flex items-center gap-4">
               <Link_Icon /> {link}
             </Link>
           </button>
