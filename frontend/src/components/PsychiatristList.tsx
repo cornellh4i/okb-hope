@@ -56,7 +56,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
       {results.map((psychiatrist) => (
         <div key={psychiatrist.id} className="psychiatrist">
           {/* Display the psychiatrist's information here */}
-          <div className="card card-side bg-base-100 shadow-xl grid-cols-5">
+          <div className="card card-side bg-base-100 shadow-xl grid-cols-5 hover:brightness-90">
             <div className="col-span-1"><figure><img src="/" alt="Profile Pic" /></figure></div>
             <div className="card-body col-span-3">
               {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}

@@ -1,6 +1,5 @@
 import Head from 'next/head';
-import { AuthProvider, useAuth } from '../../contexts/AuthContext';
-import Navbar from '@/components/navbar/Navbar';
+import { useAuth } from '../../contexts/AuthContext';
 import Dashboard from '@/components/dashboard/Dashboard';
 
 const MyPage = () => {
@@ -13,19 +12,10 @@ const MyPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar />
       {user && <Dashboard />}
       <main></main>
     </>
   );
 };
 
-const WrappedMyPage = () => {
-  return (
-    <AuthProvider>
-      <MyPage />
-    </AuthProvider>
-  );
-};
-
-export default WrappedMyPage;
+export default MyPage;

@@ -49,7 +49,19 @@ const DiscoverPage: React.FC = () => {
   return (
     <div>
       <SearchBar onSearch={handleSearch} />
-      <PsychiatristList results={searchResults} />
+      {searchResults.length > 0 ? (
+        <PsychiatristList results={searchResults} />
+      ) : (
+        <div className="text-center my-10">
+          <p className="mb-4">No Psychiatrists found based on your filters.</p>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setSearchTerm("")}
+          >
+            See all psychiatrists
+          </button>
+        </div>
+      )}
     </div>
   );
 };
