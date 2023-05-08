@@ -3,7 +3,7 @@ import Link_Icon from '../assets/link_icon.svg'
 import Saved from '../assets/saved.svg'
 import Message from '../assets/message.svg'
 import Unsaved from '../assets/unsaved.svg'
-import Image from '../assets/dummy_img.png'
+// import Image from '../assets/dummy_img.png'
 import { useState } from 'react';
 import Link from 'next/link';
 import TimeTable from './TimeTable'
@@ -25,22 +25,13 @@ interface Props {
 
 const Pro_Profile: React.FC<Props> = ({ name, description, title, gender, languages, photo_id, link, times, certifications }) => {
 
-  let languagesList: JSX.Element[] = [];
+  let tagsList: JSX.Element[] = [];
+
+  tagsList.push(<div className="badge badge-outline">{gender}</div>)
 
   languages.forEach((language) => {
-    languagesList.push(<div className="badge badge-outline">{language}</div>);
+    tagsList.push(<div className="badge badge-outline">{language}</div>);
   });
-
-
-  // let daysList: JSX.Element[] = [];
-
-  // days.forEach((day) => {
-  //   daysList.push(<div className="card shadow-xl">
-  //     <div className="card-body">
-  //       <h2 className="card-title">{day}</h2>
-  //     </div>
-  //   </div>)
-  // });
 
   const [saved, setSaved] = useState(false);
 
@@ -56,59 +47,50 @@ const Pro_Profile: React.FC<Props> = ({ name, description, title, gender, langua
           <Left_Arrow />
         </Link>
       </div>
-
-      <div className="flex flex-row">
-        <div>
-          <img src={Image.src} alt="Dummy Image" style={{ width: '800px', height: '350px' }} />
+      
+      <div className="flex justify-center">
+      <div className="card card-side bg-base-100 justify-self-center w-3/4">
+        <div className='w-full'>
+          <figure><img src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' alt="dummy_prof" style={{ width: '300px', height: '300px' }}/></figure>
         </div>
-        <div>
-          <div className="flex flex-row">
-            <div>
-              <div className="flex flex-col">
-                <p className='sm:text-3xl'>
-                  {title}{name}
-                </p>
-                <p className="italic font-thin">
-                  {certifications}
-                </p>
-              </div>
-            </div>
-            <div>
-              <div className="flex flex-row">
-                <button className="btn col-span-1 bg-[#E5E5E5] text-[#9A9A9A] text-[16px] flex space-x-3" onClick={toggleSaved}>
-                  {saved ? <Saved /> : <Unsaved />}
-                  <p>{saved ? 'Saved' : 'Save'}</p>
-                </button>
-                <button className="btn col-span-1 bg-[#E5E5E5] text-[#9A9A9A] text-[16px] flex space-x-3">
+        <div className="card-body">
+          <div className="flex flex-row gap-8">
+            <h2 className="card-title text-4xl">Erica Jameson</h2>
+            <div className='card-actions justify-end'>
+              <button className="btn bg-[#E5E5E5] text-[#9A9A9A] text-[16px] space-x-3" onClick={toggleSaved}>
+                {saved ? <Saved /> : <Unsaved />}
+                <p>{saved ? 'Saved' : 'Save'}</p>
+              </button>
+              <button className="btn bg-[#E5E5E5] text-[#9A9A9A] text-[16px] space-x-3">
                   <Message />
                   <Link href="/">
                     Message
                   </Link>
-                </button>
-              </div>
+              </button>
             </div>
           </div>
-          <div className="flex flex-row">
-            <div className="badge badge-outline">
-              {gender}
-            </div>
-            <div>{languagesList}</div>
-          </div>
-          <div className=''>
-            {description}
-          </div>
+          <p className="italic font-thin">
+                  {certifications}
+          </p>
+          <div>{tagsList}</div>
+          <div>Intro Paragraph. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.</div>
+          
+          <div>
           <button className="btn btn-outline bg-[#E5E5E5]">
             <Link href={link} className="w-18 flex items-center">
               <Link_Icon /> {link}
             </Link>
           </button>
+          </div>
+
         </div>
+      </div>
       </div>
       <div>
         <p className='sm:text-3xl'>
           Availability
         </p>
-        <div className='flex'><TimeTable times={times}></TimeTable></div>
+        <div className='grid grid-flow-row-dense grid-cols-7'><TimeTable times={times}></TimeTable></div>
         <button className="btn col-span-1 text-[16px] flex space-x-3 bg-white text-black border-gray-400">
           <div>Book Appointment</div>
         </button>

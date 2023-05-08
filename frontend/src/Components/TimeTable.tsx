@@ -26,18 +26,18 @@ const TimeTable: React.FC<Props> = ({ times }) => {
     }
 
     return (
-      <div key={day} className="card shadow-xl rounded-3xl">
-        <div className="card-body ">
-          <h2 className={`card-title ${dayTimes.length === 0 ? 'text-[#9A9A9A]' : ''}`}>
-            {day.charAt(0).toUpperCase() + day.slice(1)}
-          </h2>
-          <div>{timesList}</div>
+        <div key={day} className="inline-block card shadow-xl rounded-3xl">
+          <div className="card-body">
+            <h2 className={`card-title ${dayTimes.length === 0 ? 'text-[#9A9A9A]' : ''}`}>
+              {day.charAt(0).toUpperCase() + day.slice(1)}
+            </h2>
+              <div>{timesList}</div>
+          </div>
         </div>
-      </div>
     );
   });
 
-  return <div>{daysList}</div>;
+  return <div className="inline-block">{daysList}</div>;
 };
 
 export default TimeTable;
