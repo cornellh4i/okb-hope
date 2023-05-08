@@ -1,9 +1,26 @@
 import Head from 'next/head';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import Dashboard from '@/components/dashboard/Dashboard';
+import { fetchUser, saveResponses, updateUser, fetchRole } from '../../firebase/firebase'
+import QuestionnaireCarousel from '../components/onboarding/QuestionnaireCarousel'
 
 const MyPage = () => {
-  const { user } = useAuth();
+  const { currentUser } = useAuth();
+  const [showQuestionnaire, setShowQuestionnaire] = useState(false);
+  const [userChecked, setUserChecked] = useState(false); // Add this state variable
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (currentUser) {
+        const userData = await fetchUser(currentUser.uid); // Fetch user data
+        setShowQuestionnaire(userData?.isNewUser ?? false); // Set showQuestionnaire based on isNewUser flag
+      }
+      setUserChecked(true); // Set userChecked to true after checking user data
+    };
+    fetchUserData();
+  }, [currentUser]);
+  
   return (
     <>
       <Head>
@@ -12,7 +29,18 @@ const MyPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {user && <Dashboard />}
+      {userChecked && !showQuestionnaire && currentUser && <Dashboard />} {/* Update this line */}
+      {userChecked && showQuestionnaire && (
+        <QuestionnaireCarousel
+          onFinish={async (responses) => {
+            if (currentUser) {
+              await saveResponses(currentUser.uid, responses); // Save the responses in Firestore
+              setShowQuestionnaire(false); // Hide the popup
+              updateUser(currentUser.uid, { isNewUser: false }); // Update isNewUser flag in Firestore
+            }
+          }}
+        />
+      )}
       <main></main>
     </>
   );

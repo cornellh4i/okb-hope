@@ -2,6 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Styling for MessageItem.tsx */
+.message-item {
+  display: flex;
+  align-items: flex-end;
+}
+
+.message-item p {
+  max-width: 500px;
+  margin-bottom: 12px;
+  line-height: 24px;
+  padding: 6px 12px;
+  position: relative;
+  color: gray;
+  text-align: left;
+  max-width: 55%;
+}
+
+.sent {
+  flex-direction: row-reverse;
+}
+
+.sent p {
+  color: #5F5F5F;
+  background: white;
+  align-self: flex-end;
+  border-radius: 10px 10px 0 10px;
+  border: solid #5F5F5F 2px;
+}
+
+.received p {
+  color: #5F5F5F;
+  background: #DEDEDE;
+  border-radius: 10px 10px 10px 0;
+}
+
+.message-item img {
+  width: 2.3rem;
+  height: auto;
+  border-radius: 50%;
+  margin: 2px 15px;
+}
+
+/* Styling for MessageComposer.tsx */
+.message-composer ::placeholder {
+  text-align: left;
+  height: auto;
+  font-style: italic;
+}
+
+.message-composer textarea {
+  overflow: hidden;
+  max-height: 20px;
+}
+
 .btn {
   text-transform: none;
 }

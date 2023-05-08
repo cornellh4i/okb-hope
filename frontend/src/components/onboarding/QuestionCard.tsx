@@ -1,13 +1,17 @@
+import { useState } from "react";
 
-// I made the options optional so there can be 1-5 options per question.
-const QuestionCard = ({ question, options }: { question: string, options: string[] }) => {
+// Add the onAnswerSelected prop to the component
+const QuestionCard = ({ question, options, onAnswerSelected }: { question: string, options: string[], onAnswerSelected: (answer: string) => void }) => {
+  // Add state to track the selected option index
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(-1);
 
-  // Abstracted a button that displays the button text and can customize the onClick function
-  const OptionButton = ({ onClick, text }) =>
-    <button className="btn bg-gray-500 w-full justify-start normal-case border-transparent hover:border-transparent"
+  // Update the OptionButton component to accept an index prop
+  const OptionButton = ({ onClick, text, index }: { onClick: () => void, text: string, index: number }) =>
+    <button className={`btn w-full justify-start normal-case ${
+      index === selectedOptionIndex ? "bg-blue-500 text-white" : "bg-gray-500"
+    } border-transparent hover:border-transparent`}
       onClick={onClick}>{text}</button>
-      
-  // Creates an array [0, 1, ..., options.length-1]
+
   const optionArray = Array.from(Array(options.length).keys())
 
   return (
@@ -15,12 +19,16 @@ const QuestionCard = ({ question, options }: { question: string, options: string
       <div className="card-body items-center text-center">
         <h2 className="card-title">{question}</h2>
         <div className="card-actions mt-8">
-          {optionArray.map(option => (
+          {optionArray.map(optionIndex => (
             <OptionButton
-              key={option.toString()}
-              // The function called for onClick should be changed to some sort of handleSubmit later
-              onClick={() => console.log(`clicked option ${option}`)}
-              text={options[option]}
+              key={optionIndex.toString()}
+              // Update the onClick function to set the selectedOptionIndex and call onAnswerSelected
+              onClick={() => {
+                setSelectedOptionIndex(optionIndex);
+                onAnswerSelected(options[optionIndex]);
+              }}
+              text={options[optionIndex]}
+              index={optionIndex} // Pass the optionIndex to the OptionButton component
             />
           ))}
         </div>
@@ -29,4 +37,4 @@ const QuestionCard = ({ question, options }: { question: string, options: string
   )
 }
 
-export default QuestionCard
+export default QuestionCard;

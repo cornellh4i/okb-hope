@@ -4,13 +4,15 @@ import Link from 'next/link';
 import Logo from '../../assets/logo.svg';
 
 export default function Navbar() {
-  const { user } = useAuth();
+  const { currentUser } = useAuth(); // Change this line
   return (
     <header>
       <nav className="">
         <div className="navbar flex bg-[#C1C1C1] items-end">
           {/* logo for website */}
-          <Logo />
+          <Link href="/">
+            <Logo />
+          </Link>
           <div className="flex-1"></div>
           <ul className="menu menu-horizontal px-1 flex space-x-5">
             <li>
@@ -18,7 +20,7 @@ export default function Navbar() {
                 <div className="text-[18px] font-[500]">Discover Professionals</div>
               </Link>
             </li>
-            {user && (
+            {currentUser && ( // Change this line
               <li>
                 <Link href="/messages" className="w-18">
                   <div className="text-[18px] font-[500]">Messages</div>
@@ -31,7 +33,7 @@ export default function Navbar() {
               </Link>
             </li>
             <li>
-              {user ? (
+              {currentUser ? ( // Change this line
                 <button
                   className="btn bg-[#E6E6E6] btn-ghost glass w-18 rounded-full bg-base-100"
                   onClick={logout}
