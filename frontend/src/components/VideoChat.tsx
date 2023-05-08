@@ -26,6 +26,8 @@ const VideoChat: React.FC = () => {
   const [timer, setTimer] = useState(0);
   const [intervalID, setIntervalID] = useState<NodeJS.Timeout | null>(null);
   const [dataChannel, setDataChannel] = useState<RTCDataChannel | null>(null);
+  const [layoutOption, setLayoutOption] = useState('grid'); // 'grid' or 'spotlight'
+
 
   // add this component to a new data channel
   useEffect(() => {
@@ -392,7 +394,7 @@ const VideoChat: React.FC = () => {
       .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
-return (
+  return (
     <div className="flex flex-col">
       <div className="flex items-center justify-between bg-blue-400 p-4">
         <div className="font-semibold text-xl">
@@ -401,12 +403,22 @@ return (
         <div className="text-white">
           <span>2 participants</span> | <span>{formatTime(timer)}</span>
         </div>
-        <div className="text-white">Current view: Grid view</div>
+        <div className="text-white">Current view: {layoutOption === 'grid' ? 'Grid view' : 'Spotlight view'}</div>
+        <button onClick={() => setLayoutOption(layoutOption === 'grid' ? 'spotlight' : 'grid')} className="btn text-white">
+          Toggle Layout
+        </button>
       </div>
-      <div className="flex justify-center items-center mt-6">
-        <video ref={webcamVideo} autoPlay muted playsInline className="w-1/2 m-8 bg-[#2c3e50]" />
-        <video ref={remoteVideo} autoPlay playsInline className="w-1/2 m-8 bg-[#2c3e50]" />
-      </div>
+      {layoutOption === 'grid' ? (
+        <div className="flex justify-center items-center mt-6">
+          <video ref={webcamVideo} autoPlay muted playsInline className="w-1/2 m-8 bg-[#2c3e50]" />
+          <video ref={remoteVideo} autoPlay playsInline className="w-1/2 m-8 bg-[#2c3e50]" />
+        </div>
+      ) : (
+        <div className="relative mt-6">
+          <video ref={remoteVideo} autoPlay playsInline className="w-full h-screen bg-[#2c3e50]" />
+          <video ref={webcamVideo} autoPlay muted playsInline className="absolute bottom-6 right-6 w-1/4 h-auto bg-[#2c3e50]" />
+        </div>
+      )}
       <div className="media-controls flex justify-between items-center bg-gray-200 p-4">
         <button className="btn">Settings</button>
         <div>
@@ -422,7 +434,7 @@ return (
           Leave meeting
         </button>
       </div>
-
+  
       <div className="testing mt-20">
         <button ref={webcamButton} onClick={setupMediaSources} id="startWebcam" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Start webcam
@@ -446,8 +458,8 @@ return (
         <div className="flex items-center">
           <label htmlFor="callToken" className="mr-2">Put Call token here:</label>
           <input ref={callInput} type="text" id="callToken" className="border rounded py-1 px-2" />
+          </div>
         </div>
-      </div>
     </div>
   );
 };
