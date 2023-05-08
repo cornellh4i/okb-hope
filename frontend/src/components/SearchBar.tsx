@@ -45,11 +45,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
             <label tabIndex={0} className="btn btn-outline italic text-[#9A9A9A] font-[400]">Weekly Availability</label>
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
               <div className="form-control">
-                <label className="label cursor-pointer">
+                {/* <label className="label cursor-pointer">
                   <span className="label-text">Select All</span>
                   <input type="checkbox" className="checkbox" />
-                </label>
-                <div className="divider"></div>
+                </label> */}
+                {/* <div className="divider"></div> */}
                 <label className="label cursor-pointer">
                   <span className="label-text">Sunday</span>
                   <input type="checkbox" className="checkbox" />
@@ -86,11 +86,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
             <label tabIndex={0} className="btn btn-outline italic text-[#9A9A9A] font-[400]">Language</label>
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
               <div className="form-control">
-                <label className="label cursor-pointer">
+                {/* <label className="label cursor-pointer">
                   <span className="label-text">Select All</span>
                   <input type="checkbox" className="checkbox" />
-                </label>
-                <div className="divider"></div>
+                </label> */}
+                {/* <div className="divider"></div> */}
                 <label className="label cursor-pointer">
                   <span className="label-text">English</span>
                   <input type="checkbox" className="checkbox" />
@@ -115,11 +115,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
             <label tabIndex={0} className="btn btn-outline italic text-[#9A9A9A] font-[400]">Gender</label>
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
               <div className="form-control">
-                <label className="label cursor-pointer">
+                {/* <label className="label cursor-pointer">
                   <span className="label-text">Select All</span>
                   <input type="checkbox" className="checkbox" />
-                </label>
-                <div className="divider"></div>
+                </label> */}
+                {/* <div className="divider"></div> */}
                 <label className="label cursor-pointer">
                   <span className="label-text">Male</span>
                   <input type="checkbox" className="checkbox" />

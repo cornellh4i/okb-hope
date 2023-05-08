@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import BookmarkIcon from '../../assets/bookmark.svg'
+import BookmarkIcon from '../../assets/save_dashboard.svg'
 import PsychiatristIcon from '../../assets/psychiatrist.svg'
 
 const PyschiatristCard = ({ p_name, p_certifications }: { p_name: string, p_certifications: string }) => {

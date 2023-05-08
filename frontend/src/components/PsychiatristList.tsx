@@ -41,11 +41,11 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
               {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}
               <div className="grid grid-cols-4 gap-4 items-center pb-1/12">
                 <h2 className="card-title col-span-2 text-[#000000] text-[24px] font-bold">{psychiatrist.first_name} {psychiatrist.last_name}</h2>
-                <button className="btn col-span-1 bg-[#195BA5] text-[#FFFDFD] text-[16px] flex space-x-3" >
+                <button className="btn col-span-1 bg-[#195BA5] text-[#FFFDFD] text-[16px] flex space-x-3 btn-md px-4 py-2" >
                   <BookMark />
-                  <div>Save Psychiatrist</div>
+                  <div>Save</div>
                 </button>
-                <button className="btn col-span-1 bg-[#195BA5] text-[#FFFDFD] text-[16px] flex space-x-3"><Message /><div>Message</div></button>
+                <button className="btn col-span-1 bg-[#195BA5] text-[#FFFDFD] text-[16px] flex space-x-3 btn-md"><Message /><div>Message</div></button>
               </div>
               {/* Additional psychiatrist info */}
               <p className="text-[#000000] text-[16px] font-bold">{psychiatrist.title} at {psychiatrist.location}</p>
