@@ -3,12 +3,8 @@ import Link_Icon from '../assets/link_icon.svg'
 import Saved from '../assets/saved.svg'
 import Message from '../assets/message.svg'
 import Unsaved from '../assets/unsaved.svg'
-// import Image from '../assets/dummy_img.png'
 import { useState } from 'react';
 import Link from 'next/link';
-import TimeTable from './TimeTable'
-
-// const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
 interface Props {
   name: string,
@@ -16,7 +12,6 @@ interface Props {
   title: string,
   gender: string,
   languages: string[],
-  // photo_id: Element,
   photo_id: string,
   link: string,
   certifications: string,
@@ -42,7 +37,7 @@ const Pro_Profile: React.FC<Props> = ({ name, description, title, gender, langua
   return (
     <div>
 
-      <div>
+      <div className='pl-4 py-4'>
         <Link href="/">
           <Left_Arrow />
         </Link>
@@ -57,7 +52,7 @@ const Pro_Profile: React.FC<Props> = ({ name, description, title, gender, langua
           <div className="flex flex-row gap-8">
             <h2 className="card-title text-4xl">Erica Jameson</h2>
             <div className='card-actions justify-end'>
-              <button className="btn bg-[#E5E5E5] text-[#9A9A9A] text-[16px] space-x-3" onClick={toggleSaved}>
+              <button className="btn bg-[#E5E5E5] text-[#9A9A9A] text-[16px] space-x-3 " onClick={toggleSaved}>
                 {saved ? <Saved /> : <Unsaved />}
                 <p>{saved ? 'Saved' : 'Save'}</p>
               </button>
@@ -87,13 +82,93 @@ const Pro_Profile: React.FC<Props> = ({ name, description, title, gender, langua
       </div>
       </div>
       <div>
-        <p className='sm:text-3xl'>
+      <div className="flex justify-center">
+      <div className="card card-side bg-base-100 justify-self-center w-3/4">
+        <div className='sm:text-3xl'>
           Availability
-        </p>
-        <div className='grid grid-flow-row-dense grid-cols-7'><TimeTable times={times}></TimeTable></div>
-        <button className="btn col-span-1 text-[16px] flex space-x-3 bg-white text-black border-gray-400">
-          <div>Book Appointment</div>
-        </button>
+        </div>
+      </div>
+      </div>
+
+      <div className="flex justify-center">
+      <div className="card bg-base-100 justify-self-center w-3/4">
+        <div className='grid grid-flow-row-dense grid-cols-7 gap-2'>
+        
+        <div className="card shadow-xl rounded-3xl">
+          <div className="card-body">
+            <h2 className={`card-title justify-left text-[#9A9A9A]' : ''}`}>
+              Monday
+            </h2>
+              <div className='text-xs'>10:00 - 12:00</div>
+              <div className='text-xs'>15:00 - 17:00</div>
+          </div>
+        </div>
+
+        <div className="card shadow-xl rounded-3xl">
+          <div className="card-body">
+            <h2 className={`card-title text-[#9A9A9A]' : ''}`}>
+              Tuesday
+            </h2>
+              <div className='text-xs'>15:00 - 17:00</div>
+          </div>
+        </div>
+
+        <div className="card shadow-xl rounded-3xl">
+          <div className="card-body">
+            <h2 className={`card-title justify-center text-[#9A9A9A]' : ''}`}>
+              Wednesday
+            </h2>
+              <div className='text-xs'>13:00 - 15:00</div>
+              <div className='text-xs'>16:00 - 18:00</div>
+          </div>
+        </div>
+
+        <div className="card shadow-xl rounded-3xl">
+          <div className="card-body">
+            <h2 className={`card-title text-[#9A9A9A]': ''}`}>
+              Thursday
+            </h2>
+              <div className="text-[#9A9A9A] text-xs">No Times Available</div>
+          </div>
+        </div>
+
+        <div className="card shadow-xl rounded-3xl">
+          <div className="card-body">
+            <h2 className={`card-title text-[#9A9A9A]' : ''}`}>
+              Friday
+            </h2>
+              <div className='text-xs'>9:00 - 15:00</div>
+              <div className='text-xs'>16:00 - 18:00</div>
+          </div>
+        </div>
+
+        <div className="card shadow-xl rounded-3xl">
+          <div className="card-body">
+            <h2 className={`card-title text-[#9A9A9A]' : ''}`}>
+              Saturday
+            </h2>
+              <div className='text-xs'>10:00 - 14:00</div>
+              <div className='text-xs'>16:00 - 18:00</div>
+          </div>
+        </div>
+
+        <div className="card shadow-xl rounded-3xl">
+          <div className="card-body">
+            <h2 className={`card-title text-[#9A9A9A]' : ''}`}>
+              Sunday
+            </h2>
+              <div className="text-[#9A9A9A] text-xs">No Times Available</div>
+          </div>
+        </div>
+        </div>
+        </div>
+        </div>
+
+        <div className='flex justify-center py-12'>
+          <button className="btn col-span-1 text-[16px] flex space-x-3 bg-white text-black border-gray-400">
+            <div>Book Appointment</div>
+          </button>
+        </div>
       </div>
     </div >
   );
@@ -101,3 +176,4 @@ const Pro_Profile: React.FC<Props> = ({ name, description, title, gender, langua
 }
 
 export default Pro_Profile
+
