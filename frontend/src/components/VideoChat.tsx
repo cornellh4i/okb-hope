@@ -4,7 +4,8 @@ import { collection, doc, addDoc, setDoc, updateDoc, onSnapshot, getDoc } from "
 import Chat from "../assets/chat.svg";
 import Audio from "../assets/audio.svg";
 import Video from "../assets/video.svg";
-
+import Grid from "../assets/grid.svg";
+import Spotlight from "../assets/spotlight.svg";
 
 const VideoChat: React.FC = () => {
   const webcamButton = useRef<HTMLButtonElement>(null); /** grabs html elements */
@@ -225,12 +226,12 @@ const VideoChat: React.FC = () => {
           startTimer(); // starts the timer on the answerer's side
         }
       };
-    
+
       // Add the event listener for the open event
       channel.addEventListener('open', () => {
         channel.send('start');
       });
-    
+
       // Set the received data channel to the state
       setDataChannel(channel);
     };
@@ -395,7 +396,7 @@ const VideoChat: React.FC = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-start justify-between bg-blue-400 px-4 py-2">
+      <div className="flex items-start justify-between bg-[#C1C1C1] px-4 py-2">
         <div>
           <div className="font-semibold text-xl text-white">
             <span>[Psychiatrist's Name]</span> and <span>[Patient's Name]</span>'s meeting
@@ -409,18 +410,20 @@ const VideoChat: React.FC = () => {
             <>
               <span
                 onClick={() => setLayoutOption("spotlight")}
-                className="cursor-pointer border-b border-white mr-4"
+                className="cursor-pointer mr-4 mt-2 flex items-center"
               >
-                Grid View
+                <Grid className="mr-2" />
+                <span className="text-sm">Grid View</span>
               </span>
             </>
           ) : (
             <>
               <span
                 onClick={() => setLayoutOption("grid")}
-                className="cursor-pointer border-b border-white mr-4"
+                className="cursor-pointer mr-4 mt-2 flex items-center"
               >
-                Spotlight View
+                <Spotlight className="mr-2" />
+                <span className="text-sm">Spotlight View</span>
               </span>
             </>
           )}
@@ -433,51 +436,51 @@ const VideoChat: React.FC = () => {
         </div>
       ) : (
         <div className="relative mt-6">
-          <video ref={remoteVideo} autoPlay playsInline className="w-full h-screen bg-[#2c3e50]" />
-          <video ref={webcamVideo} autoPlay muted playsInline className="absolute bottom-6 right-6 w-1/4 h-auto bg-[#2c3e50]" />
+          <video ref={remoteVideo} autoPlay playsInline className="w-10/12 h-screen m-8 bg-[#2c3e50] border-black border-2" />
+          <video ref={webcamVideo} autoPlay muted playsInline className="absolute bottom-6 right-6 w-1/4 h-auto bg-[#2c3e50] border-black border-2" />
         </div>
       )}
-      <div className="media-controls flex justify-between items-center bg-gray-200 p-4">
+      <div className="media-controls flex justify-between items-center bg-gray-200 p-4 ">
         <button className="btn">Settings</button>
         <div>
           <button ref={toggleAudioButton} onClick={toggleAudio} className="video mx-2"><Audio /></button>
           <button ref={toggleVideoButton} onClick={toggleVideo} className="video mx-2"><Video /></button>
           <button className="mx-2"><Chat /></button>
         </div>
-        <button 
-          ref={hangupButton} 
-          onClick={hangupCall} 
+        <button
+          ref={hangupButton}
+          onClick={hangupCall}
           className="btn"
         >
           Leave meeting
         </button>
       </div>
-  
+
       <div className="testing mt-20">
-        <button ref={webcamButton} onClick={setupMediaSources} id="startWebcam" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button ref={webcamButton} onClick={setupMediaSources} id="startWebcam" className="bg-[#C1C1C1] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Start webcam
         </button>
         <button
           ref={callButton}
           onClick={createOffer}
           id="call"
-          className="bg-blue-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-2"
+          className="bg-[#C1C1C1] hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-2"
         >
           Call
         </button>
-        <button 
-          ref={answerButton} 
-          id="answer" 
+        <button
+          ref={answerButton}
+          id="answer"
           onClick={answerCall}
-          className="bg-blue-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-2"
+          className="bg-[#C1C1C1] hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-2"
         >
           Answer
         </button>
         <div className="flex items-center">
           <label htmlFor="callToken" className="mr-2">Put Call token here:</label>
           <input ref={callInput} type="text" id="callToken" className="border rounded py-1 px-2" />
-          </div>
         </div>
+      </div>
     </div>
   );
 };
