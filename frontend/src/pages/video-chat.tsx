@@ -3,10 +3,12 @@ import VideoChat from '@/components/VideoChat';
 
 const VideoChatPage = () => {
   return (
-    <div>
+    <>
       <VideoChat />
-    </div>
+    </>
   );
 };
+
+VideoChatPage.noNavbar = true;
 
 export default VideoChatPage;

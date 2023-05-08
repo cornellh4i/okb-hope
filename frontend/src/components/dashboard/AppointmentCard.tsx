@@ -2,6 +2,7 @@ import CalendarIcon from '../../assets/calendar.svg'
 import ClockIcon from '../../assets/clock.svg'
 import questions from '../../../appointment_questions.json'
 import AppointmentQuestion from './AppointmentQuestion'
+import Link from 'next/link';
 import React from 'react'
 
 interface AppointmentCard {
@@ -59,12 +60,14 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
                       <div className="col-span-4"><p>{start.getHours()}:{start.getMinutes()} - {end.getHours()}:{end.getMinutes()}</p></div>
                       <br></br>
                       {/* button to start appointment */}
-                      <button
-                        className="bg-slate-200 text-black active:bg-gray-500 font-bold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full"
-                        type="button"
-                      >
-                        Start Appointment
-                      </button>
+                      <Link href="./video-chat">
+                        <button
+                          className="bg-slate-200 text-black active:bg-gray-500 font-bold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full"
+                          type="button"
+                        >
+                          Start Appointment
+                        </button>
+                      </Link>
                       <br></br>
                       <br></br>
                       {/* reschedule button */}

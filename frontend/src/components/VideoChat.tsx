@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { db } from "../../firebase/firebase";
 import { collection, doc, addDoc, setDoc, updateDoc, onSnapshot, getDoc } from "firebase/firestore";
-import Chat from "../Assets/chat.svg";
-import Audio from "../Assets/audio.svg";
-import Video from "../Assets/video.svg";
+import Chat from "../assets/chat.svg";
+import Audio from "../assets/audio.svg";
+import Video from "../assets/video.svg";
 
 
 const VideoChat: React.FC = () => {
@@ -23,9 +23,26 @@ const VideoChat: React.FC = () => {
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [isVideoEnabled, setisVideoEnabled] = useState(false);
   const [isAudioEnabled, setisAudioEnabled] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [intervalID, setIntervalID] = useState<NodeJS.Timeout | null>(null);
+  const [dataChannel, setDataChannel] = useState<RTCDataChannel | null>(null);
+  const [layoutOption, setLayoutOption] = useState('grid'); // 'grid' or 'spotlight'
 
 
-  const callDoc = doc(collection(db, 'Calls')); /** manages answer and offer 
+  // add this component to a new data channel
+  useEffect(() => {
+    if (pc) {
+      const channel = pc.createDataChannel('timer');
+      channel.onmessage = (event) => {
+        if (event.data === 'start') {
+          startTimer(); // starts the timer on the offerer's side
+        }
+      };
+      setDataChannel(channel);
+    }
+  }, [pc]);
+
+  const callDoc = doc(collection(db, 'calls')); /** manages answer and offer 
   from both users */
   const offerCandidates = collection(callDoc, "offerCandidates");
   /** subcollections under calldoc that contain all cofferCandidates */
@@ -107,26 +124,15 @@ const VideoChat: React.FC = () => {
       callButton.current.disabled = false; // enables buttons
       answerButton.current.disabled = false; // enables buttons
       webcamButton.current.disabled = true; // disables buttons
-
-      // toggleAudioButton.current.disabled = true; // disables buttons. setupMediaSources is 
-      // //called when you start your webcam before you start any call, so you shouldn't
-      // // be able to toggle audio or video if you're not in a call
-      // toggleVideoButton.current.disabled = true; // disables buttons. see above
-      // // this is true if you want this feature accessible to patients/psychiatrists
     }
   };
-  // const callDoc = doc(collection(db, 'Calls')); /** manages answer and offer 
-  // from both users */
-  // const offerCandidates = collection(callDoc, "offerCandidates");
-  // /** subcollections under calldoc that contain all cofferCandidates */
-  // const answerCandidates = collection(callDoc, "answerCandidates");
-  /** subcollections under calldoc that contain all answerCandidates */
 
   /**
    * Sets up a WebRTC call by creating a local offer, updating the Firestore database with 
    * the offer, setting up listeners for changes, and adding remote candidates to the 
    * peer connection object. If available, the function enables the hangupButton.
    */
+
   const createOffer = async () => {
     if (callInput.current) {
       callInput.current.value = callDoc.id;
@@ -137,6 +143,16 @@ const VideoChat: React.FC = () => {
         await addDoc(offerCandidates, event.candidate.toJSON());
       }
     };
+
+    pc!.ondatachannel = (event) => {
+      const channel = event.channel;
+      channel.onmessage = (e) => {
+        if (e.data === 'start') {
+          startTimer(); // starts the timer on the caller's side
+        }
+      };
+    };
+
 
     const offerDescription = await pc!.createOffer(); /** returns offer description */
     await pc!.setLocalDescription(offerDescription); /** sets offer description as
@@ -178,8 +194,8 @@ const VideoChat: React.FC = () => {
       hangupButton.current.disabled = false; //enable hangup button
 
       // uncomment if patient/psychiatrist should be able to toggle audio/video before call starts
-      // toggleAudioButton.current.disabled = false; //enable toggleaudio button
-      // toggleVideoButton.current.disabled = false; //enable togglevideo button
+      toggleAudioButton.current.disabled = false; //enable toggleaudio button
+      toggleVideoButton.current.disabled = false; //enable togglevideo button
     }
 
   };
@@ -195,12 +211,29 @@ const VideoChat: React.FC = () => {
     const callId = callInput.current?.value;
     if (!callId) return;
 
-    const callRef = doc(db, 'Calls', callId);
+    const callRef = doc(db, 'calls', callId);
     const answerCandidates_ = collection(callRef, 'answerCandidates');
     const offerCandidates_ = collection(callRef, 'offerCandidates');
 
     pc!.onicecandidate = (event) => {
       event.candidate && addDoc(answerCandidates_, event.candidate.toJSON());
+    };
+
+    pc!.ondatachannel = (event) => {
+      const channel = event.channel;
+      channel.onmessage = (e) => {
+        if (e.data === 'start') {
+          startTimer(); // starts the timer on the answerer's side
+        }
+      };
+    
+      // Add the event listener for the open event
+      channel.addEventListener('open', () => {
+        channel.send('start');
+      });
+    
+      // Set the received data channel to the state
+      setDataChannel(channel);
     };
 
     const callDocSnapshot = await getDoc(callRef);
@@ -221,6 +254,8 @@ const VideoChat: React.FC = () => {
     };
 
     await updateDoc(callRef, { answer });
+    startTimer(); // starts timer for call
+
 
     onSnapshot(offerCandidates_, (snapshot) => {
       const changes = snapshot.docChanges();
@@ -240,6 +275,9 @@ const VideoChat: React.FC = () => {
    */
   const hangupCall = () => {
     pc!.close();
+    // Stop the timer when the call is hung up
+    stopTimer();
+    setTimer(0);
     setisVideoEnabled(false); // booleans for checking if video/audio on/off
     setisAudioEnabled(false);
 
@@ -330,45 +368,118 @@ const VideoChat: React.FC = () => {
     }
   };
 
+  const startTimer = () => {
+    if (intervalID === null) {
+      const newIntervalID = setInterval(() => {
+        setTimer((prevTimer) => prevTimer + 1);
+      }, 1000);
+      setIntervalID(newIntervalID);
+    }
+  };
+
+  const stopTimer = () => {
+    if (intervalID) {
+      clearInterval(intervalID);
+      setIntervalID(null);
+    }
+  };
+
+  const formatTime = (timeInSeconds: number) => {
+    const hours = Math.floor(timeInSeconds / 3600);
+    const minutes = Math.floor((timeInSeconds % 3600) / 60);
+    const seconds = timeInSeconds % 60;
+
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  };
+
   return (
-    <div className="flex flex-col ">
-      <div className="flex text-2xl justify-center items-center pt-20">
-        Meeting with [Psychiatrist]
-      </div>
-      <div className="flex justify-center items-center">
-        <video ref={webcamVideo} autoPlay muted playsInline className="w-1/2 m-8 bg-[#2c3e50]" />
-        <video ref={remoteVideo} autoPlay playsInline className="w-1/2 m-8 bg-[#2c3e50]" />
-      </div>
-      <div className="media-controls " dir="ltr">
-        < div className="relative" >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
-            <button ref={toggleVideoButton} onClick={toggleVideo} className="video mx-2"><Video /></button>
-            <button ref={toggleAudioButton} onClick={toggleAudio} className="audio mx-2"><Audio /></button>
-            <button ref={toggleVideoButton} onClick={toggleVideo} className="mx-2"><Chat /></button>
+    <div className="flex flex-col">
+      <div className="flex items-start justify-between bg-blue-400 px-4 py-2">
+        <div>
+          <div className="font-semibold text-xl text-white">
+            <span>[Psychiatrist's Name]</span> and <span>[Patient's Name]</span>'s meeting
           </div>
-          <button ref={hangupButton} onClick={hangupCall} disabled className="btn absolute right-0"> End Meeting</button>
-        </div >
-      </div >
+          <div className="text-white">
+            <span>2 participants</span> | <span>{formatTime(timer)}</span>
+          </div>
+        </div>
+        <div className="text-white flex items-center">
+          {layoutOption === "grid" ? (
+            <>
+              <span
+                onClick={() => setLayoutOption("spotlight")}
+                className="cursor-pointer border-b border-white mr-4"
+              >
+                Grid View
+              </span>
+            </>
+          ) : (
+            <>
+              <span
+                onClick={() => setLayoutOption("grid")}
+                className="cursor-pointer border-b border-white mr-4"
+              >
+                Spotlight View
+              </span>
+            </>
+          )}
+        </div>
+      </div>
+      {layoutOption === 'grid' ? (
+        <div className="flex justify-center items-center mt-6">
+          <video ref={webcamVideo} autoPlay muted playsInline className="w-1/2 m-8 bg-[#2c3e50]" />
+          <video ref={remoteVideo} autoPlay playsInline className="w-1/2 m-8 bg-[#2c3e50]" />
+        </div>
+      ) : (
+        <div className="relative mt-6">
+          <video ref={remoteVideo} autoPlay playsInline className="w-full h-screen bg-[#2c3e50]" />
+          <video ref={webcamVideo} autoPlay muted playsInline className="absolute bottom-6 right-6 w-1/4 h-auto bg-[#2c3e50]" />
+        </div>
+      )}
+      <div className="media-controls flex justify-between items-center bg-gray-200 p-4">
+        <button className="btn">Settings</button>
+        <div>
+          <button ref={toggleAudioButton} onClick={toggleAudio} className="video mx-2"><Audio /></button>
+          <button ref={toggleVideoButton} onClick={toggleVideo} className="video mx-2"><Video /></button>
+          <button className="mx-2"><Chat /></button>
+        </div>
+        <button 
+          ref={hangupButton} 
+          onClick={hangupCall} 
+          className="btn"
+        >
+          Leave meeting
+        </button>
+      </div>
+  
       <div className="testing mt-20">
-        <p>Below here is for testing purposes, these buttons were not incorporated into mid fi</p>
-        <button ref={webcamButton} onClick={setupMediaSources} id="startWebcam">
+        <button ref={webcamButton} onClick={setupMediaSources} id="startWebcam" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Start webcam
         </button>
-        <div>
-          <input
-            ref={callInput}
-            type="text"
-            placeholder="Call ID"
-          />
-        </div>
-        <button ref={callButton} onClick={createOffer}>
+        <button
+          ref={callButton}
+          onClick={createOffer}
+          id="call"
+          className="bg-blue-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-2"
+        >
           Call
         </button>
-        <button ref={answerButton} onClick={answerCall}>
+        <button 
+          ref={answerButton} 
+          id="answer" 
+          onClick={answerCall}
+          className="bg-blue-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-2"
+        >
           Answer
         </button>
-      </div>
-    </div >
+        <div className="flex items-center">
+          <label htmlFor="callToken" className="mr-2">Put Call token here:</label>
+          <input ref={callInput} type="text" id="callToken" className="border rounded py-1 px-2" />
+          </div>
+        </div>
+    </div>
   );
 };
 
