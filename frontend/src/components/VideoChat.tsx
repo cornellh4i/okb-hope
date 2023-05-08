@@ -441,7 +441,7 @@ const VideoChat: React.FC = () => {
           <video ref={webcamVideo} autoPlay muted playsInline className="absolute bottom-6 right-6 w-1/4 h-auto bg-[#2c3e50] border-black border-2" />
         </div>
       )}
-      <div className="media-controls flex justify-between items-center bg-gray-200 p-4">
+      <div className="media-controls flex justify-between items-center bg-gray-200 p-4 ">
         <button className="btn">Settings</button>
         <div>
           <button ref={toggleAudioButton} onClick={toggleAudio} className="video mx-2"><Audio /></button>
