@@ -31,6 +31,11 @@ const VideoChat: React.FC = () => {
   useEffect(() => {
     if (pc) {
       const channel = pc.createDataChannel('timer');
+      channel.onmessage = (event) => {
+        if (event.data === 'start') {
+          startTimer(); // starts the timer on the offerer's side
+        }
+      };
       setDataChannel(channel);
     }
   }, [pc]);
@@ -125,6 +130,7 @@ const VideoChat: React.FC = () => {
    * the offer, setting up listeners for changes, and adding remote candidates to the 
    * peer connection object. If available, the function enables the hangupButton.
    */
+
   const createOffer = async () => {
     if (callInput.current) {
       callInput.current.value = callDoc.id;
@@ -136,23 +142,14 @@ const VideoChat: React.FC = () => {
       }
     };
 
-    // let dataChannel = pc!.createDataChannel('chat');
-    // dataChannel.onmessage = (event) => {
-    //   console.log(event.data);
-    // };
-
-    // dataChannel.onopen = () => {
-    //   dataChannel.send('data channel is open');
-    // };
-
-    // pc!.ondatachannel = (event) => {
-    //   const channel = event.channel;
-    //   channel.onmessage = (e) => {
-    //     if (e.data === 'start') {
-    //       startTimer(); // starts the timer on the caller's side
-    //     }
-    //   };
-    // };
+    pc!.ondatachannel = (event) => {
+      const channel = event.channel;
+      channel.onmessage = (e) => {
+        if (e.data === 'start') {
+          startTimer(); // starts the timer on the caller's side
+        }
+      };
+    };
 
 
     const offerDescription = await pc!.createOffer(); /** returns offer description */
@@ -220,6 +217,23 @@ const VideoChat: React.FC = () => {
       event.candidate && addDoc(answerCandidates_, event.candidate.toJSON());
     };
 
+    pc!.ondatachannel = (event) => {
+      const channel = event.channel;
+      channel.onmessage = (e) => {
+        if (e.data === 'start') {
+          startTimer(); // starts the timer on the answerer's side
+        }
+      };
+    
+      // Add the event listener for the open event
+      channel.addEventListener('open', () => {
+        channel.send('start');
+      });
+    
+      // Set the received data channel to the state
+      setDataChannel(channel);
+    };
+
     const callDocSnapshot = await getDoc(callRef);
     const callData = callDocSnapshot.data();
 
@@ -239,9 +253,7 @@ const VideoChat: React.FC = () => {
 
     await updateDoc(callRef, { answer });
     startTimer(); // starts timer for call
-    // if (dataChannel && dataChannel.readyState === 'open') {
-    //   dataChannel.send('start'); // send a start message to the caller
-    // }
+
 
     onSnapshot(offerCandidates_, (snapshot) => {
       const changes = snapshot.docChanges();
