@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const LoginPopup: React.FC<{ onClose: () => void, signInWithGoogleAndRedirect: (onClose: () => void) => Promise<void> }> = ({ onClose, signInWithGoogleAndRedirect }) => {
 
     return (

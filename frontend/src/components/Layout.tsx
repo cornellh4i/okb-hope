@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import Navbar from '@/components/navbar/Navbar';
+import { ReactNode } from 'react';
+import Navbar from '@/components/Navbar';
 
 type LayoutProps = {
   children: ReactNode;

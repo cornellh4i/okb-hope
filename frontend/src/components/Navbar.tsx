@@ -1,10 +1,11 @@
-import { logout, signInWithGoogle } from '../../../firebase/firebase';
-import { useAuth } from '../../../contexts/AuthContext';
+import { logout, signInWithGoogle } from '../../firebase/firebase';
+import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
-import Logo from '../../assets/logo.svg';
+import Logo from '../assets/logo.svg';
 
-export default function Navbar() {
+const Navbar = () => {
   const { user } = useAuth();
+
   return (
     <header>
       <nav className="">
@@ -53,3 +54,5 @@ export default function Navbar() {
     </header>
   );
 }
+
+export default Navbar;

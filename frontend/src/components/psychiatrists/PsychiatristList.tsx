@@ -1,7 +1,6 @@
 // components/PsychiatristList.tsx
-import React from 'react';
-import BookMark from '../../assets/bookmark.svg'
-import Message from '../../assets/message.svg'
+import BookMark from '@assets/bookmark.svg'
+import Message from '@assets/message.svg'
 
 enum Gender {
   Male = 0,

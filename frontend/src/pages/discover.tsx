@@ -1,8 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import Fuse from 'fuse.js';
 import SearchBar from '../components/SearchBar';
 import PsychiatristList from '../components/PsychiatristList';
-import json_results from '../psychs.json';
+import json_results from '../temp_data/psychs.json';
 
 enum Gender {
   Male = 0,

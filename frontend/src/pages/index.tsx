@@ -13,7 +13,6 @@ const MyPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {user && <Dashboard />}
-      <main></main>
     </>
   );
 };

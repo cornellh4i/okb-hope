@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import BookMark from '../assets/bookmark.svg'
 import Message from '../assets/message.svg'
 import Link from 'next/link';

@@ -1,8 +1,7 @@
-import CalendarIcon from '../../assets/calendar_icon.svg'
-import CameraIcon from '../../assets/camera_icon.svg'
-import ClockIcon from '../../assets/clock_icon.svg'
-import Arrow from '../../assets/arrow.svg'
-// import TempCalendar from '../Assets/temp_calendar.svg'
+import CalendarIcon from '@assets/calendar_icon.svg'
+import CameraIcon from '@assets/camera_icon.svg'
+import ClockIcon from '@assets/clock_icon.svg'
+import Arrow from '@assets/arrow.svg'
 
 type DropdownProp = {
   img: any,
@@ -43,7 +42,7 @@ function Dropdown(props: DropdownProp) {
   )
 }
 
-export default function BookApp() {
+const BookApp = () => {
   return (
     <div className="bg-white p-16">
       <div className="max-w-6xl w-500 mx-auto p-16 bg-[#DEDEDE] shadow-lg rounded-3xl">
@@ -73,6 +72,8 @@ export default function BookApp() {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   )
 }
+
+export default BookApp;
