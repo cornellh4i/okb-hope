@@ -1,8 +1,7 @@
-import CalendarIcon from '../../assets/calendar.svg'
-import CameraIcon from '../../assets/camera_icon.svg'
-import ClockIcon from '../../assets/clock_icon.svg'
-import Arrow from '../../assets/calendar.svg'
-// import TempCalendar from '../Assets/temp_calendar.svg'
+import CalendarIcon from '@assets/calendar_icon.svg'
+import CameraIcon from '@assets/camera_icon.svg'
+import ClockIcon from '@assets/clock_icon.svg'
+import Arrow from '@assets/arrow.svg'
 
 type DropdownProp = {
   img: any,
@@ -15,7 +14,7 @@ type DropdownProp = {
  * @param props contains icon image, text, and select text
  * @returns TSX of a dropdown item
  */
-function Dropdown(props: DropdownProp) {
+const Dropdown = (props: DropdownProp) => {
   return (
     <div className="dropdown flex-row p-0 gap-5 order-none grow-0 h-70 shadow-md rounded-3xl">
       <label tabIndex={0} className="btn btn-wide btn-ghost rounded-full bg-white text-black shadow-lg">
@@ -43,7 +42,7 @@ function Dropdown(props: DropdownProp) {
   )
 }
 
-export default function BookApp() {
+const BookApp = () => {
   return (
     <div className="bg-white p-16">
       <div className="max-w-6xl w-500 mx-auto p-16 bg-[#DEDEDE] shadow-lg rounded-3xl">
@@ -73,6 +72,8 @@ export default function BookApp() {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   )
 }
+
+export default BookApp;

@@ -14,13 +14,13 @@ admin.initializeApp();
 
 // A basic HTTP function that takes a name and returns a greeting. Test it in the browser by running `firebase serve --only functions --port=5002` and navigating to http://localhost:5002/your-project-id/us-central1/basicHTTP?name=your-name when inside the functions folder!
 
-export const basicHTTP = functions.https.onRequest((request, response) => {
-    const name = request.query.name;
-    if (!name) {
-      response.status(400).send('ERROR you must supply a name :(');
-    }
-    response.send(`hello ${name}`);
-  });
+// export const basicHTTP = functions.https.onRequest((request, response) => {
+//     const name = request.query.name;
+//     if (!name) {
+//       response.status(400).send('ERROR you must supply a name :(');
+//     }
+//     response.send(`hello ${name}`);
+//   });
 
 // calendly auth
 const clientId = "21GhUOzi7KHTsg2dmSCheBBaqNQUYg_KZyMqARo-n6o";
