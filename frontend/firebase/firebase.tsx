@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { FacebookAuthProvider, getAuth, GoogleAuthProvider, TwitterAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-import { addDoc, collection, getDocs, getFirestore, query, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, getFirestore, query, where, doc, getDoc} from "firebase/firestore";
 import firebaseConfig from "../serviceAccount.json";
 
 // Initialize Firebase
@@ -12,7 +12,7 @@ const auth = getAuth(app);
 // Initialize Cloud Firestore through Firebase
 const db = getFirestore(app);
 
-const signInWithGoogle = async () => {
+const signInWithGoogle = async (role = "client") => {
   try {
     const res = await signInWithPopup(auth, new GoogleAuthProvider());
     const user = res.user;
@@ -25,6 +25,7 @@ const signInWithGoogle = async () => {
         name: user.displayName,
         authProvider: "google",
         email: user.email,
+        role: role,
       });
     }
   }
@@ -36,5 +37,12 @@ const signInWithGoogle = async () => {
 };
 
 const logout = () => signOut(auth);
+
+// const getUserRole = async (uid) => {
+//   const userRef = doc(db, "users", uid)
+//   const userRole = await getDoc(userRef)
+
+//   console.log(userRole.get("role"))
+// }
 
 export { auth, db, app, signInWithGoogle, logout };

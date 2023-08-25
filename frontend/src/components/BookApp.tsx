@@ -14,7 +14,7 @@ type DropdownProp = {
  * @param props contains icon image, text, and select text
  * @returns TSX of a dropdown item
  */
-function Dropdown(props: DropdownProp) {
+const Dropdown = (props: DropdownProp) => {
   return (
     <div className="dropdown flex-row p-0 gap-5 order-none grow-0 h-70 shadow-md rounded-3xl">
       <label tabIndex={0} className="btn btn-wide btn-ghost rounded-full bg-white text-black shadow-lg">

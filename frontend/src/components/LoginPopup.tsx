@@ -7,7 +7,7 @@ export const LoginPopup: React.FC<{ onClose: () => void, signInWithGoogleAndRedi
           <button className="absolute top-2 right-2 text-[#5F5F5F] text-[24px] font-bold" onClick={onClose}>
             &times;
           </button>
-          <h2 className="text-xl font-bold">Log in to save, message, and book appointments with psychiatrists</h2>
+          <h2 className="text-xl font-bold">Log in to save, message, and book appointments with professionals</h2>
           <button className="btn bg-[#E5E5E5] w-full" onClick={() => signInWithGoogleAndRedirect(onClose)}>
             Login
           </button>

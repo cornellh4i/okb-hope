@@ -1,4 +1,4 @@
-export default function AboutUs() {
+const AboutUs = () => {
   return (
     <div>
       <p>
@@ -7,3 +7,5 @@ export default function AboutUs() {
     </div>
   )
 }
+
+export default AboutUs;

@@ -1,29 +1,10 @@
 // components/PsychiatristList.tsx
+import { IPsychiatrist } from '@/schema';
 import BookMark from '@assets/bookmark.svg'
 import Message from '@assets/message.svg'
 
-enum Gender {
-  Male = 0,
-  Female = 1
-}
-
-interface Psychiatrist {
-  id: number;
-  first_name: string;
-  last_name: string;
-  title: string;
-  profile_pic: null;
-  availability: string[];
-  gender: Gender;
-  location: string;
-  language: string[];
-  specialty: string[];
-  description: string
-}
-
-
 interface PsychiatristListProps {
-  results: Psychiatrist[];
+  results: IPsychiatrist[];
 }
 
 const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {

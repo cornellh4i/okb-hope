@@ -1,9 +1,11 @@
 import BookApp from '../components/BookApp';
 
-export default function Bookings() {
+const Bookings = () => {
     return (
         <div>
             <BookApp />
         </div>
     );
 }
+
+export default Bookings

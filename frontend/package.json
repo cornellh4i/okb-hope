@@ -19,6 +19,7 @@
     "detective": "^5.2.1",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
+    "eslint-config-react-app": "^7.0.1",
     "firebase": "^9.19.1",
     "firebase-functions": "^4.2.1",
     "fuse.js": "^6.6.2",

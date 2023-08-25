@@ -6,29 +6,10 @@ import { useAuth } from '../../contexts/AuthContext';
 import { signInWithGoogle } from '../../firebase/firebase';
 import { useRouter } from 'next/router';
 import { LoginPopup } from './LoginPopup';
-
-
-enum Gender {
-  Male = 0,
-  Female = 1
-}
-
-interface Psychiatrist {
-  id: number;
-  first_name: string;
-  last_name: string;
-  title: string;
-  profile_pic: null;
-  availability: string[];
-  gender: Gender;
-  location: string;
-  language: string[];
-  specialty: string[];
-  description: string
-}
+import { IPsychiatrist } from '@/schema';
 
 interface PsychiatristListProps {
-  results: Psychiatrist[];
+  results: IPsychiatrist[];
 }
 
 const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {

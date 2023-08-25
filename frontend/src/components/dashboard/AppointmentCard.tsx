@@ -1,5 +1,5 @@
-import CalendarIcon from '@assets/calendar.svg'
-import ClockIcon from '@assets/clock.svg'
+import CalendarIcon from '@/assets/calendar.svg'
+import ClockIcon from '@/assets/clock.svg'
 import questions from '../../temp_data/appointment_questions.json'
 import AppointmentQuestion from './AppointmentQuestion'
 import Link from 'next/link';
