@@ -1,9 +1,36 @@
-# MERN Starter
+# OKB Hope Foundation
 
-This repository provides an opinionated, pre-configured project setup for a MERN webapp's frontend and backend components.
+## About
+**OKB Hope Foundation** works to transform healthcare provision in Ghana through collaborative education, cutting-edge research, and patient-centered care. They also seek to spread awareness and increase ease of access to health professionals and information.
 
-The frontend and backend both make use of TypeScript, and the repository comes pre-packaged with testing, continuous integration workflows, auto-PR requesting (CODEOWNERS), and a PR template
+The frontend and backend both make use of TypeScript, and the repository comes pre-packaged with testing, continuous integration workflows, auto-PR requesting (CODEOWNERS), and a PR template.
 
-The frontend and backend repos each have a README to help you get started with the project.
 
-To get started, either fork this repo or clone using `git clone https://github.com/Archit404Error/MERN-webapp`
+## Development Team
+
+### Fall 2023
+PM/TL:
++ Dylan Tom
++ Rhea Varma
+
+Developers:
+
+### Spring 2023
+Product Manager:
++ Gloria Shi
+
+Tech Lead:
++ Ved Sriraman
+
+Developers:
++ Dylan Tom
++ James Kim
++ Michelle Sun
++ Jae Hahn
++ Jessica Cho
++ Pranav Mishra
+
+Designers:
++ Jennifer Huang
++ Naomi Rufian
++ Katherine Chang

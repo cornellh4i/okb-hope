@@ -6,7 +6,8 @@ const ArticleCard = ({ title, body }: { title: string, body: string }) => {
   return (
     <div className="card w-11/12 bg-base-100 shadow-xl">
       <div className="card-body justify-center">
-        <ArticleIcon />
+        <figure className="object-cover"><ArticleIcon /></figure>
+        {/* <ArticleIcon /> */}
         <h2 className="card-title justify-evenly">{title}</h2>
         <h2>{body}</h2>
       </div>
