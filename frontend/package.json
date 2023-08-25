@@ -6,7 +6,8 @@
     "dev": "yarn next dev -p 3000",
     "build": "yarn next build",
     "start": "yarn next start",
-    "lint": "yarn next lint"
+    "lint": "yarn next lint",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "@svgr/webpack": "^7.0.0",
@@ -45,6 +46,7 @@
     "autoprefixer": "^10.4.14",
     "babel-loader": "^9.1.2",
     "cypress": "^12.8.1",
+    "gh-pages": "^6.0.0",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.7"
   }

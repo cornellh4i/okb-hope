@@ -1,4 +1,5 @@
-import { LeftArrow, RightArrow } from "@/assets/arrows"
+import LeftArrow from "@/assets/left_arrow.svg"
+import RightArrow from "@/assets/right_arrow.svg"
 
 const NavigationButtons = ({ goBack, goNext }) => {
 

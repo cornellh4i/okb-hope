@@ -1,4 +1,4 @@
-import BookApp from '../components/BookApp';
+import BookApp from '@/components/BookApp';
 
 const Bookings = () => {
     return (
