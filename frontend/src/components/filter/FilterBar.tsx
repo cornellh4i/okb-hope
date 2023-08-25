@@ -2,7 +2,7 @@ import chevron_left from "@/assets/chevron_left";
 import chevron_right from "@/assets/chevron_right";
 import chevron_down from "@/assets/chevron_down";
 
-export default function FilterBar() {
+const FilterBar = () => {
     // Options for dropdown menu
     const ageGroups = ["Below 19", "20-30", "30-40", "40-50", "Over 50"]
     const genders = ["Male", "Female"]
@@ -43,3 +43,5 @@ export default function FilterBar() {
         </div>
     )
 }
+
+export default FilterBar;

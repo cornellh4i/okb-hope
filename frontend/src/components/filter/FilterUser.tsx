@@ -16,7 +16,7 @@ export interface UserType {
     id: string;
 }
 
-export default function FilterUser() {
+const FilterUser = () => {
     /**
      * Controls the view of users, separated by patients and psychiatrists. 
      * patientView is true if we are on the patient view and false if we 
@@ -56,7 +56,7 @@ export default function FilterUser() {
      * Retrieves all the users from firebase collection. Separates them into
      * patients and psychiatrists. Re-rendered only on firebase change. 
      */
-    const userRef = collection(db, "Users");
+    const userRef = collection(db, "users");
 
     useEffect(() => {
         async function fetchUsers() {
@@ -99,3 +99,4 @@ export default function FilterUser() {
 }
 
 
+export default FilterUser;

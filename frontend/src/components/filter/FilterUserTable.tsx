@@ -2,7 +2,7 @@ import { useState } from "react";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 
-export default function FilterUserTable({ currentRecords }) {
+const FilterUserTable = ({ currentRecords }) => {
 
   // Contains all the selected Users (checked users)
   const [isSelected, setIsSelected] = useState<string[]>([]);
@@ -20,7 +20,6 @@ export default function FilterUserTable({ currentRecords }) {
       updatedList.splice(isSelected.indexOf(event.target.value), 1);
     }
     setIsSelected(updatedList);
-    console.log(updatedList)
   };
 
   /**
@@ -29,7 +28,7 @@ export default function FilterUserTable({ currentRecords }) {
    */
   async function deleteUsers(userids: string[]) {
     for (const uid of userids) {
-      await deleteDoc(doc(db, "Users", uid));
+      await deleteDoc(doc(db, "users", uid));
     }
   }
 
@@ -72,3 +71,5 @@ export default function FilterUserTable({ currentRecords }) {
     </div>
   )
 }
+
+export default FilterUserTable;
