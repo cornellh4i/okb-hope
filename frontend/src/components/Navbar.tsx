@@ -1,15 +1,16 @@
-import { logout, signInWithGoogle } from '../../../firebase/firebase';
-import { useAuth } from '../../../contexts/AuthContext';
+import { logout, signInWithGoogle } from '../../firebase/firebase';
+import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
-import Logo from '../../assets/logo.svg';
+import Logo from '../assets/logo.svg';
+import colors from '@/colors';
 
-export default function Navbar() {
+const Navbar = () => {
   const { user } = useAuth();
+
   return (
     <header>
       <nav className="">
-        <div className="navbar flex bg-[#C1C1C1] items-end">
-          {/* logo for website */}
+        <div className={`navbar flex bg-[${colors.white}] items-end`}>
           <Logo />
           <div className="flex-1"></div>
           <ul className="menu menu-horizontal px-1 flex space-x-5">
@@ -27,23 +28,23 @@ export default function Navbar() {
             )}
             <li>
               <Link href="/about" className="w-18">
-                <div className="text-[18px] font-[500]">About Us</div>
+                <div className="text-[18px] font-[500]">About</div>
               </Link>
             </li>
             <li>
               {user ? (
                 <button
-                  className="btn bg-[#E6E6E6] btn-ghost glass w-18 rounded-full bg-base-100"
+                  className="btn bg-[#195BA5] btn-ghost w-18 rounded-full bg-base-100 text-white"
                   onClick={logout}
                 >
-                  Logout
+                  Log Out
                 </button>
               ) : (
                 <button
-                  className="btn bg-[#E6E6E6] btn-ghost glass w-18 rounded-full bg-base-100"
-                  onClick={signInWithGoogle}
+                  className="btn bg-[#195BA5] btn-ghost w-18 rounded-full bg-base-100 text-white"
+                  onClick={() => signInWithGoogle()}
                 >
-                  Login
+                  Log In
                 </button>
               )}
             </li>
@@ -51,5 +52,8 @@ export default function Navbar() {
         </div>
       </nav>
     </header>
+    
   );
 }
+
+export default Navbar;
