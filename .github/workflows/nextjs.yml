@@ -26,6 +26,13 @@ jobs:
         run: |
           # Retrieve the JSON secret
           echo "${{ secrets.SERVICE_ACCOUNT }}" > ./frontend/serviceAccount.json
+          
+          if ! jq empty "./frontend/serviceAccount.json"; then
+            echo "JSON parsing failed. Invalid JSON file."
+            exit 1
+          fi
+
+          echo "JSON parsing successful. JSON file is valid."
 
       - name: Build Next.js site
         run: yarn run build
