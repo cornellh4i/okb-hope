@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { FacebookAuthProvider, getAuth, GoogleAuthProvider, TwitterAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { addDoc, collection, getDocs, getFirestore, query, where, doc, getDoc} from "firebase/firestore";
 import firebaseConfig from "../serviceAccount.json";
 
@@ -37,12 +37,5 @@ const signInWithGoogle = async (role = "client") => {
 };
 
 const logout = () => signOut(auth);
-
-// const getUserRole = async (uid) => {
-//   const userRef = doc(db, "users", uid)
-//   const userRole = await getDoc(userRef)
-
-//   console.log(userRole.get("role"))
-// }
 
 export { auth, db, app, signInWithGoogle, logout };

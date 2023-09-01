@@ -14,6 +14,11 @@ PM/TL:
 + Rhea Varma
 
 Developers:
++ Jae Hahn
++ Jackie Chin
++ Amy Wu
++ Elnandia Jean-Noel
++ Akhil Iyengar
 
 ### Spring 2023
 Product Manager:

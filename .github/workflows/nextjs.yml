@@ -22,6 +22,11 @@ jobs:
         run: yarn install
         working-directory: ./frontend
 
+      - name: Get JSON secret
+        run: |
+          # Retrieve the JSON secret
+          echo "${{ secrets.SERVICE_ACCOUNT }}" > ./frontend/serviceAccount.json
+
       - name: Build Next.js site
         run: yarn run build
         working-directory: ./frontend

@@ -6,6 +6,10 @@
 
 <!-- Summarize your changes here. -->
 
+## Replication
+
+<!-- How can someone test your code. -->
+
 ## Changes Made
 
 <!-- Include details of what your changes actually are and how it is intended to work. -->
@@ -14,15 +18,15 @@
 
 <!-- Describe how you tested this feature. Manual testing and/or unit testing. Please include repro steps and/or how to turn the feature on if applicable. -->
 
-## Next Steps (delete if not applicable)
+## Next Steps 
 
 <!-- If this is part of a multi-PR change, please describe what changes you plan on addressing in future PRs. -->
 
-## Related PRs or Issues (delete if not applicable)
+## Related PRs or Issues
 
 <!-- List related PRs against other branches/repositories. -->
 
-## Screenshots (delete if not applicable)
+## Screenshots
 
 <!-- This could include of screenshots of the new feature / proof that the changes work. -->
 

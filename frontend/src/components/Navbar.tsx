@@ -2,7 +2,7 @@ import { logout, signInWithGoogle } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/AuthContext";
 import Link from "next/link";
 import Logo from '@/assets/logo.svg'
-import { sign } from "crypto";
+import colors from "@/colors";
 
 const Navbar = () => {
   const { user } = useAuth();
@@ -10,7 +10,7 @@ const Navbar = () => {
   return (
     <header>
       <nav className="">
-        <div className="navbar flex bg-[#C1C1C1] items-end">
+        <div className={` flex bg-[${colors.dark_gray}] items-end`}>
           {/* logo for website */}
           <Logo />
           <div className="flex-1"></div>
@@ -36,7 +36,7 @@ const Navbar = () => {
                   <div tabIndex={0} className="btn btn-circle"></div>
                   <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
                     <Link href="edit_profile">
-                      <li><a>Edit Profile</a></li>
+                      <li>Edit Profile</li>
                     </Link>
                     <li><a onClick={logout}>Log out</a></li>
                   </ul>
