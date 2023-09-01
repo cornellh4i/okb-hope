@@ -1,4 +1,4 @@
-import EditPatientProfile from "@/components/patient_profile/EditPatientProfile";
+import EditPatientProfile from "@/components/EditPatientProfile";
 
 export default function Home() {
   return (
