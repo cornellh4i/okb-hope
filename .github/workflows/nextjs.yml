@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          node-version: 18
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -25,9 +27,10 @@ jobs:
       - name: Get JSON secret
         run: |
           # Retrieve the JSON secret
-          echo "${{ secrets.SERVICE_ACCOUNT }}" > ./frontend/serviceAccount.json
-          
-          if ! jq empty "./frontend/serviceAccount.json"; then
+          json_file = "./frontend/serviceAccount.json"
+          echo "${{ secrets.SERVICE_ACCOUNT }}" > $json_file
+
+          if ! jq empty "$json_file"; then
             echo "JSON parsing failed. Invalid JSON file."
             exit 1
           fi
