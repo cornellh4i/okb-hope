@@ -34,6 +34,8 @@ jobs:
 
           echo "JSON parsing successful. JSON file is valid."
 
+          head ./frontend/serviceAccount.json
+
       - name: Build Next.js site
         run: yarn run build
         working-directory: ./frontend
