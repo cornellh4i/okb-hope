@@ -38,7 +38,9 @@ const Navbar = () => {
                     <Link href="edit_profile">
                       <li>Edit Profile</li>
                     </Link>
-                    <li><a onClick={logout}>Log out</a></li>
+                    <button onClick={logout}>
+                      <li>Log Out</li>
+                    </button>
                   </ul>
                 </div> :
                 <button

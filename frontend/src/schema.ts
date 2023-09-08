@@ -29,13 +29,13 @@ export interface IPsychiatrist {
     description: string;
 }
 
-export interface IChat { }
+// export interface IChat { }
 
-export interface ICall { }
+// export interface ICall { }
 
-export interface ITicket { }
+// export interface ITicket { }
 
-export interface IResponse { }
+// export interface IResponse { }
 
 export interface IUser {
     active: Timestamp;

@@ -4,8 +4,8 @@ import React from 'react';
 import { AuthProvider } from '../../contexts/AuthContext';
 import Layout from '@/components/Layout';
 
-function getLayout(Component: any) {
-  return Component.noNavbar ? (pageProps: any) => <>{pageProps.children}</> : Layout;
+function getLayout(Component) {
+  return Component.noNavbar ? (pageProps) => <>{pageProps.children}</> : Layout;
 }
 
 export default function App({ Component, pageProps }: AppProps) {

@@ -13,7 +13,7 @@ const FilterUserTable = ({ currentRecords }) => {
    * @param event The checkbox event
    */
   const handleCheck = (event) => {
-    var updatedList = [...isSelected];
+    let updatedList = [...isSelected];
     if (event.target.checked) {
       updatedList = [...isSelected, event.target.value];
     } else {

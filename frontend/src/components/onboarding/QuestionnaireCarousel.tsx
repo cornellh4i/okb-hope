@@ -21,7 +21,7 @@ const QuestionnaireCarousel = () => {
    * if we are currently on the first question
    */
   const goBack = () => {
-    setCurrentQuestionIndex(currentQuestionIndex == 0 ? 0 :
+    setCurrentQuestionIndex(currentQuestionIndex === 0 ? 0 :
       currentQuestionIndex - 1);
   }
 
@@ -30,7 +30,7 @@ const QuestionnaireCarousel = () => {
    * if we are currently on the last question
    */
   const goNext = () => {
-    setCurrentQuestionIndex(currentQuestionIndex == maxQuestionCount - 1 ?
+    setCurrentQuestionIndex(currentQuestionIndex === maxQuestionCount - 1 ?
       maxQuestionCount - 1 : currentQuestionIndex + 1);
   }
 

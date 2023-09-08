@@ -25,7 +25,7 @@ const FilterUser = () => {
     const [patientView, setPatientView] = useState<boolean>(true);
     const [userData, setUserData] = useState<UserType[]>([]);
     // Records for selected tab based on patientView
-    const tabData = userData.filter(u => (u.patient == patientView));
+    const tabData = userData.filter(u => (u.patient === patientView));
     // User is currently on this page
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -39,7 +39,7 @@ const FilterUser = () => {
     // Records to be displayed on the current page filtered based on patientView
     const currentRecords = tabData.slice(indexOfFirstRecord, indexOfLastRecord);
     // The total number of pages
-    const numPages = tabData.length == 0 ? 1 : Math.ceil(tabData.length / recordsPerPage)
+    const numPages = tabData.length === 0 ? 1 : Math.ceil(tabData.length / recordsPerPage)
 
     /** nextPage moves forward the index of the current page. */
     const nextPage = () => {
@@ -65,7 +65,7 @@ const FilterUser = () => {
                 { ...doc.data(), id: doc.id } as UserType)
             );
             setUserData(users);
-        };
+        }
         fetchUsers()
 
     }, [userRef]);
