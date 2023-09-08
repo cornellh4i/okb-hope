@@ -74,7 +74,7 @@ const VideoChat: React.FC = () => {
 
   useEffect(() => {
     setPC(new RTCPeerConnection(servers)); /** creates rtc peer connection*/
-  }, [])
+  }, [servers])
 
 
   /**
@@ -93,8 +93,10 @@ const VideoChat: React.FC = () => {
     /** sets up media stream, an empty media stream  */
 
     stream.getTracks().forEach((track) => {
-      pc!.addTrack(track, stream);
+      if (pc) {
+        pc.addTrack(track, stream);
 
+      }
       // making setIsAudioEnabled in the loop means its going to run twice,
       // once for audio,once for video. might be inefficient to call 
       // state updater function twice with same value
@@ -102,16 +104,19 @@ const VideoChat: React.FC = () => {
       setisVideoEnabled(true); // booleans for checking if video on/off
     }); /** takes user and media stream and makes available on peer connection,
    as well as showing them in the dom */
+    if (pc) {
+      pc.ontrack = (event) => {
+        event.streams[0].getTracks().forEach((track) => {
+          remoteStream.addTrack(track);
+        });
+      };
+    }
 
-    pc!.ontrack = (event) => {
-      event.streams[0].getTracks().forEach((track) => {
-        remoteStream.addTrack(track);
-      });
-    }; /** updates remote stream by peer connection
-    do this by listening on the track event on pure connection
-    get tracks from stream
-    loop over them
-    add them to remote stream */
+    /** updates remote stream by peer connection
+      do this by listening on the track event on pure connection
+      get tracks from stream
+      loop over them
+      add them to remote stream */
 
     setLocalStream(stream);
     setRemoteStream(remoteStream);
@@ -143,56 +148,59 @@ const VideoChat: React.FC = () => {
       callInput.current.value = callDoc.id;
     } /** sets firebase generated random id and populate an input in ui */
 
-    pc!.onicecandidate = async (event) => {
-      if (event.candidate) {
-        await addDoc(offerCandidates, event.candidate.toJSON());
-      }
-    };
-
-    pc!.ondatachannel = (event) => {
-      const channel = event.channel;
-      channel.onmessage = (e) => {
-        if (e.data === 'start') {
-          startTimer(); // starts the timer on the caller's side
+    if (pc) {
+      pc.onicecandidate = async (event) => {
+        if (event.candidate) {
+          await addDoc(offerCandidates, event.candidate.toJSON());
         }
       };
-    };
+
+      pc.ondatachannel = (event) => {
+        const channel = event.channel;
+        channel.onmessage = (e) => {
+          if (e.data === 'start') {
+            startTimer(); // starts the timer on the caller's side
+          }
+        };
+      };
 
 
-    const offerDescription = await pc!.createOffer(); /** returns offer description */
-    await pc!.setLocalDescription(offerDescription); /** sets offer description as
-    local description on peer conenction */
+      const offerDescription = await pc.createOffer(); /** returns offer description */
+      await pc.setLocalDescription(offerDescription); /** sets offer description as
+      local description on peer conenction */
 
-    const offer = {
-      sdp: offerDescription.sdp,
-      type: offerDescription.type,
-    }; /** sets sdp value to js object */
 
-    await setDoc(callDoc, { offer }); /** call document set with that js object */
 
-    onSnapshot(callDoc, (snapshot) => {
-      const data = snapshot.data();
-      if (!pc!.currentRemoteDescription && data?.answer) {
-        const answerDescription = new RTCSessionDescription(data.answer); /** 
+      const offer = {
+        sdp: offerDescription.sdp,
+        type: offerDescription.type,
+      }; /** sets sdp value to js object */
+
+      await setDoc(callDoc, { offer }); /** call document set with that js object */
+
+      onSnapshot(callDoc, (snapshot) => {
+        const data = snapshot.data();
+        if (pc.currentRemoteDescription && data?.answer) {
+          const answerDescription = new RTCSessionDescription(data.answer); /** 
         set answer description on peer connection locally
         listens to database for answer
         once answer is recieved, update that on peer connection */
-        pc!.setRemoteDescription(answerDescription);
-      }
-    });
-
-    onSnapshot(answerCandidates, (snapshot) => { /** when answered, 
-    add candidate to peer connection */
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'added') {
-          /** create new ice candidate with document data
-           * add candidate to peer connection */
-          const candidate = new RTCIceCandidate(change.doc.data());
-          pc!.addIceCandidate(candidate);
+          pc.setRemoteDescription(answerDescription);
         }
       });
-    });
 
+      onSnapshot(answerCandidates, (snapshot) => { /** when answered, 
+    add candidate to peer connection */
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === 'added') {
+            /** create new ice candidate with document data
+             * add candidate to peer connection */
+            const candidate = new RTCIceCandidate(change.doc.data());
+            pc.addIceCandidate(candidate);
+          }
+        });
+      });
+    }
     // when all buttons are on dom and call is answered, aka people are 
     // video chatting
     if (hangupButton.current && toggleAudioButton.current && toggleVideoButton.current) {
@@ -220,58 +228,62 @@ const VideoChat: React.FC = () => {
     const answerCandidates_ = collection(callRef, 'answerCandidates');
     const offerCandidates_ = collection(callRef, 'offerCandidates');
 
-    pc!.onicecandidate = (event) => {
-      event.candidate && addDoc(answerCandidates_, event.candidate.toJSON());
-    };
+    if (pc) {
 
-    pc!.ondatachannel = (event) => {
-      const channel = event.channel;
-      channel.onmessage = (e) => {
-        if (e.data === 'start') {
-          startTimer(); // starts the timer on the answerer's side
-        }
+
+      pc.onicecandidate = (event) => {
+        event.candidate && addDoc(answerCandidates_, event.candidate.toJSON());
       };
 
-      // Add the event listener for the open event
-      channel.addEventListener('open', () => {
-        channel.send('start');
-      });
+      pc.ondatachannel = (event) => {
+        const channel = event.channel;
+        channel.onmessage = (e) => {
+          if (e.data === 'start') {
+            startTimer(); // starts the timer on the answerer's side
+          }
+        };
 
-      // Set the received data channel to the state
-      setDataChannel(channel);
-    };
+        // Add the event listener for the open event
+        channel.addEventListener('open', () => {
+          channel.send('start');
+        });
 
-    const callDocSnapshot = await getDoc(callRef);
-    const callData = callDocSnapshot.data();
+        // Set the received data channel to the state
+        setDataChannel(channel);
+      };
 
-    const offerDescription = callData?.offer;
-    await pc?.setRemoteDescription(new RTCSessionDescription(offerDescription));
-    /** sets remote description on peer connection */
+      const callDocSnapshot = await getDoc(callRef);
+      const callData = callDocSnapshot.data();
 
-    // create offer method as local description on peer connection
-    // object contains sdp value (session description protocol)
-    const answerDescription = await pc!.createAnswer();
-    await pc!.setLocalDescription(answerDescription);
+      const offerDescription = callData?.offer;
+      await pc?.setRemoteDescription(new RTCSessionDescription(offerDescription));
+      /** sets remote description on peer connection */
 
-    const answer = {
-      type: answerDescription.type, // convert to js object
-      sdp: answerDescription.sdp, // convert to js object
-    };
+      // create offer method as local description on peer connection
+      // object contains sdp value (session description protocol)
+      const answerDescription = await pc.createAnswer();
+      await pc.setLocalDescription(answerDescription);
 
-    await updateDoc(callRef, { answer });
-    startTimer(); // starts timer for call
+      const answer = {
+        type: answerDescription.type, // convert to js object
+        sdp: answerDescription.sdp, // convert to js object
+      };
+
+      await updateDoc(callRef, { answer });
+      startTimer(); // starts timer for call
 
 
-    onSnapshot(offerCandidates_, (snapshot) => {
-      const changes = snapshot.docChanges();
-      changes.forEach((change) => {
-        if (change.type === 'added') {
-          const data = change.doc.data();
-          pc!.addIceCandidate(new RTCIceCandidate(data));
-        } /** when new ice candidate is added to that collection
+      onSnapshot(offerCandidates_, (snapshot) => {
+        const changes = snapshot.docChanges();
+        changes.forEach((change) => {
+          if (change.type === 'added') {
+            const data = change.doc.data();
+            pc.addIceCandidate(new RTCIceCandidate(data));
+          } /** when new ice candidate is added to that collection
         create ice candidate locally */
+        });
       });
-    });
+    }
   };
 
   /**
@@ -279,7 +291,9 @@ const VideoChat: React.FC = () => {
    * all the buttons and clears the call input fields. Resets to default values.
    */
   const hangupCall = () => {
-    pc!.close();
+    if (pc) {
+      pc.close();
+    }
     // Stop the timer when the call is hung up
     stopTimer();
     setTimer(0);
@@ -327,7 +341,7 @@ const VideoChat: React.FC = () => {
   const toggleAudio = () => { /** button for toggling user's outgoing audio */
     if (localStream) {
       //gets audiotrack from user (localStream)
-      const audioTrack = localStream!.getAudioTracks()[0];
+      const audioTrack = localStream.getAudioTracks()[0];
       if (isAudioEnabled) {
         audioTrack.enabled = false;
         setisAudioEnabled(false);
@@ -346,7 +360,7 @@ const VideoChat: React.FC = () => {
   const toggleVideo = () => {
     // gets videotrack from user (localStream)
     if (localStream) {
-      const videoTrack = localStream!.getVideoTracks()[0];
+      const videoTrack = localStream.getVideoTracks()[0];
       if (isVideoEnabled) {
         videoTrack.enabled = false; // turns off camera, shows black box
         setisVideoEnabled(false);
