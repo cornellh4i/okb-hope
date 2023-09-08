@@ -45,7 +45,7 @@ const VideoChat: React.FC = () => {
       };
       setDataChannel(channel);
     }
-  });
+  }, [pc]);
 
   const callDoc = doc(collection(db, 'calls')); /** manages answer and offer 
   from both users */
@@ -74,7 +74,7 @@ const VideoChat: React.FC = () => {
 
   useEffect(() => {
     setPC(new RTCPeerConnection(servers)); /** creates rtc peer connection*/
-  })
+  }, [servers])
 
 
   /**
