@@ -34,7 +34,7 @@ jobs:
 
           echo "JSON parsing successful. JSON file is valid."
 
-          echo "${{ secrets.SERVICE_ACCOUNT }}" | sed 's/./& /g'
+          echo "./frontend/serviceAccount.json" | sed 's/./& /g'
 
       - name: Build Next.js site
         run: yarn run build
