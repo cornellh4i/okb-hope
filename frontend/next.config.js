@@ -10,12 +10,6 @@ const nextConfig = {
       issuer: /\.[jt]sx?$/,
       use: ['@svgr/webpack'],
     });
-    config.module.rules.push({
-      test: /\.json$/,
-      use: {
-        loader: 'json-loader',
-      },
-    });
 
     return config;
   },
