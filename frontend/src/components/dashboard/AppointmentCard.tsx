@@ -5,7 +5,7 @@ import AppointmentQuestion from './AppointmentQuestion'
 import Link from 'next/link';
 import React from 'react'
 
-interface AppointmentCard {
+interface IAppointmentCard {
   p_name: string,
   start: Date,
   end: Date
@@ -20,7 +20,7 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
   const month = start.toLocaleString('default', { month: 'long' });
   const day = start.toLocaleString('default', { weekday: 'long' });
   const [showModal, setShowModal] = React.useState(false);
-  const [concerns, setConcerns] = React.useState("...")
+
   return (
     <React.Fragment>
       <div className="card w-11/12 bg-base-100 shadow-xl">

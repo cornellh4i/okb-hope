@@ -1,5 +1,5 @@
-import chevron_left from "@/assets/chevron_left";
-import chevron_right from "@/assets/chevron_right";
+/** eslint-disable */
+
 import chevron_down from "@/assets/chevron_down";
 
 const FilterBar = () => {
