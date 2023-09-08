@@ -1,4 +1,3 @@
-/** eslint-disable */
 import CalendarIcon from '@/assets/calendar.svg'
 import CameraIcon from '@/assets/calendar.svg'
 import ClockIcon from '@/assets/clock.svg'
@@ -36,8 +35,8 @@ const Dropdown = (props: DropdownProp) => {
       </label>
 
       <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-64">
-        <li><a><div className="">Item 1</div></a></li>
-        <li><a>Item 2</a></li>
+        <li>Item 1</li>
+        <li>Item 2</li>
       </ul>
     </div>
   )

@@ -25,6 +25,7 @@ jobs:
       - name: Get JSON secret
         run: |
           # Retrieve the JSON secret
+          echo "${{ secrets.SERVICE_ACCOUNT }}"
           echo "${{ secrets.SERVICE_ACCOUNT }}" > "./frontend/serviceAccount.json"
 
           if ! jq empty "./frontend/serviceAccount.json"; then
