@@ -5,12 +5,6 @@ import AppointmentQuestion from './AppointmentQuestion'
 import Link from 'next/link';
 import React from 'react'
 
-interface IAppointmentCard {
-  p_name: string,
-  start: Date,
-  end: Date
-}
-
 const questionsArr = Object.values(questions);
 
 const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, start: Date, end: Date, description: string }) => {

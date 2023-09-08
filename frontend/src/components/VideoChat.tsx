@@ -31,6 +31,8 @@ const VideoChat: React.FC = () => {
   const [dataChannel, setDataChannel] = useState<RTCDataChannel | null>(null);
   const [layoutOption, setLayoutOption] = useState('grid'); // 'grid' or 'spotlight'
 
+  console.log(remoteStream);
+  console.log(dataChannel);
 
   // add this component to a new data channel
   useEffect(() => {
@@ -264,7 +266,7 @@ const VideoChat: React.FC = () => {
       const changes = snapshot.docChanges();
       changes.forEach((change) => {
         if (change.type === 'added') {
-          let data = change.doc.data();
+          const data = change.doc.data();
           pc!.addIceCandidate(new RTCIceCandidate(data));
         } /** when new ice candidate is added to that collection
         create ice candidate locally */

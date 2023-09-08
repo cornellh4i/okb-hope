@@ -38,8 +38,8 @@ const EditPatientProfile = () => {
                 <input type="text" placeholder="Select" className="input input-bordered w-full" disabled/>
               </div>
               <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
-                  <li><a>Yes</a></li>
-                  <li><a>No</a></li>
+                  <li>Yes</li>
+                  <li>No</li>
               </ul>
             </div>
 
@@ -51,11 +51,11 @@ const EditPatientProfile = () => {
                 <input type="text" placeholder="Select" className="input input-bordered w-full" disabled/>
               </div>
               <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
-                  <li><a>Within the last month</a></li>
-                  <li><a>Within the last 6 months</a></li>
-                  <li><a>Within the last year</a></li>
-                  <li><a>Over a year ago</a></li>
-                  <li><a>I have never spoken with a counselor/therapist before.</a></li>
+                  <li>Within the last month</li>
+                  <li>Within the last 6 months</li>
+                  <li>Within the last year</li>
+                  <li>Over a year ago</li>
+                  <li>I have never spoken with a counselor/therapist before.</li>
               </ul>
             </div>
 
@@ -67,12 +67,12 @@ const EditPatientProfile = () => {
                 <input type="text" placeholder="Select" className="input input-bordered w-full" disabled/>
               </div>
               <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
-                  <li><a>18-24</a></li>
-                  <li><a>25-34</a></li>
-                  <li><a>35-44</a></li>
-                  <li><a>45-54</a></li>
-                  <li><a>55-64</a></li>
-                  <li><a>65 and over</a></li>
+                  <li>18-24</li>
+                  <li>25-34</li>
+                  <li>35-44</li>
+                  <li>45-54</li>
+                  <li>55-64</li>
+                  <li>65 and over</li>
               </ul>
             </div>
 
@@ -113,9 +113,9 @@ const EditPatientProfile = () => {
                 <input type="text" placeholder="Select" className="input input-bordered w-full" disabled/>
               </div>
               <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
-                  <li><a>Male</a></li>
-                  <li><a>Female</a></li>
-                  <li><a>No preference</a></li>
+                  <li>Male</li>
+                  <li>Female</li>
+                  <li>No preference</li>
               </ul>
             </div>
 
