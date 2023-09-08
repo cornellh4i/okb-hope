@@ -11,6 +11,11 @@ const nextConfig = {
       use: ['@svgr/webpack'],
     });
 
+    config.module.rules.push({
+      test: /\.json$/,
+      loader: 'json-loader',
+    });
+
     return config;
   },
 
