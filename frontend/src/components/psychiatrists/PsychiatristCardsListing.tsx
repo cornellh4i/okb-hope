@@ -1,5 +1,5 @@
 import PyschiatristCard from './PsychiatristCard';
-import results from '../../temp_data/psychiatrists.json';
+import results from '@/temp_data/psychiatrists.json';
 
 const PsychiatristList = ({ max_size }: { max_size: number }) => {
   // Convert the results object into an array

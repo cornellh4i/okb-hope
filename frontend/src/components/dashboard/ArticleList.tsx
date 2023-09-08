@@ -1,6 +1,6 @@
 import React from 'react';
 import ArticleCard from './ArticleCard';
-import results from '../../temp_data/articles.json'; // contains article info 
+import results from '@/temp_data/articles.json'; // contains article info 
 
 const ArticleList = () => {
   // Convert the results object into an array
