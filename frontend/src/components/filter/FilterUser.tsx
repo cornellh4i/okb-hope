@@ -8,6 +8,7 @@ import chevron_right from "@/assets/chevron_right";
 import FilterBar from "./FilterBar";
 
 import FilterUserTable from "./FilterUserTable";
+import FilterBarTwo from "./FilterBarTwo";
 
 export interface UserType {
     active: Timestamp;
@@ -84,8 +85,11 @@ const FilterUser = () => {
                     className={`tab tab-bordered ${patientView ? '' : 'tab-active'}`}
                     onClick={() => setPatientView(false)}
                 >Psychiatrists</button>
+
+                {/* Conditional rendering based on setPatientView */}
+                {patientView ? <FilterBar /> : <FilterBarTwo />}
+
             </div>
-            <FilterBar />
             {/* Need to change this to the length of the query rather than just userData */}
             <div className="text-lg font-bold ml-4">{tabData.length} results</div>
             <FilterUserTable currentRecords={currentRecords} />
