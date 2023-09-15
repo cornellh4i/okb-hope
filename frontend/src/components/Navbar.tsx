@@ -3,60 +3,66 @@ import { useAuth } from "../../contexts/AuthContext";
 import Link from "next/link";
 import Logo from '@/assets/logo.svg'
 import colors from "@/colors";
+import { useRouter } from 'next/router';
 
 const Navbar = () => {
   const { user } = useAuth();
+  const router = useRouter();
 
   return (
-    <header>
-      <nav className="">
-        <div className={` flex bg-[${colors.dark_gray}] items-end`}>
-          {/* logo for website */}
-          <Logo />
-          <div className="flex-1"></div>
-          <ul className="menu menu-horizontal px-1 gap-5">
-            <li>
-              <Link href="/discover" className="w-18">
-                <div className="text-[18px] font-[500]">Discover Professionals</div>
-              </Link>
-            </li>
-            <li>
-              <Link href="/messages" className="w-18">
-                <div className="text-[18px] font-[500]">Messages</div>
-              </Link>
-            </li>
-            <li>
-              <Link href="/about" className="w-18">
-                <div className="text-[18px] font-[500]">About Us</div>
-              </Link>
-            </li>
-            <li>
-              {user ?
-                <div className="dropdown dropdown-hover dropdown-bottom dropdown-end">
-                  <div tabIndex={0} className="btn btn-circle"></div>
-                  <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
-                    <Link href="edit_profile">
-                      <li>Edit Profile</li>
-                    </Link>
-                    <button onClick={logout}>
-                      <li>Log Out</li>
-                    </button>
-                  </ul>
-                </div> :
-                <button
-                  className="btn bg-[#195BA5] btn-ghost w-18 rounded-full bg-base-100 text-white"
-                  onClick={() => signInWithGoogle()}
-                >
-                  Log In
-                </button>}
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </header>
+    <div className={`flex p-2.5 bg-[${colors.dark_gray}] items-end`}>
 
+      <div className="justify-start items-center gap-8 flex ml-2">
+        <Link href="/" className="w-18">
+          <Logo />
+        </Link>
+      </div>
+
+      <div className="flex-1"></div>
+      <ul className="menu menu-horizontal px-1 gap-5">
+        <li className={`${router.pathname === '/discover' ? 'underline-offset-1 custom-active' : ''}`}>
+          <Link href="/discover" className="w-18">
+            <div className="text-[18px] text-[#195BA5]">Discover Professionals</div>
+          </Link>
+        </li>
+
+        {user ? <li className={`${router.pathname === '/messages' ? 'underline-offset-1 custom-active' : ''}`}>
+          <Link href="/messages" className="w-18">
+            <div className="text-[18px] text-[#195BA5]">Messages</div>
+          </Link>
+        </li> : <div></div>}
+
+        <li className={`${router.pathname === '/about' ? 'underline-offset-1 custom-active' : ''}`}>
+          <Link href="/about" className="w-18">
+            <div className="text-[18px] text-[#195BA5]">About Us</div>
+          </Link>
+        </li>
+
+        {
+          user ? <div className="dropdown dropdown-hover dropdown-bottom dropdown-end">
+            <div tabIndex={0} className={`btn btn-circle bg-[${colors.okb_blue}]`}></div>
+            <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
+              <Link href="edit_profile">
+                <li>Edit Profile</li>
+              </Link>
+              <button onClick={logout}>
+                <li>Log Out</li>
+              </button>
+            </ul>
+          </div> : <li>
+            <div className="flex justify-center items-center">
+              <button
+                className="w-[104px] h-8 py-1.5 bg-sky-700 rounded-[10px] border-2 border-sky-700 justify-center items-center flex text-white"
+                onClick={() => signInWithGoogle()}
+              >
+                <div className="text-[18px] font-[600]">Log In</div>
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+    </div>
   )
 }
 
 export default Navbar;
-
