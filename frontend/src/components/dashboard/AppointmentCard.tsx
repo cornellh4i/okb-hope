@@ -30,7 +30,7 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
             {/* calculation of appointment time */}
             <div className="col-span-3 text-[12px]"><p>{start.getHours()}:{start.getMinutes()} - {end.getHours()}:{end.getMinutes()}</p></div>
           </div>
-{/* hi */}
+
           <button className="btn w-12/12 bg-[#9A9A9A] border-transparent font-[400]" onClick={() => setShowModal(true)}> Appointment Details</button>
           {showModal ? (
             // appointment details pop-up card
