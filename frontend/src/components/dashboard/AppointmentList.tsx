@@ -1,16 +1,15 @@
 import React from 'react';
 import AppointmentCard from './AppointmentCard';
 import results from '@/temp_data/appointments.json'; // appointment info 
-import NoSavedPsychComponent from './NoSavedPsych';
-import NoUpcomingAppointments from './NoUpcomingAppointments';
+// import NoUpcomingAppointments from './NoUpcomingAppointments';
 import savedPsych from '@/temp_data/savedpsych.json';
 
 const AppointmentList = () => {
   // Convert the results object into an array
-  const appointmentsArray = Object.values(results);
-  const psychNamesArray = savedPsych;
-  // const psychNamesArray = {};
-  // const appointmentsArray = Object.values(emptyresults);
+  var appointmentsArray = Object.values(results);
+
+  var psychNamesArray = savedPsych;
+  // appointmentsArray.length = 0;
 
   const appointmentCards = (() => {
     if (appointmentsArray?.length) {
@@ -25,7 +24,7 @@ const AppointmentList = () => {
         </div>
       ));
     } else {
-      return NoSavedPsychComponent
+      return <div>You have no upcoming appointments.</div>
     }
   })();
 
