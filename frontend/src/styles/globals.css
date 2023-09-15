@@ -8,7 +8,10 @@
 .custom-active {
   color: #195BA5;
   font-weight: bolder;
+  text-decoration: none;
+  pointer-events: none;
 }
+
 .custom-active::after {
   content: "";
   position: absolute;
