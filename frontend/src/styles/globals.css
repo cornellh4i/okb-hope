@@ -5,3 +5,16 @@
 .btn {
   text-transform: none;
 }
+.custom-active {
+  color: #195BA5;
+  font-weight: bolder;
+}
+.custom-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2.5px; /* Adjust the offset value as needed */
+  width: 100%;
+  height: 5px; /* Adjust the underline thickness as needed */
+  background-color: #195BA5;
+}
