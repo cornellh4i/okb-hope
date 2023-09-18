@@ -17,6 +17,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
         {/* search bar */}
         <div className='flex w-96 h-9 py-2 px-4 items-center gap-4 shrink-0 border-solid border rounded-lg border-[#5F5F5F] bg-[#FFFDFD]'>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="#9A9A9A"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           <p className='text-[#9A9A9A] italic text-xs font-normal'>Search Name or Title</p>
         </div>
         {/* <div className="flex flex-1 lg:flex-none border-[#5F5F5F] text-[#9A9A9A]">
