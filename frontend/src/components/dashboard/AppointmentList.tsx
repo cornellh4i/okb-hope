@@ -9,7 +9,7 @@ const AppointmentList = () => {
   var appointmentsArray = Object.values(results);
 
   var psychNamesArray = savedPsych;
-  // appointmentsArray.length = 0;
+  appointmentsArray.length = 0;
 
   const appointmentCards = (() => {
     if (appointmentsArray?.length) {
@@ -31,8 +31,7 @@ const AppointmentList = () => {
   return (
     // renders a card containing all of the AppointmentCards 
     <React.Fragment>
-      {/* add back bg-base-100 */}
-      <div className="card w-full">
+      <div className="card w-full bg-base-100">
         <div className="card-body">
           <h1 className="card-title pt-1/15 text-[32px]">Appointments</h1>
           <div className="grid grid-row-4 gap-4 items-center pt-1/12 shrink">
