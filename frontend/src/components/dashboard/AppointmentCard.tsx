@@ -4,16 +4,24 @@ import questions from '@/temp_data/appointment_questions.json'
 import AppointmentQuestion from './AppointmentQuestion'
 import Link from 'next/link';
 import React from 'react'
+import answers from '@/temp_data/appointment_answers.json'
 
 const questionsArr = Object.values(questions);
+const answersArr = Object.values(answers);
+
+// TODO: Make new array that represents question and answers, replace answerArr in the 
+// return react fragmemt appointment details
 
 const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, start: Date, end: Date, description: string }) => {
+
 
   // calculation of # days remaining until appt
   const daysTo = Math.floor((start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
   const month = start.toLocaleString('default', { month: 'long' });
   const day = start.toLocaleString('default', { weekday: 'long' });
   const [showModal, setShowModal] = React.useState(false);
+
+
 
   return (
     <React.Fragment>
@@ -82,9 +90,9 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
                       </div>
                       <br></br>
                       {/* questionnaire answers: map each JSON object to each individual Appointment Question */}
-                      {questionsArr.map(input => (
+                      {answersArr.map(input => (
                         <div key={input.id.toString()} className="appointment_question">
-                          <AppointmentQuestion name={input.id.toString()} question={input.question.toString()}></AppointmentQuestion>
+                          <AppointmentQuestion value={input.answer.toString()} name={input.id.toString()} question={input.question.toString()}></AppointmentQuestion>
                         </div>
                       ))}
                     </div>

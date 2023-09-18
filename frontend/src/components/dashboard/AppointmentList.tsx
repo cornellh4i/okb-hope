@@ -9,7 +9,7 @@ const AppointmentList = () => {
   var appointmentsArray = Object.values(results);
 
   var psychNamesArray = savedPsych;
-  appointmentsArray.length = 0;
+  // appointmentsArray.length = 0;
 
   const appointmentCards = (() => {
     if (appointmentsArray?.length) {
