@@ -24,6 +24,13 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
     }
   };
 
+  const handleSave = (event: React.MouseEvent) => {
+    if (!user) {
+      event.preventDefault();
+      setShowPopup(true);
+    }
+  };
+
   const signInWithGoogleAndRedirect = async (onClose: () => void) => {
     await signInWithGoogle();
     router.push('/messages'); // Moved this line before the closing of the popup
@@ -51,7 +58,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
                   <p className="text-[#000000] text-[16px] font-semibold">{psychiatrist.title} at {psychiatrist.location}</p>
                 </div>
                 <div className='flex justify-end items-center gap-4'>
-                  <button className="btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-[#FFFDFD] text-[16px] flex" >
+                  <button className="btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-[#FFFDFD] text-[16px] flex" onClick={handleSave}>
                     <BookMark />
                     <div>Save</div>
                   </button>
