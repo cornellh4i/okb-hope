@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { addDoc, collection, getDocs, getFirestore, query, where, doc, getDoc} from "firebase/firestore";
-import firebaseConfig from "../serviceAccount.json";
+
+const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_SERVICE_ACCOUNT!);
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

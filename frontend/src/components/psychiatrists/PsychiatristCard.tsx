@@ -10,16 +10,17 @@ const PyschiatristCard = ({ p_name, p_certifications }: { p_name: string, p_cert
   };
 
   return (
-    <div className="card w-11/12 bg-base-100 shadow-xl">
-      <div className="card-body">
+    <div className="card w-11/12 bg-base-100 shadow-xl m-6 border-[3px]">
+      <div className="card-body items-center p-4">
         {/* image of psychiatrist */}
         <PsychiatristIcon />
         <h2 className="card-title">{p_name}</h2>
-        <h2 className="font-[400] italic">{p_certifications}</h2>
+        <h2 className="font-[400] italic mb-0">{p_certifications}</h2>
         {/* view profile button */}
-        <div className="card-actions justify-left">
-          <button className="btn w-8/12 bg-[#9A9A9A] border-transparent">View Profile</button>
-          <button className="btn w-3/12 class = btn glass object-fill bg-cover " >
+        <div className="card-actions flex w-full mt-2 justify-left">
+          <button className="btn w-9/12 bg-okb-blue border-transparent">View Profile</button>
+          
+          <button className="btn w-2/12 p-0 glass object-cover bg-contain" >
             <BookmarkIcon />
           </button>
           {/* dummy component when view profile is pressed */}
