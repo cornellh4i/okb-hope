@@ -10,11 +10,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
-}
+
 
   return (
     <div>
-      <div className="navbar bg-base-300 rounded-box">
+      <div className="navbar rounded-box">
         <div className="flex-1 px-2 lg:flex-none">
           <div className="form-control">
             <div className="input-group">

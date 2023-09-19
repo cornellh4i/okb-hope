@@ -1,7 +1,7 @@
 /** eslint-disable */
 import { useState } from 'react';
 import chevron_down from "@/assets/chevron_down";
-import SearchBar from '../SearchBar';
+import SearchBarAdmin from '../SearchBarAdmin';
 
 
 const FilterBarTwo = () => {
@@ -26,10 +26,10 @@ const FilterBarTwo = () => {
     return (
 
         <div className="flex flex-row justify-center items-center p-0 gap-2">
-            {/* <div className="Search Name or Title">
-                <SearchBar onSearch={(handleSearch)} />
-            </div> */}
-            <input type="text" placeholder="Search Name" onChange={handleSearch} className="btn btn-sm border border-solid bg-white text-gray-500 italic text-left normal-case hover:bg-white" />
+            <div className="Search Name or Title">
+                <SearchBarAdmin onSearch={(handleSearch)} />
+            </div>
+            {/* <input type="text" placeholder="Search Name" onChange={handleSearch} className="btn btn-sm border border-solid bg-white text-gray-500 italic text-left normal-case hover:bg-white" /> */}
 
             <div className="dropdown">
                 <label tabIndex={0} className="btn btn-sm flex gap-16 m-1 border border-solid bg-white text-gray-500 italic normal-case">Weekly Availability {chevron_down}</label>
