@@ -1,0 +1,32 @@
+{
+  "1": {
+    "id": "input1",
+    "question": "Are there any specific concerns you would like to discuss with your counselor?",
+    "answer": "I would like to discuss familial relationships"
+  },
+  "2": {
+    "id": "input2",
+    "question": "Have you spoken with a counselor/therapist before?",
+    "answer": "Yes"
+  },
+  "3": {
+    "id": "input3",
+    "question": "If yes, when was the last time you spoke with one?",
+    "answer": "Over a year ago"
+  },
+  "4": {
+    "id": "input4",
+    "question": "What is your age?",
+    "answer": "below 19"
+  },
+  "5": {
+    "id": "input5",
+    "question": "What kind of counselor do you want to speak with?",
+    "answer": "Female"
+  },
+  "6": {
+    "id": "input6",
+    "question": "What is your preferred language?",
+    "answer": "English, Twi, Ga"
+  }
+}

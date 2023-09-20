@@ -4,10 +4,16 @@ import questions from '@/temp_data/appointment_questions.json'
 import AppointmentQuestion from './AppointmentQuestion'
 import Link from 'next/link';
 import React from 'react'
+import answers from '@/temp_data/appointment_answers.json'
 
 const questionsArr = Object.values(questions);
+const answersArr = Object.values(answers);
+
+// TODO: Make new array that represents question and answers, replace answerArr in the 
+// return react fragmemt appointment details
 
 const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, start: Date, end: Date, description: string }) => {
+
 
   // calculation of # days remaining until appt
   const daysTo = Math.floor((start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
@@ -15,10 +21,12 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
   const day = start.toLocaleString('default', { weekday: 'long' });
   const [showModal, setShowModal] = React.useState(false);
 
+
+
   return (
     <React.Fragment>
-      <div className="card w-11/12 bg-base-100 shadow-xl">
-        <div className="card-body">
+      <div className="card w-11/12 bg-base-100 mt-4 shadow-xl border-[3px] border-[#519AEB]">
+        <div className="card-body p-4">
           <p className="text-[12px]">In {daysTo} days</p>
           <h2 className="card-title text-[16px] font-[600]">Meeting with {p_name}</h2>
           <div className="grid grid-cols-4 grid-rows-2 gap-1 items-center pb-1/12">
@@ -31,7 +39,7 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
             <div className="col-span-3 text-[12px]"><p>{start.getHours()}:{start.getMinutes()} - {end.getHours()}:{end.getMinutes()}</p></div>
           </div>
 
-          <button className="btn w-12/12 bg-[#9A9A9A] border-transparent font-[400]" onClick={() => setShowModal(true)}> Appointment Details</button>
+          <button className="btn w-12/12 bg-okb-blue border-transparent font-[400]" onClick={() => setShowModal(true)}> Appointment Details</button>
           {showModal ? (
             // appointment details pop-up card
             <>
@@ -82,9 +90,9 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
                       </div>
                       <br></br>
                       {/* questionnaire answers: map each JSON object to each individual Appointment Question */}
-                      {questionsArr.map(input => (
+                      {answersArr.map(input => (
                         <div key={input.id.toString()} className="appointment_question">
-                          <AppointmentQuestion name={input.id.toString()} question={input.question.toString()}></AppointmentQuestion>
+                          <AppointmentQuestion value={input.answer.toString()} name={input.id.toString()} question={input.question.toString()}></AppointmentQuestion>
                         </div>
                       ))}
                     </div>

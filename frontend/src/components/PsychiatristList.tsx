@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import BookMark from '../assets/bookmark.svg'
+import NotBookMark from '../assets/bookmark.svg'
+import BookMarked from '../assets/bookmark.svg'
 import Message from '../assets/message.svg'
 import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext';
@@ -24,12 +25,20 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
     }
   };
 
-  const handleSave = (event: React.MouseEvent) => {
-    if (!user) {
-      event.preventDefault();
-      setShowPopup(true);
-    }
-  };
+// <<<<<<< disc_professionals
+//   const handleSave = (event: React.MouseEvent) => {
+//     if (!user) {
+//       event.preventDefault();
+//       setShowPopup(true);
+//     }
+//   };
+// =======
+  const [saved, setSaved] = useState(false);
+
+  function toggleSaved() {
+    setSaved(!saved);
+  }
+// >>>>>>> main
 
   const signInWithGoogleAndRedirect = async (onClose: () => void) => {
     await signInWithGoogle();
@@ -44,6 +53,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
       {results.map((psychiatrist) => (
         <div key={psychiatrist.id} className="psychiatrist">
           {/* Display the psychiatrist's information here */}
+<!-- <<<<<<< disc_professionals
           <div className="card card-side flex flex-row justify-center items-center gap-2.5 rounded-lg bg-[#FFFDFD] shadow-[0_0px_5px_0px_rgb(0,0,0,0.15)] items-start gap-x-6 bg-base-100 grid-cols-5 hover:brightness-90 p-6 self-stretch">
             <div className="col-span-1 flex items-center justify-center">
               <figure>
@@ -72,6 +82,32 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
                     </div>
                   </Link>
                 </div>
+======= -->
+          <div className="card card-side bg-base-100 shadow-xl grid-cols-5 hover:brightness-90">
+            <div className="col-span-1 flex items-center justify-center">
+              <figure>
+                <img src="https://lh3.googleusercontent.com/a/AGNmyxZobZdPI78Xzk3dOtXciW5fAE3Wn-QIZYlJTdk_=s96-c" alt="Profile Pic" className="rounded-full w-20 h-20 object-cover ml-4" />
+              </figure>
+            </div>
+            <div className="card-body col-span-3">
+              {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}
+              <div className="grid grid-cols-4 gap-4 items-center pb-1/12">
+                <h2 className="card-title col-span-2 text-[#5F5F5F] text-[24px] font-bold">{psychiatrist.first_name} {psychiatrist.last_name}</h2>
+                <button onClick={toggleSaved} className="btn col-span-1 bg-[#E5E5E5] text-[#9A9A9A] text-[16px] flex space-x-3" >
+                  {saved ? <BookMarked /> : <NotBookMark />}
+                  {/* replace saved with whether boolean in db to indicate whether psych has saved or not */}
+                  <div>{saved ? 'Save Psychiatrist' : 'Saved Psychiatrist'}</div>
+                </button>
+                <Link href="/messages">
+                  <div
+                    className="btn col-span-1 bg-[#E5E5E5] text-[#9A9A9A] text-[16px] flex space-x-3"
+                    onClick={handleSendMessage}
+                  >
+                    <Message />
+                    <div>Message</div>
+                  </div>
+                </Link>
+<!-- >>>>>>> main -->
               </div>
               {/* Additional psychiatrist info */}
               <div className='self-stretch'>
