@@ -6,9 +6,9 @@ import savedPsych from '@/temp_data/savedpsych.json';
 
 const AppointmentList = () => {
   // Convert the results object into an array
-  var appointmentsArray = Object.values(results);
+  let appointmentsArray = Object.values(results);
 
-  var psychNamesArray = savedPsych;
+  // let psychNamesArray = savedPsych;
   appointmentsArray.length = 0;
 
   const appointmentCards = (() => {
