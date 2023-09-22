@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import Fuse from 'fuse.js';
 import SearchBar from '../components/SearchBar';
-import PsychiatristList from '../components/PsychiatristList';
+import PsychiatristList from '../components/psychiatrists/PsychiatristList';
 import json_results from '../temp_data/psychs.json';
 import { IPsychiatrist } from '@/schema';
 import okb_colors from '@/colors';
