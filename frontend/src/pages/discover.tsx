@@ -4,6 +4,7 @@ import SearchBar from '../components/SearchBar';
 import PsychiatristList from '../components/PsychiatristList';
 import json_results from '../temp_data/psychs.json';
 import { IPsychiatrist } from '@/schema';
+import okb_colors from '@/colors';
 
 const psychiatrists: IPsychiatrist[] = Object.values(json_results)
 
@@ -29,8 +30,9 @@ const DiscoverPage: React.FC = () => {
     : psychiatrists;
 
   return (
-    <div>
-      <SearchBar onSearch={handleSearch} />
+    <div className={'px-24 pt-9 pb-14'}>
+      <div className='pb-8'>
+        <SearchBar onSearch={handleSearch} /></div>
       {searchResults.length > 0 ? (
         <PsychiatristList results={searchResults} />
       ) : (

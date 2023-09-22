@@ -47,7 +47,7 @@ const Navbar = () => {
 
         {
           user ? <div className="dropdown dropdown-hover dropdown-bottom dropdown-end">
-            <div tabIndex={0} className={`btn btn-circle bg-[${colors.okb_blue}]`}></div>
+            <div tabIndex={0} className={`btn btn-circle bg-[${colors.okb_blue}] text-[18px] font-normal`}>{user.displayName?.charAt(0)}</div>
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
               <Link href="edit_profile">
                 <li>Edit Profile</li>
