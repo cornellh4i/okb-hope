@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import BookMark from '../assets/bookmark.svg'
-import Message from '../assets/message.svg'
+import BookMark from '@/assets/bookmark.svg'
+import Message from '@/assets/message.svg'
 import Link from 'next/link';
 import { useAuth } from '../../../contexts/AuthContext';
 import { signInWithGoogle } from '../../../firebase/firebase';
