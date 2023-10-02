@@ -8,7 +8,7 @@ const okb_colors = {
     light_blue: "#519AEB",
     lightest_blue: "#D0DBEA",
     black: "#000000",
-    white: "#FFFFFF"
+    white: "#FFFDFD"
 }
 
 export default okb_colors;
