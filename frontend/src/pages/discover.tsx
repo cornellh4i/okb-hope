@@ -35,7 +35,7 @@ const DiscoverPage: React.FC = () => {
 
     const terms = searchTerm.trim().split(/\s+/);
 
-    // Handles searches with two terms
+    // Handles searches with three terms
     if (terms.length === 3) {
       const [firstTerm, secondTerm, thirdTerm] = terms;
       const results = psychiatrists.filter((psychiatrist) =>
@@ -51,8 +51,8 @@ const DiscoverPage: React.FC = () => {
       );
       return results;
     }
+    // Handles searches with two terms
     if (terms.length === 2) {
-      // Handles searches with two terms
       const [firstTerm, secondTerm] = terms;
       const results = psychiatrists.filter((psychiatrist) =>
       ((psychiatrist.first_name.toLowerCase().includes(firstTerm.toLowerCase()) ||
@@ -63,16 +63,18 @@ const DiscoverPage: React.FC = () => {
           psychiatrist.title.toLowerCase().includes(secondTerm.toLowerCase())))
       );
       return results;
-    } else if (terms.length === 1) {
-      // Handles searches with one term
+    }
+    // Handles searches with one term
+    else if (terms.length === 1) {
       const term = terms[0];
       const results = psychiatrists.filter((psychiatrist) =>
         psychiatrist.first_name.toLowerCase().includes(term.toLowerCase()) ||
         psychiatrist.last_name.toLowerCase().includes(term.toLowerCase()) ||
         psychiatrist.title.toLowerCase().includes(term.toLowerCase()))
       return results;
-    } else {
-      // Return an empty array if there are more than three search terms
+    }
+    // Return an empty array if there are more than three search terms
+    else {
       return [];
     }
   };
