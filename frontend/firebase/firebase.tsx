@@ -13,7 +13,7 @@ const auth = getAuth(app);
 // Initialize Cloud Firestore through Firebase
 const db = getFirestore(app);
 
-const signInWithGoogle = async (role = "client") => {
+const signInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, new GoogleAuthProvider());
     const user = res.user;
@@ -26,7 +26,6 @@ const signInWithGoogle = async (role = "client") => {
         name: user.displayName,
         authProvider: "google",
         email: user.email,
-        role: role,
       });
     }
   }
