@@ -7,7 +7,7 @@ import { signInWithGoogle } from '../../../firebase/firebase';
 import { useRouter } from 'next/router';
 import { LoginPopup } from '../LoginPopup';
 import { IPsychiatrist } from '@/schema';
-import colors from "@/colors";
+import okb_colors from "@/colors";
 
 interface PsychiatristListProps {
   results: IPsychiatrist[];
@@ -45,7 +45,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
       {results.map((psychiatrist) => (
         <div key={psychiatrist.id} className="psychiatrist">
           {/* Display the psychiatrist's information here */}
-          <div className={`card card-side flex flex-row justify-center items-center gap-2.5 rounded-lg bg-[${colors.white}] shadow-[0_0px_5px_0px_rgb(0,0,0,0.15)] items-start gap-x-6 bg-base-100 grid-cols-5 hover:brightness-90 p-6 self-stretch`}>
+          <div className={`card card-side flex flex-row justify-center items-center gap-2.5 rounded-lg bg-[${okb_colors.white}] shadow-[0_0px_5px_0px_rgb(0,0,0,0.15)] items-start gap-x-6 bg-base-100 grid-cols-5 hover:brightness-90 p-6 self-stretch`}>
             <div className={`col-span-1 flex items-center justify-center`}>
               <figure>
                 <img src="https://lh3.googleusercontent.com/a/AGNmyxZobZdPI78Xzk3dOtXciW5fAE3Wn-QIZYlJTdk_=s96-c" alt="Profile Pic" className={`rounded-full w-32 h-32 object-cover`} />
@@ -55,17 +55,17 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
               {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}
               <div className={`flex justify-between items-start self-stretch`}>
                 <div className={`flex flex-col items-start gap-2`}>
-                  <h2 className={`card-title col-span-2 text-[${colors.black}] text-[24px] font-semibold not-italic`}>{psychiatrist.first_name} {psychiatrist.last_name}</h2>
-                  <p className={`text-[${colors.black}] text-[16px] font-semibold`}>{psychiatrist.title} at {psychiatrist.location}</p>
+                  <h2 className={`card-title col-span-2 text-[${okb_colors.black}] text-[24px] font-semibold not-italic`}>{psychiatrist.first_name} {psychiatrist.last_name}</h2>
+                  <p className={`text-[${okb_colors.black}] text-[16px] font-semibold`}>{psychiatrist.title} at {psychiatrist.location}</p>
                 </div>
                 <div className={`flex justify-end items-center gap-4`}>
-                  <button className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[${colors.okb_blue}] text-[${colors.white}] text-[16px] flex`} onClick={handleSave}>
+                  <button className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-[${okb_colors.white}] text-[16px] flex`} onClick={handleSave}>
                     <BookMark />
                     <div>Save</div>
                   </button>
                   <Link href="/messages">
                     <div
-                      className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[${colors.okb_blue}] text-[${colors.white}] text-[16px] flex`}
+                      className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[${okb_colors.okb_blue}] text-[${okb_colors.white}] text-[16px] flex`}
                       onClick={handleSendMessage}
                     >
                       <Message />
@@ -76,7 +76,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
               </div>
               {/* Additional psychiatrist info */}
               <div className={`self-stretch`}>
-                <p className={`text-[${colors.dark_gray}] text-[12px] font-normal`}>{psychiatrist.description}</p>
+                <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-normal`}>{psychiatrist.description}</p>
               </div>
             </div>
           </div>

@@ -1,32 +1,218 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, use, useEffect } from 'react';
 import chevron_down from '@/assets/chevron_down';
-import colors from "@/colors";
+import okb_colors from "@/colors";
 
-interface SearchBarProps {
-  onSearch: (searchTerm: string) => void;
-}
+// interface SearchBarProps {
+//   onSearch: (searchTerm: string) => void;
+//   filters: Array<string>;
+//   setFilters: (filters: Array<string>) => void; 
+//   male: boolean;
+//   setMale: (male: boolean) => void
+// }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+// const SearchBar: React.FC<SearchBarProps> = ({ onSearch, male, setMale }) => {
+
+export default function SearchBar({ onSearch, filters, setFilters, monday, setMonday, tuesday, setTuesday, wednesday,
+  setWednesday, thursday, setThursday, friday, setFriday, saturday, setSaturday, sunday, setSunday, AllDays, setAllDays,
+  english, setEnglish, ga, setGa, twi, setTwi, hausa, setHausa, AllLanguages, setAllLanguages,
+  male, setMale, female, setFemale, bothGenders, setBothGenders, submittedFilters, setSubmittedFilters }: any) {
+
+  const FilterEnum = {
+    monday: "Monday",
+    tuesday: "Tuesday",
+    wednesday: "Wednesday",
+    thursday: "Thursday",
+    friday: "Friday",
+    saturday: "Saturday",
+    sunday: "Sunday",
+    AllDays: "AllDays",
+    english: "English",
+    ga: "Ga",
+    twi: "Twi",
+    hausa: "Hausa",
+    AllLanguages: "allLanguages",
+    male: "male",
+    female: "female",
+    bothGenders: "bothGenders"
+  }
+  let days = [FilterEnum.monday, FilterEnum.tuesday, FilterEnum.wednesday, FilterEnum.thursday, FilterEnum.friday, FilterEnum.saturday, FilterEnum.sunday];
+  let languages = [FilterEnum.english, FilterEnum.ga, FilterEnum.twi, FilterEnum.hausa]
+  let genders = [FilterEnum.male, FilterEnum.female]
+
+  let selected: any = [...filters]
   const [searchTerm, setSearchTerm] = useState('');
+  const [showGenderDropDown, setShowGenderDropdown] = useState(false);
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    console.log(submittedFilters)
+    console.log(filters)
+  }, [filters, submittedFilters]);
+
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     const searchValue = event.target.value;
     setSearchTerm(searchValue);
   };
 
+  // Searches when the enter key is pressed
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       onSearch(searchTerm);
     }
   };
 
+  // Returns the index of the filter in the selected array
+  function selectedIndex(filter: string) {
+    for (let i = 0; i < selected.length; i++) {
+      if (selected[i].filter === filter) {
+        return i
+      }
+    }
+    return -1
+  }
+
+  // Updates selected array and updates sets filters according to whether they are checked/unchecked
+  function updateSelected(filter: string, checked: boolean) {
+    if (filter === FilterEnum.AllDays) {
+      // setAllDays(checked)
+      // setMonday(checked)
+      // setTuesday(checked)
+      // setWednesday(checked)
+      // setThursday(checked)
+      // setFriday(checked)
+      // setSaturday(checked)
+      // setSunday(checked)
+
+      for (let i = 0; i < days.length; i++) {
+        let index = 0
+        index = selectedIndex(days[i])
+        if (checked === false && index >= 0) {
+          selected.splice(index, 1)
+        } else if (checked === true && index < 0) {
+          selected.push({ "filter": filter, "checked": checked })
+        }
+      }
+    } else if (filter === FilterEnum.AllLanguages) {
+      // setAllLanguages(checked)
+      // setEnglish(checked)
+      // setGa(checked)
+      // setTwi(checked)
+      // setHausa(checked)
+
+      for (let i = 0; i < languages.length; i++) {
+        let index = 0
+        index = selectedIndex(languages[i])
+        if (checked === false && index >= 0) {
+          selected.splice(index, 1)
+        } else if (checked === true && index < 0) {
+          selected.push({ "filter": filter, "checked": checked })
+        }
+      }
+    } else if (filter === FilterEnum.bothGenders) {
+      // setBothGenders(checked)
+      // setMale(checked)
+      // setFemale(checked)
+
+      for (let i = 0; i < genders.length; i++) {
+        let index = 0
+        index = selectedIndex(genders[i])
+        if (checked === false && index >= 0) {
+          selected.splice(index, 1)
+        } else if (checked === true && index < 0) {
+          selected.push({ "filter": filter, "checked": checked })
+        }
+      }
+    }
+    else {
+      let index = 0
+      index = selectedIndex(filter)
+      if (index >= 0 && !checked) {
+        selected.splice(index, 1)
+      }
+      else if (index < 0 && checked) {
+        selected.push({ "filter": filter, "checked": checked })
+      }
+    }
+    setFilters(selected)
+  }
+
+  // Updates the selected filter's state and selected array when the selected filter is checked/unchecked
+  function handleFilterChange(filterName: string, filterState: boolean, setFunction: Function,
+    event: {
+      target: {
+        checked: boolean
+      }
+    }) {
+
+    if (filterName === FilterEnum.AllDays) {
+      setAllDays(event.target.checked)
+      setMonday(event.target.checked)
+      setTuesday(event.target.checked)
+      setWednesday(event.target.checked)
+      setThursday(event.target.checked)
+      setFriday(event.target.checked)
+      setSaturday(event.target.checked)
+      setSunday(event.target.checked)
+      updateSelected(FilterEnum.monday, event.target.checked)
+      updateSelected(FilterEnum.tuesday, event.target.checked)
+      updateSelected(FilterEnum.wednesday, event.target.checked)
+      updateSelected(FilterEnum.thursday, event.target.checked)
+      updateSelected(FilterEnum.friday, event.target.checked)
+      updateSelected(FilterEnum.saturday, event.target.checked)
+      updateSelected(FilterEnum.sunday, event.target.checked)
+    }
+    else if (filterName === FilterEnum.AllLanguages) {
+      // setAllLanguages(event.target.checked)
+      setEnglish(event.target.checked)
+      setGa(event.target.checked)
+      setTwi(event.target.checked)
+      setHausa(event.target.checked)
+      updateSelected(FilterEnum.english, event.target.checked)
+      updateSelected(FilterEnum.ga, event.target.checked)
+      updateSelected(FilterEnum.twi, event.target.checked)
+      updateSelected(FilterEnum.hausa, event.target.checked)
+    } else if (filterName === FilterEnum.bothGenders) {
+      setBothGenders(event.target.checked)
+      setMale(event.target.checked)
+      setFemale(event.target.checked)
+      updateSelected(FilterEnum.male, event.target.checked)
+      updateSelected(FilterEnum.female, event.target.checked)
+    }
+    else {
+      console.log(AllDays)
+      console.log(AllLanguages)
+      console.log(bothGenders)
+      setFunction(event.target.checked)
+      updateSelected(filterName, event.target.checked)
+    }
+  }
+
+  // Parses the selected filters array into a dictionary that maps filter categories to an array of filters they encompass
+  const handleFilter = () => {
+    const filtersCategorized: { days: string[], languages: string[], genders: number[] } = { days: [], languages: [], genders: [] }
+    for (let i = 0; i < filters.length; i++) {
+      let filter = filters[i].filter
+      if (days.includes(filter)) {
+        filtersCategorized['days'].push(filter)
+      } else if (languages.includes(filter)) {
+        filtersCategorized['languages'].push(filter)
+      } else {
+        if (filter === FilterEnum.male) {
+          filtersCategorized['genders'].push(0)
+        } else {
+          filtersCategorized['genders'].push(1)
+        }
+      }
+    }
+    setSubmittedFilters(filtersCategorized)
+  }
+
   return (
     <div>
       <div className="flex w-full h-9 justify-center items-start gap-x-4 shrink-0">
 
         {/* search bar */}
-        <div className={`flex w-96 h-9 py-2 px-4 items-center gap-4 shrink-0 border-solid border rounded-lg border-[${colors.dark_gray}] bg-[${colors.white}]`}>
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke={`${colors.med_gray}`}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+        <div className={`flex w-96 h-9 py-2 px-4 items-center gap-4 shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke={`${okb_colors.med_gray}`}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           <div className="form-control w-full">
             <div className="input-group w-full">
               <input type="text"
@@ -35,190 +221,168 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
                 onKeyDown={handleKeyDown}
                 value={searchTerm}
                 // updates the search bar's text as the user types into it
-                onChange={handleChange} className={`text-[${colors.med_gray}] italic text-xs font-normal outline-none w-full`} />
+                onChange={handleSearchChange} className={`text-[${okb_colors.med_gray}] italic text-xs font-normal outline-none w-full`} />
             </div>
           </div>
         </div>
 
         {/* filter dropdowns for availability */}
-        <div className={`dropdown flex w-52 h-9 py-2 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${colors.dark_gray}] bg-[${colors.white}]`}>
-          <p className={`text-[${colors.med_gray}] italic text-xs font-normal`}>Weekly Availability</p>
+        <div className={`dropdown flex w-52 h-9 py-2 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
+          <p className={`text-[${okb_colors.med_gray}] italic text-xs font-normal`}>Weekly Availability</p>
           <button tabIndex={0} className=' flex flex-col items-start gap-2.5'>{chevron_down}</button>
-          <ul tabIndex={0} className={`dropdown-content menu flex flex-col w-52 p-2 shadow bg-base-100 rounded-lg  border-solid border border-[${colors.dark_gray}] shadow-[0_4px_10px_0px_rgb(0,0,0,0.15)] absolute mt-8 left-0`}>
+          <ul tabIndex={0} className={`dropdown-content menu flex flex-col w-52 p-2 shadow bg-base-100 rounded-lg  border-solid border border-[${okb_colors.dark_gray}] shadow-[0_4px_10px_0px_rgb(0,0,0,0.15)] absolute mt-8 left-0`}>
             <div className="form-control justify-center items-start">
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pb-3.5">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Select All</span>
+                <input type="checkbox"
+                  checked={AllDays}
+                  onChange={(e) => handleFilterChange(FilterEnum.AllDays, AllDays, setAllDays, e)}
+                  className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Select All</span>
               </label>
-              <hr className={`w-48 h-0.5 bg-[${colors.dark_gray}] place-self-center`}></hr>
+              <hr className={`w-48 h-1 bg-[${okb_colors.dark_gray}] place-self-center`}></hr>
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pt-3.5">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Monday</span>
+                <input type="checkbox"
+                  checked={monday}
+                  onChange={(e) => handleFilterChange(FilterEnum.monday, monday, setMonday, e)}
+                  className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Monday</span>
               </label>
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Tuesday</span>
+                <input type="checkbox"
+                  checked={tuesday}
+                  onChange={(e) => handleFilterChange(FilterEnum.tuesday, tuesday, setTuesday, e)}
+                  className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Tuesday</span>
               </label>
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Wednesday</span>
+                <input type="checkbox"
+                  checked={wednesday}
+                  onChange={(e) => handleFilterChange(FilterEnum.wednesday, wednesday, setWednesday, e)}
+                  className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Wednesday</span>
               </label>
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Thursday</span>
+                <input type="checkbox"
+                  checked={thursday}
+                  onChange={(e) => handleFilterChange(FilterEnum.thursday, thursday, setThursday, e)}
+                  className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Thursday</span>
               </label>
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Friday</span>
+                <input type="checkbox"
+                  checked={friday}
+                  onChange={(e) => handleFilterChange(FilterEnum.friday, friday, setFriday, e)}
+                  className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Friday</span>
               </label>
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Saturday</span>
+                <input type="checkbox"
+                  checked={saturday}
+                  onChange={(e) => handleFilterChange(FilterEnum.saturday, saturday, setSaturday, e)}
+                  className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Saturday</span>
               </label>
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Sunday</span>
+                <input type="checkbox"
+                  checked={sunday}
+                  onChange={(e) => handleFilterChange(FilterEnum.sunday, sunday, setSunday, e)}
+                  className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Sunday</span>
               </label>
             </div>
           </ul>
         </div>
-        {/* <div className="dropdown">
-          <label tabIndex={0} className="btn btn-outline w-52 h-9 bg-[#FFFDFD] border-[#5F5F5F] text-[#9A9A9A] italic font-normal">Weekly Availability</label>
-          <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-            <div className="form-control">
-              <label className="label cursor-pointer">
-                <span className="label-text">Sunday</span>
-                <input type="checkbox" className="checkbox" />
-              </label>
-              <label className="label cursor-pointer">
-                <span className="label-text">Monday</span>
-                <input type="checkbox" className="checkbox" />
-              </label>
-              <label className="label cursor-pointer">
-                <span className="label-text">Tuesday</span>
-                <input type="checkbox" className="checkbox" />
-              </label>
-              <label className="label cursor-pointer">
-                <span className="label-text">Wednesday</span>
-                <input type="checkbox" className="checkbox" />
-              </label>
-              <label className="label cursor-pointer">
-                <span className="label-text">Thursday</span>
-                <input type="checkbox" className="checkbox" />
-              </label>
-              <label className="label cursor-pointer">
-                <span className="label-text">Friday</span>
-                <input type="checkbox" className="checkbox" />
-              </label>
-              <label className="label cursor-pointer">
-                <span className="label-text">Saturday</span>
-                <input type="checkbox" className="checkbox" />
-              </label>
-            </div>
-          </ul>
-        </div> */}
 
         {/* filter dropdowns for language */}
-        <div className={`dropdown flex w-52 h-9 py-2 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${colors.dark_gray}] bg-[${colors.white}]`}>
-          <p className={`text-[${colors.med_gray}] italic text-xs font-normal`}>Language</p>
+        <div className={`dropdown flex w-52 h-9 py-2 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
+          <p className={`text-[${okb_colors.med_gray}] italic text-xs font-normal`}>Language</p>
           <button tabIndex={0} className=' flex flex-col items-start gap-2.5'>{chevron_down}</button>
-          <ul tabIndex={0} className={`dropdown-content menu w-52 p-2 shadow bg-base-100 rounded-lg  border-solid border border-[${colors.dark_gray}] shadow-[0_4px_10px_0px_rgb(0,0,0,0.15)] absolute mt-8 left-0`}>
+          <ul tabIndex={0} className={`dropdown-content menu w-52 p-2 shadow bg-base-100 rounded-lg  border-solid border border-[${okb_colors.dark_gray}] shadow-[0_4px_10px_0px_rgb(0,0,0,0.15)] absolute mt-8 left-0`}>
             <div className="form-control flex flex-col justify-center items-start">
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pb-3.5">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Select All</span>
+                <input type="checkbox"
+                  checked={AllLanguages}
+                  onChange={(e) => handleFilterChange(FilterEnum.AllLanguages, AllLanguages, setAllLanguages, e)}
+                  className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Select All</span>
               </label>
-              <hr className={`w-48 h-0.5 bg-[${colors.dark_gray}]`}></hr>
+              <hr className={`w-48 h-0.5 bg-[${okb_colors.dark_gray}]`}></hr>
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pt-3.5">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>English</span>
+                <input type="checkbox"
+                  checked={english}
+                  onChange={(e) => handleFilterChange(FilterEnum.english, english, setEnglish, e)}
+                  className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>English</span>
               </label>
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Ga</span>
+                <input type="checkbox"
+                  checked={ga}
+                  onChange={(e) => handleFilterChange(FilterEnum.ga, ga, setGa, e)}
+                  className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Ga</span>
               </label>
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Twi</span>
+                <input type="checkbox"
+                  checked={twi}
+                  onChange={(e) => handleFilterChange(FilterEnum.twi, twi, setTwi, e)}
+                  className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Twi</span>
               </label>
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Hausa</span>
+                <input type="checkbox"
+                  checked={hausa}
+                  onChange={(e) => handleFilterChange(FilterEnum.hausa, hausa, setHausa, e)}
+                  className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Hausa</span>
               </label>
             </div>
           </ul>
         </div>
-        {/* <div className="dropdown">
-          <label tabIndex={0} className="btn btn-outline w-52 h-9 bg-[#FFFDFD] border-[#5F5F5F] text-[#9A9A9A] italic font-normal">Language</label>
-          <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-            <div className="form-control">
-              <label className="label cursor-pointer">
-                <span className="label-text">English</span>
-                <input type="checkbox" className="checkbox" />
-              </label>
-              <label className="label cursor-pointer">
-                <span className="label-text">Ga</span>
-                <input type="checkbox" className="checkbox" />
-              </label>
-              <label className="label cursor-pointer">
-                <span className="label-text">Twi</span>
-                <input type="checkbox" className="checkbox" />
-              </label>
-              <label className="label cursor-pointer">
-                <span className="label-text">Hausa</span>
-                <input type="checkbox" className="checkbox" />
-              </label>
-            </div>
-          </ul>
-        </div> */}
+
 
         {/* filter drop downs for gender */}
-        <div className={`dropdown flex w-52 h-9 py-2 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${colors.dark_gray}] bg-[${colors.white}]`}>
-          <p className={`text-[${colors.med_gray}] italic text-xs font-normal`}>Gender</p>
-          <button tabIndex={0} className='flex flex-col items-start gap-2.5'>{chevron_down}</button>
-          <ul tabIndex={0} className={`dropdown-content menu w-52 p-2 shadow bg-base-100 rounded  border-solid border border-[${colors.dark_gray}] shadow-[0_4px_10px_0px_rgb(0,0,0,0.15)] absolute mt-8 left-0`}>
-            <div className="form-control flex flex-col justify-center items-start">
-              <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pb-3.5">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Select All</span>
-              </label>
-              <hr className={`w-48 h-0.5 bg-[${colors.dark_gray}]`}></hr>
-              <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pt-3.5">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Male</span>
-              </label>
-              <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
-                <input type="checkbox" className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${colors.med_gray}]`} />
-                <span className={`label-text flex text-[${colors.dark_gray}]`}>Female</span>
-              </label>
-            </div>
-          </ul>
+        <div className={`dropdown flex w-52 h-9 py-2 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
+          <p className={`text-[${okb_colors.med_gray}] italic text-xs font-normal`}>Gender</p>
+          <button tabIndex={0} onClick={() => setShowGenderDropdown((prevState) => !prevState)} className='flex flex-col items-start gap-2.5'>{chevron_down}</button>
+          {showGenderDropDown &&
+            <ul tabIndex={0} className={`dropdown-content menu w-52 p-2 shadow bg-base-100 rounded  border-solid border border-[${okb_colors.dark_gray}] shadow-[0_4px_10px_0px_rgb(0,0,0,0.15)] absolute mt-8 left-0`}>
+              <div className="form-control flex flex-col justify-center items-start">
+                <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pb-3.5">
+                  <input type="checkbox"
+                    checked={bothGenders}
+                    onChange={(e) => handleFilterChange(FilterEnum.bothGenders, bothGenders, setBothGenders, e)}
+                    className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                  <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Select All</span>
+                </label>
+                <hr className={`w-48 h-0.5 bg-[${okb_colors.dark_gray}]`}></hr>
+                <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pt-3.5">
+                  <input type="checkbox"
+                    checked={male}
+                    onChange={(e) => handleFilterChange(FilterEnum.male, male, setMale, e)}
+                    className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                  <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Male</span>
+                </label>
+                <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
+                  <input type="checkbox"
+                    checked={female}
+                    onChange={(e) => handleFilterChange(FilterEnum.female, female, setFemale, e)}
+                    className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                  <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Female</span>
+                </label>
+              </div>
+            </ul>
+          }
         </div>
-        {/* <div className="dropdown">
-          <label tabIndex={0} className="btn btn-outline w-52 h-9 bg-[#FFFDFD] border-[#5F5F5F] text-[#9A9A9A] italic font-normal">Gender</label>
-          <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-            <div className="form-control">
-              <label className="label cursor-pointer">
-                <span className="label-text">Male</span>
-                <input type="checkbox" className="checkbox" />
-              </label>
-              <label className="label cursor-pointer">
-                <span className="label-text">Female</span>
-                <input type="checkbox" className="checkbox" />
-              </label>
-            </div>
-          </ul>
-        </div> */}
+
 
         {/* filter button */}
-        <button className={`filter-button flex w-32 h-9 py-2.5 px-11 justify-center items-center gap-2.5 border-solid border rounded-lg border-[${colors.okb_blue}] bg-[${colors.white}]`}>
-          <div className={`text-[${colors.okb_blue}] text-xs font-bold`}>Filter</div>
-
-          {/* <label tabIndex={0} className="btn w-32 h-9 bg-[#FFFDFD] text-[#195BA5] border border-[#195BA5] font-bold">Filter</label> */}
+        {/* <button onClick={(e) => setFilters(filters)} className={`filter-button flex w-32 h-9 py-2.5 px-11 justify-center items-center gap-2.5 border-solid border rounded-lg border-[${okb_colors.okb_blue}] bg-[${okb_colors.white}]`}> */}
+        <button onClick={handleFilter} className={`filter-button flex w-32 h-9 py-2.5 px-11 justify-center items-center gap-2.5 border-solid border rounded-lg border-[${okb_colors.okb_blue}] bg-[${okb_colors.white}]`}>
+          <div className={`text-[${okb_colors.okb_blue}] text-xs font-bold`}>Filter</div>
         </button>
       </div>
     </div>
   );
 };
 
-export default SearchBar;
+// export default SearchBar;
