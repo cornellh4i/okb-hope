@@ -32,7 +32,7 @@ const DiscoverPage: React.FC = () => {
   const [friday, setFriday] = useState(false);
   const [saturday, setSaturday] = useState(false);
   const [sunday, setSunday] = useState(false);
-  const [AllDays, setAllDays] = useState(false);
+  const [allDays, setAllDays] = useState(false);
   const [english, setEnglish] = useState(false);
   const [ga, setGa] = useState(false);
   const [twi, setTwi] = useState(false);
@@ -169,7 +169,7 @@ const DiscoverPage: React.FC = () => {
           friday={friday} setFriday={setFriday}
           saturday={saturday} setSaturday={setSaturday}
           sunday={sunday} setSunday={setSunday}
-          AllDays={AllDays} setAllDays={setAllDays}
+          allDays={allDays} setAllDays={setAllDays}
           english={english} setEnglish={setEnglish}
           ga={ga} setGa={setGa}
           twi={twi} setTwi={setTwi}

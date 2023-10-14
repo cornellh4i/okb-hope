@@ -13,8 +13,8 @@ import okb_colors from "@/colors";
 // const SearchBar: React.FC<SearchBarProps> = ({ onSearch, male, setMale }) => {
 
 export default function SearchBar({ onSearch, filters, setFilters, monday, setMonday, tuesday, setTuesday, wednesday,
-  setWednesday, thursday, setThursday, friday, setFriday, saturday, setSaturday, sunday, setSunday, AllDays, setAllDays,
-  english, setEnglish, ga, setGa, twi, setTwi, hausa, setHausa, AllLanguages, setAllLanguages,
+  setWednesday, thursday, setThursday, friday, setFriday, saturday, setSaturday, sunday, setSunday, allDays, setAllDays,
+  english, setEnglish, ga, setGa, twi, setTwi, hausa, setHausa, allLanguages, setAllLanguages,
   male, setMale, female, setFemale, bothGenders, setBothGenders, submittedFilters, setSubmittedFilters }: any) {
 
   const FilterEnum = {
@@ -25,12 +25,12 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
     friday: "Friday",
     saturday: "Saturday",
     sunday: "Sunday",
-    AllDays: "AllDays",
+    allDays: "allDays",
     english: "English",
     ga: "Ga",
     twi: "Twi",
     hausa: "Hausa",
-    AllLanguages: "allLanguages",
+    allLanguages: "allLanguages",
     male: "male",
     female: "female",
     bothGenders: "bothGenders"
@@ -72,49 +72,11 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
 
   // Updates selected array and updates sets filters according to whether they are checked/unchecked
   function updateSelected(filter: string, checked: boolean) {
-    if (filter === FilterEnum.AllDays) {
-      // setAllDays(checked)
-      // setMonday(checked)
-      // setTuesday(checked)
-      // setWednesday(checked)
-      // setThursday(checked)
-      // setFriday(checked)
-      // setSaturday(checked)
-      // setSunday(checked)
 
-      for (let i = 0; i < days.length; i++) {
+    function handleSelectAll(arr) {
+      for (let i = 0; i < arr.length; i++) {
         let index = 0
-        index = selectedIndex(days[i])
-        if (checked === false && index >= 0) {
-          selected.splice(index, 1)
-        } else if (checked === true && index < 0) {
-          selected.push({ "filter": filter, "checked": checked })
-        }
-      }
-    } else if (filter === FilterEnum.AllLanguages) {
-      // setAllLanguages(checked)
-      // setEnglish(checked)
-      // setGa(checked)
-      // setTwi(checked)
-      // setHausa(checked)
-
-      for (let i = 0; i < languages.length; i++) {
-        let index = 0
-        index = selectedIndex(languages[i])
-        if (checked === false && index >= 0) {
-          selected.splice(index, 1)
-        } else if (checked === true && index < 0) {
-          selected.push({ "filter": filter, "checked": checked })
-        }
-      }
-    } else if (filter === FilterEnum.bothGenders) {
-      // setBothGenders(checked)
-      // setMale(checked)
-      // setFemale(checked)
-
-      for (let i = 0; i < genders.length; i++) {
-        let index = 0
-        index = selectedIndex(genders[i])
+        index = selectedIndex(arr[i])
         if (checked === false && index >= 0) {
           selected.splice(index, 1)
         } else if (checked === true && index < 0) {
@@ -122,7 +84,14 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
         }
       }
     }
-    else {
+
+    if (filter === FilterEnum.allDays) {
+      handleSelectAll(days)
+    } else if (filter === FilterEnum.allLanguages) {
+      handleSelectAll(languages)
+    } else if (filter === FilterEnum.bothGenders) {
+      handleSelectAll(genders)
+    } else {
       let index = 0
       index = selectedIndex(filter)
       if (index >= 0 && !checked) {
@@ -143,7 +112,7 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
       }
     }) {
 
-    if (filterName === FilterEnum.AllDays) {
+    if (filterName === FilterEnum.allDays) {
       setAllDays(event.target.checked)
       setMonday(event.target.checked)
       setTuesday(event.target.checked)
@@ -160,8 +129,8 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
       updateSelected(FilterEnum.saturday, event.target.checked)
       updateSelected(FilterEnum.sunday, event.target.checked)
     }
-    else if (filterName === FilterEnum.AllLanguages) {
-      // setAllLanguages(event.target.checked)
+    else if (filterName === FilterEnum.allLanguages) {
+      setAllLanguages(event.target.checked)
       setEnglish(event.target.checked)
       setGa(event.target.checked)
       setTwi(event.target.checked)
@@ -176,10 +145,25 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
       setFemale(event.target.checked)
       updateSelected(FilterEnum.male, event.target.checked)
       updateSelected(FilterEnum.female, event.target.checked)
-    }
-    else {
-      console.log(AllDays)
-      console.log(AllLanguages)
+    } else {
+      if (filterName === FilterEnum.monday || filterName === FilterEnum.tuesday || filterName === FilterEnum.wednesday
+        || filterName === FilterEnum.thursday || filterName === FilterEnum.friday || filterName === FilterEnum.saturday
+        || filterName === FilterEnum.sunday) {
+        if (event.target.checked === false) {
+          setAllDays(false)
+        }
+      } else if (filterName === FilterEnum.english || filterName === FilterEnum.ga || filterName === FilterEnum.twi
+        || filterName === FilterEnum.hausa) {
+        if (event.target.checked === false) {
+          setAllLanguages(false)
+        }
+      } else {
+        if (event.target.checked === false) {
+          setBothGenders(false)
+        }
+      }
+      console.log(allDays)
+      console.log(allLanguages)
       console.log(bothGenders)
       setFunction(event.target.checked)
       updateSelected(filterName, event.target.checked)
@@ -234,8 +218,8 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
             <div className="form-control justify-center items-start">
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pb-3.5">
                 <input type="checkbox"
-                  checked={AllDays}
-                  onChange={(e) => handleFilterChange(FilterEnum.AllDays, AllDays, setAllDays, e)}
+                  checked={allDays}
+                  onChange={(e) => handleFilterChange(FilterEnum.allDays, allDays, setAllDays, e)}
                   className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
                 <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Select All</span>
               </label>
@@ -301,8 +285,8 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
             <div className="form-control flex flex-col justify-center items-start">
               <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pb-3.5">
                 <input type="checkbox"
-                  checked={AllLanguages}
-                  onChange={(e) => handleFilterChange(FilterEnum.AllLanguages, AllLanguages, setAllLanguages, e)}
+                  checked={allLanguages}
+                  onChange={(e) => handleFilterChange(FilterEnum.allLanguages, allLanguages, setAllLanguages, e)}
                   className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
                 <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Select All</span>
               </label>
