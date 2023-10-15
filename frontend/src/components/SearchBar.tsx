@@ -2,16 +2,6 @@ import { useState, ChangeEvent, use, useEffect, useRef } from 'react';
 import chevron_down from '@/assets/chevron_down';
 import okb_colors from "@/colors";
 
-// interface SearchBarProps {
-//   onSearch: (searchTerm: string) => void;
-//   filters: Array<string>;
-//   setFilters: (filters: Array<string>) => void; 
-//   male: boolean;
-//   setMale: (male: boolean) => void
-// }
-
-// const SearchBar: React.FC<SearchBarProps> = ({ onSearch, male, setMale }) => {
-
 export default function SearchBar({ onSearch, filters, setFilters, monday, setMonday, tuesday, setTuesday, wednesday,
   setWednesday, thursday, setThursday, friday, setFriday, saturday, setSaturday, sunday, setSunday, allDays, setAllDays,
   english, setEnglish, ga, setGa, twi, setTwi, hausa, setHausa, allLanguages, setAllLanguages,
