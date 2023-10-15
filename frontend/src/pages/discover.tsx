@@ -42,6 +42,7 @@ const DiscoverPage: React.FC = () => {
 
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
 
+  // Get all psychiatrists from the database
   useEffect(() => {
     const psychRef = collection(db, 'psychiatrists');
     getDocs(psychRef)
@@ -59,44 +60,29 @@ const DiscoverPage: React.FC = () => {
 
   // Stores newSearchTerm in searchTerm
   const handleSearch = (newSearchTerm: string) => {
-    console.log(newSearchTerm);
     setSearchTerm(newSearchTerm);
-    console.log(filters)
   };
 
-  // Checks if arr1 contains every element in arr2
+  // Returns true if arr1 contains every element in arr2
   function containsAll(arr1: string[], arr2: string[]): boolean {
-
-    console.log(arr1)
-    console.log(arr2)
-
     if (arr1 && arr2) {
-      console.log(arr2.every(item => arr1.includes(item)))
       return arr2.every(item => arr1.includes(item))
     }
     else if (!arr2) { return true }
-    else {
-      return false
-    }
+    else { return false }
   }
 
-  // Checks if arr1 contains at least one element in arr2
+  // Returns true if arr1 contains at least one element in arr2
   function containsOneOf(arr1: string[], arr2: string[]): boolean {
-
-    console.log(arr1)
-    console.log(arr2)
-
     if (arr1 && arr2) {
       if (arr2.length === 0) { return true }
-      console.log(arr2.some(item => arr1.includes(item)))
       return arr2.some(item => arr1.includes(item))
     }
     else if (!arr2) { return true }
-    else {
-      return false
-    }
+    else { return false }
   }
 
+  // Returns true if gender is contained in genderArray
   function containsGender(gender: number, genderArray: number[]): boolean {
     if (genderArray) {
       if (genderArray.includes(gender) || genderArray.length === 0)
@@ -155,10 +141,6 @@ const DiscoverPage: React.FC = () => {
 
     // Updates results by the selected filters
     const filterResults = results.filter((psychiatrist) => {
-      console.log(psychiatrist.gender)
-      console.log(typeof (psychiatrist.gender))
-      console.log(submittedFilters['genders'])
-      console.log(containsGender(psychiatrist.gender, submittedFilters['genders']))
       return containsOneOf(psychiatrist.availability, submittedFilters['days']) &&
         containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
         containsGender(psychiatrist.gender, submittedFilters['genders'])
@@ -171,22 +153,6 @@ const DiscoverPage: React.FC = () => {
   // If there is a search term or there are filters selected, process the search/filter
   // Else, return all psychiatrists
   const searchFilterResults = searchTerm || submittedFilters ? processSearchFilter() : psychiatrists;
-
-  // const searchFilterResults: IPsychiatrist[] = searchTerm || submittedFilters ? processSearchFilter().map((psychiatrist) => {
-  //   return {
-  //     id: psychiatrist.id,
-  //     first_name: psychiatrist['id']['first_name'], // Replace with the correct property names
-  //     last_name: psychiatrist['id']['last_name'], // Replace with the correct property names
-  //     title: psychiatrist['id']['title'], // Replace with the correct property names
-  //     profile_pic: psychiatrist['id']['profile_pic'],
-  //     availability: psychiatrist['id']['availability'],
-  //     gender: psychiatrist['id']['gender'],
-  //     location: psychiatrist['id']['location'],
-  //     language: psychiatrist['id']['language'],
-  //     specialty: psychiatrist['id']['specialty'],
-  //     description: psychiatrist['id']['description']
-  //   };
-  // }) : psychiatrists;
 
   return (
     <div className={'px-24 pt-9 pb-14'}>
