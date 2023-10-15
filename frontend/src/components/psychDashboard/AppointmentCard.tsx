@@ -17,7 +17,7 @@ const AppointmentCard = ({p_name, time_start, time_end} : {p_name:string, time_s
         </div>
 
         {/* appointment details button */}
-        <div className={`flex py-1 px-2 justify-center items-center gap-4 rounded-[15px] border border-solid border-[okb_colors.light_blue]`}>
+        <div className={`flex py-1 px-2 justify-center items-center gap-4 rounded-[15px] border border-solid`} style={{borderColor:okb_colors.light_blue}}>
           <div className="card-actions flex py-0.5 px-2 flex-col items-start gap-2.5 rounded">
             <p className="font-montserrat text-xs font-normal">Appointment Details</p>
           </div>
