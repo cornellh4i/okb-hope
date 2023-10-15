@@ -5,10 +5,8 @@ import PsychiatristList from '../components/psychiatrists/PsychiatristList';
 import json_results from '../temp_data/psychs.json';
 import { IPsychiatrist } from '@/schema';
 import colors from "@/colors";
-
-const psychiatrists: IPsychiatrist[] = Object.values(json_results)
-
-console.log(psychiatrists);
+import { db } from '../../firebase/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 // options for fuzzy search. currently only searches by name and title
 const fuseOptions = {
@@ -41,6 +39,21 @@ const DiscoverPage: React.FC = () => {
   const [male, setMale] = useState(false);
   const [female, setFemale] = useState(false);
   const [bothGenders, setBothGenders] = useState(false);
+
+  const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
+
+  useEffect(() => {
+    const psychRef = collection(db, 'psychiatrists');
+    getDocs(psychRef)
+      .then((snapshot) => {
+        const fetchedPsychiatrists: IPsychiatrist[] = snapshot.docs.map((doc) =>
+          doc.data() as IPsychiatrist);
+        setPsychiatrists(fetchedPsychiatrists);
+      })
+      .catch((err) => {
+        console.log(err.message)
+      })
+  }, []);
 
   const fuse = useMemo(() => new Fuse(psychiatrists, fuseOptions), []);
 
@@ -138,6 +151,8 @@ const DiscoverPage: React.FC = () => {
         psychiatrist.title.toLowerCase().includes(term.toLowerCase()));
     }
 
+    console.log(results)
+
     // Updates results by the selected filters
     const filterResults = results.filter((psychiatrist) => {
       console.log(psychiatrist.gender)
@@ -149,6 +164,7 @@ const DiscoverPage: React.FC = () => {
         containsGender(psychiatrist.gender, submittedFilters['genders'])
     });
 
+    console.log(filterResults);
     return filterResults;
   };
 
@@ -156,6 +172,21 @@ const DiscoverPage: React.FC = () => {
   // Else, return all psychiatrists
   const searchFilterResults = searchTerm || submittedFilters ? processSearchFilter() : psychiatrists;
 
+  // const searchFilterResults: IPsychiatrist[] = searchTerm || submittedFilters ? processSearchFilter().map((psychiatrist) => {
+  //   return {
+  //     id: psychiatrist.id,
+  //     first_name: psychiatrist['id']['first_name'], // Replace with the correct property names
+  //     last_name: psychiatrist['id']['last_name'], // Replace with the correct property names
+  //     title: psychiatrist['id']['title'], // Replace with the correct property names
+  //     profile_pic: psychiatrist['id']['profile_pic'],
+  //     availability: psychiatrist['id']['availability'],
+  //     gender: psychiatrist['id']['gender'],
+  //     location: psychiatrist['id']['location'],
+  //     language: psychiatrist['id']['language'],
+  //     specialty: psychiatrist['id']['specialty'],
+  //     description: psychiatrist['id']['description']
+  //   };
+  // }) : psychiatrists;
 
   return (
     <div className={'px-24 pt-9 pb-14'}>
