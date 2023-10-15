@@ -16,7 +16,7 @@ export interface IClient {
 }
 
 export interface IPsychiatrist {
-    id: string;
+    id: number;
     first_name: string;
     last_name: string;
     title: string;
