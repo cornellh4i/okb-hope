@@ -1,5 +1,6 @@
 import { db } from './firebase';
 import { getDocs, query, where, collection } from "firebase/firestore";
+import { IPsychiatrist } from '@/schema';
 
 /**
  * Fetches professional data from the Firestore based on first and last name.
@@ -10,29 +11,23 @@ import { getDocs, query, where, collection } from "firebase/firestore";
  */
 const fetchProfessionalData = async (firstName: string, lastName: string) => {
   try {
-    const name = firstName + " " + lastName
     const q = query(
-      collection(db, "psychiatrist"),
+      collection(db, "psychiatrists"),
       where("first_name", "==", firstName),
       where("last_name", "==", lastName)
     );
-    const snapshot = await getDocs(collection(db, "psychiatrist"));
 
-    // no data returned from the collection
-    console.log(snapshot)
-    
     const response = await getDocs(q);
-    let professionalData = {};
-
-    response.forEach((doc) => {
-      professionalData = { id: doc.id, ...doc.data() };
-    });
-
-    return professionalData;
-
+    if (!response.empty) {
+      const docData = response.docs[0].data();
+      const psychiatrist = docData as IPsychiatrist;
+      return psychiatrist;
+    } else {
+      throw new Error(`No psychiatrist found with the name: ${firstName} ${lastName}`);
+    }
   } catch (error) {
-    console.error("Error fetching professional data: ", error);
-    return null;
+    console.error("Error fetching professional data:", error);
+    throw error;
   }
 };
 
