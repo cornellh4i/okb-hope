@@ -12,6 +12,7 @@ module.exports = {
     extend: {
       colors: {
         'okb-blue': '#195BA5',
+        'med-grey': '#9A9A9A',
       },
       fontFamily: {
         inter: ['inter', 'serif'],
