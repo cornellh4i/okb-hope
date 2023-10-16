@@ -15,16 +15,16 @@ const AvailabilityCard = ({ day, times }: AvailabilityCardProps) => {
   //      Add hover animation 
 
   // Conditional class names for styling based on availability
-  const borderColorClass = isAvailable ? 'border-okb-blue' : 'border-opacity-90 border-blue-200';
-  const textColorClass = isAvailable ? 'text-okb-blue' : 'text-opacity-90 text-blue-200';
+  const borderColorClass = isAvailable ? 'border-light-blue hover:bg-gray-200 transition cursor-pointer' : 'border-opacity-95 border-blue-200';
+  const textColorClass = isAvailable ? 'text-okb-blue' : 'text-opacity-95 text-blue-200';
 
   return (
-    <div className={`w-32 h-32 p-4 border-2 rounded-[20px] space-y-2 ${borderColorClass}`}>
+    <div className={`min-h-[8rem] w-32 p-4 border-2 rounded-[20px] space-y-2 flex flex-col ${borderColorClass}`}>
       <h2 className={`text-xl font-semibold font-montserrat text-center ${textColorClass}`}>{day}</h2>
       <div>
         {isAvailable ? (
           timeList.map((time, index) => (
-            <div key={index} className="text-sm/[16px] font-[400] font-montserrat text-center">{time}</div>
+            <div key={index} className="text-sm/[16px] font-[400] font-montserrat text-center pb-1">{time}</div>
           ))
         ) : (
           <div className={`text-sm/[16px] font-[400] font-montserrat text-center text-med-grey`}>No Times Available</div>
