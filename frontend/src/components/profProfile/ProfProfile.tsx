@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProfessionalData } from '../../../firebase/fetchData';
 import { IPsychiatrist } from '../../schema'
+import Availability from './Availability';
 
 interface props {
     psychiatrist: IPsychiatrist
@@ -23,7 +24,7 @@ const ProfProfile = ({ psychiatrist }: props) => {
 
   return (
     <div>
-      <h1>W Diego</h1>
+      <Availability />
     </div>
   );
 };

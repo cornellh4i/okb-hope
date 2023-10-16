@@ -10,6 +10,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        'okb-blue': '#195BA5',
+      },
       fontFamily: {
         inter: ['inter', 'serif'],
       },
