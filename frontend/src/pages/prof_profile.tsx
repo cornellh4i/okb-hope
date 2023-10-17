@@ -4,7 +4,7 @@ import { IPsychiatrist } from '@/schema';
 const Bookings = () => {
 
     return (
-        <div>
+        <div className={`flex justify-center pt-10`}>
             <ProfProfile firstName='Erica' lastName='Jameson' />
         </div>
     );

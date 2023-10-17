@@ -13,7 +13,10 @@ module.exports = {
       colors: {
         'okb-blue': '#195BA5',
         'med-grey': '#9A9A9A',
-        'light-blue': '#519AEB'
+        'light-blue': '#519AEB',
+        'lightest-blue': '#D0DBEA',
+        'okb-white': '#FFFDFD',
+        'dark-grey': '#5F5F5F',
       },
       fontFamily: {
         inter: ['inter', 'serif'],
