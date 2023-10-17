@@ -7,6 +7,7 @@ import { IPsychiatrist } from '@/schema';
 import colors from "@/colors";
 import { db } from '../../firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import fetchAllProfessionals from '../../firebase/fetchData';
 
 // options for fuzzy search. currently only searches by name and title
 const fuseOptions = {
@@ -44,16 +45,15 @@ const DiscoverPage: React.FC = () => {
 
   // Get all psychiatrists from the database
   useEffect(() => {
-    const psychRef = collection(db, 'psychiatrists');
-    getDocs(psychRef)
-      .then((snapshot) => {
-        const fetchedPsychiatrists: IPsychiatrist[] = snapshot.docs.map((doc) =>
-          doc.data() as IPsychiatrist);
+    async function fetchData() {
+      try {
+        const fetchedPsychiatrists: IPsychiatrist[] = await fetchAllProfessionals();
         setPsychiatrists(fetchedPsychiatrists);
-      })
-      .catch((err) => {
-        console.log(err.message)
-      })
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    }
+    fetchData();
   }, []);
 
   const fuse = useMemo(() => new Fuse(psychiatrists, fuseOptions), []);
