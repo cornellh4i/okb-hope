@@ -99,8 +99,6 @@ const DiscoverPage: React.FC = () => {
     const terms = searchTerm.trim().split(/\s+/);
     let results = psychiatrists;
 
-    console.log("HI IM FILTERINGGGGGGGGGGGGGGGG")
-
     // Updates result by search term (first names, last names, and/or titles)
     // Handles searches with three terms
     if (terms.length === 3) {
@@ -137,8 +135,6 @@ const DiscoverPage: React.FC = () => {
         psychiatrist.title.toLowerCase().includes(term.toLowerCase()));
     }
 
-    console.log(results)
-
     // Updates results by the selected filters
     const filterResults = results.filter((psychiatrist) => {
       return containsOneOf(psychiatrist.availability, submittedFilters['days']) &&
@@ -146,7 +142,6 @@ const DiscoverPage: React.FC = () => {
         containsGender(psychiatrist.gender, submittedFilters['genders'])
     });
 
-    console.log(filterResults);
     return filterResults;
   };
 

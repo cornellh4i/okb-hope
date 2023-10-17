@@ -218,9 +218,6 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
           setBothGenders(false)
         }
       }
-      console.log(allDays)
-      console.log(allLanguages)
-      console.log(bothGenders)
       setFunction(event.target.checked)
       updateSelected(filterName, event.target.checked)
     }
