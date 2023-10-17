@@ -42,8 +42,8 @@ const Sidebar: React.FC = () => {
     <div className="sidebar border-r-4 border-gray-300 bg-white h-full">
       <SearchBar onSearch={handleSearch} />
       <div className="conversation-list bg-white">
-        <div className='flex justify-between align-center bg-gray-300 rounded-full py-1 px-4 mx-2 my-2'>
-          <p className='font-bold'>All Messages</p>
+        <div className='flex justify-between align-center bg-okb-blue rounded-full py-1 px-4 mx-2 my-2'>
+          <p className='font-bold text-white'>All Messages</p>
           <button
           // onClick={ }
           >{chevron_up}</button>

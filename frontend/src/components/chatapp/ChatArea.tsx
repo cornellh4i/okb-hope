@@ -16,10 +16,18 @@ const NameArea = ({ name, credentials }: NameAreaType) => {
         <p className='font-bold text-xl tracking-wide'>{name}</p>
         <p className='italic text-sm text-gray-400'>{credentials}</p>
       </div>
-      <button
-        className='rounded-full hover:bg-gray-200'
-        onClick={() => console.log('asdfa')}
-      >{ellipsis}</button>
+      <div className = "dropdown dropdown-click dropdown-bottom dropdown-end"> 
+      <button className='rounded-full hover:bg-gray-200'>
+        {ellipsis}
+      </button>
+      <ul className='menu dropdown-content p-4 shadow bg-base-100 rounded-box w-52'>
+      <li>Mark as Unread</li>
+      <li>View Profile</li>
+      <li>Book Appointment</li>
+      <li>Delete Message Thread</li>
+       </ul>
+      </div>
+      
     </div>
   );
 }
