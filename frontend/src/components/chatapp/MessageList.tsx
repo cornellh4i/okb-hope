@@ -1,9 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import MessageItem from './MessageItem';
-import { db } from '../../../firebase/firebase'
+import { db, auth } from '../../../firebase/firebase'
 import { collection, getDocs, query, orderBy, DocumentData, onSnapshot } from "firebase/firestore"
 
 const MessageList: React.FC = () => {
+
+  const uid = auth.currentUser?.uid;
+  const photoURL = auth.currentUser?.photoURL;
+
   const messagesRef = collection(db, "Chats");
   const queryDoc = query(messagesRef, orderBy('createdAt'));
   const [messages, setMessages] = useState<DocumentData[]>([]);
@@ -18,12 +22,12 @@ const MessageList: React.FC = () => {
       }));
       setMessages(messageData);
     });
-  
+
     return () => {
       unsubscribe();
     };
   }, []);
-  
+
 
   // Scrolls to most recent message in MessageList every time there is an update to messages.
   useEffect(() => {

@@ -48,7 +48,7 @@ const MessageComposer: React.FC = () => {
   };
 
   return (
-    <div className="message-composer bg-white py-2 rounded-b-md">
+    <div className="message-composer bg-white py-2 rounded-b-md border-solid border-2 border-gray-400">
       <div className="flex items-center rounded-2xl border-solid border-2 border-gray-400 pl-2 mx-4">
         {/* Input text area */}
         <textarea
@@ -56,14 +56,14 @@ const MessageComposer: React.FC = () => {
           onChange={handleMessageChange}
           onKeyDown={handleKeyDown}
           placeholder="Send a Message"
-          className="w-full h-full"
+          className="w-full h-full overflow-scroll"
         ></textarea>
 
         {/* Button to send a message */}
         <button
           type="button"
           onClick={sendMessage}
-          className="bg-okb-blue rounded-full text-white italic font-bold px-2 mx-4 my-2"
+          className="bg-gray-400 rounded-full text-white italic font-bold px-2 mx-4 my-2"
         >Send</button>
       </div>
     </div>
