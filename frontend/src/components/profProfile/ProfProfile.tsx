@@ -55,6 +55,7 @@ const ProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
   return (
     <div className={`w-2/3 h-full flex flex-wrap flex-col justify-center content-center gap-5`}>
         <div className={`flex flex-row`}>
+            {/* Back arrow to return to go back to Discover Professionals */}
             <figure className={`cursor-pointer`}><Arrow /></figure>
         </div>
         <div className={`flex flex-row gap-10`}>
@@ -66,11 +67,13 @@ const ProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
                     <div className={`grow text-3xl text-bold`}>
                         {professional.first_name + " " + professional.last_name}
                     </div>
+                    {/* Save button, action is currently undefined */}
                     <div className={`shrink`}>
                         <div className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold`}>
                             <figure className="object-cover"><Bookmark /></figure>Save
                         </div>
                     </div>
+                    {/* Message button, action is currently undefined */}
                     <div className={`shrink`}>
                         <div className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2`}>
                             <figure className="object-cover"><Chat /></figure>Message
@@ -80,6 +83,7 @@ const ProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
                 <div className={`text-normal text-xl italic text-dark-grey`}>
                     {professional.title}
                 </div>
+                {/* Speciality/language/location tags */}
                 <div className={`flex flex-row flex-start gap-2`}>
                     {professional.specialty.map((speciality, index) => (
                         <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
@@ -100,6 +104,7 @@ const ProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
                     {professional.description}
                 </div>
                 <div className={`flex flex-row`}>
+                    {/* Link tag, currently not in the IPsychiatrist so hard coded with default link */}
                     <div className={`px-4 py-2 border-2 rounded-s-2xl rounded-[20px] border-light-blue bg-lightest-blue hover:shadow-xl transition transition underline cursor-pointer flex flex-row gap-2`}>
                         <figure className="object-cover"><Link /></figure>www.mentalhealthsite.com
                     </div>
@@ -110,6 +115,7 @@ const ProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
         <Availability availability={professional?.availability}/>
         
         <div className={`flex flex-row justify-center content-center`}>
+            {/* Book Appointment button, action undefined but should lead to calendly */}
             <button
                 className={`bg-okb-blue text-okb-white active:bg-gray-500 font-bold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
                 type="button"
