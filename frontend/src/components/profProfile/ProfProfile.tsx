@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { fetchProfessionalData } from '../../../firebase/fetchData';
 import { IPsychiatrist } from '../../schema'
 import Availability from './Availability';
+import ArrowIcon from '../../assets/bookmark.svg';
+
 
 interface ProfProfileProps {
     firstName: string;
@@ -33,7 +35,7 @@ const DummyPsychiatrist: IPsychiatrist = {
 }
 
 const ProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
-  const [professional, setProfessional] = useState<IPsychiatrist | null>(DummyPsychiatrist);
+  const [professional, setProfessional] = useState<IPsychiatrist>(DummyPsychiatrist);
 
   useEffect(() => {
     const fetchProfessional = async () => {
@@ -46,8 +48,42 @@ const ProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
   }, []);
 
   return (
-    <div>
-      <Availability availability={professional?.availability!}/>
+    <div className={`w-full h-full flex flex-wrap flex-col justify-center content-center gap-5`}>
+        <div className={``}>
+            <figure className="object-cover"><ArrowIcon /></figure>
+        </div>
+        <div className={`flex flex-row`}>
+            <div className={`shrink`}>
+                {/* picture */}
+            </div>
+            <div className={`grow flex flex-col gap-4`}>
+                <div className={`flex flex-row`}>
+                    <div className={`grow text-semibold`}>
+                        {professional.first_name + " " + professional.last_name}
+                    </div>
+                    <div className={`shrink`}>
+
+                    </div>
+                    <div className={`shrink`}>
+
+                    </div>
+                </div>
+                <div className={`text-semibold`}>
+
+                </div>
+                <div className={`flex flex-row flex-start`}>
+                    {/* map to language and speciality */}
+                </div>
+                <div className={`font-monsterat`}>
+                    {/* description */}
+                </div>
+                <div className={`flex flex-row`}>
+                    {/* Links */}
+                </div>
+            </div>
+        </div>
+        <h2 className={``}>Availability</h2>
+        <Availability availability={professional?.availability}/>
     </div>
   );
 };

@@ -20,7 +20,7 @@ const AvailabilityCard = ({ day, times }: AvailabilityCardProps) => {
 
   return (
     <div className={`min-h-[8rem] w-32 p-4 border-2 rounded-[20px] space-y-2 flex flex-col ${borderColorClass}`}>
-      <h2 className={`text-xl font-semibold font-montserrat text-center ${textColorClass}`}>{day}</h2>
+      <div className={`text-xl font-semibold font-montserrat text-center ${textColorClass}`}>{day}</div>
       <div>
         {isAvailable ? (
           timeList.map((time, index) => (
