@@ -1,28 +1,29 @@
+
+
 import { useState, useEffect, useRef } from 'react';
 import MessageItem from './MessageItem';
 import { db, auth } from '../../../firebase/firebase'
-import { collection, getDocs, query, orderBy, DocumentData, onSnapshot } from "firebase/firestore"
+import { collection, getDocs, query, orderBy, DocumentData, onSnapshot, where } from "firebase/firestore"
+import fetchUserChats from "../../../firebase/fetchData"
 
 const MessageList: React.FC = () => {
 
   const uid = auth.currentUser?.uid;
   const photoURL = auth.currentUser?.photoURL;
 
-  const messagesRef = collection(db, "Chats");
-  // const messagesRef = collection(db, "conversations");
-  const queryDoc = query(messagesRef, orderBy('createdAt'));
+  const messagesRef = collection(db, "conversations");
+  const queryDoc = query(
+    messagesRef,
+    where('user', '==', uid), // Filter messages by current user's UID
+    orderBy('createdAt')
+  );
+  // TODO: change to psychiatrist later
   const [messages, setMessages] = useState<DocumentData[]>([]);
   // Ref to scroll to most recent message in MessageList
   const scrollEnd = useRef<null | HTMLDivElement>(null);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(queryDoc, (querySnapshot) => {
-      const messageData = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setMessages(messageData);
-    });
+    const unsubscribe = fetchUserChats(setMessages);
 
     return () => {
       unsubscribe();
