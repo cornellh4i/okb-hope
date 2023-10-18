@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, use, useEffect, useRef } from 'react';
 import chevron_down from '@/assets/chevron_down';
-import okb_colors from "@/colors";
 import search_icon from '@/assets/search_icon';
+import okb_colors from '../colors';
 
 export default function SearchBar({ onSearch, filters, setFilters, monday, setMonday, tuesday, setTuesday, wednesday,
   setWednesday, thursday, setThursday, friday, setFriday, saturday, setSaturday, sunday, setSunday, allDays, setAllDays,
@@ -226,6 +226,7 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
 
   // Parses the selected filters array into a dictionary that maps filter categories to an array of filters they encompass
   const handleFilter = () => {
+    console.log(okb_colors.dark_gray)
     const filtersCategorized: { days: string[], languages: string[], genders: number[] } = { days: [], languages: [], genders: [] }
     for (let i = 0; i < filters.length; i++) {
       let filter = filters[i].filter
@@ -249,7 +250,7 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
       <div className="flex w-full h-9 justify-center items-start gap-x-4 shrink-0">
 
         {/* search bar */}
-        <div className={`flex w-96 h-9 py-2 px-4 items-center gap-4 shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
+        <div className={`flex w-96 h-9 py-2 px-4 items-center gap-4 shrink-0 border-solid border rounded-lg border-[#5F5F5F] bg-[${okb_colors.white}]`}>
           {search_icon}
           <div className="form-control w-full">
             <div className="input-group w-full">
@@ -258,7 +259,7 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
                 onKeyDown={handleKeyDown}
                 value={searchTerm}
                 // updates the search bar's text as the user types into it
-                onChange={handleSearchChange} className={`text-[${okb_colors.med_gray}] italic text-xs font-normal outline-none w-full`} />
+                onChange={handleSearchChange} className={`text-[#9A9A9A] italic text-xs font-normal outline-none w-full`} />
             </div>
           </div>
         </div>
@@ -279,10 +280,10 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
                   <input type="checkbox"
                     checked={allDays}
                     onChange={(e) => handleFilterChange(FilterEnum.allDays, allDays, setAllDays, e)}
-                    className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                    className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[#9A9A9A]`} />
                   <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Select All</span>
                 </label>
-                <hr className={`w-48 h-1 bg-[${okb_colors.dark_gray}] place-self-center`}></hr>
+                <hr className={`w-48 h-0.5 bg-[#5F5F5F] place-self-center`}></hr>
                 <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pt-3.5">
                   <input type="checkbox"
                     checked={monday}
@@ -430,7 +431,7 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
         </div>
 
         {/* filter button */}
-        <button onClick={handleFilter} className={`filter-button flex w-32 h-9 py-2.5 px-11 justify-center items-center gap-2.5 border-solid border rounded-lg border-[${okb_colors.okb_blue}] bg-[${okb_colors.white}]`}>
+        <button onClick={handleFilter} className={`filter-button flex w-32 h-9 py-2.5 px-11 justify-center items-center gap-2.5 border-solid border rounded-lg border-[#195BA5] bg-[${okb_colors.white}]`}>
           <div className={`text-[${okb_colors.okb_blue}] text-xs font-bold`}>Filter</div>
         </button>
       </div>
