@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import MessageItem from './MessageItem';
 import { db, auth } from '../../../firebase/firebase'
 import { collection, getDocs, query, orderBy, DocumentData, onSnapshot, where } from "firebase/firestore"
-import fetchUserChats from "../../../firebase/fetchData"
+import { fetchUserChats } from "../../../firebase/fetchData"
 
 const MessageList: React.FC = () => {
 
