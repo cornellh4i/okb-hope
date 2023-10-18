@@ -226,7 +226,6 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
 
   // Parses the selected filters array into a dictionary that maps filter categories to an array of filters they encompass
   const handleFilter = () => {
-    console.log(okb_colors.dark_gray)
     const filtersCategorized: { days: string[], languages: string[], genders: number[] } = { days: [], languages: [], genders: [] }
     for (let i = 0; i < filters.length; i++) {
       let filter = filters[i].filter
