@@ -16,23 +16,23 @@ type Conversation = {
 };
 
 const PsychiatristInbox = () => {
-  const { currentUser } = useAuth();
+  const { user, role } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
 
   useEffect(() => {
     const fetchConversations = async () => {
-      if (!currentUser) return;
+      if (!user) return;
 
       const q = query(
         collection(db, "Chats"),
-        where("psychiatrist.uid", "==", currentUser.uid)
+        where("psychiatrist.uid", "==", user.uid)
       );
       const querySnapshot = await getDocs(q);
       setConversations(querySnapshot.docs.map((doc) => doc.data() as Conversation));
     };
 
     fetchConversations();
-  }, [currentUser]);
+  }, [user]);
 
   return (
     <div>
