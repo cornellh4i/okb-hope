@@ -228,7 +228,7 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
   const handleFilter = () => {
     const filtersCategorized: { days: string[], languages: string[], genders: number[] } = { days: [], languages: [], genders: [] }
     for (let i = 0; i < filters.length; i++) {
-      let filter = filters[i].filter
+      const filter = filters[i].filter
       if (days.includes(filter)) {
         filtersCategorized['days'].push(filter)
       } else if (languages.includes(filter)) {
@@ -436,4 +436,4 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
       </div>
     </div>
   );
-};
+}
