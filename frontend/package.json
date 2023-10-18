@@ -10,6 +10,10 @@
     "deploy": "gh-pages -d build"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.13",
+    "@mui/x-date-pickers": "^6.16.2",
     "@svgr/webpack": "^7.0.0",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "18.15.0",
