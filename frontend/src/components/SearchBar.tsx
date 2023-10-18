@@ -26,11 +26,11 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
     female: "female",
     bothGenders: "bothGenders"
   }
-  let days = [FilterEnum.monday, FilterEnum.tuesday, FilterEnum.wednesday, FilterEnum.thursday, FilterEnum.friday, FilterEnum.saturday, FilterEnum.sunday];
-  let languages = [FilterEnum.english, FilterEnum.ga, FilterEnum.twi, FilterEnum.hausa]
-  let genders = [FilterEnum.male, FilterEnum.female]
+  const days = [FilterEnum.monday, FilterEnum.tuesday, FilterEnum.wednesday, FilterEnum.thursday, FilterEnum.friday, FilterEnum.saturday, FilterEnum.sunday];
+  const languages = [FilterEnum.english, FilterEnum.ga, FilterEnum.twi, FilterEnum.hausa]
+  const genders = [FilterEnum.male, FilterEnum.female]
 
-  let selected: any = [...filters]
+  const selected: any = [...filters]
   const [searchTerm, setSearchTerm] = useState('');
 
   const [showDayDropdown, setShowDayDropdown] = useState(false);
@@ -162,7 +162,7 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
   }
 
   // Updates the selected filter's state and selected array when the selected filter is checked/unchecked
-  function handleFilterChange(filterName: string, filterState: boolean, setFunction: Function,
+  function handleFilterChange(filterName: string, filterState: boolean, setFunction: any,
     event: {
       target: {
         checked: boolean
