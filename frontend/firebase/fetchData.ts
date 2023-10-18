@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { getDocs, query, where, collection } from "firebase/firestore";
+import { getDocs, query, where, collection, onSnapshot } from "firebase/firestore";
 import { IPsychiatrist } from '@/schema';
 
 /**
@@ -43,4 +43,28 @@ const fetchAllProfessionals = async () => {
   }
 }
 
-export { fetchProfessionalData, fetchAllProfessionals };
+function fetchUserChats(setMessages) {
+  // const userId = auth.currentUser?.uid;
+  const userId = "123"
+
+  if (!userId) {
+    console.error("No user is authenticated.");
+    return () => { }; // Return an empty function for consistent return type
+  }
+
+  const conversationsRef = collection(db, "conversations");
+  const q = query(conversationsRef, where("participants", "array-contains", userId));
+
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const userConversations = querySnapshot.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    setMessages(userConversations);
+  });
+
+  return unsubscribe;
+}
+
+export { fetchProfessionalData, fetchAllProfessionals, fetchUserChats };
+
