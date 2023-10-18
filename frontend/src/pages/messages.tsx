@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import ChatApp from '@/components/chatapp/ChatApp';
+import ChatApp from '@/components/messaging/ChatApp';
 import { LoginPopup } from '@/components/LoginPopup';
 
 const MessagesPage = () => {
