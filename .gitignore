@@ -2,4 +2,6 @@
 
 .env
 
+.env.*
+
 secrets/
