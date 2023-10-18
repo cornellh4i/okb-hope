@@ -5,9 +5,9 @@ import PatientInbox from "./PatientInbox";
 import PsychiatristInbox from "./PsychiatristInbox";
 
 const Inbox = () => {
-  const { currentUser, role } = useAuth();
+  const { user, role } = useAuth();
 
-  if (!currentUser) {
+  if (!user) {
     return <div>Please log in.</div>;
   }
 
