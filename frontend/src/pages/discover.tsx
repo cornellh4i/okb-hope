@@ -7,7 +7,7 @@ import { IPsychiatrist } from '@/schema';
 import colors from "@/colors";
 import { db } from '../../firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import fetchAllProfessionals from '../../firebase/fetchData';
+import { fetchAllProfessionals } from '../../firebase/fetchData';
 
 // options for fuzzy search. currently only searches by name and title
 const fuseOptions = {
