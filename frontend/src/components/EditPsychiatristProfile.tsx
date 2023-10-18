@@ -24,7 +24,7 @@ const EditPsychiatristProfile = ({psychiatrist}) => {
   
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const handleLanguageChange = (language) => {
-    let updatedLanguages = [...selectedLanguages];
+    const updatedLanguages = [...selectedLanguages];
     if(language.target.checked){
       updatedLanguages.push(language.target.value);
     } else{
@@ -35,7 +35,7 @@ const EditPsychiatristProfile = ({psychiatrist}) => {
         }
     setSelectedLanguages(updatedLanguages);
   };
-  let isLanguageChecked = (item) =>
+  const isLanguageChecked = (item) =>
   selectedLanguages.includes(item) ? true : false;
 
   
