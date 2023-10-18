@@ -8,7 +8,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { db } from "../../../firebase/firebase";
 import App from '@/pages/_app';
-//import fetchUsers from '../../../firebase/fetchAppointments';
+
+import fetchAppointments, { AppointmentType } from '../../../firebase/fetchAppointments';
 
 const currentDate = new Date();
 const year = currentDate.getFullYear();
@@ -20,9 +21,16 @@ const dateString = `${dayOfWeek}, ${month} ${dayOfMonth}`;
 
 const PsychiatristDashboard = () => {
   const [defaultValue, setValue] = React.useState<Dayjs | null>(dayjs(currentDate));
-  // useEffect(()=>{
-  //   fetchUsers();
-  // });
+
+  const [appointments, setAppointments] = useState<AppointmentType[]>([]); // State to store appointments
+  useEffect(()=>{
+    fetchAppointments().then( (data) => {
+      setAppointments(data);
+    })
+    .catch((error) => {
+      console.error("Error fetching appointments:", error);
+    });
+  },[]);
 
     return <React.Fragment>
         <div className=" w-full h-[1141px] relative bg-neutral-100">
