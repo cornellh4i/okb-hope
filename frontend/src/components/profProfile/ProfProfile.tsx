@@ -40,23 +40,47 @@ const DummyPsychiatrist: IPsychiatrist = {
     patients and has a specialization in the treatment of anxiety and mood disorders.`
 }
 
-const ProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
-    const [professional, setProfessional] = useState<IPsychiatrist>(DummyPsychiatrist);
+// Originally, { firstName, lastName }: ProfProfileProps was passed in below, 
+// put it is not necessary if we are using useRouter, because we can access 
+// the firstName and lastName from the router's query
 
+const ProfProfile = () => {
+
+    // Set the initial state of professional to null instead of DummyPsychiatrist 
+    // to avoid the initial rendering of the component with DummyPsychiatrist 
+    // before fetching and updating with the real data
+    const [professional, setProfessional] = useState<IPsychiatrist | null>(null);
+
+    const router = useRouter();
+
+    // Effect for fetching and updating professional data based on query parameters.
+    // This effect runs when the component mounts or when `router.query.firstName` or `router.query.lastName` change.
     useEffect(() => {
         const fetchProfessional = async () => {
-            // We use dummy psychiatrist for now for testing purposes
-            // const data = await fetchProfessionalData(firstName, lastName);
-            // setProfessional(data);
+            // Extract the first name and last name from the router query parameters
+            const firstName = router.query.firstName as string;
+            const lastName = router.query.lastName as string;
+
+            // Check if both first name and last name are defined
+            if (firstName && lastName) {
+                // Fetch professional data based on first name and last name
+                const data = await fetchProfessionalData(firstName, lastName);
+                console.log(data);
+                setProfessional(data);
+            }
         };
 
         fetchProfessional();
-    }, []);
+    }, [router.query.firstName, router.query.lastName]);
 
-    const router = useRouter();
     const handleGoToDashboard = () => {
         router.push('/discover');
     };
+
+    // Render conditionally based on whether professional data is available
+    if (professional === null) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className={`w-2/3 h-full flex flex-wrap flex-col justify-center content-center gap-5`}>
