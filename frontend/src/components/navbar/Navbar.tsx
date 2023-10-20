@@ -18,7 +18,8 @@ const Navbar = () => {
             <Logo />
           </Link>
           {user ? <li className={`${router.pathname === '/dashboard' ? 'underline-offset-1 custom-active' : ''}`}>
-            <Link href="/dashboard" className="w-18">
+            {/* A link to the user's dashboard */}
+            <Link href={`/${user.uid}/dashboard`} className="w-18">
               <div className="text-[18px] text-[#195BA5]">My Dashboard</div>
             </Link>
           </li> : <div></div>}
@@ -28,13 +29,15 @@ const Navbar = () => {
       <div className="flex-1"></div>
       <ul className="menu menu-horizontal px-1 gap-5">
         <li className={`${router.pathname === '/discover' ? 'underline-offset-1 custom-active' : ''}`}>
-          <Link href="/discover" className="w-18">
+          {/* A link to the user's discover page */}
+          <Link href={`/${user?.uid}/discover`} className="w-18">
             <div className="text-[18px] text-[#195BA5]">Discover Professionals</div>
           </Link>
         </li>
 
         {user ? <li className={`${router.pathname === '/messages' ? 'underline-offset-1 custom-active' : ''}`}>
-          <Link href="/messages" className="w-18">
+          {/* A link to the user's messages */}
+          <Link href={`/${user.uid}/messages`} className="w-18">
             <div className="text-[18px] text-[#195BA5]">Messages</div>
           </Link>
         </li> : <div></div>}
@@ -49,7 +52,8 @@ const Navbar = () => {
           user ? <div className="dropdown dropdown-hover dropdown-bottom dropdown-end">
             <div tabIndex={0} className={`btn btn-circle bg-[${colors.okb_blue}] text-[18px] font-normal`}>{user.displayName?.charAt(0)}</div>
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
-              <Link href="edit_profile">
+              {/* A link to the user's edit profile page */}
+              <Link href={`/${user.uid}/edit_profile`}>
                 <li>Edit Profile</li>
               </Link>
               <button onClick={logout}>

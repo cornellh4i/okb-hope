@@ -9,6 +9,7 @@ import Bookmark from '../../assets/bookmark2.svg';
 import Chat from '../../assets/message2.svg';
 import Photo from '../../assets/dummy_photo.jpg';
 import { useRouter } from 'next/router';
+import { useAuth } from '../../../contexts/AuthContext';
 
 
 interface ProfProfileProps {
@@ -45,6 +46,7 @@ const DummyPsychiatrist: IPsychiatrist = {
 // the firstName and lastName from the router's query
 
 const ProfProfile = () => {
+    const { user } = useAuth(); // Get the user information from the context
 
     // Set the initial state of professional to null instead of DummyPsychiatrist 
     // to avoid the initial rendering of the component with DummyPsychiatrist 
@@ -57,12 +59,14 @@ const ProfProfile = () => {
     // This effect runs when the component mounts or when `router.query.firstName` or `router.query.lastName` change.
     useEffect(() => {
         const fetchProfessional = async () => {
+            const userId = user?.uid; // Get the ID of the currently logged-in user
+
             // Extract the first name and last name from the router query parameters
             const firstName = router.query.firstName as string;
             const lastName = router.query.lastName as string;
 
             // Check if both first name and last name are defined
-            if (firstName && lastName) {
+            if (userId && firstName && lastName) {
                 // Fetch professional data based on first name and last name
                 const data = await fetchProfessionalData(firstName, lastName);
                 console.log(data);
@@ -73,8 +77,9 @@ const ProfProfile = () => {
         fetchProfessional();
     }, [router.query.firstName, router.query.lastName]);
 
+    // Navigate to the user's discover page
     const handleGoToDashboard = () => {
-        router.push('/discover');
+        router.push(`/${user?.uid}/discover`);
     };
 
     // Render conditionally based on whether professional data is available

@@ -1,14 +1,13 @@
 import { useState, useMemo, useEffect } from 'react';
 import Fuse from 'fuse.js';
-import SearchBar from '../components/SearchBar';
-import PsychiatristList from '../components/psychiatrists/PsychiatristList';
-import json_results from '../temp_data/psychs.json';
 import { IPsychiatrist } from '@/schema';
 import colors from "@/colors";
-import { db } from '../../firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import { fetchAllProfessionals } from '../../firebase/fetchData';
 import { useRouter } from 'next/router';
+import { fetchAllProfessionals } from '../../../firebase/fetchData';
+import SearchBar from '@/components/SearchBar';
+import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
+import { useAuth } from '../../../contexts/AuthContext';
 
 // options for fuzzy search. currently only searches by name and title
 const fuseOptions = {
@@ -22,7 +21,10 @@ const fuseOptions = {
 
 const DiscoverPage: React.FC = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const { userId } = router.query;
+  console.log(userId)
+  console.log(user?.uid)
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState([]);
