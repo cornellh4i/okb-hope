@@ -63,30 +63,15 @@ const FilterUserTable = ({ currentRecords }) => {
   return (
     <div className="overflow-x-auto">
       <button
-        className="btn btn-delete"
+        className="btn px-3 py-2 bg-neutral-200 rounded-[10px] justify-start items-start flex"
         onClick={openPopup}
-        style={{
-          display: 'flex',
-          width: '92px',
-          height: '40px',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: '10px',
-          background: 'var(--light-grey, #DEDEDE)',
-          color: 'var(--OKB-Blue, #195BA5)',
-          fontFamily: 'Montserrat',
-          fontSize: '20px',
-          fontStyle: 'normal',
-          fontWeight: '600',
-          lineHeight: 'normal',
-        }}
       >
-        Delete
+        <div className="text-sky-700 text-xl font-semibold font-['Montserrat']">Delete</div>
       </button>
 
       {isPopupOpen && (
         <div
-          className="popup"
+          className="popup w-[531px] h-[250px] p-9 bg-white rounded-2xl shadow flex-col justify-center items-start gap-6 inline-flex"
           style={{
             display: 'flex',
             width: '531px',
@@ -107,46 +92,15 @@ const FilterUserTable = ({ currentRecords }) => {
             zIndex: '999',
           }}
         >
-          {/* Content of the popup */}
-          <h2 style={{
-                ...popupTextStyle,
-                marginTop: '36px', /* 36px from the top */
-                marginRight: '36px', /* 36px from the right */
-                marginLeft: '36px', /* 36px from the left */
-              }}>
-            Are you sure you want to delete this user?
-          </h2>
-          <p style={{
-            ...popupTextStyleTwo,
-            marginBottom: '24px', /* 24px from the bottom of <h2> */
-            marginLeft: '36px', /* 36px from the right of the popup */
-            marginRight: '36px', /* 36px from the right of the popup */
-          }}>
-            You will not be able to recover deleted profiles.
-          </p>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <button
-              onClick={closePopup}
-              style={{
-                display: 'flex',
-                padding: '12px 16px',
-                alignItems: 'flex-start',
-                gap: '10.453px',
-                borderRadius: '10px',
-                background: 'var(--Light-blue, #519AEB)',
-                color: 'var(--white, #FFFDFD)',
-                fontFamily: 'Montserrat',
-                fontSize: '20px',
-                fontStyle: 'normal',
-                fontWeight: '600',
-                lineHeight: 'normal',
-                width: '68px',
-                height: '24px',
-                position: 'relative',
-                marginRight: '36px', /* 36px from the right of the popup */
-              }}
-            >
-              Delete
+            {/* Content of the popup */}
+          <div className="w-[472px] text-black text-2xl font-semibold font-['Montserrat']">Are you sure you want to delete this user?</div>
+          <div className="text-black text-[21px] font-normal font-['Inter']">You will not be able to recover deleted profiles. </div>
+          <div className="self-stretch justify-end items-end gap-4 inline-flex">
+            <button className="px-4 py-3 rounded-[10px] border-4 border-blue-400 justify-start items-start gap-[10.45px] flex" onClick={closePopup}>
+              <div className="text-zinc-600 text-xl font-semibold font-['Montserrat']">Cancel </div>
+            </button>
+            <button className="px-4 py-3 bg-blue-400 rounded-[10px] justify-start items-start gap-[10.45px] flex" onClick={closePopup}>
+              <div className="text-white text-xl font-semibold font-['Montserrat']">Delete</div>
             </button>
           </div>
         </div>
@@ -156,13 +110,6 @@ const FilterUserTable = ({ currentRecords }) => {
       <table className="table w-full">
         {/* head */}
         <thead>
-          <tr>
-            <th></th>
-            <th>Name</th>
-            <th>Username</th>
-            <th>Last Active</th>
-            <th>Date Created</th>
-          </tr>
         </thead>
         <tbody>
           {/* map rows */}
