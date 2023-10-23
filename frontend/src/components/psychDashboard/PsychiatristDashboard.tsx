@@ -9,17 +9,35 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { sizing } from '@mui/system';
 import { db } from "../../../firebase/firebase";
 import App from '@/pages/_app';
+import results from '@/temp_data/pappointments.json'; // appointment info 
 import fetchAppointments, { AppointmentType } from '../../../firebase/fetchAppointments';
 
-const currentDate = new Date();
-const year = currentDate.getFullYear();
-const month = currentDate.toLocaleString('default', { month: 'long' }); // Full month name
-const dayOfMonth = currentDate.getDate();
-const dayOfWeek = currentDate.toLocaleString('default', { weekday: 'long' }); // Full day of the week name
-const dateHeaderString = `${month} ${dayOfMonth}, ${year}`;
-const dateString = `${dayOfWeek}, ${month} ${dayOfMonth}`;
 
 const PsychiatristDashboard = () => {
+    const [currentDate, setCurrentDate] = useState(new Date());
+    const year = currentDate.getFullYear();
+    const month = currentDate.toLocaleString('default', { month: 'long' }); // Full month name
+    const monthNum = currentDate.toLocaleString('default', { month: 'numeric' }); // Full month name
+
+    const dayOfMonth = currentDate.getDate();
+    const dayOfWeek = currentDate.toLocaleString('default', { weekday: 'long' }); // Full day of the week name
+    const dateHeaderString = `${month} ${dayOfMonth}, ${year}`;
+    const dateString = `${dayOfWeek}, ${month} ${dayOfMonth}`;
+    const dateMDY = `${year}-${monthNum}-${dayOfMonth}`
+
+
+    // Handler for the next week button click
+    const goToNextWeek = () => {
+        const nextWeek = new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+        setCurrentDate(nextWeek);
+      };
+    
+    // Handler for the previous week button click
+    const goToPreviousWeek = () => {
+        const previousWeek = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+        setCurrentDate(previousWeek);
+      };
+
   const [defaultValue, setValue] = React.useState<Dayjs | null>(dayjs(currentDate));
   const [appointments, setAppointments] = useState<AppointmentType[]>([]); // State to store appointments
   useEffect(()=>{
@@ -30,6 +48,28 @@ const PsychiatristDashboard = () => {
       console.error("Error fetching appointments:", error);
     });
   },[]);
+
+  const apts = Object.values(results);
+
+
+  const appointmentCards = apts.map((apt) => {
+
+    const p_name = apt.Pname; 
+    const day = apt.date
+    const time_start = apt.start;
+    const time_end = apt.end;
+    const appointmentDate = new Date(time_start)
+    // returning the AppointmentCard for each appointment
+    if (day === dateMDY) {
+    return (
+      <AppointmentCard 
+        p_name={p_name} 
+        time_start={time_start} 
+        time_end={time_end} 
+      />
+    );
+  }});
+
 
     return <React.Fragment>
         <div className="w-[1114px] mx-auto  pl-63 pr-63 relative h-[1037px]">
@@ -42,6 +82,8 @@ const PsychiatristDashboard = () => {
                             <div className="text-white text-2xl font-semibold font-montserrat">Week of {dateHeaderString}</div>
                         </div>
                         <div className="w-2.5 h-5 left-0 top-[4px] absolute flex-col justify-start items-start gap-2.5 inline-flex">
+                                        
+                        <button onClick={goToPreviousWeek}>
                         <svg width="10" height="20" viewBox="0 0 10 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#clip0_2452_9242)">
                             <path d="M7.5 18C7.14844 18 6.83594 17.8828 6.60156 17.6484L0.351562 11.3984C-0.15625 10.9297 -0.15625 10.1094 0.351562 9.64062L6.60156 3.39062C7.07031 2.88281 7.89062 2.88281 8.35938 3.39062C8.86719 3.85938 8.86719 4.67969 8.35938 5.14844L3.00781 10.5L8.35938 15.8906C8.86719 16.3594 8.86719 17.1797 8.35938 17.6484C8.125 17.8828 7.8125 18 7.5 18Z" fill="#FFFDFD"/>
@@ -52,11 +94,15 @@ const PsychiatristDashboard = () => {
                             </clipPath>
                             </defs>
                         </svg>
+                        </button>
+
                         </div>
                         <div className="w-2.5 h-5 left-[352px] top-[4px] absolute flex-col justify-start items-start gap-2.5 inline-flex">
+                        <button onClick={goToNextWeek}>
                         <svg width="11" height="20" viewBox="0 0 11 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M2.5 18C2.14844 18 1.83594 17.8828 1.60156 17.6484C1.09375 17.1797 1.09375 16.3594 1.60156 15.8906L6.95312 10.5L1.60156 5.14844C1.09375 4.67969 1.09375 3.85938 1.60156 3.39062C2.07031 2.88281 2.89062 2.88281 3.35938 3.39062L9.60938 9.64062C10.1172 10.1094 10.1172 10.9297 9.60938 11.3984L3.35938 17.6484C3.125 17.8828 2.8125 18 2.5 18Z" fill="#FFFDFD"/>
                         </svg>
+                        </button>
                         </div>
 
                         
@@ -80,7 +126,8 @@ const PsychiatristDashboard = () => {
                                     <div className="flex w-[327.76px] ml-10 top-0 absolute text-black text-2xl font-semibold font-['Montserrat']">{dateString}</div>
                                     {/* <AppointmentCard /> */}
                                     <div className="mt-10">
-                                        {AppointmentCard({ p_name: "JC", time_start: "10", time_end: "11" })}
+                                        {appointmentCards}
+                                        {/* {AppointmentCard({ p_name: "JC", time_start: "10", time_end: "11" })} */}
                                     </div>
                                 </div>
                 </div>
