@@ -9,7 +9,7 @@ const AppointmentCard = ({p_name, time_start, time_end} : {p_name:string, time_s
   };
 
   return (
-    <div className="flex flex-col w-[806px] h-[67px] rounded-[10px] items-center py-2 px-10 shadow m-6 gap-2.5 inline-flex justify-center">
+    <div className="flex flex-col w-[806px] h-[67px] rounded-[10px] items-center py-2 px-10 shadow m-6 mb-0 gap-2.5 inline-flex justify-center">
       <div className="flex justify-between items-center self-stretch ">
         <div className="justify-center items-center gap-6 flex">
           <div className="text-black font-montserrat text-xs font-normal">{time_start} - {time_end}</div>

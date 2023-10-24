@@ -24,8 +24,9 @@ const PsychiatristDashboard = () => {
     const dayOfWeek = currentDate.format('dddd');
     const dateHeaderString = `${month} ${dayOfMonth}, ${year}`;
     const dateString = `${dayOfWeek}, ${month} ${dayOfMonth}`;
-    const dateMDY = `${year}-${monthNum}-${dayOfMonth}`
-
+    const dateMDY = `${year}-${monthNum}-${dayOfMonth}`;
+    const startOfWeek = currentDate.startOf('week');
+    const endOfWeek = currentDate.endOf('week');
 
     // Handler for the next week button click
     const goToNextWeek = () => {
@@ -38,39 +39,80 @@ const PsychiatristDashboard = () => {
         const previousWeek = currentDate.subtract(7, 'day');
         setCurrentDate(previousWeek);
       };
+    
+    const [appointments, setAppointments] = useState<AppointmentType[]>([]); // State to store appointments
+    useEffect(()=>{
+        fetchAppointments().then( (data) => {
+        setAppointments(data);
+        })
+        .catch((error) => {
+        console.error("Error fetching appointments:", error);
+        });
+    },[]);
 
-  const [appointments, setAppointments] = useState<AppointmentType[]>([]); // State to store appointments
-  useEffect(()=>{
-    fetchAppointments().then( (data) => {
-      setAppointments(data);
-    })
-    .catch((error) => {
-      console.error("Error fetching appointments:", error);
+    const apts: IAppointment[] = Object.values(results);
+
+    // const appointmentCards = apts.map((apt: IAppointment) => {
+
+    //     const p_name = apt.name; 
+    //     const time_start = dayjs(apt.start);
+    //     const time_end = dayjs(apt.end);
+    //     const timeStartDateString = time_start.format('YYYY-MM-DD');
+    //     // returning the AppointmentCard for each appointment
+    //     if (timeStartDateString === dateMDY) {
+    //         return (
+    //             <AppointmentCard 
+    //                 p_name={p_name} 
+    //                 time_start={time_start.format('HH:mm')} 
+    //                 time_end={time_end.format('HH:mm')} 
+    //             />
+    //         );
+    //     }
+    // });
+
+    const aptsByDay: { [key: string]: IAppointment[] } = {};
+    apts.forEach((apt: IAppointment) => {
+        const time_start = dayjs(apt.start);
+        const timeStartDateString = time_start.format('YYYY-MM-DD');
+
+        if (time_start.isAfter(startOfWeek) && time_start.isBefore(endOfWeek)) {
+            if (!aptsByDay[timeStartDateString]) {
+                aptsByDay[timeStartDateString] = [];
+            }
+            aptsByDay[timeStartDateString].push(apt);
+        }
     });
-  },[]);
 
-  const apts: IAppointment[] = Object.values(results);
+    const sortedDates = Object.keys(aptsByDay).sort((a, b) => {
+        if (a === dateMDY) return -1;
+        if (b === dateMDY) return 1;
+        return dayjs(a).isBefore(dayjs(b)) ? -1 : 1;
+    });
 
-  const appointmentCards = apts.map((apt: IAppointment) => {
-
-    const p_name = apt.name; 
-    const time_start = dayjs(apt.start);
-    const time_end = dayjs(apt.end);
-    const timeStartDateString = time_start.format('YYYY-MM-DD');
-    // returning the AppointmentCard for each appointment
-    if (timeStartDateString === dateMDY) {
+    const appointmentSections = sortedDates.map(dateString => {
+        const aptForDay = aptsByDay[dateString];
         return (
-            <AppointmentCard 
-                p_name={p_name} 
-                time_start={time_start.format('HH:mm')} 
-                time_end={time_end.format('HH:mm')} 
-            />
+            <div key={dateString} className="relative mb-5">
+                <div className="flex w-[px] ml-10 top-0 absolute text-black text-2xl font-semibold font-montserrat">
+                    {dayjs(dateString).format('dddd, MMMM D')}
+                </div>
+                <div className="mt-10">
+                    {aptForDay.map(apt => (
+                        <AppointmentCard
+                            key={apt.id}
+                            p_name={apt.name}
+                            time_start={dayjs(apt.start).format('HH:mm')}
+                            time_end={dayjs(apt.end).format('HH:mm')}
+                        />
+                    ))}
+                </div>
+            </div>
         );
-    }});
+    });
 
 
-    return <React.Fragment>
-        <div className="w-[1114px] mx-auto  pl-63 pr-63 relative h-[1037px]">
+    return (
+        <div className="w-full h-[full]">
             {/* the header part of dashboard, containing week */}
             {/* Fix width */}
             <div className="flex flex-col justify-center items-center">
@@ -102,36 +144,24 @@ const PsychiatristDashboard = () => {
                         </svg>
                         </button>
                         </div>
-
-                        
-
                     </div>    
                 </div>
             </div> 
-            <div className="flex">
+            <div className="flex flex-row justify-center pt-10">
                 {/* the side-bar part of dashboard, containing calendar */}
-                <div className="w-[264px] h-[274px] bg-white rounded-[10px] shadow mt-40px" >
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DateCalendar value={currentDate} sx={{ width: 264, height: 274 }} onChange={(newValue: dayjs.Dayjs | null) => {setCurrentDate(newValue ?? dayjs());}}  />
-                        </LocalizationProvider>   
+                <div className="w-[320px] h-[300px] bg-white rounded-[10px] shadow" >
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DateCalendar value={currentDate} onChange={(newValue: dayjs.Dayjs | null) => {setCurrentDate(newValue ?? dayjs());}}  />
+                    </LocalizationProvider>   
                 </div>    
-                
         
                 {/* the main body of dashboard, containing appointments */}
-                <div className="ml-40px mt-40px w-[806px] h-[906px] flex-col justify-start items-start gap-9 inline-flex">
- 
-                                <div className="relative">
-                                    <div className="flex w-[327.76px] ml-10 top-0 absolute text-black text-2xl font-semibold font-['Montserrat']">{dateString}</div>
-                                    {/* <AppointmentCard /> */}
-                                    <div className="mt-10">
-                                        {appointmentCards}
-                                        {/* {AppointmentCard({ p_name: "JC", time_start: "10", time_end: "11" })} */}
-                                    </div>
-                                </div>
+                <div className="ml-40px mt-40px w-[806px] flex-col justify-start items-start gap-6 inline-flex overflow-y-auto h-[825px]">
+                    {appointmentSections}
                 </div>
             </div>
         </div>            
-    </React.Fragment>
+    )
   }
   
 export default PsychiatristDashboard;
