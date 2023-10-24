@@ -114,7 +114,6 @@ const PsychiatristDashboard = () => {
     return (
         <div className="w-full h-[full]">
             {/* the header part of dashboard, containing week */}
-            {/* Fix width */}
             <div className="flex flex-col justify-center items-center">
                 <div id="blueheader" className="flex w-[1114px] h-[53px] py-3 bg-sky-700 rounded-[10px] justify-center items-center inline-flex">  
                     <div className="relative">
