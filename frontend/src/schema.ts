@@ -29,6 +29,14 @@ export interface IPsychiatrist {
     description: string;
 }
 
+export interface IAppointment {
+    id: number,
+    name: string,
+    start: string,
+    end: string,
+    description: string
+}
+
 // export interface IChat { }
 
 // export interface ICall { }

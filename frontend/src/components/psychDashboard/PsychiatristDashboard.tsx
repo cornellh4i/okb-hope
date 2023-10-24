@@ -9,18 +9,19 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { sizing } from '@mui/system';
 import { db } from "../../../firebase/firebase";
 import App from '@/pages/_app';
-import results from '@/temp_data/pappointments.json'; // appointment info 
+import results from '../../temp_data/appointments.json'; // appointment info
 import fetchAppointments, { AppointmentType } from '../../../firebase/fetchAppointments';
+import { IAppointment } from '@/schema';
 
 
 const PsychiatristDashboard = () => {
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const year = currentDate.getFullYear();
-    const month = currentDate.toLocaleString('default', { month: 'long' }); // Full month name
-    const monthNum = currentDate.toLocaleString('default', { month: 'numeric' }); // Full month name
+    const [currentDate, setCurrentDate] = useState<dayjs.Dayjs>(dayjs());
+    const year = currentDate.year();
+    const month = currentDate.format('MMMM');
+    const monthNum = currentDate.format('M');
 
-    const dayOfMonth = currentDate.getDate();
-    const dayOfWeek = currentDate.toLocaleString('default', { weekday: 'long' }); // Full day of the week name
+    const dayOfMonth = currentDate.date();
+    const dayOfWeek = currentDate.format('dddd');
     const dateHeaderString = `${month} ${dayOfMonth}, ${year}`;
     const dateString = `${dayOfWeek}, ${month} ${dayOfMonth}`;
     const dateMDY = `${year}-${monthNum}-${dayOfMonth}`
@@ -28,17 +29,16 @@ const PsychiatristDashboard = () => {
 
     // Handler for the next week button click
     const goToNextWeek = () => {
-        const nextWeek = new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+        const nextWeek = currentDate.add(7, 'day');
         setCurrentDate(nextWeek);
       };
     
     // Handler for the previous week button click
     const goToPreviousWeek = () => {
-        const previousWeek = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const previousWeek = currentDate.subtract(7, 'day');
         setCurrentDate(previousWeek);
       };
 
-  const [defaultValue, setValue] = React.useState<Dayjs | null>(dayjs(currentDate));
   const [appointments, setAppointments] = useState<AppointmentType[]>([]); // State to store appointments
   useEffect(()=>{
     fetchAppointments().then( (data) => {
@@ -49,26 +49,24 @@ const PsychiatristDashboard = () => {
     });
   },[]);
 
-  const apts = Object.values(results);
+  const apts: IAppointment[] = Object.values(results);
 
+  const appointmentCards = apts.map((apt: IAppointment) => {
 
-  const appointmentCards = apts.map((apt) => {
-
-    const p_name = apt.Pname; 
-    const day = apt.date
-    const time_start = apt.start;
-    const time_end = apt.end;
-    const appointmentDate = new Date(time_start)
+    const p_name = apt.name; 
+    const time_start = dayjs(apt.start);
+    const time_end = dayjs(apt.end);
+    const timeStartDateString = time_start.format('YYYY-MM-DD');
     // returning the AppointmentCard for each appointment
-    if (day === dateMDY) {
-    return (
-      <AppointmentCard 
-        p_name={p_name} 
-        time_start={time_start} 
-        time_end={time_end} 
-      />
-    );
-  }});
+    if (timeStartDateString === dateMDY) {
+        return (
+            <AppointmentCard 
+                p_name={p_name} 
+                time_start={apt.start} 
+                time_end={apt.end} 
+            />
+        );
+    }});
 
 
     return <React.Fragment>
@@ -114,7 +112,7 @@ const PsychiatristDashboard = () => {
                 {/* the side-bar part of dashboard, containing calendar */}
                 <div className="w-[264px] h-[274px] bg-white rounded-[10px] shadow mt-40px" >
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DateCalendar value={defaultValue} sx={{ width: 264, height: 274 }}onChange={(newValue) => setValue(newValue)} />
+                            <DateCalendar value={currentDate} sx={{ width: 264, height: 274 }} onChange={(newValue: dayjs.Dayjs | null) => {setCurrentDate(newValue ?? dayjs());}}  />
                         </LocalizationProvider>   
                 </div>    
                 
