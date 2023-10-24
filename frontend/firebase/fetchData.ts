@@ -1,6 +1,7 @@
 import { db } from './firebase';
 import { getDocs, query, where, collection, onSnapshot } from "firebase/firestore";
 import { IPsychiatrist } from '@/schema';
+import { useAuth } from '../contexts/AuthContext';
 
 /**
  * Fetches professional data from the Firestore based on first and last name.
@@ -45,7 +46,9 @@ const fetchAllProfessionals = async () => {
 
 function fetchUserChats(setMessages) {
   // const userId = auth.currentUser?.uid;
-  const userId = "123"
+  const { user } = useAuth();
+  const userId = user?.uid
+  // const userId = "123"
 
   if (!userId) {
     console.error("No user is authenticated.");
@@ -62,7 +65,6 @@ function fetchUserChats(setMessages) {
     }));
     setMessages(userConversations);
   });
-
   return unsubscribe;
 }
 
