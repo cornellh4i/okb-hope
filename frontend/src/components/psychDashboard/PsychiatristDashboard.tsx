@@ -62,8 +62,8 @@ const PsychiatristDashboard = () => {
         return (
             <AppointmentCard 
                 p_name={p_name} 
-                time_start={apt.start} 
-                time_end={apt.end} 
+                time_start={time_start.format('HH:mm')} 
+                time_end={time_end.format('HH:mm')} 
             />
         );
     }});
