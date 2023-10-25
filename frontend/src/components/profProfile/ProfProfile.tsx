@@ -16,7 +16,7 @@ interface ProfProfileProps {
     lastName: string;
 }
 
-const DummyPsychiatrist: IPsychiatrist = {
+const DummyPsychiatrist = {
     id: 1,
     first_name: "Gloria",
     last_name: "Shi",
@@ -41,7 +41,7 @@ const DummyPsychiatrist: IPsychiatrist = {
 }
 
 const ProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
-    const [professional, setProfessional] = useState<IPsychiatrist>(DummyPsychiatrist);
+    const [professional, setProfessional] = useState(DummyPsychiatrist);
 
     useEffect(() => {
         const fetchProfessional = async () => {

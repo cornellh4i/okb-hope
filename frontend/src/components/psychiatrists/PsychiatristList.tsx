@@ -43,7 +43,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
     <div className={`psychiatrist-list flex flex-col items-start gap-6`}>
       {showPopup && <LoginPopup onClose={() => setShowPopup(false)} signInWithGoogleAndRedirect={signInWithGoogleAndRedirect} />}
       {results.map((psychiatrist) => (
-        <div key={psychiatrist.id} className="psychiatrist">
+        <div key={psychiatrist.uid} className="psychiatrist">
           {/* Display the psychiatrist's information here */}
           <div className={`card card-side flex flex-row justify-center items-center gap-2.5 rounded-lg bg-[${okb_colors.white}] shadow-[0_0px_5px_0px_rgb(0,0,0,0.15)] items-start gap-x-6 bg-base-100 grid-cols-5 hover:brightness-90 p-6 self-stretch`}>
             <div className={`col-span-1 flex items-center justify-center`}>
@@ -55,8 +55,8 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
               {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}
               <div className={`flex justify-between items-start self-stretch`}>
                 <div className={`flex flex-col items-start gap-2`}>
-                  <h2 className={`card-title col-span-2 text-[${okb_colors.black}] text-[24px] font-semibold not-italic`}>{psychiatrist.first_name} {psychiatrist.last_name}</h2>
-                  <p className={`text-[${okb_colors.black}] text-[16px] font-semibold`}>{psychiatrist.title} at {psychiatrist.location}</p>
+                  <h2 className={`card-title col-span-2 text-[${okb_colors.black}] text-[24px] font-semibold not-italic`}>{psychiatrist.firstName} {psychiatrist.lastName}</h2>
+                  <p className={`text-[${okb_colors.black}] text-[16px] font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
                 </div>
                 <div className={`flex justify-end items-center gap-4`}>
                   <button className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-[${okb_colors.white}] text-[16px] flex`} onClick={handleSave}>
