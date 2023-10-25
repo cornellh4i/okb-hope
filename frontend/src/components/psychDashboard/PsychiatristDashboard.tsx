@@ -50,7 +50,7 @@ const PsychiatristDashboard = () => {
         });
     },[]);
 
-    const apts: IAppointment[] = Object.values(results);
+    const apts = Object.values(results);
 
     // const appointmentCards = apts.map((apt: IAppointment) => {
 
@@ -70,8 +70,8 @@ const PsychiatristDashboard = () => {
     //     }
     // });
 
-    const aptsByDay: { [key: string]: IAppointment[] } = {};
-    apts.forEach((apt: IAppointment) => {
+    const aptsByDay = {};
+    apts.forEach((apt) => {
         const time_start = dayjs(apt.start);
         const timeStartDateString = time_start.format('YYYY-MM-DD');
 
