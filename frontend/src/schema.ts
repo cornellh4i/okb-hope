@@ -26,6 +26,7 @@ export interface IAvailability {
     endTime: Timestamp;
 }
 
+
 export interface IAppointment extends IAvailability {
     clientId: string;
 }
