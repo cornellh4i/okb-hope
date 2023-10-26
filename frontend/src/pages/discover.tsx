@@ -93,6 +93,12 @@ const DiscoverPage: React.FC = () => {
     return true
   }
 
+  const matchesTerm = (psychiatrist: any, term: string) => {
+    return psychiatrist.firstName?.toLowerCase().includes(term.toLowerCase()) ||
+      psychiatrist.lastName?.toLowerCase().includes(term.toLowerCase()) ||
+      psychiatrist.position?.toLowerCase().includes(term.toLowerCase());
+  };
+
   // Filters psychiatrists by search and/or selected filters
   const processSearchFilter = () => {
 
@@ -104,41 +110,28 @@ const DiscoverPage: React.FC = () => {
     if (terms.length === 3) {
       const [firstTerm, secondTerm, thirdTerm] = terms;
       results = psychiatrists.filter((psychiatrist) =>
-      ((psychiatrist.firstName.toLowerCase().includes(firstTerm.toLowerCase()) ||
-        psychiatrist.lastName.toLowerCase().includes(firstTerm.toLowerCase()) ||
-        psychiatrist.position.toLowerCase().includes(firstTerm.toLowerCase())) &&
-        (psychiatrist.firstName.toLowerCase().includes(secondTerm.toLowerCase()) ||
-          psychiatrist.lastName.toLowerCase().includes(secondTerm.toLowerCase()) ||
-          psychiatrist.position.toLowerCase().includes(secondTerm.toLowerCase())) &&
-        (psychiatrist.firstName.toLowerCase().includes(thirdTerm.toLowerCase()) ||
-          psychiatrist.lastName.toLowerCase().includes(thirdTerm.toLowerCase()) ||
-          psychiatrist.position.toLowerCase().includes(thirdTerm.toLowerCase()))));
+        matchesTerm(psychiatrist, firstTerm) &&
+        matchesTerm(psychiatrist, secondTerm) &&
+        matchesTerm(psychiatrist, thirdTerm));
     }
+
     // Handles searches with two terms
     if (terms.length === 2) {
       const [firstTerm, secondTerm] = terms;
       results = psychiatrists.filter((psychiatrist) =>
-      ((psychiatrist.firstName.toLowerCase().includes(firstTerm.toLowerCase()) ||
-        psychiatrist.lastName.toLowerCase().includes(firstTerm.toLowerCase()) ||
-        psychiatrist.position.toLowerCase().includes(firstTerm.toLowerCase())) &&
-        (psychiatrist.firstName.toLowerCase().includes(secondTerm.toLowerCase()) ||
-          psychiatrist.lastName.toLowerCase().includes(secondTerm.toLowerCase()) ||
-          psychiatrist.position.toLowerCase().includes(secondTerm.toLowerCase())))
-      );
+        matchesTerm(psychiatrist, firstTerm) &&
+        matchesTerm(psychiatrist, secondTerm));
     }
-    // Handles searches with one term
+
     else if (terms.length === 1) {
       const term = terms[0];
-      results = psychiatrists.filter((psychiatrist) =>
-        psychiatrist.firstName.toLowerCase().includes(term.toLowerCase()) ||
-        psychiatrist.lastName.toLowerCase().includes(term.toLowerCase()) ||
-        psychiatrist.position.toLowerCase().includes(term.toLowerCase()));
+      results = psychiatrists.filter((psychiatrist) => matchesTerm(psychiatrist, term));
     }
 
     // Updates results by the selected filters
     const filterResults = results.filter((psychiatrist) => {
       // return containsOneOf(psychiatrist.availability, submittedFilters['days']) &&
-        return containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
+      return containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
         containsGender(psychiatrist.gender, submittedFilters['genders'])
     });
 
