@@ -1,0 +1,1 @@
+// CRUD functions for IAvailability
