@@ -88,11 +88,11 @@ const PsychiatristDashboard = () => {
         return (time_start.isAfter(currentDate) || time_start.isSame(currentDate, 'day')) && time_start.isBefore(currentDate.add(7, 'day'));
       });
 
-    const todaysAppointments = aptsForTheWeek.filter(apt => dayjs(apt.start).isSame(currentDate, 'day')).map((apt: IAppointment) => (
+    const todaysAppointments = aptsForTheWeek.filter(apt => dayjs(apt.start).isSame(currentDate, 'day')).map((apt) => (
         <AppointmentCard 
-            p_name={apt.name} 
-            time_start={dayjs(apt.start).format('HH:mm')} 
-            time_end={dayjs(apt.end).format('HH:mm')} 
+            profId={apt.name} 
+            startTime={dayjs(apt.start).format('HH:mm')} 
+            endTime={dayjs(apt.end).format('HH:mm')} 
         />
     ));
 
@@ -106,9 +106,9 @@ const PsychiatristDashboard = () => {
             return (
                 <AppointmentCard
                     key={apt.id}
-                    p_name={p_name}
-                    time_start={time_start.format('HH:mm')}
-                    time_end={time_end.format('HH:mm')}
+                    profId={p_name}
+                    startTime={time_start.format('HH:mm')}
+                    endTime={time_end.format('HH:mm')}
                 />
             );
         });

@@ -16,7 +16,8 @@ export interface IPsychiatrist {
     location: string;
     language: string[];
     specialty: string[];
-    description: string;
+    descript
+    ion: string;
     website: string;
 }
 
