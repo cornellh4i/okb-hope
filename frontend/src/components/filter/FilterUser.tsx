@@ -17,7 +17,7 @@ export interface UserType {
     id: string;
 }
 
-const FilterUser = ({ noNavbar }) => {
+const FilterUser = () => {
     const [patientView, setPatientView] = useState<boolean>(true);
     const [userData, setUserData] = useState<UserType[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
