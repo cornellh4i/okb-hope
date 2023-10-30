@@ -38,10 +38,13 @@ export interface IPsychiatrist {
 // export interface IResponse { }
 
 export interface IUser {
-    active: Timestamp;
-    created: Timestamp;
-    name: string;
-    patient: boolean;
-    username: string;
-    id: string;
+    uid: string;
+    authProvider: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    savedPsychiatrists: string[];
+    age: number;
+    language: string[];
+    genderPref: Gender;
 }

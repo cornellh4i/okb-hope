@@ -15,19 +15,15 @@ const MessageList: React.FC = () => {
 
   useEffect(() => {
     if(uid){
-      console.log(uid);
-      console.log(messagesRef);
-      const queryDoc = query(messagesRef, where("uid","==",uid)); //orderBy('createdAt')
+      const queryDoc = query(messagesRef, where("uid","==",uid), orderBy('createdAt')); 
       console.log(queryDoc);
       const unsubscribe = onSnapshot(queryDoc, (querySnapshot) => {
         const messageData = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
-        console.log("Fetched Messages: ", messageData); 
         setMessages(messageData);
       },(error) => {console.error("Error fetching data: ", error);});
-
       return () => {
         unsubscribe();
       };
