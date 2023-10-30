@@ -1,98 +1,110 @@
 import { useState, useEffect, useRef } from 'react';
-import PyschiatristCard from './PsychiatristCard';
+import PsychiatristCard from './PsychiatristCard';
 import results from '@/temp_data/psychiatrists.json';
 import { db, auth } from '../../../firebase/firebase';
-import { collection, getDocs, where, query, DocumentData, onSnapshot,doc, writeBatch } from "firebase/firestore";
- 
+import { collection, getDocs, where, query, DocumentData, onSnapshot, doc, writeBatch, getDoc, DocumentReference } from "firebase/firestore";
+import { IPsychiatrist } from '@/schema';
+
 import NoSavedPsychComponent from './NoSavedPsych';
 
 const PsychiatristList = ({ max_size }: { max_size: number }) => {
   const uid = auth.currentUser?.uid;
   const usersRef = collection(db, "users");
-  const [savedPsychiatrists, setSavedPsychiatrists] = useState<DocumentData[]>([]);
-  
+  const [savedPsychiatrists, setSavedPsychiatrists] = useState<(DocumentData | null)[]>([]);
 
+  useEffect(() => {
+    if (uid) {
+      const queryDoc = query(usersRef, where("user_id", "==", uid));
 
-  // Convert the results object into an array
-  // Ensures # psychiatrist cards rendered <= max_size
-  // const psychiatristArr = Object.values(results).slice(0, max_size);
-
-  // psychiatristArr.length = 0;
-
-  // Check if psychiatristArr has no values
-  // const content = psychiatristArr.length === 0 ? (
-  //   <NoSavedPsychComponent />
-  // ) : (
-  //   psychiatristArr.map((psychiatrist: any) => (
-  //     <div key={psychiatrist.id.toString()} className="psychiatrist">
-  //       <PyschiatristCard
-  //         p_name={psychiatrist.name}
-  //         p_certifications={psychiatrist.certification}
-  //       />
-  //     </div>
-  //   ))
-  // );
-
-  useEffect(() =>{
-    if(uid){
-      const queryDoc = query(usersRef,where("user_id","==",uid));
-      console.log(queryDoc);
       const unsubscribe = onSnapshot(queryDoc, (querySnapshot) => {
-        const savedPsychData = querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-          savedPsychiatrists: doc.data().savedPsychiatrists
-        }));
-        console.log(querySnapshot.docs);
-        console.log("hiiiii" + savedPsychData);
-        setSavedPsychiatrists(savedPsychData.map(data => data.savedPsychiatrists));
-      },(error) => {console.error("Error fetching data: ", error);});
-      
+        let savedPsychRefs: DocumentReference[] = [];
+
+        querySnapshot.forEach((doc) => {
+          const userData = doc.data();
+          const savedPsychRefsForUser = userData.savedPsychiatrists;
+          savedPsychRefs = savedPsychRefs.concat(savedPsychRefsForUser);
+        });
+
+        if (savedPsychRefs.length !== 0) {
+
+          // Now, you need to fetch data from Firestore using these references
+          const fetchDataFromRefs = async () => {
+            const savedPsychData = await Promise.all(savedPsychRefs.map(async (psychRef) => {
+              const docSnapshot = await getDoc(psychRef);
+              if (docSnapshot.exists()) {
+                return docSnapshot.data() as DocumentData;
+              }
+              return null;
+            }));
+
+            // Filter out null values (references that didn't fetch successfully)
+            const filteredSavedPsychData = savedPsychData.filter((data) => data !== null);
+
+            setSavedPsychiatrists(filteredSavedPsychData);
+          };
+
+          fetchDataFromRefs();
+        }
+      }, (error) => {
+        console.error('Error fetching data: ', error);
+      });
+
       return () => {
         unsubscribe();
       };
     }
-  },[]);
+  }, [uid]);
+
+
+
   console.log(savedPsychiatrists[0]);
+  // console.log(savedPsychiatrists[0].firstName);
+
   const content = savedPsychiatrists.length === 0 ? (
     <NoSavedPsychComponent />
   ) : (
-    savedPsychiatrists.slice(0, max_size).map((psychiatrist: any) => (
-      <div key={psychiatrist.id} className="psychiatrist">
-        <PyschiatristCard
-          p_name={psychiatrist.firstName}
-          p_certifications={psychiatrist.position}
-        />
-      </div>
-    ))
-    
+    savedPsychiatrists.slice(0, max_size).map((psychiatrist: any) => {
+      console.log(typeof (psychiatrist))
+      console.log(psychiatrist);
+      return (
+        <div key={psychiatrist.id} className="psychiatrist">
+          <PsychiatristCard
+            p_first_name={psychiatrist.firstName}
+            p_last_name={psychiatrist.lastName}
+            p_certifications={psychiatrist.position}
+            p_location={psychiatrist.location}
+          />
+        </div>
+      );
+    })
+
   );
-  
+
   const contentsStyle = savedPsychiatrists.length === 0 ? "" : "grid grid-cols-3 gap-4 items-center pb-1/12 shrink";
 
 
-  //function to add fields to user collection
+  // Function to add fields to user collection
   async function addFieldToUsersCollection() {
     const uid = auth.currentUser?.uid;
     const tempRef = collection(db, "users");
-    const psychRefDoc = doc(db, "psychiatrists","2LSl9NbxLbpTCiOA26Tc");
+    const psychRefDoc = doc(db, "psychiatrists", "2LSl9NbxLbpTCiOA26Tc");
 
     const batch = writeBatch(db);
-  
+
     try {
       const querySnapshot = await getDocs(tempRef);
-  
+
       querySnapshot.forEach((doc) => {
         const docRef = doc.ref;
         const dataToUpdate = {
-          savedPsychiatrists: psychRefDoc,
+          savedPsychiatrists: [psychRefDoc],
+          age: 0,
+          language: ["English"],
+          genderPref: 1
         };
-        // const dataToDelete = {
-        //   newField: newField.delete()
-        // }
         batch.update(docRef, dataToUpdate);
       });
-  
+
       await batch.commit();
       console.log("Batch update completed successfully.");
     } catch (error) {
@@ -101,20 +113,20 @@ const PsychiatristList = ({ max_size }: { max_size: number }) => {
   }
   addFieldToUsersCollection();
 
- return (
-   (
-    // renders a card containing all of the PsychiatristCards 
-    <div className="card w-full bg-base-100 rounded-[6.5px] shadow-custom-shadow">
-      <div className="card-body">
-        <h1 className="card-title pt-1/15 text-[32px]">My Saved Psychiatrists</h1>
-        <div className={contentsStyle}>
-          {/* Use the content constant which either contains the NoSavedPsychComponent or the list of psychiatrist cards */}
-          {content}
+  return (
+    (
+      // renders a card containing all of the PsychiatristCards 
+      <div className="card w-full bg-base-100 rounded-[6.5px] shadow-custom-shadow">
+        <div className="card-body">
+          <h1 className="card-title pt-1/15 text-[32px]">My Saved Psychiatrists</h1>
+          <div className={contentsStyle}>
+            {/* Use the content constant which either contains the NoSavedPsychComponent or the list of psychiatrist cards */}
+            {content}
+          </div>
         </div>
       </div>
-    </div>
-    ) 
-);
+    )
+  );
 };
 
 export default PsychiatristList;
