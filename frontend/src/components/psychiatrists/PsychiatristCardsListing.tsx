@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import PsychiatristCard from './PsychiatristCard';
 import results from '@/temp_data/psychiatrists.json';
+import { IUser } from '@/schema';
 import { db, auth } from '../../../firebase/firebase';
 import { collection, getDocs, where, query, DocumentData, onSnapshot, doc, writeBatch, getDoc, DocumentReference } from "firebase/firestore";
 import { IPsychiatrist } from '@/schema';
@@ -83,11 +84,9 @@ const PsychiatristList = ({ max_size }: { max_size: number }) => {
   const contentsStyle = savedPsychiatrists.length === 0 ? "" : "grid grid-cols-3 gap-4 items-center pb-1/12 shrink";
 
 
-  // Function to add fields to user collection
+  //temporary function to add fields to user collection until this can be resolved
   async function addFieldToUsersCollection() {
-    const uid = auth.currentUser?.uid;
     const tempRef = collection(db, "users");
-    const psychRefDoc = doc(db, "psychiatrists", "2LSl9NbxLbpTCiOA26Tc");
 
     const batch = writeBatch(db);
 
@@ -96,12 +95,16 @@ const PsychiatristList = ({ max_size }: { max_size: number }) => {
 
       querySnapshot.forEach((doc) => {
         const docRef = doc.ref;
-        const dataToUpdate = {
-          savedPsychiatrists: [psychRefDoc],
-          age: 0,
-          language: ["English"],
-          genderPref: 1
+        const existingData = doc.data();
+        const savedPsychiatrists = existingData.savedPsychiatrists || [];
+
+        var dataToUpdate = {
+          savedPsychiatrists: savedPsychiatrists,
+          age:existingData.age || 0,
+          language: existingData.language || ["English"],
+          genderPref: existingData.genderPref || 1
         };
+        
         batch.update(docRef, dataToUpdate);
       });
 
@@ -111,7 +114,7 @@ const PsychiatristList = ({ max_size }: { max_size: number }) => {
       console.error("Error updating documents:", error);
     }
   }
-  addFieldToUsersCollection();
+  // addFieldToUsersCollection();
 
   return (
     (
