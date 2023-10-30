@@ -60,6 +60,7 @@ const FilterUser = () => {
     const handleDeleteUser = (userId) => {
         // Update the user data in the state
         setUserData((prevUserData) => prevUserData.filter((user) => user.id !== userId));
+        window.location.reload();
     };
 
     return (
@@ -77,6 +78,11 @@ const FilterUser = () => {
                 >
                     Psychiatrists
                 </button>
+
+                {/* Conditional rendering based on setPatientView */}
+                {patientView ? <FilterBar /> : <FilterBarTwo />}
+
+
             </div>
             <div className="text-lg font-bold ml-4">{userData.length} results</div>
             <FilterUserTable currentRecords={currentRecords} onDelete={handleDeleteUser} />
