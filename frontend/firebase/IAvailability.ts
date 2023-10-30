@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { getDocs, collection, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { getDocs, collection, addDoc, updateDoc, deleteDoc, doc, query, QueryConstraint } from "firebase/firestore";
 import { IAvailability } from '@/schema';
 
 const AVAILABILITY_COLLECTION = "Availability";
@@ -12,9 +12,10 @@ const createAvailability = async (availability: IAvailability): Promise<void> =>
     }
 }
 
-const fetchAvailability = async (queryFunction: (q: any) => any): Promise<IAvailability[] | null> => {
+const fetchAvailability = async (constraints: QueryConstraint[]): Promise<IAvailability[] | null> => {
     try {
-        const q = queryFunction(collection(db, AVAILABILITY_COLLECTION));
+        const baseQuery = collection(db, AVAILABILITY_COLLECTION);
+        const q = query(baseQuery, ...constraints);
         const querySnapshot = await getDocs(q);
         const availabilities: IAvailability[] = [];
         querySnapshot.forEach(doc => {

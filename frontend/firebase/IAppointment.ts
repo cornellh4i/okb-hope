@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { getDocs, collection, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { getDocs, collection, addDoc, updateDoc, deleteDoc, doc, QueryConstraint, query } from "firebase/firestore";
 import { IAppointment } from '@/schema';
 
 const APPOINTMENT_COLLECTION = "Appointments";
@@ -12,14 +12,17 @@ const createAppointment = async (appointment: IAppointment): Promise<void> => {
     }
 }
 
-const fetchAppointment = async (queryFunction: (q: any) => any): Promise<IAppointment[] | null> => {
+const fetchAppointment = async (constraints: QueryConstraint[]): Promise<IAppointment[] | null> => {
     try {
-        const q = queryFunction(collection(db, APPOINTMENT_COLLECTION));
+        const baseQuery = collection(db, APPOINTMENT_COLLECTION);
+        const q = query(baseQuery, ...constraints);
         const querySnapshot = await getDocs(q);
+
         const appointments: IAppointment[] = [];
         querySnapshot.forEach(doc => {
             appointments.push(doc.data() as IAppointment);
         });
+
         return appointments;
     } catch (error) {
         console.error("Error fetching appointment entry: ", error);
