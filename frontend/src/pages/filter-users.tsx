@@ -3,7 +3,7 @@ import FilterUser from "@/components/filter/FilterUser";
 export default function Filter() {
     return (
         <div>
-            <FilterUser />
+            <FilterUser noNavbar ={true} />
         </div>
     );
 }
