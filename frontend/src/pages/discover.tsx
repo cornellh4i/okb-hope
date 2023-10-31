@@ -1,18 +1,17 @@
 import { useState, useMemo, useEffect } from 'react';
 import Fuse from 'fuse.js';
-import SearchBar from '../components/SearchBar';
-import PsychiatristList from '../components/psychiatrists/PsychiatristList';
-import json_results from '../temp_data/psychs.json';
 import { IPsychiatrist } from '@/schema';
 import colors from "@/colors";
-import { db } from '../../firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import { fetchAllProfessionals } from '../../firebase/fetchData';
 import { useRouter } from 'next/router';
+import SearchBar from '@/components/SearchBar';
+import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
+import { useAuth } from '../../contexts/AuthContext';
+import { fetchAllProfessionals } from '../../firebase/fetchData';
 
 // options for fuzzy search. currently only searches by name and title
 const fuseOptions = {
-  keys: ['first_name', 'last_name', 'title'],
+  keys: ['firstName', 'lastName', 'position'],
   threshold: 0.5,
   findAllMatches: true,
   distance: 5,
@@ -22,7 +21,10 @@ const fuseOptions = {
 
 const DiscoverPage: React.FC = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const { userId } = router.query;
+  console.log(userId)
+  console.log(user?.uid)
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState([]);
@@ -96,6 +98,12 @@ const DiscoverPage: React.FC = () => {
     return true
   }
 
+  const matchesTerm = (psychiatrist: any, term: string) => {
+    return psychiatrist.firstName?.toLowerCase().includes(term.toLowerCase()) ||
+      psychiatrist.lastName?.toLowerCase().includes(term.toLowerCase()) ||
+      psychiatrist.position?.toLowerCase().includes(term.toLowerCase());
+  };
+
   // Filters psychiatrists by search and/or selected filters
   const processSearchFilter = () => {
 
@@ -107,41 +115,27 @@ const DiscoverPage: React.FC = () => {
     if (terms.length === 3) {
       const [firstTerm, secondTerm, thirdTerm] = terms;
       results = psychiatrists.filter((psychiatrist) =>
-      ((psychiatrist.first_name.toLowerCase().includes(firstTerm.toLowerCase()) ||
-        psychiatrist.last_name.toLowerCase().includes(firstTerm.toLowerCase()) ||
-        psychiatrist.title.toLowerCase().includes(firstTerm.toLowerCase())) &&
-        (psychiatrist.first_name.toLowerCase().includes(secondTerm.toLowerCase()) ||
-          psychiatrist.last_name.toLowerCase().includes(secondTerm.toLowerCase()) ||
-          psychiatrist.title.toLowerCase().includes(secondTerm.toLowerCase())) &&
-        (psychiatrist.first_name.toLowerCase().includes(thirdTerm.toLowerCase()) ||
-          psychiatrist.last_name.toLowerCase().includes(thirdTerm.toLowerCase()) ||
-          psychiatrist.title.toLowerCase().includes(thirdTerm.toLowerCase()))));
+        matchesTerm(psychiatrist, firstTerm) &&
+        matchesTerm(psychiatrist, secondTerm) &&
+        matchesTerm(psychiatrist, thirdTerm));
     }
     // Handles searches with two terms
     if (terms.length === 2) {
       const [firstTerm, secondTerm] = terms;
       results = psychiatrists.filter((psychiatrist) =>
-      ((psychiatrist.first_name.toLowerCase().includes(firstTerm.toLowerCase()) ||
-        psychiatrist.last_name.toLowerCase().includes(firstTerm.toLowerCase()) ||
-        psychiatrist.title.toLowerCase().includes(firstTerm.toLowerCase())) &&
-        (psychiatrist.first_name.toLowerCase().includes(secondTerm.toLowerCase()) ||
-          psychiatrist.last_name.toLowerCase().includes(secondTerm.toLowerCase()) ||
-          psychiatrist.title.toLowerCase().includes(secondTerm.toLowerCase())))
-      );
+        matchesTerm(psychiatrist, firstTerm) &&
+        matchesTerm(psychiatrist, secondTerm));
     }
     // Handles searches with one term
     else if (terms.length === 1) {
-      const term = terms[0];
-      results = psychiatrists.filter((psychiatrist) =>
-        psychiatrist.first_name.toLowerCase().includes(term.toLowerCase()) ||
-        psychiatrist.last_name.toLowerCase().includes(term.toLowerCase()) ||
-        psychiatrist.title.toLowerCase().includes(term.toLowerCase()));
+      const [firstTerm] = terms;
+      results = psychiatrists.filter((psychiatrist) => matchesTerm(psychiatrist, firstTerm));
     }
 
     // Updates results by the selected filters
     const filterResults = results.filter((psychiatrist) => {
-      return containsOneOf(psychiatrist.availability, submittedFilters['days']) &&
-        containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
+      // return containsOneOf(psychiatrist.availability, submittedFilters['days']) &&
+      return containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
         containsGender(psychiatrist.gender, submittedFilters['genders'])
     });
 

@@ -26,24 +26,32 @@ const PsychiatristList = ({ max_size }: { max_size: number }) => {
         });
 
         if (savedPsychRefs.length !== 0) {
+          try {
+            // Now, you need to fetch data from Firestore using these references
+            const fetchDataFromRefs = async () => {
+              const savedPsychData = await Promise.all(savedPsychRefs.map(async (psychRef) => {
+                try {
+                  const docSnapshot = await getDoc(psychRef);
+                  if (docSnapshot.exists()) {
+                    return docSnapshot.data() as DocumentData;
+                  }
+                  return null;
+                } catch (error) {
+                  console.log(error);
+                  return null;
+                }
+              }));
 
-          // Now, you need to fetch data from Firestore using these references
-          const fetchDataFromRefs = async () => {
-            const savedPsychData = await Promise.all(savedPsychRefs.map(async (psychRef) => {
-              const docSnapshot = await getDoc(psychRef);
-              if (docSnapshot.exists()) {
-                return docSnapshot.data() as DocumentData;
-              }
-              return null;
-            }));
+              // Filter out null values (references that didn't fetch successfully)
+              const filteredSavedPsychData = savedPsychData.filter((data) => data !== null);
 
-            // Filter out null values (references that didn't fetch successfully)
-            const filteredSavedPsychData = savedPsychData.filter((data) => data !== null);
+              setSavedPsychiatrists(filteredSavedPsychData);
+            };
 
-            setSavedPsychiatrists(filteredSavedPsychData);
-          };
-
-          fetchDataFromRefs();
+            fetchDataFromRefs();
+          } catch (error) {
+            console.log(error)
+          }
         }
       }, (error) => {
         console.error('Error fetching data: ', error);
@@ -111,7 +119,7 @@ const PsychiatristList = ({ max_size }: { max_size: number }) => {
       console.error("Error updating documents:", error);
     }
   }
-  addFieldToUsersCollection();
+  // addFieldToUsersCollection();
 
   return (
     (

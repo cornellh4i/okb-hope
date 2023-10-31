@@ -14,8 +14,8 @@ const fetchProfessionalData = async (firstName: string, lastName: string) => {
   try {
     const q = query(
       collection(db, "psychiatrists"),
-      where("first_name", "==", firstName),
-      where("last_name", "==", lastName)
+      where("firstName", "==", firstName),
+      where("lastName", "==", lastName)
     );
 
     const response = await getDocs(q);

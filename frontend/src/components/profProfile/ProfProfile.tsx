@@ -17,10 +17,10 @@ interface ProfProfileProps {
     lastName: string;
 }
 
-const DummyPsychiatrist: IPsychiatrist = {
+const DummyPsychiatrist = {
     id: 1,
-    first_name: "Gloria",
-    last_name: "Shi",
+    firstName: "Gloria",
+    lastName: "Shi",
     title: "Psychiatrist at Wohohiame Hospital",
     profile_pic: null,
     availability: ["9:00-10:00, 13:00-16:30",
@@ -100,7 +100,7 @@ const ProfProfile = () => {
                 <div className={`grow flex flex-col gap-4`}>
                     <div className={`flex flex-row gap-4`}>
                         <div className={`grow text-3xl text-bold`}>
-                            {professional.first_name + " " + professional.last_name}
+                            {professional.firstName + " " + professional.lastName}
                         </div>
                         {/* Save button, action is currently undefined */}
                         <div className={`shrink`}>
@@ -116,7 +116,7 @@ const ProfProfile = () => {
                         </div>
                     </div>
                     <div className={`text-normal text-xl italic text-dark-grey`}>
-                        {professional.title}
+                        {professional.position}
                     </div>
                     {/* Speciality/language/location tags */}
                     <div className={`flex flex-row flex-start gap-2`}>
