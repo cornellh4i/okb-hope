@@ -11,8 +11,8 @@ const FilterBarTwo = () => {
         setSearchTerm(newSearchTerm);
     };
     // Options for dropdown menu
-    const weeklyAvailability = ["Monday", "Tuesday"]
-    const language = ["English"]
+    const weeklyAvailability = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    const language = ["English", "Ga", "Twi", "Hausa"]
     const genders = ["Male", "Female"]
 
     /**
@@ -31,92 +31,35 @@ const FilterBarTwo = () => {
             </div>
             {/* <input type="text" placeholder="Search Name" onChange={handleSearch} className="btn btn-sm border border-solid bg-white text-gray-500 italic text-left normal-case hover:bg-white" /> */}
 
-            <div className="dropdown">
-                <label tabIndex={0} className="btn btn-sm flex gap-16 m-1 border border-solid bg-white text-gray-500 italic normal-case">Weekly Availability {chevron_down}</label>
-                <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" style={{ width: '210px', height: '36px', left: '436px', borderRadius: '8px', borderWidth: '1px', borderStyle: 'solid', borderColor: '#5F5F5F', justifyContent: 'space-between', padding: '8px 16px', backgroundColor: '#FFFDFD', color: '#5F5F5F' }}>
-                    {weeklyAvailability.map((e) => <li>{e}</li>)}
-                </ul>
+            <div className="w-[210px] h-9 px-4 py-2 bg-white rounded-lg border border-zinc-600 justify-between items-center inline-flex">
+                <div className="dropdown">
+                    <label tabIndex={0} className="text-neutral-400 flex gap-16 m-1 text-xs font-normal font-['Montserrat']">Weekly Availability{chevron_down}</label>
+                        <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                            {weeklyAvailability.map((e) => <li>{e}</li>)}
+                        </ul>
+                </div>    
             </div>
-            <div className="dropdown">
-                <label tabIndex={0} className="btn btn-sm flex gap-16 m-1 border border-solid bg-white text-gray-500 italic normal-case">Language {chevron_down}</label>
-                <ul
-                    tabIndex={0}
-                    className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
-                    style={{
-                        display: 'flex',
-                        width: '210px',
-                        height: '36px',
-                        padding: '8px 16px',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        flexShrink: 0,
-                        borderRadius: '8px',
-                        border: '1px solid var(--dark-grey, #5F5F5F)',
-                        background: 'var(--white, #FFFDFD)',
-                        color: 'var(--med-gray, #9A9A9A)',
-                        fontFamily: 'Montserrat',
-                        fontSize: '12px',
-                        fontStyle: 'italic',
-                        fontWeight: '400',
-                        lineHeight: 'normal',
-                    }}
-                >
-                    {language.map((e) => <li>{e}</li>)}
-                </ul>
+
+            <div className="w-[210px] h-9 px-4 py-2 bg-white rounded-lg border border-zinc-600 justify-between items-center inline-flex">
+                <div className="dropdown">
+                    <label tabIndex={0} className="text-neutral-400 flex gap-16 m-1 text-xs font-normal font-['Montserrat']">Language{chevron_down}</label>
+                        <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                            {language.map((e) => <li>{e}</li>)}
+                        </ul>
+                </div>    
             </div>
-            <div className="dropdown">
-                <label tabIndex={0} className="btn btn-sm flex gap-16 m-1 border border-solid bg-white text-gray-500 italic normal-case">Gender {chevron_down}</label>
-                <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
-                    style={{
-                        display: 'flex',
-                        width: '210px',
-                        height: '36px',
-                        padding: '8px 16px',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        flexShrink: 0,
-                        borderRadius: '8px',
-                        border: '1px solid var(--dark-grey, #5F5F5F)',
-                        background: 'var(--white, #FFFDFD)',
-                        color: 'var(--med-gray, #9A9A9A)',
-                        fontFamily: 'Montserrat',
-                        fontSize: '12px',
-                        fontStyle: 'italic',
-                        fontWeight: '400',
-                        lineHeight: 'normal',
-                    }}
-                >
-                    {genders.map((e) => <li>{e}</li>)}
-                </ul>
+
+            <div className="w-[210px] h-9 px-4 py-2 bg-white rounded-lg border border-zinc-600 justify-between items-center inline-flex">
+                <div className="dropdown">
+                    <label tabIndex={0} className="text-neutral-400 flex gap-16 m-1 text-xs font-normal font-['Montserrat']">Gender{chevron_down}</label>
+                    <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                        {genders.map((e) => <li>{e}</li>)}
+                    </ul>
+                </div>    
             </div>
-            <button
-                style={{
-                    borderRadius: '10px',
-                    border: '1px solid var(--OKB-Blue, #195BA5)',
-                    background: 'var(--white, #FFFDFD)',
-                    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
-                    display: 'flex',
-                    padding: '10px 46px',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '10px',
-                }}
-                className="btn flex flex-row justify-center items-center gap-2.5 rounded-xl bg-[#DEDEDE] normal-case text-gray-500 text-lg border-none px-14" onClick={filter}
-            >
-                <span
-                    style={{
-                        width: '34px',
-                        height: '16px',
-                        color: 'var(--OKB-Blue, #195BA5)',
-                        fontFamily: 'Montserrat',
-                        fontSize: '12px',
-                        fontStyle: 'normal',
-                        fontWeight: '700',
-                        lineHeight: 'normal',
-                    }}
-                >
-                    Filter
-                </span>
+
+            <button className="px-[46px] py-2.5 bg-white rounded-[10px] border border-sky-700 justify-center items-center gap-2.5 inline-flex" onClick={filter}>
+                <div className="w-[34px] h-4 text-sky-700 text-xs font-bold font-['Montserrat']">Filter</div>
             </button>
         </div>
     )
