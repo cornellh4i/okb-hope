@@ -76,9 +76,10 @@ export const createTest = async () => {
     const retrievedAvailabilities = await fetchAvailability([where("profId", "==", "1")]);
     const retrievedAppointments = await fetchAppointment([where("profId", "==", "1")]);
 
-    const retrievedPsych = await fetchPsychiatrist("John", "Paul");
+    // const retrievedPsych = await fetchPsychiatrist([where("uid", "==", "1")]);
+    const retrievedPsych = await fetchPsychiatrist([where("firstName", "==", "John")]);
     const retrievedAllPsych = await fetchAllPsychiatrist([]);
-    const retrievedUser = await fetchUser([where("ui", "==", "1")])
+    const retrievedUser = await fetchUser([where("uid", "==", "1")])
 
     console.log("Retrieved availabilities")
     console.log(retrievedAvailabilities)
@@ -134,24 +135,24 @@ export const createTest = async () => {
 
     await updateAvailability("IMnyeGm61VxgsDAJt6GH", updateAvailability1)
     console.log("Updated availability")
-    await updateAppointment("LSXu8dGfu4v3qKDao8En", updateAppointment1)
-    console.log("Updated appointment")
+    // await updateAppointment("LSXu8dGfu4v3qKDao8En", updateAppointment1)
+    // console.log("Updated appointment")
 
     //I do not know what the id string is for
     await updatePsychiatrist("hi", updatedPsych)
     console.log("Updated Psych 1")
-    await updateUser("idk so hi", updatedUser)
-    console.log("Updated User")
+    // await updateUser("idk so hi", updatedUser)
+    // console.log("Updated User")
 
-    await deleteAvailability("IMnyeGm61VxgsDAJt6GH")
-    console.log("Deleted availability")
-    await deleteAppointment("LSXu8dGfu4v3qKDao8En")
-    console.log("Deleted appointment")
+    // await deleteAvailability("IMnyeGm61VxgsDAJt6GH")
+    // console.log("Deleted availability")
+    // await deleteAppointment("LSXu8dGfu4v3qKDao8En")
+    // console.log("Deleted appointment")
 
-    //I do not know what the id string is for still. So idk how to delete --> haven't ran yet
-    await deletePsychiatrist("1")
-    await deletePsychiatrist("2")
-    await deleteUser("1")
+    // //I do not know what the id string is for still. So idk how to delete --> haven't ran yet
+    // await deletePsychiatrist("1")
+    // await deletePsychiatrist("2")
+    // await deleteUser("1")
 
 
 }
