@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
+import FilterCard from "./FilterCard";
 
 const FilterUserTable = ({ currentRecords, onDelete }) => {
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
@@ -44,6 +45,19 @@ const FilterUserTable = ({ currentRecords, onDelete }) => {
         Delete
       </button>
 
+      <div className="w-full">
+        <div className="grid grid-cols-1 gap-4">
+          {currentRecords && currentRecords.map((user, index) => {
+            const name = user.name;
+            const username = user.email;
+            return (
+              <div>
+                <FilterCard key={index} name={name} username={username} created={"N/A"} active={"N/A"} />
+              </div>
+            );
+          })}
+        </div>
+      </div>
 
       <table className="table w-full rounded-lg">
         <tbody>

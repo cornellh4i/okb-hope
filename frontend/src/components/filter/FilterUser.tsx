@@ -7,6 +7,7 @@ import FilterBar from "./FilterBar";
 
 import FilterUserTable from "./FilterUserTable";
 import FilterBarTwo from "./FilterBarTwo";
+import FilterCard from "./FilterCard";
 
 export interface UserType {
     active: Timestamp;
@@ -44,7 +45,6 @@ const FilterUser = () => {
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
     const currentRecords = userData.slice(indexOfFirstRecord, indexOfLastRecord);
-    console.log(currentRecords)
     const nextPage = () => {
         if (currentPage < numPages) {
             setCurrentPage(currentPage + 1);
