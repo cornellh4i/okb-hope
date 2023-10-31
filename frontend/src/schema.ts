@@ -31,6 +31,7 @@ export interface IAppointment extends IAvailability {
     clientId: string;
 }
 
+
 export interface IUser {
     uid: string;
     authProvider: string;
