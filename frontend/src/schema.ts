@@ -11,13 +11,27 @@ export interface IPsychiatrist {
     lastName: string;
     position: string;
     profile_pic: null;
-    availability: IAvailability[];
+    availability: string[]; //changed to string so it just stores the availability doc id
     gender: Gender;
     location: string;
     language: string[];
     specialty: string[];
     description: string;
     website: string;
+}
+
+export interface IPatient {
+    uid: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    concerns: string;
+    previousTherapyExperience: string;
+    lastTherapyTimeframe: string;
+    ageRange: string;
+    prefLanguages: string[];
+    genderPref: Gender;
+    savedPsychiatrists: string[];
 }
 
 export interface IAvailability {
@@ -32,14 +46,14 @@ export interface IAppointment extends IAvailability {
 }
 
 
-export interface IUser {
-    uid: string;
-    authProvider: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    savedPsychiatrists: string[];
-    age: number;
-    language: string[];
-    genderPref: Gender;
-}
+// export interface IUser {
+//     uid: string;
+//     authProvider: string;
+//     email: string;
+//     firstName: string;
+//     lastName: string;
+//     savedPsychiatrists: string[];
+//     age: number;
+//     language: string[];
+//     genderPref: Gender;
+// }

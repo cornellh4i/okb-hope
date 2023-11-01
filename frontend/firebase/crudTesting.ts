@@ -1,9 +1,13 @@
 import { createAppointment, fetchAppointment, updateAppointment, deleteAppointment } from "./IAppointment";
 import { createAvailability, fetchAvailability, updateAvailability, deleteAvailability } from "./IAvailability";
-import { createUser, fetchUser, updateUser, deleteUser } from "./IUser";
+import { createPatient, fetchPatient, updatePatient, deletePatient } from "./IPatient";
 import { createPsychiatrist, fetchPsychiatrist, fetchAllPsychiatrist, updatePsychiatrist, deletePsychiatrist } from "./IPsychiatrist";
-import { IAppointment, IAvailability, IPsychiatrist, IUser } from "@/schema";
+import { IAppointment, IAvailability, IPsychiatrist, IPatient } from "@/schema";
 import { CollectionReference, DocumentData, Timestamp, where } from "firebase/firestore";
+import { fetchDocumentId } from "./fetchData";
+
+const PYSCH = "psychiatrists"
+const PATIENT = "patients"
 
 export const createTest = async () => {
     const newAvailability: IAvailability = {
@@ -25,7 +29,7 @@ export const createTest = async () => {
         lastName: "Paul",
         position: "idk",
         profile_pic: null,
-        availability: [newAvailability],
+        availability: ["newAvailability"],
         gender: 0,
         location: "chicago",
         language: ["english"],
@@ -40,7 +44,7 @@ export const createTest = async () => {
         lastName: "Noel",
         position: "idk",
         profile_pic: null,
-        availability: [newAvailability],
+        availability: ["newAvailability"],
         gender: 1,
         location: "Jersey",
         language: ["english"],
@@ -49,37 +53,39 @@ export const createTest = async () => {
         website: "nonexistent"
     }
 
-    const newUser: IUser = {
+    const newPatient: IPatient = {
         uid: "1",
-        authProvider: "idk",
-        email: "fakeemail@.com",
         firstName: "David",
         lastName: "Rodriguez",
-        savedPsychiatrists: ["John Paul"], //this should not be a string list...
-        age: 20,
-        language: ["english"],
-        genderPref: 0
+        email: "fakeemail@.com",
+        concerns: "everything",
+        previousTherapyExperience: "None",
+        lastTherapyTimeframe: "Months",
+        ageRange: "18-22", //go on the figma and in the login profile it shows ranges not age
+        prefLanguages: ["english"],
+        genderPref: 0,
+        savedPsychiatrists: ["John Paul"] //this should not be a string list...
     }
 
-    await createAvailability(newAvailability)
-    console.log("New availability made")
-    await createAppointment(newAppointment)
-    console.log("New appointment made")
+    // await createAvailability(newAvailability)
+    // console.log("New availability made")
+    // await createAppointment(newAppointment)
+    // console.log("New appointment made")
 
-    await createPsychiatrist(newPsych)
-    console.log("New psychiatrist made")
-    await createPsychiatrist(newPsych2)
-    console.log("New psychiatrist2 made")
-    await createUser(newUser)
-    console.log("New user made")
+    // await createPsychiatrist(newPsych)
+    // console.log("New psychiatrist made")
+    // await createPsychiatrist(newPsych2)
+    // console.log("New psychiatrist2 made")
+    // await createPatient(newPatient)
+    // console.log("New user made")
 
     const retrievedAvailabilities = await fetchAvailability([where("profId", "==", "1")]);
     const retrievedAppointments = await fetchAppointment([where("profId", "==", "1")]);
 
-    // const retrievedPsych = await fetchPsychiatrist([where("uid", "==", "1")]);
-    const retrievedPsych = await fetchPsychiatrist([where("firstName", "==", "John")]);
+    // const retrievedPsych = await fetchPsychiatrist("John", "Paul");
+    const retrievedPsych = await fetchAllPsychiatrist([where("firstName", "==", "John")]);
     const retrievedAllPsych = await fetchAllPsychiatrist([]);
-    const retrievedUser = await fetchUser([where("uid", "==", "1")])
+    const retrievedPatient = await fetchPatient([where("uid", "==", "1")])
 
     console.log("Retrieved availabilities")
     console.log(retrievedAvailabilities)
@@ -91,7 +97,7 @@ export const createTest = async () => {
     console.log("Retrieved all psychs")
     console.log(retrievedAllPsych)
     console.log("Retrived user")
-    console.log(retrievedUser)
+    console.log(retrievedPatient)
 
     const updateAvailability1: IAvailability = {
         profId: "1",
@@ -112,7 +118,7 @@ export const createTest = async () => {
         lastName: "Paul",
         position: "idk",
         profile_pic: null,
-        availability: [newAvailability],
+        availability: ["docref"],
         gender: 0,
         location: "Paris",
         language: ["english"],
@@ -121,38 +127,47 @@ export const createTest = async () => {
         website: "nonexistent"
     }
 
-    const updatedUser: IUser = {
+    const updatedPatient: IPatient = {
         uid: "1",
-        authProvider: "idk",
-        email: "fakeemail@.com",
         firstName: "David",
         lastName: "Rodriguez",
-        savedPsychiatrists: ["John Paul"], //this should not be a string list...
-        age: 20,
-        language: ["english", "spanish"],
-        genderPref: 0
+        email: "fakeemail@.com",
+        concerns: "everything",
+        previousTherapyExperience: "None",
+        lastTherapyTimeframe: "Months",
+        ageRange: "18-22",
+        prefLanguages: ["english", "spanish"],
+        genderPref: 0,
+        savedPsychiatrists: ["John Paul"]
     }
 
     await updateAvailability("IMnyeGm61VxgsDAJt6GH", updateAvailability1)
     console.log("Updated availability")
-    // await updateAppointment("LSXu8dGfu4v3qKDao8En", updateAppointment1)
-    // console.log("Updated appointment")
+    await updateAppointment("LSXu8dGfu4v3qKDao8En", updateAppointment1)
+    console.log("Updated appointment")
 
-    //I do not know what the id string is for
-    await updatePsychiatrist("hi", updatedPsych)
+    const psychDocID = await fetchDocumentId(PYSCH, updatedPsych.uid)
+    const psych2DocID = await fetchDocumentId(PYSCH, newPsych2.uid)
+    const patientDocID = await fetchDocumentId(PATIENT, updatedPatient.uid)
+
+    console.log(psychDocID)
+    await updatePsychiatrist(psychDocID, updatedPsych)
+
     console.log("Updated Psych 1")
-    // await updateUser("idk so hi", updatedUser)
-    // console.log("Updated User")
+    await updatePatient(patientDocID, updatedPatient)
+    console.log("Updated Patient")
 
-    // await deleteAvailability("IMnyeGm61VxgsDAJt6GH")
-    // console.log("Deleted availability")
-    // await deleteAppointment("LSXu8dGfu4v3qKDao8En")
-    // console.log("Deleted appointment")
+    await deleteAvailability("IMnyeGm61VxgsDAJt6GH")
+    console.log("Deleted availability")
+    await deleteAppointment("LSXu8dGfu4v3qKDao8En")
+    console.log("Deleted appointment")
 
-    // //I do not know what the id string is for still. So idk how to delete --> haven't ran yet
-    // await deletePsychiatrist("1")
-    // await deletePsychiatrist("2")
-    // await deleteUser("1")
+    await deletePsychiatrist(psychDocID)
+    console.log("Deleted psychiatrist John Paul")
+    await deletePsychiatrist(psych2DocID)
+    console.log("Deleted psychiatrist El Noel")
+    await deletePatient(patientDocID)
+    console.log("Deleted patient David Rodriguez")
 
 
 }
