@@ -1,11 +1,12 @@
 import { useState } from "react";
 
-const FilterCard = ({ name, username, created, active }) => {
-  const [isChecked, setIsChecked] = useState(false);
+const FilterCard = ({ name, username, created, active, isChecked, onCheckChange }) => {
+
 
   const handleOnChange = () => {
-    setIsChecked(!isChecked);
+    onCheckChange(!isChecked);
   };
+
 
   return (
     <div className="flex items-center pr-10 pl-10 w-full">
