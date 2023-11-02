@@ -35,6 +35,7 @@ export interface IPatient {
 }
 
 export interface IAvailability {
+    availId: string;
     profId: string;
     startTime: Timestamp;
     endTime: Timestamp;
@@ -42,7 +43,8 @@ export interface IAvailability {
 
 
 export interface IAppointment extends IAvailability {
-    clientId: string;
+    appointId: string;
+    patientId: string;
 }
 
 

@@ -1,15 +1,18 @@
-import { db } from './firebase';
-import { getDocs, collection, addDoc, updateDoc, deleteDoc, doc, QueryConstraint, query } from "firebase/firestore";
+import { app, db } from './firebase';
+import { getDocs, collection, addDoc, updateDoc, deleteDoc, doc, QueryConstraint, query, setDoc } from "firebase/firestore";
 import { IAppointment } from '@/schema';
 
-const APPOINTMENT_COLLECTION = "Appointments";
+const APPOINTMENT_COLLECTION = "appointments";
 
-const createAppointment = async (appointment: IAppointment): Promise<void> => {
+const createAppointment = async (appointment: IAppointment): Promise<IAppointment> => {
     try {
-        await addDoc(collection(db, APPOINTMENT_COLLECTION), appointment);
+        const newDocRef = doc(collection(db, APPOINTMENT_COLLECTION));
+        appointment.appointId = newDocRef.id
+        await setDoc(newDocRef, appointment)
     } catch (error) {
         console.error("Error adding appointment entry: ", error);
     }
+    return appointment
 }
 
 const fetchAppointment = async (constraints: QueryConstraint[]): Promise<IAppointment[] | null> => {
@@ -30,18 +33,18 @@ const fetchAppointment = async (constraints: QueryConstraint[]): Promise<IAppoin
     }
 }
 
-const updateAppointment = async (id: string, updatedAppointment: Partial<IAppointment>): Promise<void> => {
+const updateAppointment = async (updatedAppointment: IAppointment): Promise<void> => {
     try {
-        const appointmentRef = doc(db, APPOINTMENT_COLLECTION, id);
-        await updateDoc(appointmentRef, updatedAppointment);
+        const appointmentRef = doc(db, APPOINTMENT_COLLECTION, updatedAppointment.appointId);
+        await setDoc(appointmentRef, updatedAppointment);
     } catch (error) {
         console.error("Error updating appointment entry: ", error);
     }
 }
 
-const deleteAppointment = async (id: string): Promise<void> => {
+const deleteAppointment = async (updatedAppointment: IAppointment): Promise<void> => {
     try {
-        const appointmentRef = doc(db, APPOINTMENT_COLLECTION, id);
+        const appointmentRef = doc(db, APPOINTMENT_COLLECTION, updatedAppointment.appointId);
         await deleteDoc(appointmentRef);
     } catch (error) {
         console.error("Error deleting appointment entry: ", error);

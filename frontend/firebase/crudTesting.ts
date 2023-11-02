@@ -5,22 +5,26 @@ import { createPsychiatrist, fetchPsychiatrist, fetchAllPsychiatrist, updatePsyc
 import { IAppointment, IAvailability, IPsychiatrist, IPatient } from "@/schema";
 import { CollectionReference, DocumentData, Timestamp, where } from "firebase/firestore";
 import { fetchDocumentId } from "./fetchData";
+import fetchAppointments from "./fetchAppointments";
 
 const PYSCH = "psychiatrists"
 const PATIENT = "patients"
 
 export const createTest = async () => {
     const newAvailability: IAvailability = {
+        availId: "1",
         profId: "1",
         startTime: Timestamp.now(),
         endTime: Timestamp.now()
     }
 
     const newAppointment: IAppointment = {
+        availId: "1",
+        appointId: "1",
         profId: "1",
         startTime: Timestamp.now(),
         endTime: Timestamp.now(),
-        clientId: "2"
+        patientId: "2"
     }
 
     const newPsych: IPsychiatrist = {
@@ -87,10 +91,10 @@ export const createTest = async () => {
     const retrievedAllPsych = await fetchAllPsychiatrist([]);
     const retrievedPatient = await fetchPatient([where("uid", "==", "1")])
 
-    console.log("Retrieved availabilities")
-    console.log(retrievedAvailabilities)
-    console.log("Retrived appointments")
-    console.log(retrievedAppointments)
+    // console.log("Retrieved availabilities")
+    // console.log(retrievedAvailabilities)
+    // console.log("Retrived appointments")
+    // console.log(retrievedAppointments)
 
     console.log("Retrieved psych")
     console.log(retrievedPsych)
@@ -100,16 +104,19 @@ export const createTest = async () => {
     console.log(retrievedPatient)
 
     const updateAvailability1: IAvailability = {
+        availId: "dgkPWTpDh87X1q18Pa6E",
         profId: "1",
         startTime: Timestamp.now(),
         endTime: Timestamp.now()
     }
 
     const updateAppointment1: IAppointment = {
+        appointId:"Qsg0uNcxuTP2uofBnhtv",
+        availId:"dgkPWTpDh87X1q18Pa6E",
         profId: "1",
         startTime: Timestamp.now(),
         endTime: Timestamp.now(),
-        clientId: "2"
+        patientId: "2"
     }
 
     const updatedPsych: IPsychiatrist = {
@@ -140,11 +147,17 @@ export const createTest = async () => {
         genderPref: 0,
         savedPsychiatrists: ["John Paul"]
     }
-
-    await updateAvailability("IMnyeGm61VxgsDAJt6GH", updateAvailability1)
+    console.log("Before update")
+    console.log(await fetchAvailability([where("profId", "==", "1")]));
+    await updateAvailability(updateAvailability1)
     console.log("Updated availability")
-    await updateAppointment("LSXu8dGfu4v3qKDao8En", updateAppointment1)
+    console.log(await fetchAvailability([where("profId", "==", "1")]));
+
+    console.log("Before update")
+    console.log(await fetchAppointment([where("profId", "==", "1")]));
+    await updateAppointment(updateAppointment1)
     console.log("Updated appointment")
+    console.log(await fetchAppointment([where("profId", "==", "1")]));
 
     const psychDocID = await fetchDocumentId(PYSCH, updatedPsych.uid)
     const psych2DocID = await fetchDocumentId(PYSCH, newPsych2.uid)
@@ -157,10 +170,37 @@ export const createTest = async () => {
     await updatePatient(patientDocID, updatedPatient)
     console.log("Updated Patient")
 
-    await deleteAvailability("IMnyeGm61VxgsDAJt6GH")
-    console.log("Deleted availability")
-    await deleteAppointment("LSXu8dGfu4v3qKDao8En")
+    const newAvailability2: IAvailability = {
+        availId: "",
+        profId: "1",
+        startTime: Timestamp.now(),
+        endTime: Timestamp.now()
+    }
+
+    const newAppointment2: IAppointment = {
+        availId: "1",
+        appointId: "1",
+        profId: "1",
+        startTime: Timestamp.now(),
+        endTime: Timestamp.now(),
+        patientId: "2"
+    }
+
+
+    // DELETE FUNCTION TESTS
+    const newObj1 = await createAvailability(newAvailability2)
+    console.log("Availability created")
+    console.log(await fetchAvailability([where("availId", "==", `${newObj1?.availId}`)]));
+    console.log("Delete this availability")
+    await deleteAvailability(newObj1)
+    console.log(await fetchAvailability([where("availId", "==", `${newObj1?.availId}`)]));
+
+    const newObj2 = await createAppointment(newAppointment2);
+    console.log("Appointment created");
+    console.log(await fetchAppointment([where("appointId", "==", `${newObj2.appointId}`)]));
+    await deleteAppointment(newObj2)
     console.log("Deleted appointment")
+    console.log(await fetchAppointment([where("appointId", "==", `${newObj2.appointId}`)]));
 
     await deletePsychiatrist(psychDocID)
     console.log("Deleted psychiatrist John Paul")

@@ -34,7 +34,7 @@ const PsychiatristDashboard = () => {
     const goToNextWeek = () => {
         const nextWeek = currentDate.add(7, 'day');
         setCurrentDate(nextWeek);
-        createTest();
+        // createTest();
       };
     
     // Handler for the previous week button click
