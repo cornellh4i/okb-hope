@@ -30,14 +30,10 @@ const EditPatientProfile = () => {
   const languagesSpoken = ["English", "Ga", "Twi", "Hausa"];
   const preferredGender = ["Male", "Female"];
 
-  const [fNameError, setFNameError] = useState(false)
-  const [lNameError, setLNameError] = useState(false)
-
   useEffect(() => {
     const fetchUser = async () => {
       if (uid) {
         const data = await fetchPatientDetails(uid);
-        console.log(data);
         setFirstName(data.firstName);
         setLastName(data.lastName);
         setConcerns(data.concerns);
@@ -46,31 +42,10 @@ const EditPatientProfile = () => {
         setAgeRange(data.ageRange);
         setPrefLanguages(data.prefLanguages);
         setGenderPref(data.genderPref);
-
-
-        console.log(firstName);
-        console.log(lastName);
-        console.log(concerns);
-        console.log(previousTherapyExperience);
-        console.log(lastTherapyTimeframe);
-        console.log(ageRange);
-        console.log(prefLanguages);
-        console.log(genderPref);
       }
     }
     fetchUser();
   }, []);
-
-  useEffect(() => {
-    console.log(firstName)
-    console.log(lastName)
-    console.log(concerns)
-    console.log(previousTherapyExperience)
-    console.log(lastTherapyTimeframe)
-    console.log(ageRange)
-    console.log(prefLanguages)
-    console.log(genderPref)
-  }, [firstName, lastName, concerns, previousTherapyExperience, lastTherapyTimeframe, ageRange, prefLanguages, genderPref]);
 
   const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFirstName(event.target.value);
@@ -121,7 +96,6 @@ const EditPatientProfile = () => {
       if (uid) {
         const documentId = await fetchDocumentId("patients", uid);
         setDocId(documentId);
-        console.log(docId)
       }
     }
     fetchDocId();

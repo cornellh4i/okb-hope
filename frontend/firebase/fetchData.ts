@@ -55,7 +55,6 @@ const fetchPatientDetails = async (uid: string) => {
     if (!response.empty) {
       const doc = response.docs[0];
       const docId = doc.id;
-      console.log(docId);
       const docData = response.docs[0].data();
       const patient = docData as IPatient;
       return patient;
