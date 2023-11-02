@@ -66,5 +66,22 @@ function fetchUserChats(setMessages) {
   return unsubscribe;
 }
 
-export { fetchProfessionalData, fetchAllProfessionals, fetchUserChats };
+const fetchDocumentId = async (type: string, uid: string)  => {
+  try {
+    const q = query(
+      collection(db, type),
+      where("uid", "==", uid)
+    );
+    const response = await getDocs(q);
+    if (!response.empty) {
+      const doc = response.docs[0];
+      const docId = doc.id;
+      return docId;
+    }
+  } catch (error: any) {
+    console.error(error.message);
+  }
+}
+
+export { fetchProfessionalData, fetchAllProfessionals, fetchUserChats, fetchDocumentId };
 

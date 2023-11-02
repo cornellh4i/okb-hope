@@ -12,6 +12,8 @@ import App from '@/pages/_app';
 import results from '../../temp_data/appointments.json'; // appointment info
 import fetchAppointments, { AppointmentType } from '../../../firebase/fetchAppointments';
 import { IAppointment } from '@/schema';
+import { createTest } from '../../../firebase/crudTesting';
+import { useMonthCalendarDefaultizedProps } from '@mui/x-date-pickers/MonthCalendar/MonthCalendar';
 
 
 const PsychiatristDashboard = () => {
@@ -32,6 +34,7 @@ const PsychiatristDashboard = () => {
     const goToNextWeek = () => {
         const nextWeek = currentDate.add(7, 'day');
         setCurrentDate(nextWeek);
+        // createTest();
       };
     
     // Handler for the previous week button click
