@@ -1,6 +1,6 @@
 import { db } from './firebase';
 import { getDocs, query, where, collection, onSnapshot } from "firebase/firestore";
-import { IPsychiatrist } from '@/schema';
+import { IPatient, IPsychiatrist } from '@/schema';
 import { useAuth } from '../contexts/AuthContext';
 
 /**
@@ -44,6 +44,30 @@ const fetchAllProfessionals = async () => {
   }
 }
 
+const fetchPatientDetails = async (uid: string) => {
+  try {
+    const q = query(
+      collection(db, "patients"),
+      where("uid", "==", uid)
+    );
+
+    const response = await getDocs(q);
+    if (!response.empty) {
+      const doc = response.docs[0];
+      const docId = doc.id;
+      console.log(docId);
+      const docData = response.docs[0].data();
+      const patient = docData as IPatient;
+      return patient;
+    } else {
+      throw new Error(`No patient found with the uid: ${uid}`)
+    }
+  } catch (error: any) {
+    console.error(error.message);
+    throw error;
+  }
+}
+
 function fetchUserChats(setMessages) {
   // const userId = auth.currentUser?.uid;
   const { user } = useAuth();
@@ -68,5 +92,23 @@ function fetchUserChats(setMessages) {
   return unsubscribe;
 }
 
-export { fetchProfessionalData, fetchAllProfessionals, fetchUserChats };
+const fetchDocumentId = async (type: string, uid: string) => {
+  try {
+    const q = query(
+      collection(db, type),
+      where("uid", "==", uid)
+    );
+
+    const response = await getDocs(q);
+    if (!response.empty) {
+      const doc = response.docs[0];
+      const docId = doc.id;
+      return docId;
+    }
+  } catch (error: any) {
+    console.error(error.message);
+  }
+}
+
+export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId };
 
