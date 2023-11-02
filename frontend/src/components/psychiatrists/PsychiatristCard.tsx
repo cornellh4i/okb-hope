@@ -34,7 +34,7 @@ const PsychiatristCard = ({ p_first_name, p_last_name, p_certifications, p_locat
                 </button>
               </div>
               <h2 className="card-title text-[16px] text-center">{p_first_name} {p_last_name}</h2>
-              <p>Pyschiatrist Profile</p>
+              <p>Psychiatrist Profile</p>
             </div>
           </div>}
         </div>

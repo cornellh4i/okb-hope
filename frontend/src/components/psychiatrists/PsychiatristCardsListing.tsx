@@ -10,20 +10,20 @@ import NoSavedPsychComponent from './NoSavedPsych';
 
 const PsychiatristList = ({ max_size }: { max_size: number }) => {
   const uid = auth.currentUser?.uid;
-  const usersRef = collection(db, "users");
+  const patientsRef = collection(db, "patients");
   const [savedPsychiatrists, setSavedPsychiatrists] = useState<(DocumentData | null)[]>([]);
 
   useEffect(() => {
     if (uid) {
-      const queryDoc = query(usersRef, where("user_id", "==", uid));
+      const queryDoc = query(patientsRef, where("uid", "==", uid));
 
       const unsubscribe = onSnapshot(queryDoc, (querySnapshot) => {
         let savedPsychRefs: DocumentReference[] = [];
 
         querySnapshot.forEach((doc) => {
-          const userData = doc.data();
-          const savedPsychRefsForUser = userData.savedPsychiatrists;
-          savedPsychRefs = savedPsychRefs.concat(savedPsychRefsForUser);
+          const patientData = doc.data();
+          const savedPsychRefsForPatient = patientData.savedPsychiatrists;
+          savedPsychRefs = savedPsychRefs.concat(savedPsychRefsForPatient);
         });
 
         if (savedPsychRefs.length !== 0) {
@@ -64,17 +64,12 @@ const PsychiatristList = ({ max_size }: { max_size: number }) => {
     }
   }, [uid]);
 
-
-
-  console.log(savedPsychiatrists[0]);
-  // console.log(savedPsychiatrists[0].firstName);
+  console.log(savedPsychiatrists);
 
   const content = savedPsychiatrists.length === 0 ? (
     <NoSavedPsychComponent />
   ) : (
     savedPsychiatrists.slice(0, max_size).map((psychiatrist: any) => {
-      console.log(typeof (psychiatrist))
-      console.log(psychiatrist);
       return (
         <div key={psychiatrist.id} className="psychiatrist">
           <PsychiatristCard
