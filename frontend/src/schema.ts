@@ -47,7 +47,6 @@ export interface IAppointment extends IAvailability {
     patientId: string;
 }
 
-
 export interface IUser {
     uid: string;
     authProvider: string;
@@ -59,3 +58,4 @@ export interface IUser {
     language: string[];
     genderPref: Gender;
 }
+

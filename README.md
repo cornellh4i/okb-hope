@@ -10,8 +10,8 @@ The frontend and backend both make use of TypeScript, and the repository comes p
 
 ### Fall 2023
 PM/TL:
++ Rhea Verma
 + Dylan Tom
-+ Rhea Varma
 
 Developers:
 + Jae Hahn
@@ -19,6 +19,11 @@ Developers:
 + Amy Wu
 + Elnandia Jean-Noel
 + Akhil Iyengar
++ Diego Marques
++ Joseph Ugarte
+
+Designers:
++ Afran Ahmed
 
 ### Spring 2023
 Product Manager:

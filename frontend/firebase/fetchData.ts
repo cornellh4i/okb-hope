@@ -109,7 +109,7 @@ function fetchUserChats(setMessages) {
   return unsubscribe;
 }
 
-const fetchDocumentId = async (type: string, uid: string) => {
+const fetchDocumentId = async (type: string, uid: string)  => {
   try {
     const q = query(
       collection(db, type),
@@ -128,4 +128,5 @@ const fetchDocumentId = async (type: string, uid: string) => {
 }
 
 export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId, fetchApptDetails };
+
 
