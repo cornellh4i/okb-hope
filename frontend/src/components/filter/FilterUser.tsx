@@ -7,6 +7,7 @@ import FilterBar from "./FilterBar";
 
 import FilterUserTable from "./FilterUserTable";
 import FilterBarTwo from "./FilterBarTwo";
+import FilterCard from "./FilterCard";
 
 export interface UserType {
     active: Timestamp;
@@ -44,7 +45,6 @@ const FilterUser = () => {
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
     const currentRecords = userData.slice(indexOfFirstRecord, indexOfLastRecord);
-    console.log(currentRecords)
     const nextPage = () => {
         if (currentPage < numPages) {
             setCurrentPage(currentPage + 1);
@@ -87,7 +87,7 @@ const FilterUser = () => {
             <div className="text-lg font-bold ml-4">{userData.length} results</div>
             <FilterUserTable currentRecords={currentRecords} onDelete={handleDeleteUser} />
             <div className="pagination flex items-center m-auto">
-                <div className="flex">
+                <div className="flex mb-5">
                     <button className="" onClick={prevPage}>
                         {chevron_left}
                     </button>
@@ -96,7 +96,7 @@ const FilterUser = () => {
                         {chevron_right}
                     </button>
                 </div>
-                <div>Page {currentPage} of {numPages}</div>
+                <div className="mb-5">Page {currentPage} of {numPages}</div>
             </div>
         </div>
     );

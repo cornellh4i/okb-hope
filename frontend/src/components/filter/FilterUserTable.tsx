@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
+import FilterCard from "./FilterCard";
 
 const FilterUserTable = ({ currentRecords, onDelete }) => {
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
@@ -32,6 +33,13 @@ const FilterUserTable = ({ currentRecords, onDelete }) => {
       console.error("Error deleting users:", error);
     }
   };
+  const handleCheckChange = (userId, isChecked) => {
+    if (isChecked) {
+      setSelectedUserIds((prevSelectedUserIds) => [...prevSelectedUserIds, userId]);
+    } else {
+      setSelectedUserIds((prevSelectedUserIds) => prevSelectedUserIds.filter((id) => id !== userId));
+    }
+  };
 
 
   return (
@@ -44,31 +52,20 @@ const FilterUserTable = ({ currentRecords, onDelete }) => {
         Delete
       </button>
 
-
-      <table className="table w-full rounded-lg">
-        <tbody>
-          {currentRecords && currentRecords.map((user, index) => (
-
-            <tr className={`hover border`} key={user.id}>
-              <td>
-                <label>
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    value={user.id}
-                    onChange={handleCheck}
-                  />
-                </label>
-              </td>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{"N/A"}</td>
-              <td>{"N/A"}</td>
-            </tr>
-
-          ))}
-        </tbody>
-      </table>
+      <div className="w-full">
+        <div className="grid grid-cols-1 gap-4">
+          {currentRecords && currentRecords.map((user, index) => {
+            const name = user.name;
+            const username = user.email;
+            return (
+              <div>
+                <FilterCard key={index} name={name} username={username} created={"N/A"} active={"N/A"} isChecked={selectedUserIds.includes(user.id)}
+                  onCheckChange={(isChecked) => handleCheckChange(user.id, isChecked)} />
+              </div>
+            );
+          })}
+        </div>
+      </div>
 
 
     </div>
