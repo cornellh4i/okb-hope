@@ -8,8 +8,6 @@ import { fetchPatientDetails, fetchApptDetails } from '../../../firebase/fetchDa
 import savedPsych from '@/temp_data/savedpsych.json';
 
 const AppointmentList = () => {
-  // Convert the results object into an array
-  const appointmentsArray = Object.values(results);
   const uid = auth.currentUser?.uid;
   const [appointments, setAppointments] = useState<(DocumentData | null)[]>([]);
   
@@ -28,7 +26,6 @@ const AppointmentList = () => {
     fetchAppts();
   }, [uid]);
 
-  // let psychNamesArray = savedPsych;
   const appointmentCards = (() => {
     if (appointments?.length) {
       // const appointmentElements : JSX.Element[] = [];
@@ -46,7 +43,6 @@ const AppointmentList = () => {
       //             p_name={psychData.firstName + " " + psychData.lastName} 
       //             start={(appointment as any)?.startTime.toDate()}
       //             end={(appointment as any)?.endTime.toDate()}
-      //             description={"hi"}
       //           />
       //         </div>
       //       );
@@ -62,7 +58,6 @@ const AppointmentList = () => {
             p_name={appointment?.profId}
             start={appointment?.startTime.toDate()}
             end={appointment?.endTime.toDate()}
-            description={"hi"}
           />
         </div>
       ));

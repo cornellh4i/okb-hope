@@ -11,26 +11,45 @@ import answers from '@/temp_data/appointment_answers.json'
 const questionsArr = Object.values(questions);
 const answersArr = Object.values(answers);
 
-// TODO: Make new array that represents question and answers, replace answerArr in the 
-// return react fragmemt appointment details
+//structure of dictionary representing each element in the apptQuestions array in "Appointment Details" section
+interface ApptQuestion {
+  id: string;
+  question: string;
+  answer: string;
+}
+const apptQuestions : ApptQuestion[] = []
 
-const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, start: Date, end: Date, description: string }) => {
+const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, end: Date }) => {
   const uid = auth.currentUser?.uid;
+  
   useEffect(() => {
     const fetchUser = async () => {
       if (uid) {
         const data = await fetchPatientDetails(uid);
-        console.log(data);
-        // setConcerns(data.concerns);
-        // setPreviousTherapyExperience(data.previousTherapyExperience);
-        // setLastTherapyTimeframe(data.lastTherapyTimeframe);
-        // setAgeRange(data.ageRange);
-        // setPrefLanguages(data.prefLanguages);
-        // setGenderPref(data.genderPref);
+        apptQuestions.push({"id": "input1",
+        "question": "Are there any specific concerns you would like to discuss with your counselor?",
+        "answer": data.concerns});
+        apptQuestions.push({"id": "input2",
+        "question": "Have you spoken with a counselor/therapist before?",
+        "answer": data.previousTherapyExperience});
+        apptQuestions.push({"id": "input3",
+        "question": "If yes, when was the last time you spoke with one?",
+        "answer": data.lastTherapyTimeframe});
+        apptQuestions.push({"id": "input4",
+        "question": "What is your age?",
+        "answer": data.ageRange});
+        apptQuestions.push({"id": "input5",
+        "question": "What kind of counselor do you want to speak with?",
+        "answer": (data.genderPref === 1 ? "Female" : "Male")});
+        apptQuestions.push({"id": "input6",
+        "question": "What is your preferred language?",
+        "answer": data.prefLanguages.join(', ')});
       }
     }
     fetchUser();
-  }, []);
+    
+  }, [uid]);
+  
   // calculation of # days remaining until appt
   const daysTo = Math.floor((start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
   const month = start.toLocaleString('default', { month: 'long' });
@@ -106,7 +125,8 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
                       </div>
                       <br></br>
                       {/* questionnaire answers: map each JSON object to each individual Appointment Question */}
-                      {answersArr.map(input => (
+                      {apptQuestions.map(input => (
+                        
                         <div key={input.id.toString()} className="appointment_question">
                           <AppointmentQuestion value={input.answer.toString()} name={input.id.toString()} question={input.question.toString()}></AppointmentQuestion>
                         </div>
