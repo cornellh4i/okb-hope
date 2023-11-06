@@ -1,8 +1,8 @@
 import Head from 'next/head';
-import { useAuth } from '../../contexts/AuthContext';
 import Dashboard from '@/components/dashboard/Dashboard';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const App = () => {
   const { user } = useAuth();

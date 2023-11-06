@@ -1,6 +1,7 @@
 import { db } from './firebase';
 import { getDocs, query, where, collection, onSnapshot } from "firebase/firestore";
-import { IPsychiatrist } from '@/schema';
+import { IAppointment, IPatient, IPsychiatrist } from '@/schema';
+import { useAuth } from '../contexts/AuthContext';
 
 /**
  * Fetches professional data from the Firestore based on first and last name.
@@ -13,8 +14,8 @@ const fetchProfessionalData = async (firstName: string, lastName: string) => {
   try {
     const q = query(
       collection(db, "psychiatrists"),
-      where("first_name", "==", firstName),
-      where("last_name", "==", lastName)
+      where("firstName", "==", firstName),
+      where("lastName", "==", lastName)
     );
 
     const response = await getDocs(q);
@@ -43,9 +44,52 @@ const fetchAllProfessionals = async () => {
   }
 }
 
+const fetchPatientDetails = async (uid: string) => {
+  try {
+    const q = query(
+      collection(db, "patients"),
+      where("uid", "==", uid)
+    );
+    const response = await getDocs(q);
+    console.log(response);
+    if (!response.empty) {
+      const doc = response.docs[0];
+      const docId = doc.id;
+      const docData = response.docs[0].data();
+      const patient = docData as IPatient;
+      return patient;
+    } else {
+      throw new Error(`No patient found with the uid: ${uid}`)
+    }
+  } catch (error: any) {
+    console.error(error.message);
+    throw error;
+  }
+}
+
+const fetchApptDetails = async (uid: string) => {
+  try{
+    const apptRef = collection(db, "appointments");
+    const q = query(apptRef, where("patientId", "==", uid)); 
+    const response = await getDocs(q);
+    if(!response.empty){
+      const docData: IAppointment[] = response.docs.map((doc) => doc.data() as IAppointment);
+      return docData
+    } else {
+      throw new Error(`No appointment found for patient with the uid: ${uid}`);
+    }
+
+
+  } catch (error: any) {
+    console.error(error.message);
+  }
+}
+
 function fetchUserChats(setMessages) {
   // const userId = auth.currentUser?.uid;
-  const userId = "123"
+  const { user } = useAuth();
+  const userId = user?.uid
+  // const userId = "123"
 
   if (!userId) {
     console.error("No user is authenticated.");
@@ -62,7 +106,6 @@ function fetchUserChats(setMessages) {
     }));
     setMessages(userConversations);
   });
-
   return unsubscribe;
 }
 
@@ -72,6 +115,7 @@ const fetchDocumentId = async (type: string, uid: string)  => {
       collection(db, type),
       where("uid", "==", uid)
     );
+
     const response = await getDocs(q);
     if (!response.empty) {
       const doc = response.docs[0];
@@ -83,5 +127,6 @@ const fetchDocumentId = async (type: string, uid: string)  => {
   }
 }
 
-export { fetchProfessionalData, fetchAllProfessionals, fetchUserChats, fetchDocumentId };
+export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId, fetchApptDetails };
+
 

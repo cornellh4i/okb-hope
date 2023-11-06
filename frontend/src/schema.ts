@@ -16,8 +16,7 @@ export interface IPsychiatrist {
     location: string;
     language: string[];
     specialty: string[];
-    descript
-    ion: string;
+    description: string;
     website: string;
 }
 
@@ -48,15 +47,15 @@ export interface IAppointment extends IAvailability {
     patientId: string;
 }
 
+export interface IUser {
+    uid: string;
+    authProvider: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    savedPsychiatrists: string[];
+    age: number;
+    language: string[];
+    genderPref: Gender;
+}
 
-// export interface IUser {
-//     uid: string;
-//     authProvider: string;
-//     email: string;
-//     firstName: string;
-//     lastName: string;
-//     savedPsychiatrists: string[];
-//     age: number;
-//     language: string[];
-//     genderPref: Gender;
-// }

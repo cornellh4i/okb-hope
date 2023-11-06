@@ -32,6 +32,14 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
     }
   };
 
+  // Redirects to a professional's profile page and passes their first name and last name as query parameters
+  function handleGoToProfProfile(psychiatrist: IPsychiatrist) {
+    router.push({
+      pathname: `/${user?.uid}/prof_profile`,
+      query: { firstName: psychiatrist.firstName, lastName: psychiatrist.lastName }
+    })
+  }
+
   const signInWithGoogleAndRedirect = async (onClose: () => void) => {
     await signInWithGoogle();
     router.push('/messages'); // Moved this line before the closing of the popup
@@ -43,7 +51,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
     <div className={`psychiatrist-list flex flex-col items-start gap-6`}>
       {showPopup && <LoginPopup onClose={() => setShowPopup(false)} signInWithGoogleAndRedirect={signInWithGoogleAndRedirect} />}
       {results.map((psychiatrist) => (
-        <div key={psychiatrist.uid} className="psychiatrist">
+        <div key={psychiatrist.uid} className="psychiatrist" onClick={() => handleGoToProfProfile(psychiatrist)}>
           {/* Display the psychiatrist's information here */}
           <div className={`card card-side flex flex-row justify-center items-center gap-2.5 rounded-lg bg-[${okb_colors.white}] shadow-[0_0px_5px_0px_rgb(0,0,0,0.15)] items-start gap-x-6 bg-base-100 grid-cols-5 hover:brightness-90 p-6 self-stretch`}>
             <div className={`col-span-1 flex items-center justify-center`}>

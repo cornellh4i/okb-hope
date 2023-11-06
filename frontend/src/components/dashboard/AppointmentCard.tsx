@@ -1,27 +1,74 @@
+import React, {useState, useEffect} from 'react';
+import {auth} from '../../../firebase/firebase';
 import CalendarIcon from '@/assets/calendar.svg'
 import ClockIcon from '@/assets/clock.svg'
-import questions from '@/temp_data/appointment_questions.json'
 import AppointmentQuestion from './AppointmentQuestion'
 import Link from 'next/link';
-import React from 'react'
+import { fetchPatientDetails } from '../../../firebase/fetchData';
 import answers from '@/temp_data/appointment_answers.json'
 
-const questionsArr = Object.values(questions);
-const answersArr = Object.values(answers);
+//structure of dictionary representing each element in the apptQuestions array in "Appointment Details" section
+interface ApptQuestion {
+  id: string;
+  question: string;
+  answer: string;
+}
 
-// TODO: Make new array that represents question and answers, replace answerArr in the 
-// return react fragmemt appointment details
+const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, end: Date }) => {
+  const uid = auth.currentUser?.uid;
+  const [apptQuestions, setApptQuestions] = useState<ApptQuestion[]>([]);
 
-const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, start: Date, end: Date, description: string }) => {
+  // popoulate Appointment Details questions with data from Patient's profile
+  const populateApptQuestions = async () => {
+    if (uid) {
+      const data = await fetchPatientDetails(uid);
+      const updatedApptQuestions: ApptQuestion[] = [
+        {
+          "id": "input1",
+          "question": "Are there any specific concerns you would like to discuss with your counselor?",
+          "answer": data.concerns
+        },
+        {
+          "id": "input2",
+          "question": "Have you spoken with a counselor/therapist before?",
+          "answer": data.previousTherapyExperience
+        },
+        {
+          "id": "input3",
+          "question": "If yes, when was the last time you spoke with one?",
+          "answer": data.lastTherapyTimeframe
+        },
+        {
+          "id": "input4",
+          "question": "What is your age?",
+          "answer": data.ageRange
+        },
+        {
+          "id": "input5",
+          "question": "What kind of counselor do you want to speak with?",
+          "answer": data.genderPref === 1 ? "Female" : "Male"
+        },
+        {
+          "id": "input6",
+          "question": "What is your preferred language?",
+          "answer": data.prefLanguages.join(', ')
+        }
+      ];
+      // Set the state with the updated array
+      setApptQuestions(updatedApptQuestions);
+    }
+  };
 
-
+  useEffect(() => {
+    populateApptQuestions();
+    
+  }, [uid]);
+  
   // calculation of # days remaining until appt
   const daysTo = Math.floor((start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
   const month = start.toLocaleString('default', { month: 'long' });
   const day = start.toLocaleString('default', { weekday: 'long' });
   const [showModal, setShowModal] = React.useState(false);
-
-
 
   return (
     <React.Fragment>
@@ -90,7 +137,8 @@ const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, 
                       </div>
                       <br></br>
                       {/* questionnaire answers: map each JSON object to each individual Appointment Question */}
-                      {answersArr.map(input => (
+                      {apptQuestions.map(input => (
+                        
                         <div key={input.id.toString()} className="appointment_question">
                           <AppointmentQuestion value={input.answer.toString()} name={input.id.toString()} question={input.question.toString()}></AppointmentQuestion>
                         </div>

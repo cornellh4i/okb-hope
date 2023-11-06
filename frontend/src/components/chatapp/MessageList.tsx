@@ -1,32 +1,33 @@
 import { useState, useEffect, useRef } from 'react';
 import MessageItem from './MessageItem';
 import { db, auth } from '../../../firebase/firebase'
-import { collection, getDocs, query, orderBy, DocumentData, onSnapshot } from "firebase/firestore"
+import { collection, getDocs, where, query, orderBy, DocumentData, onSnapshot } from "firebase/firestore"
 
 const MessageList: React.FC = () => {
-
   const uid = auth.currentUser?.uid;
   const photoURL = auth.currentUser?.photoURL;
-
   const messagesRef = collection(db, "Chats");
+
   // const messagesRef = collection(db, "conversations");
-  const queryDoc = query(messagesRef, orderBy('createdAt'));
   const [messages, setMessages] = useState<DocumentData[]>([]);
   // Ref to scroll to most recent message in MessageList
   const scrollEnd = useRef<null | HTMLDivElement>(null);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(queryDoc, (querySnapshot) => {
-      const messageData = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setMessages(messageData);
-    });
-
-    return () => {
-      unsubscribe();
-    };
+    if(uid){
+      const queryDoc = query(messagesRef, where("uid","==",uid), orderBy('createdAt')); 
+      console.log(queryDoc);
+      const unsubscribe = onSnapshot(queryDoc, (querySnapshot) => {
+        const messageData = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setMessages(messageData);
+      },(error) => {console.error("Error fetching data: ", error);});
+      return () => {
+        unsubscribe();
+      };
+    }
   }, []);
 
 

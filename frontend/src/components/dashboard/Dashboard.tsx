@@ -1,6 +1,6 @@
 import React from 'react';
 import AppointmentList from './AppointmentList';
-import PsychiatristList from '../psychiatrists/PsychiatristCardsListing';
+import PsychiatristCardsListing from '../psychiatrists/PsychiatristCardsListing';
 import ArticleList from './ArticleList';
 
 const Dashboard = () => {
@@ -17,7 +17,7 @@ const Dashboard = () => {
         </aside>
         <main role="main" className="w-full sm:w-3/4 md:w-3/4 pt-1 px-2 z-30">
           {/* main body of dashboard, contains psychiatrist, article cards */}
-          <PsychiatristList max_size={10} />
+          <PsychiatristCardsListing max_size={10} />
           <ArticleList />
         </main>
       </div>
