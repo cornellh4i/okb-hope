@@ -101,7 +101,7 @@ const PsychiatristList = ({ max_size }: { max_size: number }) => {
         const existingData = doc.data();
         const savedPsychiatrists = existingData.savedPsychiatrists || [];
 
-        var dataToUpdate = {
+        const dataToUpdate = {
           savedPsychiatrists: savedPsychiatrists,
           age:existingData.age || 0,
           language: existingData.language || ["English"],
