@@ -43,7 +43,7 @@ export interface IAvailability {
 
 
 export interface IAppointment extends IAvailability {
-    apptId: string;
+    appointId: string;
     patientId: string;
 }
 

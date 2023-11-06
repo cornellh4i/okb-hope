@@ -34,7 +34,6 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
 
   // Redirects to a professional's profile page and passes their first name and last name as query parameters
   function handleGoToProfProfile(psychiatrist: IPsychiatrist) {
-    console.log(psychiatrist);
     router.push({
       pathname: `/${user?.uid}/prof_profile`,
       query: { firstName: psychiatrist.firstName, lastName: psychiatrist.lastName }

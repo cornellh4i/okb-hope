@@ -2,37 +2,67 @@ import React, {useState, useEffect} from 'react';
 import AppointmentCard from './AppointmentCard';
 import results from '@/temp_data/appointments.json'; // appointment info 
 import { db,auth } from '../../../firebase/firebase';
-import { collection, DocumentData, query, where, doc } from 'firebase/firestore';
+import { collection, DocumentData, query, where, getDocs, doc } from 'firebase/firestore';
+import { fetchPatientDetails, fetchApptDetails } from '../../../firebase/fetchData';
 // import NoUpcomingAppointments from './NoUpcomingAppointments';
 import savedPsych from '@/temp_data/savedpsych.json';
 
 const AppointmentList = () => {
   // Convert the results object into an array
   const appointmentsArray = Object.values(results);
-
   const uid = auth.currentUser?.uid;
-  const apptRef = collection(db, "Appointments")
   const [appointments, setAppointments] = useState<(DocumentData | null)[]>([]);
   
   useEffect(() => {
-    if (uid) {
-      const queryDoc = query(apptRef, where("user_id", "==", uid)); //check what the user id is called
-
+    const fetchAppts = async () => {
+      if (uid) {
+        const apptData = await fetchApptDetails(uid);
+        console.log(apptData);
+        if (apptData){
+          const filteredApptData = apptData.filter((data) => data !== null);
+          console.log(filteredApptData);
+          setAppointments(filteredApptData);
+        }
+      }
     }
+    fetchAppts();
   }, [uid]);
 
   // let psychNamesArray = savedPsych;
-  appointmentsArray.length = 0;
-
   const appointmentCards = (() => {
-    if (appointmentsArray?.length) {
-      return appointmentsArray.map(appointment => (
-        <div key={appointment.id.toString()} className="appointment"> 
+    if (appointments?.length) {
+      // const appointmentElements : JSX.Element[] = [];
+      // for (const appointment in appointments) {
+      //   const profId = (appointment as any)?.profId;
+      //   const psychRef = collection(db, 'psychiatrists');
+      //   const q = query(psychRef, where('profId', '==', profId));
+      //   const querySnapshot = await getDocs(q);
+      //   if (!querySnapshot.empty) {
+      //     querySnapshot.forEach((doc) => {
+      //       const psychData = doc.data();
+      //       const appointmentElement = (
+      //         <div key={(appointment as any)?.appointId.toString()} className="appointment">
+      //           <AppointmentCard
+      //             p_name={psychData.firstName + " " + psychData.lastName} 
+      //             start={(appointment as any)?.startTime.toDate()}
+      //             end={(appointment as any)?.endTime.toDate()}
+      //             description={"hi"}
+      //           />
+      //         </div>
+      //       );
+      //       appointmentElements.push(appointmentElement);
+  
+      //     });
+      //   } 
+      // }
+      // return appointmentElements;
+      return appointments.map(appointment => (
+        <div key={appointment?.appointId.toString()} className="appointment"> 
           <AppointmentCard
-            p_name={appointment.name}
-            start={new Date(appointment.start)}
-            end={new Date(appointment.end)}
-            description={appointment.description}
+            p_name={appointment?.profId}
+            start={appointment?.startTime.toDate()}
+            end={appointment?.endTime.toDate()}
+            description={"hi"}
           />
         </div>
       ));

@@ -1,6 +1,6 @@
 import { db } from './firebase';
 import { getDocs, query, where, collection, onSnapshot } from "firebase/firestore";
-import { IPatient, IPsychiatrist } from '@/schema';
+import { IAppointment, IPatient, IPsychiatrist } from '@/schema';
 import { useAuth } from '../contexts/AuthContext';
 
 /**
@@ -50,8 +50,8 @@ const fetchPatientDetails = async (uid: string) => {
       collection(db, "patients"),
       where("uid", "==", uid)
     );
-
     const response = await getDocs(q);
+    console.log(response);
     if (!response.empty) {
       const doc = response.docs[0];
       const docId = doc.id;
@@ -64,6 +64,24 @@ const fetchPatientDetails = async (uid: string) => {
   } catch (error: any) {
     console.error(error.message);
     throw error;
+  }
+}
+
+const fetchApptDetails = async (uid: string) => {
+  try{
+    const apptRef = collection(db, "appointments");
+    const q = query(apptRef, where("patientId", "==", uid)); 
+    const response = await getDocs(q);
+    if(!response.empty){
+      const docData: IAppointment[] = response.docs.map((doc) => doc.data() as IAppointment);
+      return docData
+    } else {
+      throw new Error(`No appointment found for patient with the uid: ${uid}`);
+    }
+
+
+  } catch (error: any) {
+    console.error(error.message);
   }
 }
 
@@ -109,5 +127,5 @@ const fetchDocumentId = async (type: string, uid: string) => {
   }
 }
 
-export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId };
+export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId, fetchApptDetails };
 

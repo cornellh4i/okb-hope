@@ -1,9 +1,11 @@
+import React, {useState, useEffect} from 'react';
+import {auth} from '../../../firebase/firebase';
 import CalendarIcon from '@/assets/calendar.svg'
 import ClockIcon from '@/assets/clock.svg'
 import questions from '@/temp_data/appointment_questions.json'
 import AppointmentQuestion from './AppointmentQuestion'
 import Link from 'next/link';
-import React from 'react'
+import { fetchPatientDetails } from '../../../firebase/fetchData';
 import answers from '@/temp_data/appointment_answers.json'
 
 const questionsArr = Object.values(questions);
@@ -13,8 +15,22 @@ const answersArr = Object.values(answers);
 // return react fragmemt appointment details
 
 const AppointmentCard = ({ p_name, start, end, description }: { p_name: string, start: Date, end: Date, description: string }) => {
-
-
+  const uid = auth.currentUser?.uid;
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (uid) {
+        const data = await fetchPatientDetails(uid);
+        console.log(data);
+        // setConcerns(data.concerns);
+        // setPreviousTherapyExperience(data.previousTherapyExperience);
+        // setLastTherapyTimeframe(data.lastTherapyTimeframe);
+        // setAgeRange(data.ageRange);
+        // setPrefLanguages(data.prefLanguages);
+        // setGenderPref(data.genderPref);
+      }
+    }
+    fetchUser();
+  }, []);
   // calculation of # days remaining until appt
   const daysTo = Math.floor((start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
   const month = start.toLocaleString('default', { month: 'long' });
