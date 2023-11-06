@@ -2,14 +2,10 @@ import React, {useState, useEffect} from 'react';
 import {auth} from '../../../firebase/firebase';
 import CalendarIcon from '@/assets/calendar.svg'
 import ClockIcon from '@/assets/clock.svg'
-import questions from '@/temp_data/appointment_questions.json'
 import AppointmentQuestion from './AppointmentQuestion'
 import Link from 'next/link';
 import { fetchPatientDetails } from '../../../firebase/fetchData';
 import answers from '@/temp_data/appointment_answers.json'
-
-const questionsArr = Object.values(questions);
-const answersArr = Object.values(answers);
 
 //structure of dictionary representing each element in the apptQuestions array in "Appointment Details" section
 interface ApptQuestion {
@@ -17,36 +13,54 @@ interface ApptQuestion {
   question: string;
   answer: string;
 }
-const apptQuestions : ApptQuestion[] = []
 
 const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, end: Date }) => {
   const uid = auth.currentUser?.uid;
-  
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (uid) {
-        const data = await fetchPatientDetails(uid);
-        apptQuestions.push({"id": "input1",
-        "question": "Are there any specific concerns you would like to discuss with your counselor?",
-        "answer": data.concerns});
-        apptQuestions.push({"id": "input2",
-        "question": "Have you spoken with a counselor/therapist before?",
-        "answer": data.previousTherapyExperience});
-        apptQuestions.push({"id": "input3",
-        "question": "If yes, when was the last time you spoke with one?",
-        "answer": data.lastTherapyTimeframe});
-        apptQuestions.push({"id": "input4",
-        "question": "What is your age?",
-        "answer": data.ageRange});
-        apptQuestions.push({"id": "input5",
-        "question": "What kind of counselor do you want to speak with?",
-        "answer": (data.genderPref === 1 ? "Female" : "Male")});
-        apptQuestions.push({"id": "input6",
-        "question": "What is your preferred language?",
-        "answer": data.prefLanguages.join(', ')});
-      }
+  const [apptQuestions, setApptQuestions] = useState<ApptQuestion[]>([]);
+
+  // popoulate Appointment Details questions with data from Patient's profile
+  const populateApptQuestions = async () => {
+    if (uid) {
+      const data = await fetchPatientDetails(uid);
+      const updatedApptQuestions: ApptQuestion[] = [
+        {
+          "id": "input1",
+          "question": "Are there any specific concerns you would like to discuss with your counselor?",
+          "answer": data.concerns
+        },
+        {
+          "id": "input2",
+          "question": "Have you spoken with a counselor/therapist before?",
+          "answer": data.previousTherapyExperience
+        },
+        {
+          "id": "input3",
+          "question": "If yes, when was the last time you spoke with one?",
+          "answer": data.lastTherapyTimeframe
+        },
+        {
+          "id": "input4",
+          "question": "What is your age?",
+          "answer": data.ageRange
+        },
+        {
+          "id": "input5",
+          "question": "What kind of counselor do you want to speak with?",
+          "answer": data.genderPref === 1 ? "Female" : "Male"
+        },
+        {
+          "id": "input6",
+          "question": "What is your preferred language?",
+          "answer": data.prefLanguages.join(', ')
+        }
+      ];
+      // Set the state with the updated array
+      setApptQuestions(updatedApptQuestions);
     }
-    fetchUser();
+  };
+
+  useEffect(() => {
+    populateApptQuestions();
     
   }, [uid]);
   
@@ -55,8 +69,6 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
   const month = start.toLocaleString('default', { month: 'long' });
   const day = start.toLocaleString('default', { weekday: 'long' });
   const [showModal, setShowModal] = React.useState(false);
-
-
 
   return (
     <React.Fragment>
