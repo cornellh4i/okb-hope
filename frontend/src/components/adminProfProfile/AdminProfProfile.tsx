@@ -17,10 +17,10 @@ interface ProfProfileProps {
 }
 
 const DummyPsychiatrist: IPsychiatrist = {
-  id: 1,
-  first_name: "Gloria",
-  last_name: "Shi",
-  title: "Psychiatrist at Wohohiame Hospital",
+  uid: "1",
+  firstName: "Gloria",
+  lastName: "Shi",
+  position: "Psychiatrist at Wohohiame Hospital",
   profile_pic: null,
   availability: ["9:00-10:00, 13:00-16:30",
     "16:00-17:00",
@@ -37,7 +37,8 @@ const DummyPsychiatrist: IPsychiatrist = {
     She obtained her medical degree from the University of Ghana and completed 
     her psychiatry residency training at the Korle Bu Teaching Hospital in Accra. 
     Dr. Gloria Shi is passionate about providing quality mental health care to her 
-    patients and has a specialization in the treatment of anxiety and mood disorders.`
+    patients and has a specialization in the treatment of anxiety and mood disorders.`,
+  website: "www.mentalhealth.com"
 }
 
 const AdminProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
@@ -74,7 +75,7 @@ const AdminProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
         <div className={`grow flex flex-col gap-4`}>
           <div className={`flex flex-row gap-4`}>
             <div className={`grow text-3xl text-bold`}>
-              {professional.first_name + " " + professional.last_name}
+              {professional.firstName + " " + professional.lastName}
             </div>
             <div className={`shrink`}>
               <div className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold`} onClick={handleGoToEdit}>
@@ -89,7 +90,7 @@ const AdminProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
             </div>
           </div>
           <div className={`text-normal text-xl italic text-dark-grey`}>
-            {professional.title}
+            {professional.position}
           </div>
           {/* Speciality/language/location tags */}
           <div className={`flex flex-row flex-start gap-2`}>
