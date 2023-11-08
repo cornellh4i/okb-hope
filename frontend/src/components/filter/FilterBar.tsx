@@ -1,6 +1,7 @@
 import chevron_down from "@/assets/chevron_down";
 import { useState } from "react";
 import SearchBarAdmin from '../SearchBarAdmin';
+import Trash from '@/assets/trash.svg';
 
 const FilterBar = () => {
     const ageGroups = ["Below 19", "20-30", "30-40", "40-50", "Over 50"];
@@ -53,6 +54,7 @@ const FilterBar = () => {
             <button className="px-8 py-3 bg-white rounded-2xl border border-sky-700 justify-center items-center gap-2.5 inline-flex" onClick={filter}>
                 <div className="text-sky-700 text-base font-bold text-center">Filter</div>
             </button>
+            <figure className={`cursor-pointer`} onClick={filter}><Trash /></figure>
         </div>
     );
 }

@@ -54,13 +54,6 @@ const FilterUserTable = ({ currentRecords, onDelete }) => {
       </div>
       <div className="bg-black h-2 rounded-lg mx-36 "></div>
 
-      <button
-        className="bg-blue-500 hover:bg-blue-600 text-blue font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
-        onClick={handleDeleteUsers}
-        style={{ marginBottom: '10px' }}
-      >
-        Delete
-      </button>
 
       <div className="w-full">
         <div className="grid grid-cols-1 gap-4">
@@ -76,7 +69,13 @@ const FilterUserTable = ({ currentRecords, onDelete }) => {
           })}
         </div>
       </div>
-
+      <button
+        className="bg-blue-500 hover:bg-blue-600 text-blue font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
+        onClick={handleDeleteUsers}
+        style={{ marginBottom: '10px' }}
+      >
+        Delete
+      </button>
 
     </div>
   )
