@@ -79,11 +79,11 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
           <div className="grid grid-cols-4 grid-rows-2 gap-1 items-center pb-1/12">
             {/* row 1: day, date of appointment */}
             <div className="col-span-1 shrink"><CalendarIcon></CalendarIcon></div>
-            <div className="col-span-3 text-[12px]"><p>{day}, {month} {start.getDay()}</p></div>
+            <div className="col-span-3 text-[12px]"><p>{day}, {month} {start.getDate()}</p></div>
             {/* row 2: time of appointment */}
             <div className="col-span-1 shrink"><ClockIcon></ClockIcon></div>
             {/* calculation of appointment time */}
-            <div className="col-span-3 text-[12px]"><p>{start.getHours()}:{start.getMinutes()} - {end.getHours()}:{end.getMinutes()}</p></div>
+            <div className="col-span-3 text-[12px]"><p>{start.getHours()}:{(start.getMinutes() < 10 ? '0' : '') + start.getMinutes()} - {end.getHours()}:{(end.getMinutes() < 10 ? '0' : '') + end.getMinutes()}</p></div>
           </div>
 
           <button className="btn w-12/12 bg-okb-blue border-transparent font-[400]" onClick={() => setShowModal(true)}> Appointment Details</button>
@@ -105,8 +105,8 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
                     </div>
                     {/*body*/}
                     <div className="relative p-6 flex-auto">
-                      <div className="col-span-4"><p>{day}, {month} {start.getDay()}</p></div>
-                      <div className="col-span-4"><p>{start.getHours()}:{start.getMinutes()} - {end.getHours()}:{end.getMinutes()}</p></div>
+                      <div className="col-span-4"><p>{day}, {month} {start.getDate()}</p></div>
+                      <div className="col-span-4"><p>{start.getHours()}:{(start.getMinutes() < 10 ? '0' : '') + start.getMinutes()} - {end.getHours()}:{(end.getMinutes() < 10 ? '0' : '') + end.getMinutes()}</p></div>
                       <br></br>
                       {/* button to start appointment */}
                       <Link href="./video-chat">

@@ -13,10 +13,11 @@ const AppointmentList = () => {
   useEffect(() => {
     const fetchAppts = async () => {
       if (uid) {
-        const apptData = await fetchApptDetails(uid);
-        console.log(apptData);
+        const apptData = await fetchApptDetails(uid);        
         if (apptData){
-          const filteredApptData = apptData.filter((data) => data !== null);
+          const currTime = new Date().getTime()
+
+          const filteredApptData = apptData.filter((data) => data !== null && Math.floor((data.startTime.toDate().getTime() - currTime) / (1000 * 60 * 60 * 24)) >= 0);
           console.log(filteredApptData);
           setAppointments(filteredApptData);
         }
