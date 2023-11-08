@@ -65,26 +65,23 @@ const FilterUser = () => {
 
     return (
         <div className="flex flex-col gap-8">
-            <div className="m-auto">
+            <div className="mt-5 mb-5 ml-36">
                 <button
-                    className={`tab tab-bordered ${patientView ? "tab-active" : ""}`}
+                    className={`tab tab-bordered ${patientView ? "tab-active text-blue-800 border-b-4" : "text-blue-500 border-b-2"} text-3xl`}
                     onClick={() => setPatientView(true)}
                 >
-                    Patients
+                    Clients
                 </button>
                 <button
-                    className={`tab tab-bordered ${patientView ? "" : "tab-active"}`}
+                    className={`tab tab-bordered ${patientView ? "text-blue-500 border-b-2" : "tab-active text-blue-800 border-b-4"} text-3xl`}
                     onClick={() => setPatientView(false)}
                 >
                     Psychiatrists
                 </button>
 
-                {/* Conditional rendering based on setPatientView */}
-                {patientView ? <FilterBar /> : <FilterBarTwo />}
-
-
             </div>
-            <div className="text-lg font-bold ml-4">{userData.length} results</div>
+            {/* Conditional rendering based on setPatientView */}
+            {patientView ? <FilterBar /> : <FilterBarTwo />}
             <FilterUserTable currentRecords={currentRecords} onDelete={handleDeleteUser} />
             <div className="pagination flex items-center m-auto">
                 <div className="flex mb-5">

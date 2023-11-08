@@ -9,7 +9,7 @@ const FilterCard = ({ name, username, created, active, isChecked, onCheckChange 
 
 
   return (
-    <div className="flex items-center pr-10 pl-10 w-full">
+    <div className="flex items-center mx-36">
       <div className='flex justify-between items-center w-full border-solid border-gray-300 border-2 rounded-lg py-5 px-6'>
         <div className="flex items center">
           <input type="checkbox" className="checkbox ml-5 mr-20" checked={isChecked} onChange={handleOnChange} />

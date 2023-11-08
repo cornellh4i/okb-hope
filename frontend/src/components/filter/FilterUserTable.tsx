@@ -44,6 +44,16 @@ const FilterUserTable = ({ currentRecords, onDelete }) => {
 
   return (
     <div className="overflow-x-auto">
+      <div className=" flex items-center mx-36">
+        <div className=' flex justify-between items-center w-full'>
+          <h2 className="text-2xl font-bold pl-24 mb-4">Name</h2>
+          <h2 className="text-2xl font-bold mb-4">Email</h2>
+          <h2 className="text-2xl font-bold mb-4">Date Created</h2>
+          <h2 className="text-2xl font-bold pr-24 mb-4">Last Active</h2>
+        </div>
+      </div>
+      <div className="bg-black h-2 rounded-lg mx-36 "></div>
+
       <button
         className="bg-blue-500 hover:bg-blue-600 text-blue font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
         onClick={handleDeleteUsers}
