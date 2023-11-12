@@ -33,6 +33,7 @@ const MessagesPage = () => {
         <meta name="description" content="Messages page" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        {/* <script dangerouslySetInnerHTML={{ __html: 'window.scrollTo(0, 0);' }} /> */}
       </Head>
       {user ? (
         <ChatApp />

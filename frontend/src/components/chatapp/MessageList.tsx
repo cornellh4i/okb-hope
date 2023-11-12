@@ -44,7 +44,7 @@ const MessageList: React.FC = () => {
     // Map all messages in db
     <div className='h-96 bg-white'>
       <div className='py-2'></div>
-      <div className="message-list bg-white">
+      <div className="message-list bg-white flex flex-col items-end">
         {messages && messages.map((msg) => (
           <MessageItem key={msg.id} message={msg} />
         ))}
