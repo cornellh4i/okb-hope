@@ -3,7 +3,7 @@ import chevron_down from "@/assets/chevron_down";
 import SearchBarAdmin from '../SearchBarAdmin';
 import Trash from '@/assets/trash.svg';
 
-const FilterBarTwo = () => {
+const FilterBarTwo = ({ onDelete, userList }) => {
     const weeklyAvailability = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     const language = ["English", "Ga", "Twi", "Hausa"];
     const genders = ["Male", "Female"];
@@ -16,6 +16,24 @@ const FilterBarTwo = () => {
     const filter = () => {
         console.log("Filter successful");
     }
+
+    async function deleteUsers(userIds: string[]) {
+        for (const uid of userIds) {
+            await deleteDoc(doc(db, "users", uid));
+        }
+    }
+
+    const handleDeleteUsers = async () => {
+        try {
+            await deleteUsers(userList);
+            onDelete(selectedUserIds);
+            setSelectedUserIds([]);
+        } catch (error) {
+            console.error("Error deleting users:", error);
+        }
+    };
+
+
 
     return (
         <div className="flex flex-row justify-center items-center gap-2 mx-36">
