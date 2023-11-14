@@ -1,4 +1,11 @@
+import { useState, useEffect, useRef } from 'react';
 import PsychiatristCard from './PsychiatristCard';
+import results from '@/temp_data/psychiatrists.json';
+import { IUser } from '@/schema';
+import { db, auth } from '../../../firebase/firebase';
+import { collection, getDocs, where, query, DocumentData, onSnapshot, doc, writeBatch, getDoc, DocumentReference } from "firebase/firestore";
+import { IPsychiatrist } from '@/schema';
+
 import NoSavedPsychComponent from './NoSavedPsych';
 import { useEffect, useState } from 'react';
 import { IUser } from '@/schema';
@@ -31,9 +38,62 @@ const PsychiatristList = ({ max_size }: { max_size: number }) => {
       certification: "Certifications", // Replace with the actual certification property from your user object
     };
   });
+  const uid = auth.currentUser?.uid;
+  const patientsRef = collection(db, "patients");
+  const [savedPsychiatrists, setSavedPsychiatrists] = useState<(DocumentData | null)[]>([]);
 
-  // Check if psychiatristArr has no values
-  const content = psychiatristArr.length === 0 ? (
+  useEffect(() => {
+    if (uid) {
+      const queryDoc = query(patientsRef, where("uid", "==", uid));
+
+      const unsubscribe = onSnapshot(queryDoc, (querySnapshot) => {
+        let savedPsychRefs: DocumentReference[] = [];
+
+        querySnapshot.forEach((doc) => {
+          const patientData = doc.data();
+          const savedPsychRefsForPatient = patientData.savedPsychiatrists;
+          savedPsychRefs = savedPsychRefs.concat(savedPsychRefsForPatient);
+        });
+
+        if (savedPsychRefs.length !== 0) {
+          try {
+            // Now, you need to fetch data from Firestore using these references
+            const fetchDataFromRefs = async () => {
+              const savedPsychData = await Promise.all(savedPsychRefs.map(async (psychRef) => {
+                try {
+                  const docSnapshot = await getDoc(psychRef);
+                  if (docSnapshot.exists()) {
+                    return docSnapshot.data() as DocumentData;
+                  }
+                  return null;
+                } catch (error) {
+                  console.log(error);
+                  return null;
+                }
+              }));
+
+              // Filter out null values (references that didn't fetch successfully)
+              const filteredSavedPsychData = savedPsychData.filter((data) => data !== null);
+
+              setSavedPsychiatrists(filteredSavedPsychData);
+            };
+
+            fetchDataFromRefs();
+          } catch (error) {
+            console.log(error)
+          }
+        }
+      }, (error) => {
+        console.error('Error fetching data: ', error);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [uid]);
+
+  const content = savedPsychiatrists.length === 0 ? (
     <NoSavedPsychComponent />
   ) : (
     psychiatristArr.map((psychiatrist: any) => (

@@ -3,6 +3,8 @@ import ConversationItem from './ConversationItem';
 import { db } from "../../../firebase/firebase"
 import { collection, getDocs, query, orderBy, DocumentData, onSnapshot } from "firebase/firestore"
 import { useState, useEffect } from 'react';
+import HorizontalLine from '../../assets/horizontal_line.svg';
+
 // Define the Conversation type
 type Conversation = {
   id: string;
@@ -14,15 +16,16 @@ type Conversation = {
 
 // Define the type for props
 type ConversationListProps = {
+  read: boolean,
   conversations: Conversation[];
 };
 
-const ConversationList: React.FC<ConversationListProps> = ({ }) => {
+const ConversationList: React.FC<ConversationListProps> = ({ read, conversations }) => {
 
 
   const conversationsRef = collection(db, "conversations");
   // const queryDoc = query(conversationsRef, orderBy('createdAt'));
-  const [conversations, setConversations] = useState<DocumentData[]>([]);
+  const [conversationList, setConversationsList] = useState<DocumentData[]>([]);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(conversationsRef, (querySnapshot) => {
@@ -30,22 +33,21 @@ const ConversationList: React.FC<ConversationListProps> = ({ }) => {
         ...doc.data(),
         id: doc.id,
       }));
-      setConversations(conversationData);
+      setConversationsList(conversationData);
     });
-  
+
     return () => {
       unsubscribe();
     };
   }, []);
-  
-  
+
+  {/* {index < conversationList.length - 1 && <HorizontalLine></HorizontalLine>} */ }
 
   return (
     <div className="conversation-list">
-      {conversations.map((conversation, index) => (
-        <ConversationItem key={index} conversation={conversation} />
+      {conversationList.map((conversation, index) => (
+        <ConversationItem key={index} read={read} conversation={conversation} isLast={index === conversationList.length - 1}/>
       ))}
-      {/* <span>Test Conversation List</span> */}
     </div>
   );
 };

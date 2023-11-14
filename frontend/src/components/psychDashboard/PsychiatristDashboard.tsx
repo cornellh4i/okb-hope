@@ -12,6 +12,8 @@ import App from '@/pages/_app';
 import results from '../../temp_data/appointments.json'; // appointment info
 import fetchAppointments, { AppointmentType } from '../../../firebase/fetchAppointments';
 import { IAppointment } from '@/schema';
+import { createTest } from '../../../firebase/crudTesting';
+import { useMonthCalendarDefaultizedProps } from '@mui/x-date-pickers/MonthCalendar/MonthCalendar';
 
 
 const PsychiatristDashboard = () => {
@@ -32,6 +34,7 @@ const PsychiatristDashboard = () => {
     const goToNextWeek = () => {
         const nextWeek = currentDate.add(7, 'day');
         setCurrentDate(nextWeek);
+        // createTest();
       };
     
     // Handler for the previous week button click
@@ -83,38 +86,48 @@ const PsychiatristDashboard = () => {
         }
     });
 
-    const sortedDates = Object.keys(aptsByDay).sort((a, b) => {
-        if (a === dateMDY) return -1;
-        if (b === dateMDY) return 1;
-        return dayjs(a).isBefore(dayjs(b)) ? -1 : 1;
-    });
+    const aptsForTheWeek = apts.filter(apt => {
+        const time_start = dayjs(apt.start);
+        return (time_start.isAfter(currentDate) || time_start.isSame(currentDate, 'day')) && time_start.isBefore(currentDate.add(7, 'day'));
+      });
 
-    const appointmentSections = sortedDates.map(dateString => {
-        const aptForDay = aptsByDay[dateString];
+    const todaysAppointments = aptsForTheWeek.filter(apt => dayjs(apt.start).isSame(currentDate, 'day')).map((apt) => (
+        <AppointmentCard 
+            profId={apt.name} 
+            startTime={dayjs(apt.start).format('HH:mm')} 
+            endTime={dayjs(apt.end).format('HH:mm')} 
+        />
+    ));
+
+    const otherAppointments = Object.keys(aptsByDay).sort().map(dateKey => {
+        const dayHeader = dayjs(dateKey).format('dddd, MMMM D');
+        const dailyApts = aptsByDay[dateKey].map(apt => {
+            const p_name = apt.name;
+            const time_start = dayjs(apt.start);
+            const time_end = dayjs(apt.end);
+    
+            return (
+                <AppointmentCard
+                    key={apt.id}
+                    profId={p_name}
+                    startTime={time_start.format('HH:mm')}
+                    endTime={time_end.format('HH:mm')}
+                />
+            );
+        });
+    
         return (
-            <div key={dateString} className="relative mb-5">
-                <div className="flex w-[px] ml-10 top-0 absolute text-black text-2xl font-semibold font-montserrat">
-                    {dayjs(dateString).format('dddd, MMMM D')}
-                </div>
-                <div className="mt-10">
-                    {aptForDay.map(apt => (
-                        <AppointmentCard
-                            key={apt.id}
-                            p_name={apt.name}
-                            time_start={dayjs(apt.start).format('HH:mm')}
-                            time_end={dayjs(apt.end).format('HH:mm')}
-                        />
-                    ))}
-                </div>
+            <div key={dateKey}>
+                <div className="text-black text-xl font-semibold font-montserrat mt-5 ml-10">{dayHeader}</div>
+                {dailyApts}
             </div>
         );
     });
 
 
     return (
-        <div className="w-full h-[full]">
+        <div className="w-full h-full">
             {/* the header part of dashboard, containing week */}
-            {/* Fix width */}
             <div className="flex flex-col justify-center items-center">
                 <div id="blueheader" className="flex w-[1114px] h-[53px] py-3 bg-sky-700 rounded-[10px] justify-center items-center inline-flex">  
                     <div className="relative">
@@ -147,17 +160,42 @@ const PsychiatristDashboard = () => {
                     </div>    
                 </div>
             </div> 
-            <div className="flex flex-row justify-center pt-10">
-                {/* the side-bar part of dashboard, containing calendar */}
+            <div className="flex flex-row h-max justify-center pt-10">
                 <div className="w-[320px] h-[300px] bg-white rounded-[10px] shadow" >
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DateCalendar value={currentDate} onChange={(newValue: dayjs.Dayjs | null) => {setCurrentDate(newValue ?? dayjs());}}  />
                     </LocalizationProvider>   
                 </div>    
-        
-                {/* the main body of dashboard, containing appointments */}
-                <div className="ml-40px mt-40px w-[806px] flex-col justify-start items-start gap-6 inline-flex overflow-y-auto h-[825px]">
-                    {appointmentSections}
+                <div className="ml-10 mb-10 w-[806px] h-[630px] h-full flex-col justify-start items-start gap-9 inline-flex overflow-y-auto">
+                {
+                    todaysAppointments.length > 0 ?
+                    (
+                        <div className="relative mb-5">
+                            <div className="text-black text-2xl font-semibold font-montserrat">Today's Appointments</div>
+                                             
+                            {todaysAppointments}
+                        </div>
+                    ) : (
+                        <div className="relative mb-5">
+                            <div className="text-black text-2xl font-semibold font-montserrat">Today's Appointments</div>
+                            <div className="text-black text-xl font-montserrat mt-5">{"No appointments booked for " + currentDate.format('dddd, MMMM D')}</div>
+                        </div>
+                    )
+                }
+                {
+                    otherAppointments.length > 0 ?
+                    (
+                        <>
+                            <div className="text-black text-2xl font-semibold font-montserrat">This Week's Appointments</div>
+                            {otherAppointments}
+                        </>
+                    ) : (
+                        <>
+                            <div className="text-black text-2xl font-semibold font-montserrat">This Week's Appointments</div>
+                            <div className="text-black text-xl font-montserrat mt-5">{"No appointments booked for the week of " + currentDate.format('dddd, MMMM D')}</div>
+                        </>
+                    )
+                }
                 </div>
             </div>
         </div>            

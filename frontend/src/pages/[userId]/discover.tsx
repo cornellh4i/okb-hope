@@ -4,12 +4,12 @@ import { IPsychiatrist } from '@/schema';
 import colors from "@/colors";
 import { collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/router';
+import { fetchAllProfessionals } from '../../../firebase/fetchData';
 import SearchBar from '@/components/SearchBar';
 import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
-import { useAuth } from '../../contexts/AuthContext';
-import { fetchAllProfessionals } from '../../firebase/fetchData';
+import { useAuth } from '../../../contexts/AuthContext';
 
-// options for fuzzy search. currently only searches by name and position
+// options for fuzzy search. currently only searches by name and title
 const fuseOptions = {
   keys: ['firstName', 'lastName', 'position'],
   threshold: 0.5,
@@ -110,7 +110,7 @@ const DiscoverPage: React.FC = () => {
     const terms = searchTerm.trim().split(/\s+/);
     let results = psychiatrists;
 
-    // Updates result by search term (first names, last names, and/or positions)
+    // Updates result by search term (first names, last names, and/or titles)
     // Handles searches with three terms
     if (terms.length === 3) {
       const [firstTerm, secondTerm, thirdTerm] = terms;
@@ -119,7 +119,6 @@ const DiscoverPage: React.FC = () => {
         matchesTerm(psychiatrist, secondTerm) &&
         matchesTerm(psychiatrist, thirdTerm));
     }
-
     // Handles searches with two terms
     if (terms.length === 2) {
       const [firstTerm, secondTerm] = terms;
@@ -127,7 +126,7 @@ const DiscoverPage: React.FC = () => {
         matchesTerm(psychiatrist, firstTerm) &&
         matchesTerm(psychiatrist, secondTerm));
     }
-
+    // Handles searches with one term
     else if (terms.length === 1) {
       const [firstTerm] = terms;
       results = psychiatrists.filter((psychiatrist) => matchesTerm(psychiatrist, firstTerm));

@@ -1,14 +1,14 @@
-/** eslint-disable */
-
 import { useEffect, useState } from "react";
 import { collection, getDocs, Timestamp } from "firebase/firestore";
-import { db } from "../../../firebase/firebase";
 import chevron_left from "@/assets/chevron_left";
 import chevron_right from "@/assets/chevron_right";
 import FilterBar from "./FilterBar";
 
 import FilterUserTable from "./FilterUserTable";
 import FilterBarTwo from "./FilterBarTwo";
+import FilterCard from "./FilterCard";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../../../firebase/firebase";
 
 export interface UserType {
     active: Timestamp;
@@ -20,90 +20,93 @@ export interface UserType {
 }
 
 const FilterUser = () => {
-    /**
-     * Controls the view of users, separated by patients and psychiatrists. 
-     * patientView is true if we are on the patient view and false if we 
-     * are on the psychiatrist view.
-     */
     const [patientView, setPatientView] = useState<boolean>(true);
     const [userData, setUserData] = useState<UserType[]>([]);
-    // Records for selected tab based on patientView
-    const tabData = userData.filter(u => (u.patient === patientView));
-    // User is currently on this page
     const [currentPage, setCurrentPage] = useState(1);
-
-    // Number of records to be displayed on each page   
-    const recordsPerPage = 10;
-    // const [recordsPerPage, setRecordsPerPage] = useState(10);
-    // Index of the last record on the current page
-    const indexOfLastRecord = currentPage * recordsPerPage;
-    // Index of the first record on the current page
-    const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-
-    // Records to be displayed on the current page filtered based on patientView
-    const currentRecords = tabData.slice(indexOfFirstRecord, indexOfLastRecord);
-    // The total number of pages
-    const numPages = tabData.length === 0 ? 1 : Math.ceil(tabData.length / recordsPerPage)
-
-    /** nextPage moves forward the index of the current page. */
-    const nextPage = () => {
-        if (currentPage !== numPages)
-            setCurrentPage(currentPage + 1)
-    }
-    /** prevPage moves back the index of the current page. */
-    const prevPage = () => {
-        if (currentPage !== 1)
-            setCurrentPage(currentPage - 1)
-    }
-
-    /**
-     * Retrieves all the users from firebase collection. Separates them into
-     * patients and psychiatrists. Re-rendered only on firebase change. 
-     */
-    const userRef = collection(db, "users");
+    const [recordsPerPage] = useState(10);
+    const [numPages, setNumPages] = useState(1);
+    const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 
     useEffect(() => {
         async function fetchUsers() {
-            const userSnapshot = await getDocs(userRef);
-            const users: UserType[] = userSnapshot.docs.map((doc) => (
-                { ...doc.data(), id: doc.id } as UserType)
-            );
+            const userSnapshot = await getDocs(collection(db, "users"));
+            const users: UserType[] = userSnapshot.docs.map((doc) => {
+                const data = doc.data();
+                return {
+                    ...data,
+                    id: doc.id,
+                } as UserType;
+            });
             setUserData(users);
-        }
-        fetchUsers()
 
-    }, [userRef]);
+            // Calculate the number of pages based on all user records
+            setNumPages(Math.ceil(users.length / recordsPerPage));
+        }
+        fetchUsers();
+    }, [recordsPerPage]);
+
+    // Pagination logic to calculate currentRecords based on currentPage
+    const indexOfLastRecord = currentPage * recordsPerPage;
+    const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+    const currentRecords = userData.slice(indexOfFirstRecord, indexOfLastRecord);
+    const nextPage = () => {
+        if (currentPage < numPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const prevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const handleDeleteUser = (userId) => {
+        // Update the user data in the state
+        setUserData((prevUserData) => prevUserData.filter((user) => user.id !== userId));
+        window.location.reload();
+    };
+
+    const handleSelectedUsers = (users) => {
+        setSelectedUsers(users);
+    };
+
 
     return (
         <div className="flex flex-col gap-8">
-            <div className="m-auto">
+            <div className="mt-5 mb-5 ml-36">
                 <button
-                    className={`tab tab-bordered ${patientView ? 'tab-active' : ''}`}
+                    className={`tab tab-bordered relative ${patientView ? "tab-active text-blue-800" : "text-blue-500"} text-3xl`}
                     onClick={() => setPatientView(true)}
-                >Patients</button>
+                >
+                    <span className="relative z-10">Clients</span>
+                    <span className="block absolute left-0 bottom-0 w-full h-0.5 bg-blue-800 transition-transform transform origin-bottom scale-x-0 group-hover:scale-x-100"></span>
+                </button>
+
                 <button
-                    className={`tab tab-bordered ${patientView ? '' : 'tab-active'}`}
+                    className={`tab tab-bordered relative ${patientView ? "text-blue-500" : "tab-active text-blue-800"} text-3xl`}
                     onClick={() => setPatientView(false)}
-                >Psychiatrists</button>
-
-                {/* Conditional rendering based on setPatientView */}
-                {patientView ? <FilterBar /> : <FilterBarTwo />}
-
+                >
+                    <span className="relative z-10">Psychiatrists</span>
+                    <span className="block absolute left-0 bottom-0 w-full h-0.5 bg-blue-800 transition-transform transform origin-bottom scale-x-0 group-hover:scale-x-100"></span>
+                </button>
             </div>
-            {/* Need to change this to the length of the query rather than just userData */}
-            <div className="text-lg font-bold ml-4">{tabData.length} results</div>
-            <FilterUserTable currentRecords={currentRecords} />
+            {patientView ? <FilterBar onDelete={handleDeleteUser} userList={selectedUsers} /> : <FilterBarTwo onDelete={handleDeleteUser} userList={selectedUsers} />}
+            <FilterUserTable currentRecords={currentRecords} onDelete={handleDeleteUser} selectedUsers={(users) => handleSelectedUsers(users)} />
             <div className="pagination flex items-center m-auto">
-                <div className="flex">
-                    <button className="" onClick={prevPage}>{chevron_left}</button>
+                <div className="flex mb-5">
+                    <button className="" onClick={prevPage}>
+                        {chevron_left}
+                    </button>
                     <div className="border-2 border-solid border-gray-300 px-6">{currentPage}</div>
-                    <button className="" onClick={nextPage}>{chevron_right}</button>
+                    <button className="" onClick={nextPage}>
+                        {chevron_right}
+                    </button>
                 </div>
-                <div>Page {currentPage} of {numPages}</div>
+                <div className="mb-5">Page {currentPage} of {numPages}</div>
             </div>
         </div>
-    )
-}
-
+    );
+};
 
 export default FilterUser;

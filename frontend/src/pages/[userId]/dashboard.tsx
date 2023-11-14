@@ -1,4 +1,4 @@
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 import Dashboard from '@/components/dashboard/Dashboard';
 
 const App = () => {

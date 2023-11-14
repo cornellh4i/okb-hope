@@ -1,19 +1,20 @@
 import { useState } from 'react'
 // import tailwindconfig from '../../../tailwind.config.js'
 import okb_colors from '../../colors'
+import { Timestamp } from 'firebase/firestore';
 
-const AppointmentCard = ({p_name, time_start, time_end} : {p_name:string, time_start:string, time_end:string}) => {
+const AppointmentCard = ({profId, startTime, endTime} : {profId:string, startTime:string, endTime:string}) => {
   const [isShown, setIsShown] = useState(false);
   const handleClick = event => {
     setIsShown(!isShown);
   };
 
   return (
-    <div className="flex flex-col w-[806px] h-[67px] rounded-[10px] items-center py-2 px-10 shadow m-6 mb-0 gap-2.5 inline-flex justify-center">
+    <div className="flex flex-col w-[756px] h-[67px] rounded-[10px] items-center py-2 px-10 shadow m-6 mb-0 gap-2.5 inline-flex justify-center">
       <div className="flex justify-between items-center self-stretch ">
         <div className="justify-center items-center gap-6 flex">
-          <div className="text-black font-montserrat text-xs font-normal">{time_start} - {time_end}</div>
-          <div className="text-black font-montserrat text-base font-semibold">{p_name}</div>
+          <div className="text-black font-montserrat text-xs font-normal">{startTime} - {endTime}</div>
+          <div className="text-black font-montserrat text-base font-semibold">{profId}</div>
         </div>
 
         {/* appointment details button */}

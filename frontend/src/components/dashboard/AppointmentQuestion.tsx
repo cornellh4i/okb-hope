@@ -6,7 +6,7 @@ const AppointmentQuestion = ({ name, question, value = "" }: { name: string, que
       <p className="font-bold text-black text-lg">
         {question}
       </p>
-      <input className="outline-1 w-full" value={value} name={name} placeholder='enter here'></input>
+      <input className="outline-1 w-full" value={value} name={name} placeholder=''></input>
       <br></br><br></br>
     </React.Fragment>
   );
