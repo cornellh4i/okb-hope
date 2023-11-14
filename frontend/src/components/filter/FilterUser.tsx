@@ -93,9 +93,7 @@ const FilterUser = () => {
                     <span className="relative z-10">Psychiatrists</span>
                     <span className="block absolute left-0 bottom-0 w-full h-0.5 bg-blue-800 transition-transform transform origin-bottom scale-x-0 group-hover:scale-x-100"></span>
                 </button>
-
             </div>
-            {/* Conditional rendering based on setPatientView */}
             {patientView ? <FilterBar onDelete={handleDeleteUser} userList={selectedUsers} /> : <FilterBarTwo onDelete={handleDeleteUser} userList={selectedUsers} />}
             <FilterUserTable currentRecords={currentRecords} onDelete={handleDeleteUser} selectedUsers={(users) => handleSelectedUsers(users)} />
             <div className="pagination flex items-center m-auto">

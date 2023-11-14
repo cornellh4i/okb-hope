@@ -50,13 +50,12 @@ const FilterBar = ({ onDelete, userList }) => {
     return (
         <div className="flex flex-row justify-center items-center gap-2 mx-36">
             <div className="Search Name or Title">
-
                 <SearchBarAdmin onSearch={handleSearch} />
             </div>
 
             <div className="h-12 px-6 py-3 bg-white rounded-lg border border-zinc-600 justify-between items-center inline-flex">
                 <div className="dropdown">
-                    <label tabIndex={0} className="text-neutral-400 flex gap-16 m-1 text-base font-normal">Age Group{chevron_down}</label>
+                    <label tabIndex={0} className="text-neutral-400 flex gap-25 m-1 text-base font-normal">Age Group{chevron_down}</label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
                         {ageGroups.map((e) => <li key={e}>{e}</li>)}
                     </ul>
@@ -65,7 +64,7 @@ const FilterBar = ({ onDelete, userList }) => {
 
             <div className="h-12 px-6 py-3 bg-white rounded-lg border border-zinc-600 justify-between items-center inline-flex">
                 <div className="dropdown">
-                    <label tabIndex={0} className="text-neutral-400 flex gap-16 m-1 text-base font-normal">Gender{chevron_down}</label>
+                    <label tabIndex={0} className="text-neutral-400 flex gap-5 m-1 text-base font-normal">Gender{chevron_down}</label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
                         {genders.map((e) => <li key={e}>{e}</li>)}
                     </ul>
@@ -74,7 +73,7 @@ const FilterBar = ({ onDelete, userList }) => {
 
             <div className="h-12 px-6 py-3 bg-white rounded-lg border border-zinc-600 justify-between items-center inline-flex">
                 <div className="dropdown">
-                    <label tabIndex={0} className="text-neutral-400 flex gap-16 m-1 text-base font-normal">Conditions{chevron_down}</label>
+                    <label tabIndex={0} className="text-neutral-400 flex gap-5 m-1 text-base font-normal">Conditions{chevron_down}</label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
                         {conditions.map((e) => <li key={e}>{e}</li>)}
                     </ul>
