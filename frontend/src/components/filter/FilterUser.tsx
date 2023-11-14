@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, Timestamp } from "firebase/firestore";
-import { db } from "../../../firebase/firebase";
 import chevron_left from "@/assets/chevron_left";
 import chevron_right from "@/assets/chevron_right";
 import FilterBar from "./FilterBar";
@@ -8,6 +7,8 @@ import FilterBar from "./FilterBar";
 import FilterUserTable from "./FilterUserTable";
 import FilterBarTwo from "./FilterBarTwo";
 import FilterCard from "./FilterCard";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../../../firebase/firebase";
 
 export interface UserType {
     active: Timestamp;
@@ -24,16 +25,19 @@ const FilterUser = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(10);
     const [numPages, setNumPages] = useState(1);
+    const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 
     useEffect(() => {
         async function fetchUsers() {
             const userSnapshot = await getDocs(collection(db, "users"));
-            const users: UserType[] = userSnapshot.docs.map((doc) => ({
-                ...doc.data(),
-                id: doc.id,
-            } as UserType));
+            const users: UserType[] = userSnapshot.docs.map((doc) => {
+                const data = doc.data();
+                return {
+                    ...data,
+                    id: doc.id,
+                } as UserType;
+            });
             setUserData(users);
-
 
             // Calculate the number of pages based on all user records
             setNumPages(Math.ceil(users.length / recordsPerPage));
@@ -63,29 +67,32 @@ const FilterUser = () => {
         window.location.reload();
     };
 
+    const handleSelectedUsers = (users) => {
+        setSelectedUsers(users);
+    };
+
+
     return (
         <div className="flex flex-col gap-8">
-            <div className="m-auto">
+            <div className="mt-5 mb-5 ml-36">
                 <button
-                    className={`tab tab-bordered ${patientView ? "tab-active" : ""}`}
+                    className={`tab tab-bordered relative ${patientView ? "tab-active text-blue-800" : "text-blue-500"} text-3xl`}
                     onClick={() => setPatientView(true)}
                 >
-                    Patients
+                    <span className="relative z-10">Clients</span>
+                    <span className="block absolute left-0 bottom-0 w-full h-0.5 bg-blue-800 transition-transform transform origin-bottom scale-x-0 group-hover:scale-x-100"></span>
                 </button>
+
                 <button
-                    className={`tab tab-bordered ${patientView ? "" : "tab-active"}`}
+                    className={`tab tab-bordered relative ${patientView ? "text-blue-500" : "tab-active text-blue-800"} text-3xl`}
                     onClick={() => setPatientView(false)}
                 >
-                    Psychiatrists
+                    <span className="relative z-10">Psychiatrists</span>
+                    <span className="block absolute left-0 bottom-0 w-full h-0.5 bg-blue-800 transition-transform transform origin-bottom scale-x-0 group-hover:scale-x-100"></span>
                 </button>
-
-                {/* Conditional rendering based on setPatientView */}
-                {patientView ? <FilterBar /> : <FilterBarTwo />}
-
-
             </div>
-            <div className="text-lg font-bold ml-4">{userData.length} results</div>
-            <FilterUserTable currentRecords={currentRecords} onDelete={handleDeleteUser} />
+            {patientView ? <FilterBar onDelete={handleDeleteUser} userList={selectedUsers} /> : <FilterBarTwo onDelete={handleDeleteUser} userList={selectedUsers} />}
+            <FilterUserTable currentRecords={currentRecords} onDelete={handleDeleteUser} selectedUsers={(users) => handleSelectedUsers(users)} />
             <div className="pagination flex items-center m-auto">
                 <div className="flex mb-5">
                     <button className="" onClick={prevPage}>
