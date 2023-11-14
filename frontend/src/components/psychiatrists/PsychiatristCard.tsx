@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import BookmarkIcon from '@/assets/bookmark.svg'
 import PsychiatristIcon from '@/assets/psychiatrist.svg'
-import { IUser } from '@/schema';
+import { IPsychiatrist, IUser } from '@/schema';
 import { fetchAllUsers } from '../../../firebase/fetchData';
 
 const PyschiatristCard = ({ p_name, p_certifications }: { p_name: string, p_certifications: string }) => {
@@ -9,12 +9,17 @@ const PyschiatristCard = ({ p_name, p_certifications }: { p_name: string, p_cert
   const [isShown, setIsShown] = useState(false);
   const handleClick = event => {
     setIsShown(!isShown);
+  };
+
+  const handleUnbookmark = async () => {
 
     //finish this to delete users when clcik bookmark
-    // const fetchUsers: IUser[] = await fetchAllUsers();
-    // const currentUser = fetchUsers[0];
+    const fetchUsers: IUser[] = await fetchAllUsers();
+    const currentUser = fetchUsers[0];
 
-    // currentUser.savedPsychiatrists.push(`${psychiatrist.firstName} ${psychiatrist.lastName}`);
+    //const currentPsych: IPsychiatrist[] await 
+
+    // currentUser.savedPsychiatrists.pop(`${psychiatrist.firstName} ${psychiatrist.lastName}`);
 
     // const updatedSavedPsychiatrists = currentUser.savedPsychiatrists.filter(id => id !== psychiatristId);
 
@@ -22,7 +27,7 @@ const PyschiatristCard = ({ p_name, p_certifications }: { p_name: string, p_cert
     //   updateUser(user.uid, { savedPsychiatrists: updatedSavedPsychiatrists });
     // }
 
-  };
+  }
 
   return (
     <div className="card w-11/12 bg-base-100 shadow-xl m-6 border-[3px]">
@@ -35,7 +40,7 @@ const PyschiatristCard = ({ p_name, p_certifications }: { p_name: string, p_cert
         <div className="card-actions flex w-full mt-2 justify-left">
           <button className="btn w-9/12 bg-okb-blue border-transparent">View Profile</button>
 
-          <button className="btn w-2/12 p-0 glass object-cover bg-contain" >
+          <button className="btn w-2/12 p-0 glass object-cover bg-contain" onClick={handleUnbookmark}>
             <BookmarkIcon />
           </button>
           {/* dummy component when view profile is pressed */}
