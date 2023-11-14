@@ -1,12 +1,27 @@
 import { useState } from 'react'
 import BookmarkIcon from '@/assets/bookmark.svg'
 import PsychiatristIcon from '@/assets/psychiatrist.svg'
+import { IUser } from '@/schema';
+import { fetchAllUsers } from '../../../firebase/fetchData';
 
 const PyschiatristCard = ({ p_name, p_certifications }: { p_name: string, p_certifications: string }) => {
   // toggles whether to show psychiatrist profile or not
   const [isShown, setIsShown] = useState(false);
   const handleClick = event => {
     setIsShown(!isShown);
+
+    //finish this to delete users when clcik bookmark
+    // const fetchUsers: IUser[] = await fetchAllUsers();
+    // const currentUser = fetchUsers[0];
+
+    // currentUser.savedPsychiatrists.push(`${psychiatrist.firstName} ${psychiatrist.lastName}`);
+
+    // const updatedSavedPsychiatrists = currentUser.savedPsychiatrists.filter(id => id !== psychiatristId);
+
+    //   // Update the user data in Firestore
+    //   updateUser(user.uid, { savedPsychiatrists: updatedSavedPsychiatrists });
+    // }
+
   };
 
   return (
@@ -19,7 +34,7 @@ const PyschiatristCard = ({ p_name, p_certifications }: { p_name: string, p_cert
         {/* view profile button */}
         <div className="card-actions flex w-full mt-2 justify-left">
           <button className="btn w-9/12 bg-okb-blue border-transparent">View Profile</button>
-          
+
           <button className="btn w-2/12 p-0 glass object-cover bg-contain" >
             <BookmarkIcon />
           </button>
