@@ -1,7 +1,6 @@
 import { db } from './firebase';
 import { getDocs, query, where, collection, onSnapshot, doc, updateDoc } from "firebase/firestore";
-import { IPsychiatrist, IUser } from '@/schema';
-import { IAppointment, IPatient, IPsychiatrist } from '@/schema';
+import { IAppointment, IPatient, IPsychiatrist, IUser} from '@/schema';
 import { useAuth } from '../contexts/AuthContext';
 
 /**
