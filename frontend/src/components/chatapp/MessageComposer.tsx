@@ -27,7 +27,8 @@ const MessageComposer: React.FC = () => {
           text: message,
           createdAt: serverTimestamp(),
           uid,
-          photoURL
+          photoURL,
+          recipientId: uid // REPLACE recipientId value, depending on what chat is selected
         });
         console.log("Document written with ID: ", docRef.id);
       } catch (e) {
