@@ -4,7 +4,7 @@ import PsychiatristIcon from '@/assets/psychiatrist.svg'
 import { IPsychiatrist, IUser } from '@/schema';
 import { fetchAllUsers } from '../../../firebase/fetchData';
 
-const PsychiatristCard = ({ p_first_name, p_last_name, p_certifications, p_location }: { p_first_name: string, p_last_name: string, p_certifications: string, p_location: string }) => {
+const PyschiatristCard = ({ p_name, p_certifications }: { p_name: string, p_certifications: string }) => {
   // toggles whether to show psychiatrist profile or not
   const [isShown, setIsShown] = useState(false);
   const handleClick = event => {
@@ -34,14 +34,13 @@ const PsychiatristCard = ({ p_first_name, p_last_name, p_certifications, p_locat
       <div className="card-body items-center p-4">
         {/* image of psychiatrist */}
         <PsychiatristIcon />
-        <h2 className="card-title">{p_certifications} {p_first_name} {p_last_name}</h2>
-        <h2 className="font-[400] italic mb-0">{p_certifications} at {p_location}</h2>
+        <h2 className="card-title">{p_name}</h2>
+        <h2 className="font-[400] italic mb-0">{p_certifications}</h2>
         {/* view profile button */}
         <div className="card-actions flex w-full mt-2 justify-left">
           <button className="btn w-9/12 bg-okb-blue border-transparent">View Profile</button>
-          
-          <button className="btn w-2/12 p-0 glass object-cover bg-contain" onClick={handleUnbookmark}>
 
+          <button className="btn w-2/12 p-0 glass object-cover bg-contain" onClick={handleUnbookmark}>
             <BookmarkIcon />
           </button>
           {/* dummy component when view profile is pressed */}
@@ -54,8 +53,8 @@ const PsychiatristCard = ({ p_first_name, p_last_name, p_certifications, p_locat
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
               </div>
-              <h2 className="card-title text-[16px] text-center">{p_first_name} {p_last_name}</h2>
-              <p>Psychiatrist Profile</p>
+              <h2 className="card-title text-[16px] text-center">{p_name}</h2>
+              <p>Pyschiatrist Profile</p>
             </div>
           </div>}
         </div>
@@ -64,4 +63,4 @@ const PsychiatristCard = ({ p_first_name, p_last_name, p_certifications, p_locat
   );
 };
 
-export default PsychiatristCard;
+export default PyschiatristCard;
