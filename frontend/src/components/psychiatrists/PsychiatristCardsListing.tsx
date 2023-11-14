@@ -3,11 +3,11 @@ import NoSavedPsychComponent from './NoSavedPsych';
 import { useEffect, useState } from 'react';
 import { IUser } from '@/schema';
 import { fetchAllUsers } from '../../../firebase/fetchData';
-​
+
 const PsychiatristList = ({ max_size }: { max_size: number }) => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [user, setUser] = useState<IUser | null>(null);
-​
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -20,10 +20,10 @@ const PsychiatristList = ({ max_size }: { max_size: number }) => {
     }
     fetchData();
   }, []);
-​
+
   // Display the saved psychiatrists of the user
   const savedPsychiatrists = user?.savedPsychiatrists || [];
-​
+
   // Map the saved psychiatrists to the desired format
   const psychiatristArr = savedPsychiatrists.slice(0, max_size).map(psychiatrist => {
     return {
@@ -31,7 +31,7 @@ const PsychiatristList = ({ max_size }: { max_size: number }) => {
       certification: "Certifications", // Replace with the actual certification property from your user object
     };
   });
-​
+
   // Check if psychiatristArr has no values
   const content = psychiatristArr.length === 0 ? (
     <NoSavedPsychComponent />
@@ -45,9 +45,9 @@ const PsychiatristList = ({ max_size }: { max_size: number }) => {
       </div>
     ))
   );
-​
+
   const contentsStyle = psychiatristArr.length === 0 ? "" : "grid grid-cols-3 gap-4 items-center pb-1/12 shrink";
-​
+
   return (
     <div className="card w-full bg-base-100 rounded-[6.5px] shadow-custom-shadow">
       <div className="card-body">
@@ -59,5 +59,5 @@ const PsychiatristList = ({ max_size }: { max_size: number }) => {
     </div>
   );
 };
-​
+
 export default PsychiatristList;
