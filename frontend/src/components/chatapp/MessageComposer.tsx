@@ -2,6 +2,7 @@ import { serverTimestamp } from "firebase/firestore";
 import React, { useState } from "react";
 import { db, auth } from '../../../firebase/firebase'
 import { collection, addDoc } from "firebase/firestore"
+import okb_colors from "@/colors";
 
 const MessageComposer: React.FC = () => {
   const messagesRef = collection(db, "Chats");
@@ -26,7 +27,8 @@ const MessageComposer: React.FC = () => {
           text: message,
           createdAt: serverTimestamp(),
           uid,
-          photoURL
+          photoURL,
+          recipientId: uid // REPLACE recipientId value, depending on what chat is selected
         });
         console.log("Document written with ID: ", docRef.id);
       } catch (e) {
@@ -47,24 +49,25 @@ const MessageComposer: React.FC = () => {
     }
   };
 
+  const maxRows = 2;
+
   return (
-    <div className="message-composer bg-white py-2 rounded-b-md">
-      <div className="flex items-center rounded-2xl border-solid border-2 border-gray-400 pl-2 mx-4">
+    <div className="message-composer bg-white py-2 rounded-b-md ">
+      <div className={`flex py-2 pl-6 pr-2 items-center rounded-[46px] border border-solid border-[${okb_colors.dark_gray}] mx-4`}>
         {/* Input text area */}
         <textarea
           value={message}
           onChange={handleMessageChange}
           onKeyDown={handleKeyDown}
           placeholder="Send a Message"
-          className="w-full h-full"
-        ></textarea>
+          className={`w-full italic resize-none text-[12px] font-normal text-[${okb_colors.med_gray}]`}
+        />
 
         {/* Button to send a message */}
         <button
           type="button"
           onClick={sendMessage}
-          className="bg-okb-blue rounded-full text-white italic font-bold px-2 mx-4 my-2"
-        >Send</button>
+          className="flex py-1 px-2 items-start bg-okb-blue rounded-[20px] text-[12px] text-white font-bold">Send</button>
       </div>
     </div>
   );

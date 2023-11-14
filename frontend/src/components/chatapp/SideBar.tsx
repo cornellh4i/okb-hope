@@ -5,6 +5,7 @@ import Fuse from 'fuse.js'; // install fuse.js
 import { db } from '../../../firebase/firebase'
 import { collection, getDocs } from "firebase/firestore";
 import chevron_up from '@/assets/chevron_up';
+import okb_colors from '@/colors';
 
 const psychiatrists: any[] = [];
 
@@ -39,19 +40,33 @@ const Sidebar: React.FC = () => {
     : psychiatrists;
 
   return (
-    <div className="sidebar border-r-4 border-gray-300 bg-white h-full">
+    <div className="flex flex-col sidebar border-r-2 border-gray-300 bg-white h-full overflow-y-auto">
       <SearchBar onSearch={handleSearch} />
-      <div className="conversation-list bg-white">
-      <div className='flex justify-between align-center bg-okb-blue rounded-full py-1 px-4 mx-2 my-2'>
-          <p className='font-bold text-white'>All Messages</p>
-          <button
-          // onClick={ }
-          >{chevron_up}</button>
+
+      <div className="flex flex-col conversation-list bg-white">
+        {/* Unread Messages */}
+        <div className='flex flex-col unread-conversation-list'>
+          <div className='inline-flex justify-between align-center bg-okb-blue rounded-full py-2 px-6 items-center text-white mx-5 mb-2'>
+            <p className='text-[16px] font-semibold'>Unread Messages</p>
+            <button>{chevron_up}</button>
+          </div>
+          <div className='overflow-scroll mb-5'>
+            <ConversationList read={false} conversations={searchResults} />
+          </div>
         </div>
-        <div className='overflow-scroll h-96'>
-          <ConversationList conversations={searchResults} />
+
+        {/* All Messages */}
+        <div className='flex flex-col all-conversation-list'>
+          <div className='inline-flex justify-between align-center bg-okb-blue rounded-full py-2 px-6 items-center text-white mx-5 mb-2'>
+            <p className='text-[16px] font-semibold'>All Messages</p>
+            <button>{chevron_up}</button>
+          </div>
+          <div className='overflow-scroll'>
+            <ConversationList read={true} conversations={searchResults} />
+          </div>
         </div>
       </div>
+
     </div >
   );
 };

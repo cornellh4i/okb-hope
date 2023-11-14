@@ -10,7 +10,7 @@ const Navbar = () => {
   const router = useRouter();
 
   return (
-    <div className={`flex p-2.5 bg-[${colors.white}] items-end`}>
+    <div className={`flex p-2.5 bg-[${colors.white}] items-end boxShadow-custom-shadow`}>
 
       <div className="justify-start items-center gap-8 flex ml-2">
         <ul className="menu menu-horizontal px-1 gap-5">
