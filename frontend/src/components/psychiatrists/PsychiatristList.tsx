@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BookMark from '@/assets/bookmark.svg'
 import Message from '@/assets/message.svg'
 import Link from 'next/link';
 import { useAuth } from '../../../contexts/AuthContext';
-import { signInWithGoogle } from '../../../firebase/firebase';
+import { fetchUser, signInWithGoogle } from '../../../firebase/firebase';
 import { useRouter } from 'next/router';
 import { LoginPopup } from '../LoginPopup';
-import { IPsychiatrist } from '@/schema';
+import { IPsychiatrist, IUser } from '@/schema';
 import okb_colors from "@/colors";
+import { fetchAllUsers, updateUser } from '../../../firebase/fetchData';
 
 interface PsychiatristListProps {
   results: IPsychiatrist[];
@@ -17,6 +18,21 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
   const { user } = useAuth();
   const [showPopup, setShowPopup] = useState(false);
   const router = useRouter();
+  const [users, setUsers] = useState<IUser[]>([]);
+
+
+  // Get all users from the database
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const fetchUsers: IUser[] = await fetchAllUsers();
+        setUsers(fetchUsers);
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    }
+    fetchData();
+  }, []);
 
   const handleSendMessage = (event: React.MouseEvent) => {
     if (!user) {
@@ -25,10 +41,32 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
     }
   };
 
-  const handleSave = (event: React.MouseEvent) => {
+  const handleSave = async (event: React.MouseEvent, psychiatrist) => {
     if (!user) {
       event.preventDefault();
       setShowPopup(true);
+    } else {
+      try {
+        const fetchUsers: IUser[] = await fetchAllUsers();
+        const currentUser = fetchUsers[0];
+
+
+        // Check if the psychiatrist is already saved
+        if (!currentUser.savedPsychiatrists.includes(`${psychiatrist.firstName} ${psychiatrist.lastName}`)) {
+          // If not saved, add the psychiatrist to the savedPsychiatrists array
+          currentUser.savedPsychiatrists.push(`${psychiatrist.firstName} ${psychiatrist.lastName}`);
+
+          // Save the updated user data
+          // Assuming you have a function to update user data, e.g., updateUser
+          await updateUser('3DTG4Slk3KnwVAf6UjMG', currentUser.savedPsychiatrists); // This is only dummy data
+
+          // You can also update the local state to trigger a re-render
+          setUsers(prevUsers => prevUsers.map(u => (u.uid === user.uid ? currentUser : u)));
+        }
+
+      } catch (error) {
+        console.error('Error saving psychiatrist');
+      }
     }
   };
 
@@ -67,7 +105,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
                   <p className={`text-[${okb_colors.black}] text-[16px] font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
                 </div>
                 <div className={`flex justify-end items-center gap-4`}>
-                  <button className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-[${okb_colors.white}] text-[16px] flex`} onClick={handleSave}>
+                  <button className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-[${okb_colors.white}] text-[16px] flex`} onClick={(event) => handleSave(event, psychiatrist)}>
                     <BookMark />
                     <div>Save</div>
                   </button>

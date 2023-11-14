@@ -1,5 +1,6 @@
 import { db } from './firebase';
-import { getDocs, query, where, collection, onSnapshot } from "firebase/firestore";
+import { getDocs, query, where, collection, onSnapshot, doc, updateDoc } from "firebase/firestore";
+import { IPsychiatrist, IUser } from '@/schema';
 import { IAppointment, IPatient, IPsychiatrist } from '@/schema';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -43,6 +44,38 @@ const fetchAllProfessionals = async () => {
     throw err;
   }
 }
+
+const fetchAllUsers = async () => {
+  try {
+    const userRef = collection(db, 'User');
+    const snapshot = await getDocs(userRef);
+    const fetchedUsers: IUser[] = snapshot.docs.map((doc) => doc.data() as IUser);
+    return fetchedUsers;
+  } catch (err: any) {
+    console.error(err.message);
+    throw err;
+  }
+}
+
+
+const updateUser = async (userId: string, savedPsychiatrists: string[]) => {
+  try {
+    console.log("hi")
+    const userDocRef = doc(db, 'User', userId);
+    console.log(userDocRef)
+
+    // Update only the savedPsychiatrists field
+    const updateUserPayload: Partial<IUser> = {
+      savedPsychiatrists: savedPsychiatrists,
+    };
+
+    await updateDoc(userDocRef, updateUserPayload);
+    console.log(`User with ID ${userId} updated successfully`);
+  } catch (error) {
+    console.error(`Error updating user with ID ${userId}:`, error);
+    throw error;
+  }
+};
 
 const fetchPatientDetails = async (uid: string) => {
   try {
@@ -126,6 +159,6 @@ const fetchDocumentId = async (type: string, uid: string)  => {
   }
 }
 
-export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId, fetchApptDetails };
+export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId, fetchApptDetails, fetchAllUsers, updateUser };
 
 
