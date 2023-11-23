@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
-enum Gender {
+export enum Gender {
     Male = 0,
     Female = 1
 }
