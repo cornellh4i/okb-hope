@@ -18,6 +18,10 @@ const PatientQuestionnaire = () => {
     const [checked, setChecked] = useState<{ [key: string]: boolean }>(
         {'english': false, 'twi': false, 'fante': false, 'ewe': false, 'ga': false, 'other': false});
     const [languages, setLanguages] = useState<string[]>([]);
+    
+    const [prevExp, setPrevExp] = useState<string>("");
+    const [prevExpTime, setPrevExpTime] = useState<string>("");
+    const [concerns, setConcerns] = useState<string>("");
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
@@ -63,6 +67,16 @@ const PatientQuestionnaire = () => {
         console.log(newChecked);
     };
 
+    const handlePrevExpChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setPrevExp(event.target.value);
+    }
+    const handlePrevExpTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setPrevExpTime(event.target.value);
+    }
+    const handleConcernsChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setConcerns(event.target.value);
+    }
+
     const goBack = () => {
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
@@ -102,7 +116,13 @@ const PatientQuestionnaire = () => {
                 handleAge={handleAgeChange}
                 handleCheck={handleCheck}
             />}
-            {currentStep === 3 && <HistoryQuestionnaire/>}
+            {currentStep === 3 && <HistoryQuestionnaire
+            prevExp={prevExp}
+            prevExpTime={prevExpTime}
+            concerns={concerns}
+            handlePrevExp={handlePrevExpChange}
+            handlePrevExpTime={handlePrevExpTimeChange}
+            handleConcerns={handleConcernsChange}/>}
             <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3`}>
                 <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>
                     <div className={`text-zinc-600 font-semibold font-montserrat`}>Go Back</div>
