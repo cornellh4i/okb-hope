@@ -26,13 +26,13 @@ const FilterUserTable = ({ currentRecords, onDelete, selectedUsers }) => {
     <div className="overflow-x-auto">
       <div className=" flex items-center mx-36">
         <div className=' flex justify-between items-center w-full'>
-          <h2 className="text-2xl font-bold pl-24 mb-4">Name</h2>
-          <h2 className="text-2xl font-bold mb-4">Email</h2>
-          <h2 className="text-2xl font-bold mb-4">Date Created</h2>
-          <h2 className="text-2xl font-bold pr-24 mb-4">Last Active</h2>
+          <h2 className="text-2l font-bold pl-24 mb-1">Name</h2>
+          <h2 className="text-2l font-bold mb-1">Email</h2>
+          <h2 className="text-2l font-bold mb-1">Date Created</h2>
+          <h2 className="text-2l font-bold pr-24 mb-1">Last Active</h2>
         </div>
       </div>
-      <div className="bg-black h-2 rounded-lg mx-36 "></div>
+      <div className="bg-black h-0.5 rounded-lg mx-36 "></div>
 
 
       <div className="w-full mt-5">
