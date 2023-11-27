@@ -54,6 +54,7 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="radio-buttons-group"
+                    defaultValue={gender === Gender.Male ? "male" : (gender === Gender.Female ? "female" : " ")}
                     onChange={handleGender}
                 >
                     <FormControlLabel className={` ml-1 `} value="female" control={<Radio />} label={

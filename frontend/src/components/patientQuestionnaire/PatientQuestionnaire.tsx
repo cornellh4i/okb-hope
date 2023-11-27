@@ -14,6 +14,10 @@ const PatientQuestionnaire = () => {
     const [lastName,  setLastName] = useState<string>("");
     const [gender,  setGender] = useState<Gender>();
     const [image,  setImage] = useState<string>("");
+    const [age, setAge] = useState<string>("");
+    const [checked, setChecked] = useState<{ [key: string]: boolean }>(
+        {'english': false, 'twi': false, 'fante': false, 'ewe': false, 'ga': false, 'other': false});
+    const [languages, setLanguages] = useState<string[]>([]);
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
@@ -37,6 +41,28 @@ const PatientQuestionnaire = () => {
         }
     };
 
+    const handleAgeChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setAge(event.target.value);
+    }
+
+    const handleCheck = (event: ChangeEvent<HTMLInputElement>) => {
+        const lang = event.target.value;
+        const newChecked = {
+            ...checked,
+            [lang]: !checked[lang]
+        };
+        setChecked(newChecked);
+    
+        if (newChecked[lang]) {
+            setLanguages([...languages, lang]);
+        } else {
+            setLanguages(languages.filter(element => element !== lang));
+        }
+    
+        console.log(languages);
+        console.log(newChecked);
+    };
+
     const goBack = () => {
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
@@ -44,13 +70,11 @@ const PatientQuestionnaire = () => {
     };
 
     const goNext = () => {
-        // Validation for step 1: Ensure first and last names are filled
         if (currentStep === 1 && (firstName.trim() === "" || lastName.trim() === "")) {
             alert("Please fill out both first and last name.");
             return;
         }
 
-        // Proceed to the next step if the current step is less than the total number of steps
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
         }
@@ -68,7 +92,16 @@ const PatientQuestionnaire = () => {
                 handleLastName={handleLastNameChange}
                 handleGender={handleGenderChange}
             />}
-            {currentStep === 2 && <AgeLanguageQuestionnaire/>}
+            {currentStep === 2 && 
+            <AgeLanguageQuestionnaire
+                age={age}
+                languages={languages}
+                setLanguages={setLanguages}
+                checked={checked}
+                setChecked={setChecked}
+                handleAge={handleAgeChange}
+                handleCheck={handleCheck}
+            />}
             {currentStep === 3 && <HistoryQuestionnaire/>}
             <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3`}>
                 <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>
