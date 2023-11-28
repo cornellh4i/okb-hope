@@ -5,6 +5,8 @@ import Dashboard from '@/components/dashboard/Dashboard';
 const App = () => {
   const { user } = useAuth();
 
+  console.log(user)
+
   return (
     <>
       <Head>

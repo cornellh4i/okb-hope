@@ -58,6 +58,8 @@ const DiscoverPage: React.FC = () => {
 
   const fuse = useMemo(() => new Fuse(psychiatrists, fuseOptions), []);
 
+
+
   // Stores newSearchTerm in searchTerm
   const handleSearch = (newSearchTerm: string) => {
     setSearchTerm(newSearchTerm);
@@ -138,7 +140,7 @@ const DiscoverPage: React.FC = () => {
     // Updates results by the selected filters
     const filterResults = results.filter((psychiatrist) => {
       // return containsOneOf(psychiatrist.availability, submittedFilters['days']) &&
-        return containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
+      return containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
         containsGender(psychiatrist.gender, submittedFilters['genders'])
     });
 

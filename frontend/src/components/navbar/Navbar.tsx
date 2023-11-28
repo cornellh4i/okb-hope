@@ -16,6 +16,7 @@ const Navbar = () => {
         <ul className="menu menu-horizontal px-1 gap-5">
           <Link href="/" className="w-18">
             <Logo />
+            {/* <div className="text-[18px] text-[#195BA5]">My Dashboard</div> */}
           </Link>
           {user ? <li className={`${router.pathname === '/dashboard' ? 'underline-offset-1 custom-active' : ''}`}>
             <Link href="/dashboard" className="w-18">
