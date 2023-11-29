@@ -25,8 +25,10 @@ const AgeLanguageQuestionnaire = ({ age, languages, setLanguages, checked, setCh
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 mb-5`}>
             <FormControl>
-                <span className={`text-lg font-semibold font-montserrat`}>What is your age?</span>
-                
+                <div className={`flex flex-row gap-1`}>
+                    <span className={`text-lg font-semibold font-montserrat`}>What is your age?</span>
+                    <span className={`text-lg text-red-600`}>*</span>
+                </div> 
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="radio-buttons-group"
@@ -67,7 +69,10 @@ const AgeLanguageQuestionnaire = ({ age, languages, setLanguages, checked, setCh
                 </RadioGroup>
             </FormControl>
             <FormGroup>
-                <span className={`text-lg font-semibold font-montserrat`}>What are your preferred languages?</span>
+                <div className={`flex flex-row gap-1`}>
+                    <span className={`text-lg font-semibold font-montserrat`}>What are your preferred languages?</span>
+                    <span className={`text-lg text-red-600`}>*</span>
+                </div> 
                 <FormControlLabel control={<Checkbox defaultChecked={checked.English} checked={checked['english']} value={`english`} onChange={handleCheck} />} className={` ml-1 `} label={
                         <span style={{fontWeight: 300, fontSize: 18 }}>
                         English

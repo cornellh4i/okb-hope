@@ -89,6 +89,21 @@ const PatientQuestionnaire = () => {
             return;
         }
 
+        else if (currentStep === 1 && (gender === undefined)) {
+            alert("Please choose your gender.");
+            return;
+        }
+
+        else if (currentStep === 2 && (age === "")) {
+            alert("Please select your age.");
+            return;
+        }
+
+        else if (currentStep === 2 && (languages.length === 0)) {
+            alert("Please select your language(s).");
+            return;
+        }
+
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
         }

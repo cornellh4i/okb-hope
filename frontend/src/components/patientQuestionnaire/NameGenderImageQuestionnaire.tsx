@@ -33,7 +33,10 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
             <div className={`flex flex-row`}>
                 {/* First Name */}
                 <div tabIndex={0} className={`flex form-control min-w-[25%] mr-10`}>
-                    <span className={`text-lg font-semibold mb-2`}>First Name (Required)</span>
+                    <div className={`flex flex-row gap-1`}>
+                        <span className={`text-lg font-semibold mb-2`}>First Name</span>
+                        <span className={`text-lg mb-2 text-red-600`}>*</span>
+                    </div> 
                     <div className={`flex items-center`}>
                         <Vertical_line className=""></Vertical_line>
                         <input type="text" value={firstName} onChange={handleFirstName} placeholder="Type here" className={`input input-bordered w-full border-2 ml-3 rounded-2xl`} style={{ borderColor: okb_colors.light_blue }} />
@@ -41,7 +44,10 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                 </div>
                 {/* Last Name */}
                 <div tabIndex={0} className={`form-control min-w-[25%] pr-0`}>
-                        <span className={`text-lg font-semibold mb-2`}>Last Name (Required)</span>
+                    <div className={`flex flex-row gap-1`}>
+                        <span className={`text-lg font-semibold mb-2`}>Last Name</span>
+                        <span className={`text-lg mb-2 text-red-600`}>*</span>
+                    </div> 
                     <div className={`flex items-center`}>
                         <Vertical_line className=""></Vertical_line>
                         <input type="text" value={lastName} onChange={handleLastName} placeholder="Type here" className={`input input-bordered w-full border-2 ml-3 rounded-2xl`} style={{ borderColor: okb_colors.light_blue }} />
@@ -49,8 +55,10 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                 </div>
             </div>
             <FormControl>
-                <span className={`text-lg font-semibold font-montserrat`}>What is your gender?</span>
-                
+                <div className={`flex flex-row gap-1`}>
+                    <span className={`text-lg font-semibold font-montserrat`}>What is your gender?</span>
+                    <span className={`text-lg text-red-600`}>*</span>
+                </div> 
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="radio-buttons-group"
