@@ -27,6 +27,7 @@ const DiscoverPage: React.FC = () => {
   console.log(user?.uid)
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [submittedSearchTerm, setSubmittedSearchTerm] = useState("");
   const [filters, setFilters] = useState([]);
   const [submittedFilters, setSubmittedFilters] = useState({});
   const [monday, setMonday] = useState(false);
@@ -62,11 +63,6 @@ const DiscoverPage: React.FC = () => {
   }, []);
 
   const fuse = useMemo(() => new Fuse(psychiatrists, fuseOptions), []);
-
-  // Stores newSearchTerm in searchTerm
-  const handleSearch = (newSearchTerm: string) => {
-    setSearchTerm(newSearchTerm);
-  };
 
   // Returns true if arr1 contains every element in arr2
   function containsAll(arr1: string[], arr2: string[]): boolean {
@@ -107,7 +103,7 @@ const DiscoverPage: React.FC = () => {
   // Filters psychiatrists by search and/or selected filters
   const processSearchFilter = () => {
 
-    const terms = searchTerm.trim().split(/\s+/);
+    const terms = submittedSearchTerm.trim().split(/\s+/);
     let results = psychiatrists;
 
     // Updates result by search term (first names, last names, and/or titles)
@@ -142,15 +138,25 @@ const DiscoverPage: React.FC = () => {
     return filterResults;
   };
 
+  const resetSearchBar = () => {
+    setSearchTerm("")
+    setSubmittedSearchTerm("")
+    setFilters([])
+    setSubmittedFilters({})
+  }
+
   // If there is a search term or there are filters selected, process the search/filter
   // Else, return all psychiatrists
-  const searchFilterResults = searchTerm || submittedFilters ? processSearchFilter() : psychiatrists;
+  const searchFilterResults = submittedSearchTerm || submittedFilters ? processSearchFilter() : psychiatrists;
 
   return (
     <div className={'px-24 pt-9 pb-14'}>
       <div className='pb-8'>
-        <SearchBar onSearch={handleSearch}
+        <SearchBar
+          searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+          submittedSearchTerm={submittedSearchTerm} setSubmittedSearchTerm={setSubmittedSearchTerm}
           filters={filters} setFilters={setFilters}
+          submittedFilters={submittedFilters} setSubmittedFilters={setSubmittedFilters}
           monday={monday} setMonday={setMonday}
           tuesday={tuesday} setTuesday={setTuesday}
           wednesday={wednesday} setWednesday={setWednesday}
@@ -166,8 +172,7 @@ const DiscoverPage: React.FC = () => {
           allLanguages={allLanguages} setAllLanguages={setAllLanguages}
           male={male} setMale={setMale}
           female={female} setFemale={setFemale}
-          bothGenders={bothGenders} setBothGenders={setBothGenders}
-          submittedFilters={submittedFilters} setSubmittedFilters={setSubmittedFilters} />
+          bothGenders={bothGenders} setBothGenders={setBothGenders} />
       </div>
       {searchFilterResults.length > 0 ? (
         <PsychiatristList results={searchFilterResults} />
@@ -176,7 +181,7 @@ const DiscoverPage: React.FC = () => {
           <p className="mb-4">No Psychiatrists found based on your filters.</p>
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => setSearchTerm("")}
+            onClick={resetSearchBar}
           >
             See all psychiatrists
           </button>
