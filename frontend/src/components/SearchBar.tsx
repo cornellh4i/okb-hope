@@ -73,13 +73,6 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
     setShowLanguageDropdown(false);
   };
 
-  useEffect(() => {
-    console.log(searchTerm)
-    console.log(submittedSearchTerm)
-    console.log(filters)
-    console.log(submittedFilters)
-  }, [searchTerm, submittedSearchTerm, filters, submittedFilters])
-
   // Close dropdown if there is a click anywhere outside of the dropdown refs
   useEffect(() => {
     const clickListener = (e) => {

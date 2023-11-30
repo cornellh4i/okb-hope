@@ -1,10 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
 import Fuse from 'fuse.js';
-import { IPsychiatrist } from '@/schema';
+import { IAvailability, IPsychiatrist } from '@/schema';
 import colors from "@/colors";
 import { collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { fetchAllProfessionals } from '../../../firebase/fetchData';
+import { fetchAllProfessionals, fetchAvailability } from '../../../firebase/fetchData';
 import SearchBar from '@/components/SearchBar';
 import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -23,8 +23,8 @@ const DiscoverPage: React.FC = () => {
   const router = useRouter();
   const { user } = useAuth();
   const { userId } = router.query;
-  console.log(userId)
-  console.log(user?.uid)
+  // console.log(userId)
+  // console.log(user?.uid)
 
   const [searchTerm, setSearchTerm] = useState("");
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState("");
@@ -48,6 +48,7 @@ const DiscoverPage: React.FC = () => {
   const [bothGenders, setBothGenders] = useState(false);
 
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
+  const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
 
   // Get all psychiatrists from the database
   useEffect(() => {
@@ -61,6 +62,33 @@ const DiscoverPage: React.FC = () => {
     }
     fetchData();
   }, []);
+
+  // Processes all psychiatrists availabilities to a dictionary mapping each psychiatrist's uid to their availabilities in the form of the days of the week
+  useEffect(() => {
+    // Transforms each item in a psychiatrist's availability array from availability ID to its respective day of the week
+    const processAvailabilityToDaysOfWeek = async (psychiatristAvailability: string[]) => {
+      var availabilityToDaysOfWeek: string[] = [];
+      for (let i = 0; i < psychiatristAvailability.length; i++) {
+        const availabilityId = psychiatristAvailability[i];
+        const fetchedAvailability: IAvailability = await fetchAvailability(availabilityId);
+        const day = fetchedAvailability.startTime.toDate().toLocaleString('default', { weekday: 'long' });
+        if (!availabilityToDaysOfWeek.includes(day)) {
+          availabilityToDaysOfWeek.push(day);
+        }
+      }
+      return availabilityToDaysOfWeek;
+    }
+
+    const processPsychiatrists = async () => {
+      const promises = psychiatrists.map(async (psychiatrist) => {
+        const psychiatristId = psychiatrist.uid;
+        const psychiatristAvailabilityToDaysOfWeek = await processAvailabilityToDaysOfWeek(psychiatrist.availability);
+        setPsychiatristAvailabilities((prev) => ({ ...prev, [psychiatristId]: psychiatristAvailabilityToDaysOfWeek }));
+      });
+      await Promise.all(promises);
+    };
+    processPsychiatrists();
+  }, [psychiatrists]);
 
   const fuse = useMemo(() => new Fuse(psychiatrists, fuseOptions), []);
 
@@ -130,8 +158,8 @@ const DiscoverPage: React.FC = () => {
 
     // Updates results by the selected filters
     const filterResults = results.filter((psychiatrist) => {
-      // return containsOneOf(psychiatrist.availability, submittedFilters['days']) &&
-      return containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
+      return containsOneOf(psychiatristAvailabilities[psychiatrist.uid], submittedFilters['days']) &&
+        containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
         containsGender(psychiatrist.gender, submittedFilters['genders'])
     });
 
@@ -147,7 +175,7 @@ const DiscoverPage: React.FC = () => {
 
   // If there is a search term or there are filters selected, process the search/filter
   // Else, return all psychiatrists
-  const searchFilterResults = submittedSearchTerm || submittedFilters ? processSearchFilter() : psychiatrists;
+  const searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
 
   return (
     <div className={'px-24 pt-9 pb-14'}>
