@@ -17,6 +17,7 @@ module.exports = {
         'lightest-blue': '#D0DBEA',
         'okb-white': '#FFFDFD',
         'dark-grey': '#5F5F5F',
+        'off-white': '#F5F5F5',
       },
       fontFamily: {
         inter: ['inter', 'serif'],
