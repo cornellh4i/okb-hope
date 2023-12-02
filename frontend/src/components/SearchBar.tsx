@@ -3,10 +3,11 @@ import chevron_down from '@/assets/chevron_down';
 import search_icon from '@/assets/search_icon';
 import okb_colors from '../colors';
 
-export default function SearchBar({ onSearch, filters, setFilters, monday, setMonday, tuesday, setTuesday, wednesday,
+export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTerm, setSubmittedSearchTerm, 
+  filters, setFilters, submittedFilters, setSubmittedFilters, monday, setMonday, tuesday, setTuesday, wednesday,
   setWednesday, thursday, setThursday, friday, setFriday, saturday, setSaturday, sunday, setSunday, allDays, setAllDays,
   english, setEnglish, ga, setGa, twi, setTwi, hausa, setHausa, allLanguages, setAllLanguages,
-  male, setMale, female, setFemale, bothGenders, setBothGenders, submittedFilters, setSubmittedFilters }: any) {
+  male, setMale, female, setFemale, bothGenders, setBothGenders }: any) {
 
   const FilterEnum = {
     monday: "Monday",
@@ -31,7 +32,7 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
   const genders = [FilterEnum.male, FilterEnum.female]
 
   const selected: any = [...filters]
-  const [searchTerm, setSearchTerm] = useState('');
+  // const [searchTerm, setSearchTerm] = useState('');
 
   const [showDayDropdown, setShowDayDropdown] = useState(false);
   const dayDropdownRef = useRef<HTMLButtonElement | null>(null);
@@ -112,9 +113,10 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
   // Searches when the enter key is pressed
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      onSearch(searchTerm);
+      setSubmittedSearchTerm(searchTerm);
     }
   };
+
 
   // Returns the index of the filter in the selected array
   function selectedIndex(filter: string) {
@@ -160,6 +162,27 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
     }
     setFilters(selected)
   }
+
+  useEffect(() => {
+    if (Object.keys(submittedFilters).length === 0) {
+      setAllDays(false)
+      setMonday(false)
+      setTuesday(false)
+      setWednesday(false)
+      setThursday(false)
+      setFriday(false)
+      setSaturday(false)
+      setSunday(false)
+      setAllLanguages(false)
+      setEnglish(false)
+      setGa(false)
+      setTwi(false)
+      setHausa(false)
+      setBothGenders(false)
+      setMale(false)
+      setFemale(false)
+    }
+  }, [submittedFilters])
 
   // Updates the selected filter's state and selected array when the selected filter is checked/unchecked
   function handleFilterChange(filterName: string, filterState: boolean, setFunction: any,
@@ -226,22 +249,23 @@ export default function SearchBar({ onSearch, filters, setFilters, monday, setMo
 
   // Parses the selected filters array into a dictionary that maps filter categories to an array of filters they encompass
   const handleFilter = () => {
-    const filtersCategorized: { days: string[], languages: string[], genders: number[] } = { days: [], languages: [], genders: [] }
+    setSubmittedSearchTerm(searchTerm);
+    const filtersCategorized: { days: string[], languages: string[], genders: number[] } = { days: [], languages: [], genders: [] };
     for (let i = 0; i < filters.length; i++) {
-      const filter = filters[i].filter
+      const filter = filters[i].filter;
       if (days.includes(filter)) {
-        filtersCategorized['days'].push(filter)
+        filtersCategorized['days'].push(filter);
       } else if (languages.includes(filter)) {
-        filtersCategorized['languages'].push(filter)
+        filtersCategorized['languages'].push(filter);
       } else {
         if (filter === FilterEnum.male) {
-          filtersCategorized['genders'].push(0)
+          filtersCategorized['genders'].push(0);
         } else {
-          filtersCategorized['genders'].push(1)
+          filtersCategorized['genders'].push(1);
         }
       }
     }
-    setSubmittedFilters(filtersCategorized)
+    setSubmittedFilters(filtersCategorized);
   }
 
   return (

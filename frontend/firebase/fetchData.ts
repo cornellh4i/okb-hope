@@ -1,6 +1,6 @@
 import { db } from './firebase';
 import { getDocs, query, where, collection, onSnapshot, doc, updateDoc } from "firebase/firestore";
-import { IAppointment, IPatient, IPsychiatrist, IUser} from '@/schema';
+import { IAppointment, IAvailability, IPatient, IPsychiatrist, IUser} from '@/schema';
 import { useAuth } from '../contexts/AuthContext';
 
 /**
@@ -158,6 +158,25 @@ const fetchDocumentId = async (type: string, uid: string)  => {
   }
 }
 
-export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId, fetchApptDetails, fetchAllUsers, updateUser };
+const fetchAvailability = async (availId: string) => {
+  try {
+    const q = query(
+      collection(db, "availabilities"),
+      where("availId", "==", availId)
+    );
+    const response = await getDocs(q);
+    if (!response.empty) {
+      const docData = response.docs[0].data();
+      const availability = docData as IAvailability;
+      return availability;
+    } else {
+      throw new Error(`No availability found with the availId: ${availId}`)
+    }
+  } catch (error: any) {
+    console.error(error.message);
+    throw error;
+  }
+}
+export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId, fetchApptDetails, fetchAvailability, fetchAllUsers, updateUser };
 
 
