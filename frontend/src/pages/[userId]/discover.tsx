@@ -67,7 +67,7 @@ const DiscoverPage: React.FC = () => {
   useEffect(() => {
     // Transforms each item in a psychiatrist's availability array from availability ID to its respective day of the week
     const processAvailabilityToDaysOfWeek = async (psychiatristAvailability: string[]) => {
-      var availabilityToDaysOfWeek: string[] = [];
+      const availabilityToDaysOfWeek: string[] = [];
       for (let i = 0; i < psychiatristAvailability.length; i++) {
         const availabilityId = psychiatristAvailability[i];
         const fetchedAvailability: IAvailability = await fetchAvailability(availabilityId);
