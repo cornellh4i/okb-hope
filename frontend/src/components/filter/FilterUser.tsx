@@ -21,6 +21,8 @@ export interface UserType {
 
 const FilterUser = () => {
     const [patientView, setPatientView] = useState<boolean>(true);
+    const [clientView, setClientView] = useState(true);
+    const [psychiatristView, setPsychiatristView] = useState(false);
     const [userData, setUserData] = useState<UserType[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(10);
@@ -71,27 +73,53 @@ const FilterUser = () => {
         setSelectedUsers(users);
     };
 
+    const handleClick = () => {
+        setPatientView((prevPatientView) => !prevPatientView);
+      };
+
+    const handleClientClick = () => {
+    setClientView(true);
+    setPsychiatristView((prev) => !prev); // Toggle the state of the second button
+    };
+
+    const handlePsychiatristClick = () => {
+    setClientView((prev) => !prev); // Toggle the state of the first button
+    setPsychiatristView(true);
+    };  
+
 
     return (
         <div className="flex flex-col gap-8">
             <div className="mt-5 mb-5 ml-36">
-                <button
-                    className={`tab tab-bordered relative ${patientView ? "tab-active text-blue-800" : "text-blue-500"} text-3xl`}
-                    onClick={() => setPatientView(true)}
-                >
-                    <span className="relative z-10">Clients</span>
-                    <span className="block absolute left-0 bottom-0 w-full h-0.5 bg-blue-800 transition-transform transform origin-bottom scale-x-0 group-hover:scale-x-100"></span>
+            <button
+                className={`tab relative ${
+                    clientView ? "text-sky-700 border-b-2 border-sky-700" : "text-slate-300 border-b-2 border-slate-300"
+                } text-3xl`}
+                onClick={handleClientClick}
+            >
+                    <span className="relative z-10 ">Clients</span>
+                    {/* <span
+                        className={`block absolute left-0 bottom-0 w-full h-0.5 ${
+                        clientView ? "bg-sky-700" : "bg-slate-300"
+                        } transition-transform transform origin-bottom scale-x-2 group-hover:scale-x-100`}
+                    ></span> */}
                 </button>
 
                 <button
-                    className={`tab tab-bordered relative ${patientView ? "text-blue-500" : "tab-active text-blue-800"} text-3xl`}
-                    onClick={() => setPatientView(false)}
+                    className={`tab tab-bordered relative ${
+                        psychiatristView ? "text-sky-700 border-b-2 border-sky-700" : "text-slate-300 border-b-2 border-slate-300"
+                    } text-3xl`}
+                    onClick={handlePsychiatristClick}
                 >
                     <span className="relative z-10">Psychiatrists</span>
-                    <span className="block absolute left-0 bottom-0 w-full h-0.5 bg-blue-800 transition-transform transform origin-bottom scale-x-0 group-hover:scale-x-100"></span>
+                    {/* <span
+                        className={`block absolute left-0 bottom-0 w-full h-0.5 ${
+                        psychiatristView ? "bg-sky-700" : "bg-slate-300"
+                        } transition-transform transform origin-bottom scale-x-2 group-hover:scale-x-100`}
+                    ></span> */}
                 </button>
             </div>
-            {patientView ? <FilterBar onDelete={handleDeleteUser} userList={selectedUsers} /> : <FilterBarTwo onDelete={handleDeleteUser} userList={selectedUsers} />}
+            {clientView ? <FilterBar onDelete={handleDeleteUser} userList={selectedUsers} /> : <FilterBarTwo onDelete={handleDeleteUser} userList={selectedUsers} />}
             <FilterUserTable currentRecords={currentRecords} onDelete={handleDeleteUser} selectedUsers={(users) => handleSelectedUsers(users)} />
             <div className="pagination flex items-center m-auto">
                 <div className="flex mb-5">
