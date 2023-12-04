@@ -51,7 +51,7 @@ const Availability = ({ availability = [] }: AvailabilityProps) => {
                     console.log("state of availabilities " , availabilities);
                     const start = availabilities[index]?.startTime.toDate()
                     const end = availabilities[index]?.endTime.toDate()
-                    var times = ''
+                    let times = ''
                     
                     // check if this availability exists
                     if (availabilities[index]){
