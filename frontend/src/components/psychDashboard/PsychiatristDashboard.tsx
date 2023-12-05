@@ -160,8 +160,8 @@ const PsychiatristDashboard = () => {
                     </div>    
                 </div>
             </div> 
-            <div className="flex flex-row h-max justify-center pt-10">
-                <div className="bg-white rounded-[10px] shadow" >
+            <div className="flex flex-row justify-center pt-10">
+                <div className="bg-white max-h-fit rounded-[10px] shadow" >
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DateCalendar value={currentDate} onChange={(newValue: dayjs.Dayjs | null) => {setCurrentDate(newValue ?? dayjs());}}  />
                     </LocalizationProvider>   
