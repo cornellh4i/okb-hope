@@ -12,7 +12,7 @@ import App from '@/pages/_app';
 import results from '../../temp_data/appointments.json'; // appointment info
 import fetchAppointments, { AppointmentType } from '../../../firebase/fetchAppointments';
 import { IAppointment } from '@/schema';
-import { createTest } from '../../../firebase/crudTesting';
+import { createAppointments } from '../../../firebase/crudTesting';
 import { useMonthCalendarDefaultizedProps } from '@mui/x-date-pickers/MonthCalendar/MonthCalendar';
 
 
@@ -34,7 +34,7 @@ const PsychiatristDashboard = () => {
     const goToNextWeek = () => {
         const nextWeek = currentDate.add(7, 'day');
         setCurrentDate(nextWeek);
-        // createTest();
+        // createAppointments();
       };
     
     // Handler for the previous week button click
@@ -161,7 +161,7 @@ const PsychiatristDashboard = () => {
                 </div>
             </div> 
             <div className="flex flex-row justify-center pt-10">
-                <div className="bg-white max-h-fit rounded-[10px] shadow" >
+                <div className="bg-white h-[330px] rounded-[10px] shadow" >
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DateCalendar value={currentDate} onChange={(newValue: dayjs.Dayjs | null) => {setCurrentDate(newValue ?? dayjs());}}  />
                     </LocalizationProvider>   
