@@ -10,6 +10,55 @@ import fetchAppointments from "./fetchAppointments";
 const PYSCH = "psychiatrists"
 const PATIENT = "patients"
 
+export const createAppointments = async () => {
+    const newAppointment1: IAppointment = {
+        availId: "dgkPWTpDh87X1q18Pa6E",
+        appointId: "1",
+        profId: "2LSl9NbxLbpTCiOA26Tc",
+        startTime: Timestamp.now(),
+        endTime: Timestamp.now(),
+        patientId: "Gnk4XP77YyfYTFNHL8leVHAmkWM2"
+    }
+
+    const newAppointment2: IAppointment = {
+        availId: "e0ItZ7laWYZrhyjpTYN8",
+        appointId: "1",
+        profId: "2LSl9NbxLbpTCiOA26Tc",
+        startTime: Timestamp.fromDate(new Date(Timestamp.now().toDate().getTime() - (3 * 24 * 60 * 60 * 1000))),
+        endTime: Timestamp.fromDate(new Date(Timestamp.now().toDate().getTime() - (3 * 24 * 60 - 30) * 60 * 1000)),
+        patientId: "Gnk4XP77YyfYTFNHL8leVHAmkWM2"
+    }
+
+    const newAppointment3: IAppointment = {
+        availId: "p2PBckBWo0LEH1QEpMMO",
+        appointId: "1",
+        profId: "2LSl9NbxLbpTCiOA26Tc",
+        startTime: Timestamp.fromDate(new Date(Timestamp.now().toDate().getTime() - (24 * 60 * 60 * 1000))),
+        endTime: Timestamp.fromDate(new Date(Timestamp.now().toDate().getTime() - (24 * 60 - 30) * 60 * 1000)),
+        patientId: "Gnk4XP77YyfYTFNHL8leVHAmkWM2"
+    }
+
+    const newAppointment4: IAppointment = {
+        availId: "GRLQn8gE1uWXbMTL0unN",
+        appointId: "1",
+        profId: "2LSl9NbxLbpTCiOA26Tc",
+        startTime: Timestamp.fromDate(new Date(Timestamp.now().toDate().getTime() + (24 * 60 + 30) * 60 * 1000)),
+        endTime: Timestamp.fromDate(new Date(Timestamp.now().toDate().getTime() + (24 * 60 + 30) * 60 * 1000)),
+        patientId: "Gnk4XP77YyfYTFNHL8leVHAmkWM2"
+    }
+
+    await createAppointment(newAppointment1)
+    console.log("New appointment made")
+    await createAppointment(newAppointment2)
+    console.log("New appointment made")
+    await createAppointment(newAppointment3)
+    console.log("New appointment made")
+    await createAppointment(newAppointment4)
+    console.log("New appointment made")
+
+}
+
+
 export const createTest = async () => {
     const newAvailability: IAvailability = {
         availId: "1",
