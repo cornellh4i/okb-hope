@@ -8,6 +8,11 @@ The frontend and backend both make use of TypeScript, and the repository comes p
 
 ## Development Team
 
+### Spring 2024
+PM/TL:
++ Amy Wu
++ Brianna Liu
+
 ### Fall 2023
 PM/TL:
 + Rhea Verma
