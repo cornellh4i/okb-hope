@@ -8,21 +8,6 @@ import { useAuth } from '../../../contexts/AuthContext';
 const PsychiatristCardsListing = ({ max_size }: { max_size: number }) => {
   const { user } = useAuth();
   const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
-  // const [users, setUsers] = useState<IUser[]>([]);
-  // const [user, setUser] = useState<IUser | null>(null);
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       const fetchUsers: IUser[] = await fetchAllUsers();
-  //       setUsers(fetchUsers);
-  //       setUser(fetchUsers[0]); // Change this once the users ACTUALLY WORK
-  //     } catch (err: any) {
-  //       console.error(err.message);
-  //     }
-  //   }
-  //   fetchData();
-  // }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -36,26 +21,7 @@ const PsychiatristCardsListing = ({ max_size }: { max_size: number }) => {
     fetchUser();
   }, []);
 
-  // Display the saved psychiatrists of the user
-  // console.log(data)
-  // console.log(user.savedPsychiatrists)
-  // const savedPsychiatrists = user?.savedPsychiatrists || [];
-
-  // Map the saved psychiatrists to the desired format
-  // const psychiatristArr = savedPsychiatrists.slice(0, max_size).map(async psychiatrist => {
-  //   const data = await fetchProfessionalData(psychiatrist);
-  //   console.log(data)
-  //   console.log(data.firstName)
-  //   console.log(psychiatrist)
-  //   return {
-  //     uid: data.uid,
-  //     firstName: data.firstName,
-  //     lastName: data.lastName,
-  //     certification: "Certifications", // Replace with the actual certification property from your user object
-  //   };
-  // });
-
-  // Check if psychiatristArr has no values
+  // Check there are no saved psychiatrists
   const content = savedPsychiatrists.length === 0 ? (
     <NoSavedPsychComponent />
   ) : (
