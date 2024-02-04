@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { fetchProfessionalData } from '../../../firebase/fetchData';
+import { fetchDocumentId, fetchPatientDetails, fetchProfessionalData } from '../../../firebase/fetchData';
 import { IPsychiatrist } from '../../schema'
 import Availability from './Availability';
 import Image from 'next/image';
 import Link from '../../assets/link.svg';
 import Arrow from '../../assets/return_arrow.svg';
 import Bookmark from '../../assets/bookmark2.svg';
+import SavedBookmark from '../../assets/saved_bookmark2.svg';
 import Chat from '../../assets/message2.svg';
 import Photo from '../../assets/dummy_photo.jpg';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db, signInWithGoogle } from '../../../firebase/firebase';
+import { LoginPopup } from '../LoginPopup';
 
 
 interface ProfProfileProps {
@@ -47,11 +51,14 @@ const DummyPsychiatrist = {
 
 const ProfProfile = () => {
     const { user } = useAuth(); // Get the user information from the context
+    const [docId, setDocId] = useState<string | undefined>(undefined);
+    const [showPopup, setShowPopup] = useState(false);
 
     // Set the initial state of professional to null instead of DummyPsychiatrist 
     // to avoid the initial rendering of the component with DummyPsychiatrist 
     // before fetching and updating with the real data
     const [professional, setProfessional] = useState<IPsychiatrist | null>(null);
+    const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
 
     const router = useRouter();
 
@@ -76,10 +83,80 @@ const ProfProfile = () => {
         fetchProfessional();
     }, [router.query.psych_uid]);
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            if (user) {
+                const data = await fetchPatientDetails(user.uid);
+                setSavedPsychiatrists(data.savedPsychiatrists)
+                console.log(savedPsychiatrists)
+            }
+        }
+        fetchUser();
+    }, []);
+
+    useEffect(() => {
+        const fetchDocId = async () => {
+            if (user) {
+                const documentId = await fetchDocumentId("patients", user.uid);
+                setDocId(documentId);
+                console.log(documentId)
+            }
+        }
+        fetchDocId();
+    }, [docId]);
+
+    const handleSave = async (event: React.MouseEvent, psychiatrist) => {
+        if (!user) {
+            event.preventDefault();
+            setShowPopup(true);
+        } else {
+            try {
+                const currUser = await fetchPatientDetails(user.uid);
+                const updatedSavedPsychiatrists = [...savedPsychiatrists];
+
+                // Check if the psychiatrist is already saved
+                if (!savedPsychiatrists.includes(psychiatrist.uid)) {
+                    // If not saved, add the psychiatrist to the savedPsychiatrists array
+                    updatedSavedPsychiatrists.push(psychiatrist.uid);
+                } else {
+                    // If already saved, unsave it by removing the psychiatrist from the savedPsychiatrists array
+                    const index = updatedSavedPsychiatrists.indexOf(psychiatrist.uid);
+                    if (index !== -1) {
+                        updatedSavedPsychiatrists.splice(index, 1);
+                    }
+                }
+                setSavedPsychiatrists(updatedSavedPsychiatrists)
+
+                // Update the result to firebase
+                const userRef = doc(db, "patients", docId ?? "");
+                await updateDoc(userRef, {
+                    savedPsychiatrists: updatedSavedPsychiatrists
+                })
+
+            } catch (error) {
+                console.error('Error saving psychiatrist');
+            }
+        }
+    };
+
+    const handleSendMessage = (event: React.MouseEvent) => {
+        if (!user) {
+            event.preventDefault();
+            setShowPopup(true);
+        }
+    };
+
     // Navigate to the user's discover page
     const handleGoToDashboard = () => {
         router.push(`/${user?.uid}/discover`);
     };
+
+    const signInWithGoogleAndRedirect = async (onClose: () => void) => {
+        await signInWithGoogle();
+        router.push('/messages'); // Moved this line before the closing of the popup
+        setShowPopup(false);
+        onClose();
+      };
 
     // Render conditionally based on whether professional data is available
     if (professional === null) {
@@ -88,6 +165,7 @@ const ProfProfile = () => {
 
     return (
         <div className={`w-2/3 h-full flex flex-wrap flex-col justify-center content-center gap-5`}>
+            {showPopup && <LoginPopup onClose={() => setShowPopup(false)} signInWithGoogleAndRedirect={signInWithGoogleAndRedirect} />}
             <div className={`flex flex-row`}>
                 {/* Back arrow to return to go back to Discover Professionals */}
                 <figure className={`cursor-pointer`} onClick={handleGoToDashboard}><Arrow /></figure>
@@ -103,13 +181,13 @@ const ProfProfile = () => {
                         </div>
                         {/* Save button, action is currently undefined */}
                         <div className={`shrink`}>
-                            <div className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold`}>
-                                <figure className="object-cover"><Bookmark /></figure>Save
+                            <div onClick={(event) => handleSave(event, professional)} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold`}>
+                                <figure className="object-cover">{savedPsychiatrists.includes(professional.uid) ? <SavedBookmark /> : <Bookmark />}</figure>Save
                             </div>
                         </div>
                         {/* Message button, action is currently undefined */}
-                        <div className={`shrink`}>
-                            <div className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2`}>
+                        <div className={`shrink`} >
+                            <div onClick={handleSendMessage} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2`}>
                                 <figure className="object-cover"><Chat /></figure>Message
                             </div>
                         </div>
