@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import { LoginPopup } from '../LoginPopup';
 import { IPsychiatrist, IUser } from '@/schema';
 import okb_colors from "@/colors";
-import { fetchAllUsers, updateUser } from '../../../firebase/fetchData';
+import { fetchAllUsers, updateUser, fetchPatientDetails } from '../../../firebase/fetchData';
 
 interface PsychiatristListProps {
   results: IPsychiatrist[];
@@ -50,15 +50,21 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
         const fetchUsers: IUser[] = await fetchAllUsers();
         const currentUser = fetchUsers[0];
 
+        console.log(user)
+        const currUser = await fetchPatientDetails(user.uid);
+
+        console.log(psychiatrist)
+        console.log(currUser)
+
 
         // Check if the psychiatrist is already saved
-        if (!currentUser.savedPsychiatrists.includes(`${psychiatrist.firstName} ${psychiatrist.lastName}`)) {
+        if (!currUser.savedPsychiatrists.includes(`${psychiatrist.uid}`)) {
           // If not saved, add the psychiatrist to the savedPsychiatrists array
-          currentUser.savedPsychiatrists.push(`${psychiatrist.firstName} ${psychiatrist.lastName}`);
+          currUser.savedPsychiatrists.push(`${psychiatrist.uid}`);
 
           // Save the updated user data
           // Assuming you have a function to update user data, e.g., updateUser
-          await updateUser('3DTG4Slk3KnwVAf6UjMG', currentUser.savedPsychiatrists); // This is only dummy data
+          await updateUser(user.uid, currUser.savedPsychiatrists); // This is only dummy data
 
           // You can also update the local state to trigger a re-render
           setUsers(prevUsers => prevUsers.map(u => (u.uid === user.uid ? currentUser : u)));
@@ -70,11 +76,12 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
     }
   };
 
-  // Redirects to a professional's profile page and passes their first name and last name as query parameters
-  function handleGoToProfProfile(psychiatrist: IPsychiatrist) {
+  // Redirects to a professional's profile page and passes their uid as query parameter
+  function handleGoToProfProfile(psych_uid: string) {
+    console.log(psych_uid)
     router.push({
       pathname: `/${user?.uid}/prof_profile`,
-      query: { firstName: psychiatrist.firstName, lastName: psychiatrist.lastName }
+      query: { psych_uid: psych_uid }
     })
   }
 
@@ -89,7 +96,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
     <div className={`psychiatrist-list flex flex-col items-start gap-6`}>
       {showPopup && <LoginPopup onClose={() => setShowPopup(false)} signInWithGoogleAndRedirect={signInWithGoogleAndRedirect} />}
       {results.map((psychiatrist) => (
-        <div key={psychiatrist.uid} className="psychiatrist" onClick={() => handleGoToProfProfile(psychiatrist)}>
+        <div key={psychiatrist.uid} className="psychiatrist" onClick={() => handleGoToProfProfile(psychiatrist.uid)}>
           {/* Display the psychiatrist's information here */}
           <div className={`card card-side flex flex-row justify-center items-center gap-2.5 rounded-lg bg-[${okb_colors.white}] shadow-[0_0px_5px_0px_rgb(0,0,0,0.15)] items-start gap-x-6 bg-base-100 grid-cols-5 hover:brightness-90 p-6 self-stretch`}>
             <div className={`col-span-1 flex items-center justify-center`}>

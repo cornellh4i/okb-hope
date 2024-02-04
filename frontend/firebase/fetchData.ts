@@ -10,12 +10,11 @@ import { useAuth } from '../contexts/AuthContext';
  * @param lastName - The last name of the professional.
  * @returns The professional data, or null if not found.
  */
-const fetchProfessionalData = async (firstName: string, lastName: string) => {
+const fetchProfessionalData = async (psych_uid: string) => {
   try {
     const q = query(
       collection(db, "psychiatrists"),
-      where("firstName", "==", firstName),
-      where("lastName", "==", lastName)
+      where("uid", "==", psych_uid)
     );
 
     const response = await getDocs(q);
@@ -24,7 +23,7 @@ const fetchProfessionalData = async (firstName: string, lastName: string) => {
       const psychiatrist = docData as IPsychiatrist;
       return psychiatrist;
     } else {
-      throw new Error(`No psychiatrist found with the name: ${firstName} ${lastName}`);
+      throw new Error(`No psychiatrist found with the name: ${psych_uid}`);
     }
   } catch (error) {
     console.error("Error fetching professional data:", error);

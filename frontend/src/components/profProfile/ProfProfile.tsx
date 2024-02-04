@@ -56,26 +56,25 @@ const ProfProfile = () => {
     const router = useRouter();
 
     // Effect for fetching and updating professional data based on query parameters.
-    // This effect runs when the component mounts or when `router.query.firstName` or `router.query.lastName` change.
+    // This effect runs when the component mounts or when `router.query.psych_uid` change.
     useEffect(() => {
         const fetchProfessional = async () => {
             const userId = user?.uid; // Get the ID of the currently logged-in user
 
             // Extract the first name and last name from the router query parameters
-            const firstName = router.query.firstName as string;
-            const lastName = router.query.lastName as string;
+            const psych_uid = router.query.psych_uid as string;
 
             // Check if both first name and last name are defined
-            if (userId && firstName && lastName) {
+            if (userId && psych_uid) {
                 // Fetch professional data based on first name and last name
-                const data = await fetchProfessionalData(firstName, lastName);
+                const data = await fetchProfessionalData(psych_uid);
                 console.log(data);
                 setProfessional(data);
             }
         };
 
         fetchProfessional();
-    }, [router.query.firstName, router.query.lastName]);
+    }, [router.query.psych_uid]);
 
     // Navigate to the user's discover page
     const handleGoToDashboard = () => {
