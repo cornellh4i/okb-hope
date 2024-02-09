@@ -1,11 +1,8 @@
-const AboutUs = () => {
-  return (
-    <div>
-      <p>
-        About Us Page
-      </p>
-    </div>
-  )
-}
+import React from "react";
 
-export default AboutUs;
+/** An About page */
+const About = () => {
+  return <>Hello there</>;
+};
+
+export default About;
