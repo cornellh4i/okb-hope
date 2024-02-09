@@ -13,6 +13,10 @@ PM/TL:
 + Amy Wu
 + Brianna Liu
 
+Developers:
++ Leane Ying
++ Selena Zheng
+
 ### Fall 2023
 PM/TL:
 + Rhea Verma
