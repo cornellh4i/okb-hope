@@ -6,7 +6,6 @@ const About = () => {
   return (
     <>
       <Button text="hello"/>
-      Hello there
     </>
   );
 };
