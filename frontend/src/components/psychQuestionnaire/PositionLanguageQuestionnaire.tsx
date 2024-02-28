@@ -24,22 +24,26 @@ interface QuestionnaireProps {
 }
 
 //2nd page of questionnaire
-const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, setChecked, handleAge, handleCheck, handleAboutYourself, handlePosition }: QuestionnaireProps) => {
+const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, setChecked, handleAge, handleCheck, handlePosition }: QuestionnaireProps) => {
 
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 mb-5`}>
             <FormControl>
-                <RadioGroup>
+                <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    name="radio-buttons-group"
+                    defaultValue={setPosition = ""}
+                    onChange={handlePosition}>
                     <div className={`flex flex-row gap-1`}>
                         <span className={`text-lg font-semibold font-montserrat`}>What is your current position?</span>
                         <span className={`text-lg text-red-600`}>*</span>
                     </div>
-                    <FormControlLabel control={<Checkbox defaultChecked={checked.Psychiatrist} checked={checked['psychiatrist']} value={`psychiatrist`} onChange={handlePosition} />} className={` ml-1 `} label={
+                    <FormControlLabel control={<Radio checked={checked['psychiatrist']} value={`psychiatrist`} />} className={` ml-1 `} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Psychiatrist
                         </span>
                     } />
-                    <FormControlLabel control={<Checkbox defaultChecked={checked.Nurse} checked={checked['nurse']} value={`nurse`} onChange={handlePosition} />} className={` ml-1 `} label={
+                    <FormControlLabel control={<Radio checked={checked['nurse']} value={`nurse`} />} className={` ml-1 `} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Nurse
                         </span>

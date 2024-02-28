@@ -1,11 +1,16 @@
 import NameGenderImageQuestionnaire from "./NameGenderImageQuestionnaire";
 import PositionLanguageQuestionnaire from "./PositionLanguageQuestionnaire";
+import SelectionQuestioinnaire from "./SelectionQuestionnaire";
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Gender } from "@/schema";
 import ProgressBar0 from '../../assets/progressbar0.svg';
 import ProgressBar33 from '../../assets/progressbar33.svg';
 import ProgressBar67 from '../../assets/progressbar67.svg';
+
+
+
+
 
 const PsychQuestionnaire = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -21,6 +26,8 @@ const PsychQuestionnaire = () => {
     const [prevExp, setPrevExp] = useState<string>("");
     const [prevExpTime, setPrevExpTime] = useState<string>("");
     const [concerns, setConcerns] = useState<string>("");
+
+    const [profile, setProfile] = useState<string>("");
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
@@ -47,12 +54,14 @@ const PsychQuestionnaire = () => {
     const handlePosition = (event: ChangeEvent<HTMLInputElement>) => {
         const selectedPosition = (event.target.value);
         switch (selectedPosition) {
-            case 'Psychiatrist':
-                setPosition("Psychiatrist");
+            case 'psychiatrist':
+                setPosition("psychiatrist");
                 break;
-            case 'Nurse':
-                setPosition("Nurse");
+            case 'nurse':
+                setPosition("nurse");
                 break;
+            default:
+                setPosition("")
         }
     }
 
@@ -91,22 +100,22 @@ const PsychQuestionnaire = () => {
     };
 
     const goNext = () => {
-        if (currentStep === 1 && (firstName.trim() === "" || lastName.trim() === "")) {
+        if (currentStep === 2 && (firstName.trim() === "" || lastName.trim() === "")) {
             alert("Please fill out both first and last name.");
             return;
         }
 
-        else if (currentStep === 1 && (gender === undefined)) {
+        else if (currentStep === 2 && (gender === undefined)) {
             alert("Please choose your gender.");
             return;
         }
 
-        else if (currentStep === 2 && (position === "")) {
+        else if (currentStep === 3 && (position === "")) {
             alert("Please select your position.");
             return;
         }
 
-        else if (currentStep === 2 && (languages.length === 0)) {
+        else if (currentStep === 3 && (languages.length === 0)) {
             alert("Please select your language(s).");
             return;
         }
@@ -118,7 +127,8 @@ const PsychQuestionnaire = () => {
 
     return (
         <div className={'flex flex-col bg-off-white'}>
-            {currentStep === 1 &&
+            {currentStep === 1 && <SelectionQuestioinnaire setProfile={setProfile} />}
+            {currentStep === 2 &&
                 <NameGenderImageQuestionnaire
                     firstName={firstName}
                     lastName={lastName}
@@ -128,7 +138,7 @@ const PsychQuestionnaire = () => {
                     handleLastName={handleLastNameChange}
                     handleGender={handleGenderChange}
                 />}
-            {currentStep === 2 &&
+            {currentStep === 3 &&
                 <PositionLanguageQuestionnaire
                     position={position}
                     languages={languages}
