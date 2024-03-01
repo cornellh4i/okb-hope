@@ -5,8 +5,7 @@ import Button from "@/components/Button";
 const About = () => {
   return (
     <>
-      <Button text="hello" />
-      Hello there
+      <div className="bg-yellow-100 bg-opacity-10 w-1/2 mx-auto text-center tracking-tighter">Hello</div>
     </>
   );
 };
