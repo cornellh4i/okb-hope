@@ -1,13 +1,14 @@
-import React from 'react';
+import React from "react";
+import Button from "@/components/Button";
 
-const AboutUs = () => {
+/** An About page */
+const About = () => {
   return (
-    <div>
-      <p>
-        About Us Page
-      </p>
-    </div>
-  )
-}
+    <>
+      <Button />
+      Hello there
+    </>
+  );
+};
 
-export default AboutUs;
+export default About;
