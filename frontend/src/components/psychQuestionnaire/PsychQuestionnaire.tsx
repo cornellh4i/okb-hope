@@ -22,12 +22,14 @@ const PsychQuestionnaire = () => {
     const [checked, setChecked] = useState<{ [key: string]: boolean }>(
         { 'english': false, 'twi': false, 'fante': false, 'ewe': false, 'ga': false, 'other': false });
     const [languages, setLanguages] = useState<string[]>([]);
+    const [aboutYourself, setAboutYourself] = useState<string>("");
 
     const [prevExp, setPrevExp] = useState<string>("");
     const [prevExpTime, setPrevExpTime] = useState<string>("");
     const [concerns, setConcerns] = useState<string>("");
 
-    const [profile, setProfile] = useState<string>("");
+    const [patient, setPatient] = useState<boolean>(false);
+    const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
@@ -127,7 +129,7 @@ const PsychQuestionnaire = () => {
 
     return (
         <div className={'flex flex-col bg-off-white'}>
-            {currentStep === 1 && <SelectionQuestioinnaire setProfile={setProfile} />}
+            {currentStep === 1 && <SelectionQuestioinnaire patient={patient} psychiatrist={psychiatrist} />}
             {currentStep === 2 &&
                 <NameGenderImageQuestionnaire
                     firstName={firstName}
@@ -140,8 +142,9 @@ const PsychQuestionnaire = () => {
                 />}
             {currentStep === 3 &&
                 <PositionLanguageQuestionnaire
-                    position={position}
+                    setPosition={position}
                     languages={languages}
+                    aboutYourself={aboutYourself}
                     setLanguages={setLanguages}
                     checked={checked}
                     setChecked={setChecked}

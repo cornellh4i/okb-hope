@@ -17,14 +17,13 @@ interface QuestionnaireProps {
     setLanguages: React.Dispatch<React.SetStateAction<string[]>>;
     checked: { [key: string]: boolean };
     setChecked: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
-    handleAge: (event: ChangeEvent<HTMLInputElement>) => void;
     handleCheck: (event: ChangeEvent<HTMLInputElement>) => void;
     handlePosition: (event: ChangeEvent<HTMLInputElement>) => void;
 
 }
 
 //2nd page of questionnaire
-const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, setChecked, handleAge, handleCheck, handlePosition }: QuestionnaireProps) => {
+const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, setChecked, handleCheck, handlePosition }: QuestionnaireProps) => {
 
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 mb-5`}>
