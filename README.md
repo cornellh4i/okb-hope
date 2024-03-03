@@ -16,6 +16,12 @@ PM/TL:
 Developers:
 + Leane Ying
 + Selena Zheng
++ Aadam Faheem
++ Claire Wang
++ Nicole Qiu
++ Alisha Varma
++ Sophie Strausberg
++ Nicole Fan
 
 ### Fall 2023
 PM/TL:
