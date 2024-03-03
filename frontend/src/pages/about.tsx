@@ -5,6 +5,8 @@ import Button from "@/components/Button";
 const About = () => {
   return (
     <>
+      <Button text="hello" />
+      Hello there
       <div className="bg-yellow-500 opacity-10 w-6/12 tracking-tighter">Hello</div>
       <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
       <div className="bg-red-500 h-44 flex items-center justify-center rounded-3xl m-6">Red</div>
