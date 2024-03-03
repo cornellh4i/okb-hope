@@ -39,8 +39,10 @@ const DiscoverPage: React.FC = () => {
   const [sunday, setSunday] = useState(false);
   const [allDays, setAllDays] = useState(false);
   const [english, setEnglish] = useState(false);
-  const [ga, setGa] = useState(false);
   const [twi, setTwi] = useState(false);
+  const [fante, setFante] = useState(false);
+  const [ewe, setEwe] = useState(false);
+  const [ga, setGa] = useState(false);
   const [hausa, setHausa] = useState(false);
   const [allLanguages, setAllLanguages] = useState(false);
   const [male, setMale] = useState(false);
@@ -194,8 +196,10 @@ const DiscoverPage: React.FC = () => {
           sunday={sunday} setSunday={setSunday}
           allDays={allDays} setAllDays={setAllDays}
           english={english} setEnglish={setEnglish}
-          ga={ga} setGa={setGa}
           twi={twi} setTwi={setTwi}
+          fante={fante} setFante={setFante}
+          ewe={ewe} setEwe={setEwe}
+          ga={ga} setGa={setGa}
           hausa={hausa} setHausa={setHausa}
           allLanguages={allLanguages} setAllLanguages={setAllLanguages}
           male={male} setMale={setMale}
