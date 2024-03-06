@@ -14,36 +14,37 @@ interface QuestionnaireProps {
     setPosition: string;
     languages: string[];
     aboutYourself: string;
-    handleAboutYourself: (event: ChangeEvent<HTMLInputElement>) => void;
     setLanguages: React.Dispatch<React.SetStateAction<string[]>>;
     checked: { [key: string]: boolean };
     setChecked: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
+    handleAge: (event: ChangeEvent<HTMLInputElement>) => void;
     handleCheck: (event: ChangeEvent<HTMLInputElement>) => void;
-    handlePosition: (event: ChangeEvent<HTMLInputElement>) => void;
+    handleAboutYourself: (event: ChangeEvent<HTMLInputElement>) => void;
 
 }
 
 //2nd page of questionnaire
-const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, handleAboutYourself, setChecked, handleCheck, handlePosition }: QuestionnaireProps) => {
+const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, setChecked, handleAge, handleCheck, handleAboutYourself }: QuestionnaireProps) => {
 
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 mb-5`}>
             <FormControl>
+                <div className={`flex flex-row gap-1`}>
+                    <span className={`text-lg font-semibold font-montserrat`}>WWhat is your current position?</span>
+                    <span className={`text-lg text-red-600`}>*</span>
+                </div>
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="radio-buttons-group"
-                    defaultValue={setPosition = ""}
-                    onChange={handlePosition}>
-                    <div className={`flex flex-row gap-1`}>
-                        <span className={`text-lg font-semibold font-montserrat`}>What is your current position?</span>
-                        <span className={`text-lg text-red-600`}>*</span>
-                    </div>
-                    <FormControlLabel control={<Radio checked={checked['psychiatrist']} value={`psychiatrist`} />} className={` ml-1 `} label={
+                    defaultValue={gender === Gender.Male ? "male" : (gender === Gender.Female ? "female" : " ")}
+                    onChange={handleGender}
+                >
+                    <FormControlLabel control={<Checkbox defaultChecked={checked.Psychiatrist} checked={checked['psychiatrist']} value={`psychiatrist`} onChange={handleCheck} />} className={` ml-1 `} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Psychiatrist
                         </span>
                     } />
-                    <FormControlLabel control={<Radio checked={checked['nurse']} value={`nurse`} />} className={` ml-1 `} label={
+                    <FormControlLabel control={<Checkbox defaultChecked={checked.Nurse} checked={checked['nurse']} value={`nurse`} onChange={handleCheck} />} className={` ml-1 `} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Nurse
                         </span>
@@ -52,14 +53,15 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
             </FormControl>
             <div>
                 <span className={`text-lg font-semibold font-montserrat`}>Tell us and your patients about yourself.</span>
-                <textarea
+                <input
+                    type="text"
                     value={aboutYourself}
                     onChange={handleAboutYourself}
                     placeholder="Type here"
-                    className={`input input-bordered resize-none w-full mr-3 border-2 rounded-2xl`}
+                    className={`input input-bordered w-full mr-3 border-2 rounded-2xl h-500`}
                     style={{
                         borderColor: okb_colors.light_blue,
-                        height: 190
+                        height: '560px'
                     }}
                 />
             </div>

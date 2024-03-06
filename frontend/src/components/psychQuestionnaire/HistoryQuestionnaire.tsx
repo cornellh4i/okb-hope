@@ -54,34 +54,33 @@ const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, handlePrevExp, h
                     onChange={handlePrevExpTime}
                     className={`flex flex-col gap-2`}
                 >
-                    <FormControlLabel className={`ml-1`} value="within-last-month" control={<Radio />} label={
+                    <FormControlLabel className={` ml-1 `} value="18-24" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Within the last month
                         </span>
                     } />
-                    <FormControlLabel className={`ml-1`} value="within-last-6-months" control={<Radio />} label={
+                    <FormControlLabel className={` ml-1 `} value="25-34" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Within the last 6 months
                         </span>
                     } />
-                    <FormControlLabel className={`ml-1`} value="within-last-year" control={<Radio />} label={
+                    <FormControlLabel className={` ml-1 `} value="25-34" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Within the last year
                         </span>
                     } />
-                    <FormControlLabel className={`ml-1`} value="over-a-year-ago" control={<Radio />} label={
+                    <FormControlLabel className={` ml-1 `} value="25-34" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Over a year ago
                         </span>
                     } />
-                    <FormControlLabel className={`ml-1`} value="never-spoken" control={<Radio />} label={
+                    <FormControlLabel className={` ml-1 `} value="25-34" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
-                            I have never spoken with a counselor/therapist before.
+                            I have never spoken witih a counselor/therapist before.
                         </span>
                     } />
                 </RadioGroup>
             </FormControl>
-
             <div>
                 <span className={`text-lg font-semibold font-montserrat`}>Are there any specific concerns you would like to discuss with your conselor?</span>
                 <input type="text" value={concerns} onChange={handleConcerns} placeholder="Type here" className={`input input-bordered w-full mr-3 border-2 rounded-2xl`} style={{ borderColor: okb_colors.light_blue }} />

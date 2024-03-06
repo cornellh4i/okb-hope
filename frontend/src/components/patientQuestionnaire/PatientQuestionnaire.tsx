@@ -4,6 +4,10 @@ import HistoryQuestionnaire from "./HistoryQuestionnaire";
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Gender } from "@/schema";
+import { useRouter } from 'next/router';
+
+import { signInWithGoogle } from "../../../firebase/firebase";
+
 import ProgressBar25 from '../../assets/progressbar25.svg';
 import ProgressBar50 from '../../assets/progressbar50.svg';
 import ProgressBar75 from '../../assets/progressbar75.svg';
@@ -22,6 +26,9 @@ const PatientQuestionnaire = () => {
     const [prevExp, setPrevExp] = useState<string>("");
     const [prevExpTime, setPrevExpTime] = useState<string>("");
     const [concerns, setConcerns] = useState<string>("");
+
+    const router = useRouter();
+
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
@@ -80,6 +87,8 @@ const PatientQuestionnaire = () => {
     const goBack = () => {
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
+        } else {
+            router.push('/psych_questionnaire');
         }
     };
 
@@ -106,6 +115,31 @@ const PatientQuestionnaire = () => {
 
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
+        }
+
+        if (currentStep === 3) {
+            signInWithGoogle(
+                "patient",
+                firstName,
+                lastName,
+                "", //position
+                image,
+                [], //availability
+                gender,
+                "", //location
+                languages,
+                [], //specialty
+                "", //description
+                "", //website
+                concerns,
+                prevExp,
+                prevExpTime,
+                "", //ageRange
+                [], //prefLanguages
+                gender, //genderPref
+                [], //savedPsychiatrists
+            );
+            router.push('/dashboard');
         }
     };
 

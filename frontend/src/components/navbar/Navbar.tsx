@@ -47,6 +47,11 @@ const Navbar = () => {
             <div className="text-[18px] text-[#195BA5]">About Us</div>
           </Link>
         </li>
+        <li className={`${router.pathname === '/psych_questionnaire' ? 'underline-offset-1 custom-active' : ''}`}>
+          <Link href="/psych_questionnaire" className="w-18">
+            <div className="text-[18px] text-[#195BA5]">Sign Up</div>
+          </Link>
+        </li>
 
         {
           user ? <div className="dropdown dropdown-hover dropdown-bottom dropdown-end">

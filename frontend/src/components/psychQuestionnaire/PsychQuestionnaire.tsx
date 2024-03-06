@@ -1,16 +1,15 @@
 import NameGenderImageQuestionnaire from "./NameGenderImageQuestionnaire";
 import PositionLanguageQuestionnaire from "./PositionLanguageQuestionnaire";
-import SelectionQuestioinnaire from "./SelectionQuestionnaire";
+import SelectionQuestionnaire from "./SelectionQuestionnaire";
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
+import Link from "next/link";
+import { useRouter } from 'next/router';
 import { Gender } from "@/schema";
 import ProgressBar0 from '../../assets/progressbar0.svg';
 import ProgressBar33 from '../../assets/progressbar33.svg';
 import ProgressBar67 from '../../assets/progressbar67.svg';
-
-
-
-
+import { signInWithGoogle } from "../../../firebase/firebase";
 
 const PsychQuestionnaire = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -30,6 +29,8 @@ const PsychQuestionnaire = () => {
 
     const [patient, setPatient] = useState<boolean>(false);
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
+    const router = useRouter();
+
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
@@ -95,6 +96,20 @@ const PsychQuestionnaire = () => {
         setConcerns(event.target.value);
     }
 
+    const handleAboutYourself = (event: ChangeEvent<HTMLInputElement>) => {
+        setAboutYourself(event.target.value);
+    }
+
+    const handleOptionChange = (option: 'patient' | 'psychiatrist') => {
+        if (option === 'patient') {
+            setPatient(true);
+            setPsychiatrist(false);
+        } else {
+            setPatient(false);
+            setPsychiatrist(true);
+        }
+    }
+
     const goBack = () => {
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
@@ -102,6 +117,14 @@ const PsychQuestionnaire = () => {
     };
 
     const goNext = () => {
+        if (currentStep === 1 && (patient === false && psychiatrist === false)) {
+            alert("Please select either patient or psychiatrist");
+            return;
+        }
+        if (currentStep === 1 && patient) {
+            router.push('/patient_questionnaire');
+        }
+
         if (currentStep === 2 && (firstName.trim() === "" || lastName.trim() === "")) {
             alert("Please fill out both first and last name.");
             return;
@@ -125,11 +148,39 @@ const PsychQuestionnaire = () => {
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
         }
-    };
 
+        if (currentStep === 3) {
+            signInWithGoogle(
+                "psychiatrist",
+                firstName,
+                lastName,
+                position,
+                image,
+                [],
+                gender,
+                "", //location
+                languages,
+                [], //specialty
+                aboutYourself,
+                "", //website
+                "", //concerns
+                "", //prevExp
+                "", //prevExpTime
+                "", //ageRange
+                [], //prefLanguages
+                gender, //genderPref
+                [], //savedPsychiatrists
+            )
+            router.push('/psych_dashboard');
+        }
+    };
     return (
         <div className={'flex flex-col bg-off-white'}>
-            {currentStep === 1 && <SelectionQuestioinnaire patient={patient} psychiatrist={psychiatrist} />}
+            {currentStep === 1 && <SelectionQuestionnaire
+                patient={patient}
+                psychiatrist={psychiatrist}
+                onChange={handleOptionChange}
+            />}
             {currentStep === 2 &&
                 <NameGenderImageQuestionnaire
                     firstName={firstName}
@@ -150,6 +201,7 @@ const PsychQuestionnaire = () => {
                     setChecked={setChecked}
                     handleCheck={handleCheck}
                     handlePosition={handlePosition}
+                    handleAboutYourself={handleAboutYourself}
                 />}
             <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3`}>
                 <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>
