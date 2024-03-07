@@ -4,10 +4,9 @@ import { IAppointment, IAvailability, IPatient, IPsychiatrist, IUser} from '@/sc
 import { useAuth } from '../contexts/AuthContext';
 
 /**
- * Fetches professional data from the Firestore based on first and last name.
+ * Fetches professional data from the Firestore based on psych_uid.
  * 
- * @param firstName - The first name of the professional.
- * @param lastName - The last name of the professional.
+ * @param psych_uid - The uid of the professional.
  * @returns The professional data, or null if not found.
  */
 const fetchProfessionalData = async (psych_uid: string) => {

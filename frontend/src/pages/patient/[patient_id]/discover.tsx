@@ -4,10 +4,10 @@ import { IAvailability, IPsychiatrist } from '@/schema';
 import colors from "@/colors";
 import { collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { fetchAllProfessionals, fetchAvailability } from '../../../firebase/fetchData';
+import { fetchAllProfessionals, fetchAvailability } from '../../../../firebase/fetchData';
 import SearchBar from '@/components/SearchBar';
 import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 // options for fuzzy search. currently only searches by name and title
 const fuseOptions = {

@@ -116,7 +116,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
   function handleGoToProfProfile(psych_uid: string) {
     console.log(psych_uid)
     router.push({
-      pathname: `/${user?.uid}/prof_profile`,
+      pathname: `/${user?.userType}/${user?.uid}/prof_profile`,
       query: { psych_uid: psych_uid }
     })
   }

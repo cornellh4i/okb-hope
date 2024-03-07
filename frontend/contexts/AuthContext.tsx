@@ -1,13 +1,11 @@
-import { createContext, useState, ReactNode, useContext, useEffect, FC } from 'react';
+import { createContext, useState, ReactNode, useContext, useEffect } from 'react';
 import { auth, signInWithGoogle, logout, fetchRole } from "../firebase/firebase";
-import { onAuthStateChanged, User } from "firebase/auth";
-// import { auth } from "../firebase/firebase";
+import { onAuthStateChanged, User as FirebaseAuthUser } from "firebase/auth";
+import router from 'next/router';
 
-// type AuthUser = User | null;
-// type AuthData = { user?: AuthUser }
-
-// const AuthUserContext = createContext<AuthData | undefined>(undefined)
-
+interface User extends FirebaseAuthUser {
+  userType: string;
+}
 
 type AuthContextType = {
   user: User | null;
@@ -18,43 +16,63 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-
-// type FCProps = { children?: ReactNode }
-
-// export const AuthProvider: FC<FCProps> = ({ children }) => {
-//   const [user, setUser] = useState<AuthUser>(null);
-
-//   useEffect(() => (auth.onAuthStateChanged(
-//     setUser
-//   )), []);
-
-//   return (<AuthUserContext.Provider value={{ user }}>{children}</AuthUserContext.Provider>);
-// }
-
-export function AuthProvider({ children }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setCurrentUser] = useState<User | null>(null);
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setCurrentUser(user);
-      if (user) {
-        const userRole = await fetchRole(user.uid);
-        setRole(userRole);
-      } else {
-        setRole(null);
+    const fetchData = async () => {
+      try {
+        // Check if user is available and navigate to dashboard if so
+        if (user) {
+          if (user.userType == "psychiatrist")
+            router.push(`/${user.userType}/${user.uid}/psych_dashboard`);
+          else if (user.userType == "patient")
+            router.push(`/${user.userType}/${user.uid}/dashboard`);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
-    });
+    };
+
+    // Check if user is available before fetching data
+    if (user) {
+      fetchData();
+    }
+  }, [user, router]);
+
+  useEffect(() => {
+    const signInAndFetchRole = async () => {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          console.log(user.uid)
+          setRole(null); // Reset role state
+          const userRole = await fetchRole(user.uid);
+          console.log(userRole);
+          setCurrentUser({ ...(user as User), userType: userRole });
+          setRole(userRole); // Update role state after fetchRole
+        } else {
+          setRole(null);
+          setCurrentUser(null);
+        }
+      } catch (error) {
+        console.error('Error during sign-in:', error);
+        // Handle sign-in error
+      }
+    };
+
+    const unsubscribe = onAuthStateChanged(auth, signInAndFetchRole);
 
     return unsubscribe;
   }, []);
 
-  function login() {
-    return signInWithGoogle();
+  async function login() {
+    await signInWithGoogle();
   }
 
-  function logOut() {
-    return logout();
+  async function logOut() {
+    await logout();
   }
 
   const value: AuthContextType = {
@@ -67,12 +85,8 @@ export function AuthProvider({ children }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-
-
 export const useAuth = () => {
-  const context = useContext(AuthContext)
-  //   const context = useContext(AuthUserContext);
-  // if (!context) throw new Error("AuthUserContext has no value")
-  if (!context) throw new Error("AuthContext has no value")
-  return context
-}
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("AuthContext has no value");
+  return context;
+};

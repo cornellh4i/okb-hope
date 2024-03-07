@@ -5,11 +5,13 @@ import SelectionQuestionnaire from "./SelectionQuestionnaire";
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import Link from "next/link";
 import { useRouter } from 'next/router';
-import { Gender } from "@/schema";
+import { Gender, IPatient, IUser } from "@/schema";
 import ProgressBar0 from '../../assets/progressbar0.svg';
 import ProgressBar33 from '../../assets/progressbar33.svg';
 import ProgressBar67 from '../../assets/progressbar67.svg';
-import { signInWithGoogle } from "../../../firebase/firebase";
+import { db, signInWithGoogle } from "../../../firebase/firebase";
+import { useAuth } from "../../../contexts/AuthContext";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 const PsychQuestionnaire = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -19,7 +21,7 @@ const PsychQuestionnaire = () => {
     const [image, setImage] = useState<string>("");
     const [position, setPosition] = useState<string>("");
     const [checked, setChecked] = useState<{ [key: string]: boolean }>(
-        { 'english': false, 'twi': false, 'fante': false, 'ewe': false, 'ga': false, 'other': false });
+        { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
     const [languages, setLanguages] = useState<string[]>([]);
     const [aboutYourself, setAboutYourself] = useState<string>("");
 
@@ -30,6 +32,44 @@ const PsychQuestionnaire = () => {
     const [patient, setPatient] = useState<boolean>(false);
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
     const router = useRouter();
+    const { user } = useAuth();
+
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             // Check if user is available and navigate to dashboard if so
+    //             if (user) {
+    //                 router.push(`/${user.userType}/${user.uid}/psych_dashboard`);
+    //                 // const q = query(
+    //                 //     collection(db, "users"),
+    //                 //     where("uid", "==", user?.uid)
+    //                 // );
+    //                 // const response = await getDocs(q);
+    //                 // if (!response.empty) {
+    //                 //     const doc = response.docs[0];
+    //                 //     const docId = doc.id;
+    //                 //     const docData = doc.data();
+    //                 //     const userData = docData as IUser;
+    //                 //     console.log("userData.userType:", userData.userType);
+    //                 //     console.log("userData.uid:", userData.uid);
+    //                 //     router.push(`/${userData.userType}/${userData.uid}/psych_dashboard`);
+    //                 // } else {
+    //                 //     console.error("No document found");
+    //                 // }
+    //             }
+    //         } catch (error) {
+    //             console.error("Error fetching user data:", error);
+    //         }
+    //     };
+
+    //     // Check if user is available before fetching data
+    //     if (user) {
+    //         fetchData();
+    //     }
+    // }, [user]);
+
+
 
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -48,6 +88,9 @@ const PsychQuestionnaire = () => {
                 break;
             case 'female':
                 setGender(Gender.Female);
+                break;
+            case 'other':
+                setGender(Gender.Other);
                 break;
             default:
                 setGender(undefined);
@@ -116,7 +159,7 @@ const PsychQuestionnaire = () => {
         }
     };
 
-    const goNext = () => {
+    const goNext = async () => {
         if (currentStep === 1 && (patient === false && psychiatrist === false)) {
             alert("Please select either patient or psychiatrist");
             return;
@@ -150,30 +193,38 @@ const PsychQuestionnaire = () => {
         }
 
         if (currentStep === 3) {
-            signInWithGoogle(
-                "psychiatrist",
-                firstName,
-                lastName,
-                position,
-                image,
-                [],
-                gender,
-                "", //location
-                languages,
-                [], //specialty
-                aboutYourself,
-                "", //website
-                "", //concerns
-                "", //prevExp
-                "", //prevExpTime
-                "", //ageRange
-                [], //prefLanguages
-                gender, //genderPref
-                [], //savedPsychiatrists
-            )
-            router.push('/psych_dashboard');
+            console.log("adding to database");
+            try {
+                await signInWithGoogle(
+                    "psychiatrist",
+                    firstName,
+                    lastName,
+                    position,
+                    image,
+                    [],
+                    gender,
+                    "",
+                    languages,
+                    [],
+                    aboutYourself,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    [],
+                    gender,
+                    [],
+                );
+                router.push(`/${user?.userType}/${user?.uid}/psych_dashboard`);
+                // setDocumentAdded(true);
+            } catch (error) {
+                console.error('Error signing in:', error);
+                // Handle error if sign-in fails
+            }
         }
     };
+
     return (
         <div className={'flex flex-col bg-off-white'}>
             {currentStep === 1 && <SelectionQuestionnaire

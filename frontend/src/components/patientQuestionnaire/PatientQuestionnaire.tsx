@@ -11,6 +11,7 @@ import { signInWithGoogle } from "../../../firebase/firebase";
 import ProgressBar25 from '../../assets/progressbar25.svg';
 import ProgressBar50 from '../../assets/progressbar50.svg';
 import ProgressBar75 from '../../assets/progressbar75.svg';
+import { useAuth } from "../../../contexts/AuthContext";
 
 const PatientQuestionnaire = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -28,6 +29,7 @@ const PatientQuestionnaire = () => {
     const [concerns, setConcerns] = useState<string>("");
 
     const router = useRouter();
+    const { user } = useAuth();
 
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +94,7 @@ const PatientQuestionnaire = () => {
         }
     };
 
-    const goNext = () => {
+    const goNext = async () => {
         if (currentStep === 1 && (firstName.trim() === "" || lastName.trim() === "")) {
             alert("Please fill out both first and last name.");
             return;
@@ -118,30 +120,38 @@ const PatientQuestionnaire = () => {
         }
 
         if (currentStep === 3) {
-            signInWithGoogle(
-                "patient",
-                firstName,
-                lastName,
-                "", //position
-                image,
-                [], //availability
-                gender,
-                "", //location
-                languages,
-                [], //specialty
-                "", //description
-                "", //website
-                concerns,
-                prevExp,
-                prevExpTime,
-                "", //ageRange
-                [], //prefLanguages
-                gender, //genderPref
-                [], //savedPsychiatrists
-            );
-            router.push('/dashboard');
+            console.log("adding to database");
+            try {
+                await signInWithGoogle(
+                    "patient",
+                    firstName,
+                    lastName,
+                    "", //position
+                    image,
+                    [], //availability
+                    gender,
+                    "", //location
+                    languages,
+                    [], //specialty
+                    "", //description
+                    "", //website
+                    concerns,
+                    prevExp,
+                    prevExpTime,
+                    "", //ageRange
+                    [], //prefLanguages
+                    gender, //genderPref
+                    [], //savedPsychiatrists
+                );
+                router.push(`/${user?.userType}/${user?.uid}/psych_dashboard`);
+                // setDocumentAdded(true);
+            } catch (error) {
+                console.error('Error signing in:', error);
+                // Handle error if sign-in fails
+            }
         }
     };
+
 
     return (
         <div className={'flex flex-col bg-off-white'}>
