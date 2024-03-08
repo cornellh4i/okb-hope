@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Bookmark from '@/assets/bookmark.svg'
 import SavedBookmark from '@/assets/saved_bookmark.svg'
 import Message from '@/assets/message.svg'
+import ViewReport from '@/assets/view_reports.svg'
 import Link from 'next/link';
 import { useAuth } from '../../../contexts/AuthContext';
 import { db, fetchUser, signInWithGoogle } from '../../../firebase/firebase';
@@ -14,9 +15,10 @@ import { doc, updateDoc } from 'firebase/firestore';
 
 interface PsychiatristListProps {
   results: IPsychiatrist[];
+  buttonType: string; 
 }
 
-const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
+const PsychiatristList: React.FC<PsychiatristListProps> = ({results, buttonType = "discover"}) => {
   const { user } = useAuth();
   const uid = user?.uid;
   const [docId, setDocId] = useState<string | undefined>(undefined);
@@ -128,6 +130,31 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
     onClose();
   };
 
+  const renderButtons = (psychiatrist: IPsychiatrist) => {
+    if (buttonType === "report") {
+      return (
+        <button  className={` rounded-s-2xl rounded-[12px] transition cursor-pointer text-okb-white flex flex-row gap-2`}>
+        <ViewReport className="object-cover" />
+      </button>
+      );
+    } else {
+      return (
+        <>
+          <button className="btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-white text-[16px] flex" onClick={(event) => handleSave(event, psychiatrist)}>
+            {savedPsychiatrists.includes(psychiatrist.uid) ? <SavedBookmark /> : <Bookmark />}
+            <div>Save</div>
+          </button>
+          <Link href="/messages">
+            <div className="btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-white text-[16px] flex" onClick={handleSendMessage}>
+              <Message />
+              <div>Message</div>
+            </div>
+          </Link>
+        </>
+      );
+    }
+  };
+
   return (
     <div className={`psychiatrist-list flex flex-col items-start gap-6`}>
       {showPopup && <LoginPopup onClose={() => setShowPopup(false)} signInWithGoogleAndRedirect={signInWithGoogleAndRedirect} />}
@@ -148,19 +175,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
                   <p className={`text-[${okb_colors.black}] text-[16px] font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
                 </div>
                 <div className={`flex justify-end items-center gap-4`}>
-                  <button className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-[${okb_colors.white}] text-[16px] flex`} onClick={(event) => handleSave(event, psychiatrist)}>
-                    {savedPsychiatrists.includes(psychiatrist.uid) ? <SavedBookmark /> : <Bookmark />}
-                    <div>Save</div>
-                  </button>
-                  <Link href="/messages">
-                    <div
-                      className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[${okb_colors.okb_blue}] text-[${okb_colors.white}] text-[16px] flex`}
-                      onClick={handleSendMessage}
-                    >
-                      <Message />
-                      <div>Message</div>
-                    </div>
-                  </Link>
+                  {renderButtons(psychiatrist)}
                 </div>
               </div>
               {/* Additional psychiatrist info */}

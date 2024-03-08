@@ -5,6 +5,8 @@ import Logo from '@/assets/logo.svg'
 import colors from "@/colors";
 import { useRouter } from 'next/router';
 
+
+
 const Navbar = () => {
   const { user } = useAuth();
   const router = useRouter();
@@ -55,6 +57,9 @@ const Navbar = () => {
               {/* A link to the user's edit profile page */}
               <Link href={`/${user.uid}/edit_profile`}>
                 <li>Edit Profile</li>
+              </Link>
+              <Link href={`/${user?.uid}/report_history`} className="w-18">
+                <li>Report History</li>
               </Link>
               <button onClick={logout}>
                 <li>Log Out</li>

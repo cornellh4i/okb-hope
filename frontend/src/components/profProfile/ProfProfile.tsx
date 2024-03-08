@@ -9,11 +9,14 @@ import Bookmark from '../../assets/bookmark2.svg';
 import SavedBookmark from '../../assets/saved_bookmark2.svg';
 import Chat from '../../assets/message2.svg';
 import Photo from '../../assets/dummy_photo.jpg';
+import ReportIcon from '../../assets/report.svg';
+import CheckCircle from '../../assets/check_circle.svg'
 import { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db, signInWithGoogle } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
+
 
 
 interface ProfProfileProps {
@@ -45,6 +48,74 @@ const DummyPsychiatrist = {
     patients and has a specialization in the treatment of anxiety and mood disorders.`
 }
 
+const overlayStyle: React.CSSProperties = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000,
+  };
+  
+  const popupStyle: React.CSSProperties = {
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '10px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    display: 'flex',
+    flexDirection: 'column',
+    width: '30%', // adjust the width as needed
+    maxWidth: '500px', // maximum width of the popup
+    zIndex: 1001,
+  };
+  
+  const textareaStyle: React.CSSProperties = {
+    width: '100%',
+    height: '150px', // Increased height for more text
+    margin: '10px 0 20px 0', // Added some margin top and bottom
+    borderColor: '#ddd', // Light grey border color
+    padding: '10px', // Padding inside the textarea
+  };
+  
+  const buttonsContainerStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'flex-end', // Aligns the buttons to the right
+  };
+  
+  const buttonStyle: React.CSSProperties = {
+    border: '1px solid #ccc',
+    padding: '10px 20px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    margin: '0 5px', // Adds margin between buttons
+    fontWeight: 'normal', // Resets button text to normal weight
+  };
+  
+  const submitButtonStyle: React.CSSProperties = {
+    ...buttonStyle, // Spread the existing button styles
+    backgroundColor: '#007bff', // Use a blue background
+    color: '#fff', // White text color
+    fontWeight: 'bold', // Make text bold
+    marginLeft: '10px', // Add some left margin
+  };
+  const continueButtonStyle: React.CSSProperties = {
+    // Add your styling here similar to the submit button
+    backgroundColor: '#007bff', // or any other color you prefer
+    color: '#fff',
+    fontWeight: 'bold',
+    padding: '10px 20px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    border: 'none',
+  };
+  
+  
+  
+
 // Originally, { firstName, lastName }: ProfProfileProps was passed in below, 
 // put it is not necessary if we are using useRouter, because we can access 
 // the firstName and lastName from the router's query
@@ -53,6 +124,10 @@ const ProfProfile = () => {
     const { user } = useAuth(); // Get the user information from the context
     const [docId, setDocId] = useState<string | undefined>(undefined);
     const [showPopup, setShowPopup] = useState(false);
+    const [showReportPopup, setShowReportPopup] = useState(false);
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
+
 
     // Set the initial state of professional to null instead of DummyPsychiatrist 
     // to avoid the initial rendering of the component with DummyPsychiatrist 
@@ -139,6 +214,30 @@ const ProfProfile = () => {
         }
     };
 
+    // Trigger report popup to show up
+    const handleReport = (event) => {
+        event.preventDefault();
+        setShowReportPopup(true);
+    };
+    
+    // Trigger report popup to close
+    const handleCloseReport = () => {
+        setShowReportPopup(false);
+    };
+
+    const handleContinue = () => {
+        setShowSuccessPopup(false);
+        // Add additional logic for what happens when the user clicks continue
+      };
+      const handleSubmitReport = () => {
+        setShowSuccessPopup(true);
+        setShowReportPopup(false);
+        // Add additional logic for what happens when the user clicks continue
+      };
+      
+      
+    
+
     const handleSendMessage = (event: React.MouseEvent) => {
         if (!user) {
             event.preventDefault();
@@ -166,6 +265,42 @@ const ProfProfile = () => {
     return (
         <div className={`w-2/3 h-full flex flex-wrap flex-col justify-center content-center gap-5`}>
             {showPopup && <LoginPopup onClose={() => setShowPopup(false)} signInWithGoogleAndRedirect={signInWithGoogleAndRedirect} />}
+
+
+            {showReportPopup && (
+            <div style={overlayStyle}>
+                <div style={popupStyle}>
+                <h3 style={{ fontWeight: 'bold', marginBottom: '15px' }}>Report Dr. Gloria Shi?</h3>
+                <p style={{ marginBottom: '15px' }}>
+                    We are committed to ensuring your right to privacy and safety. If you feel
+                    like any of these rights have been violated by a psychiatrist that you are
+                    seeing, please fill out the report form below.
+                </p>
+                <textarea style={textareaStyle}></textarea>
+                <div style={buttonsContainerStyle}>
+                    <button onClick={handleCloseReport} style={buttonStyle}>Cancel</button>
+                    <button onClick = {handleSubmitReport} style={submitButtonStyle}>Submit</button>
+                </div>
+                </div>
+            </div>
+            )}
+            {showSuccessPopup && (
+            <div style={overlayStyle}>
+                <div style={popupStyle}>
+                {/* Assuming you have the SVG as a React component */}
+                <CheckCircle />
+                <h3 style={{ fontWeight: 'bold', marginBottom: '15px' }}>You have successfully reported Dr. Gloria Shi.</h3>
+                <p style={{ marginBottom: '15px' }}>
+                    Dr. Gloria Shi's profile will be removed from your view and you will now be
+                    redirected back to the list of available psychiatrists. If you'd like to access
+                    your reported psychiatrists, check out the report section in your profile.
+                </p>
+                <button style={continueButtonStyle} onClick={handleContinue}>Continue</button>
+                </div>
+            </div>
+            )}
+
+
             <div className={`flex flex-row`}>
                 {/* Back arrow to return to go back to Discover Professionals */}
                 <figure className={`cursor-pointer`} onClick={handleGoToDashboard}><Arrow /></figure>
@@ -178,6 +313,12 @@ const ProfProfile = () => {
                     <div className={`flex flex-row gap-4`}>
                         <div className={`grow text-3xl text-bold`}>
                             {professional.firstName + " " + professional.lastName}
+                        </div>
+                        {/* Report button, action is currently undefined */}
+                        <div className={`shrink`} >
+                            <button onClick={handleReport} className={` rounded-s-2xl rounded-[12px] transition cursor-pointer text-okb-white flex flex-row gap-2`}>
+                                <ReportIcon className="object-cover" />
+                            </button>
                         </div>
                         {/* Save button, action is currently undefined */}
                         <div className={`shrink`}>
@@ -247,5 +388,7 @@ const ProfProfile = () => {
         </div>
     );
 };
+
+
 
 export default ProfProfile;
