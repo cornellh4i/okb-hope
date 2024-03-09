@@ -55,24 +55,24 @@ const fetchAllUsers = async () => {
 }
 
 
-const updateUser = async (userId: string, savedPsychiatrists: string[]) => {
-  try {
-    console.log("hi")
-    const userDocRef = doc(db, 'User', userId);
-    console.log(userDocRef)
+// const updateUser = async (userId: string, savedPsychiatrists: string[]) => {
+//   try {
+//     console.log("hi")
+//     const userDocRef = doc(db, 'User', userId);
+//     console.log(userDocRef)
 
-    // Update only the savedPsychiatrists field
-    const updateUserPayload: Partial<IUser> = {
-      savedPsychiatrists: savedPsychiatrists,
-    };
+//     // Update only the savedPsychiatrists field
+//     const updateUserPayload: Partial<IUser> = {
+//       savedPsychiatrists: savedPsychiatrists,
+//     };
 
-    await updateDoc(userDocRef, updateUserPayload);
-    console.log(`User with ID ${userId} updated successfully`);
-  } catch (error) {
-    console.error(`Error updating user with ID ${userId}:`, error);
-    throw error;
-  }
-};
+//     await updateDoc(userDocRef, updateUserPayload);
+//     console.log(`User with ID ${userId} updated successfully`);
+//   } catch (error) {
+//     console.error(`Error updating user with ID ${userId}:`, error);
+//     throw error;
+//   }
+// };
 
 const fetchPatientDetails = async (uid: string) => {
   try {
@@ -175,6 +175,6 @@ const fetchAvailability = async (availId: string) => {
     throw error;
   }
 }
-export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId, fetchApptDetails, fetchAvailability, fetchAllUsers, updateUser };
+export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId, fetchApptDetails, fetchAvailability, fetchAllUsers };
 
 

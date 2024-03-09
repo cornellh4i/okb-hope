@@ -4,12 +4,12 @@ import SavedBookmark from '@/assets/saved_bookmark.svg'
 import Message from '@/assets/message.svg'
 import Link from 'next/link';
 import { useAuth } from '../../../contexts/AuthContext';
-import { db, fetchUser, logInWithGoogle } from '../../../firebase/firebase';
+import { db, logInWithGoogle } from '../../../firebase/firebase';
 import { useRouter } from 'next/router';
 import { LoginPopup } from '../LoginPopup';
 import { IPsychiatrist, IUser } from '@/schema';
 import okb_colors from "@/colors";
-import { fetchAllUsers, updateUser, fetchPatientDetails, fetchDocumentId } from '../../../firebase/fetchData';
+import { fetchAllUsers, fetchPatientDetails, fetchDocumentId } from '../../../firebase/fetchData';
 import { doc, updateDoc } from 'firebase/firestore';
 
 interface PsychiatristListProps {
