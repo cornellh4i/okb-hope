@@ -135,7 +135,7 @@ const signUpWithGoogle = async (
       if (err instanceof Error) {
         reject(err); // Reject the promise if an error occurs during sign-in
         alert("this email is already in use by an existing account");
-        logout()
+        logout();
         return;
       }
     }

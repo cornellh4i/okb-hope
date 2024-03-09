@@ -1,5 +1,5 @@
 import { createContext, useState, ReactNode, useContext, useEffect } from 'react';
-import { auth, signInWithGoogle, logout, fetchRole } from "../firebase/firebase";
+import { auth, logout, fetchRole, logInWithGoogle } from "../firebase/firebase";
 import { onAuthStateChanged, User as FirebaseAuthUser } from "firebase/auth";
 import router from 'next/router';
 
@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function login() {
-    await signInWithGoogle();
+    await logInWithGoogle();
   }
 
   async function logOut() {
