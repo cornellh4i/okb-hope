@@ -14,6 +14,8 @@ import fetchAppointments, { AppointmentType } from '../../../firebase/fetchAppoi
 import { IAppointment } from '@/schema';
 import { createAppointments } from '../../../firebase/crudTesting';
 import { useMonthCalendarDefaultizedProps } from '@mui/x-date-pickers/MonthCalendar/MonthCalendar';
+import { useRouter } from 'next/router';
+import { useAuth } from '../../../contexts/AuthContext';
 
 
 const PsychiatristDashboard = () => {
@@ -29,6 +31,16 @@ const PsychiatristDashboard = () => {
     const dateMDY = `${year}-${monthNum}-${dayOfMonth}`;
     const startOfWeek = currentDate.startOf('week');
     const endOfWeek = currentDate.endOf('week');
+    const { user } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        // Check if user is available and navigate to dashboard if so
+        if (user) {
+            console.log(user)
+            router.push(`/${user.userType}/${user.uid}/psych_dashboard`);
+        }
+    }, [user]);
 
     // Handler for the next week button click
     const goToNextWeek = () => {

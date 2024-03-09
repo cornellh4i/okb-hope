@@ -4,9 +4,14 @@ import HistoryQuestionnaire from "./HistoryQuestionnaire";
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Gender } from "@/schema";
+import { useRouter } from 'next/router';
+
+import { signInWithGoogle, logout } from "../../../firebase/firebase";
+
 import ProgressBar25 from '../../assets/progressbar25.svg';
 import ProgressBar50 from '../../assets/progressbar50.svg';
 import ProgressBar75 from '../../assets/progressbar75.svg';
+import { useAuth } from "../../../contexts/AuthContext";
 
 const PatientQuestionnaire = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -22,6 +27,10 @@ const PatientQuestionnaire = () => {
     const [prevExp, setPrevExp] = useState<string>("");
     const [prevExpTime, setPrevExpTime] = useState<string>("");
     const [concerns, setConcerns] = useState<string>("");
+
+    const router = useRouter();
+    const { user } = useAuth();
+
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
@@ -80,10 +89,12 @@ const PatientQuestionnaire = () => {
     const goBack = () => {
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
+        } else {
+            router.push('/psych_questionnaire');
         }
     };
 
-    const goNext = () => {
+    const goNext = async () => {
         if (currentStep === 1 && (firstName.trim() === "" || lastName.trim() === "")) {
             alert("Please fill out both first and last name.");
             return;
@@ -107,7 +118,41 @@ const PatientQuestionnaire = () => {
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
         }
+
+        if (currentStep === 3) {
+            console.log("adding to database");
+            try {
+                await signInWithGoogle(
+                    "patient",
+                    firstName,
+                    lastName,
+                    "", //position
+                    image,
+                    [], //availability
+                    gender,
+                    "", //location
+                    languages,
+                    [], //specialty
+                    "", //description
+                    "", //website
+                    concerns,
+                    prevExp,
+                    prevExpTime,
+                    "", //ageRange
+                    [], //prefLanguages
+                    gender, //genderPref
+                    [], //savedPsychiatrists
+                );
+
+                router.push(`/${user?.userType}/${user?.uid}/psych_dashboard`);
+                // setDocumentAdded(true);
+            } catch (error) {
+                console.error('Error signing in:', error);
+                logout()
+            }
+        }
     };
+
 
     return (
         <div className={'flex flex-col bg-off-white'}>

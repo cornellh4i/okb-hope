@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import ChatApp from '@/components/chatapp/ChatApp';
 import { LoginPopup } from '@/components/LoginPopup';
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../../contexts/AuthContext';
 import { useRouter } from 'next/router';
 
 const MessagesPage = () => {

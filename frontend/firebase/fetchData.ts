@@ -1,13 +1,12 @@
 import { db } from './firebase';
 import { getDocs, query, where, collection, onSnapshot, doc, updateDoc } from "firebase/firestore";
-import { IAppointment, IAvailability, IPatient, IPsychiatrist, IUser} from '@/schema';
+import { IAppointment, IAvailability, IPatient, IPsychiatrist, IUser } from '@/schema';
 import { useAuth } from '../contexts/AuthContext';
 
 /**
- * Fetches professional data from the Firestore based on first and last name.
+ * Fetches professional data from the Firestore based on psych_uid.
  * 
- * @param firstName - The first name of the professional.
- * @param lastName - The last name of the professional.
+ * @param psych_uid - The uid of the professional.
  * @returns The professional data, or null if not found.
  */
 const fetchProfessionalData = async (psych_uid: string) => {
@@ -98,11 +97,11 @@ const fetchPatientDetails = async (uid: string) => {
 }
 
 const fetchApptDetails = async (uid: string) => {
-  try{
+  try {
     const apptRef = collection(db, "appointments");
-    const q = query(apptRef, where("patientId", "==", uid)); 
+    const q = query(apptRef, where("patientId", "==", uid));
     const response = await getDocs(q);
-    if(!response.empty){
+    if (!response.empty) {
       const docData: IAppointment[] = response.docs.map((doc) => doc.data() as IAppointment);
       return docData
     } else {
@@ -139,7 +138,7 @@ function fetchUserChats(setMessages) {
   return unsubscribe;
 }
 
-const fetchDocumentId = async (type: string, uid: string)  => {
+const fetchDocumentId = async (type: string, uid: string) => {
   try {
     const q = query(
       collection(db, type),

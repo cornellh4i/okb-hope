@@ -11,8 +11,10 @@ import okb_colors from "@/colors";
 import { IUser } from '@/schema';
 import router from 'next/router';
 import { fetchDocumentId, fetchPatientDetails } from '../../firebase/fetchData';
+import { useAuth } from '../../contexts/AuthContext';
 
 const EditPatientProfile = () => {
+  const { user } = useAuth();
   const uid = auth.currentUser?.uid;
   const [docId, setDocId] = useState<string | undefined>(undefined);
   const [firstName, setFirstName] = useState('');
@@ -113,11 +115,11 @@ const EditPatientProfile = () => {
       prefLanguages: prefLanguages,
       genderPref: genderPref
     })
-    router.push(`/${uid}/dashboard`);
+    router.push(`/${user?.userType}/${uid}/dashboard`);
   };
 
   const handleCancel = () => {
-    router.push(`/${uid}/dashboard`);
+    router.push(`/${user?.userType}/${uid}/dashboard`);
   }
 
   return (

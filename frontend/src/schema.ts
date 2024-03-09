@@ -2,7 +2,8 @@ import { Timestamp } from "firebase/firestore";
 
 export enum Gender {
     Male = 0,
-    Female = 1
+    Female = 1,
+    Other = 2
 }
 
 export interface IPsychiatrist {
@@ -53,9 +54,9 @@ export interface IUser {
     email: string;
     firstName: string;
     lastName: string;
-    savedPsychiatrists: string[];
     age: number;
     language: string[];
     genderPref: Gender;
+    userType: string;
 }
 

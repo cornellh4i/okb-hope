@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import Dashboard from '@/components/dashboard/Dashboard';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import PsychiatristDashboard from '@/components/psychDashboard/PsychiatristDashboard';
 
 const App = () => {
   const { user } = useAuth();
@@ -15,7 +16,23 @@ const App = () => {
     if (user) {
       // Construct the URL to the user's dashboard based on their unique user ID (UID).
       // This URL will navigate the user to their personalized dashboard.
-      router.push(`/${user.uid}/dashboard`);
+
+      console.log(user)
+
+      // Check if userType exists in the user object
+      if (user.userType) {
+        // Construct the URL to the user's dashboard based on their unique user ID (UID).
+        // This URL will navigate the user to their personalized dashboard.
+        if (user.userType == "patient"){
+          router.push(`/${user.userType}/${user.uid}/dashboard`);
+        } else if (user.userType == "psychiatrist"){
+          router.push(`/${user.userType}/${user.uid}/psych_dashboard`);
+        }
+      } else {
+        console.log('User type not found');
+      }
+    } else {
+      console.log('No user logged in');
     }
   }, [user, router]);
 
@@ -27,7 +44,8 @@ const App = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/logo.svg" type="image/svg+xml" />
       </Head>
-      {user && <Dashboard />}
+      {user && user.userType == "patient" && <Dashboard />}
+      {user && user.userType == "psychiatrist" && <PsychiatristDashboard />}
     </>
   );
 };
