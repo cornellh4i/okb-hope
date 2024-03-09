@@ -6,7 +6,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Gender } from "@/schema";
 import { useRouter } from 'next/router';
 
-import { signInWithGoogle } from "../../../firebase/firebase";
+import { signInWithGoogle, logout } from "../../../firebase/firebase";
 
 import ProgressBar25 from '../../assets/progressbar25.svg';
 import ProgressBar50 from '../../assets/progressbar50.svg';
@@ -143,10 +143,12 @@ const PatientQuestionnaire = () => {
                     gender, //genderPref
                     [], //savedPsychiatrists
                 );
+
                 router.push(`/${user?.userType}/${user?.uid}/psych_dashboard`);
                 // setDocumentAdded(true);
             } catch (error) {
                 console.error('Error signing in:', error);
+                logout()
             }
         }
     };

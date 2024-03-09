@@ -3,6 +3,8 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/
 import { addDoc, collection, getDocs, getFirestore, query, where, doc, getDoc, setDoc } from "firebase/firestore";
 import { FacebookAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { Gender, IUser } from "@/schema";
+import { useRouter } from 'next/router';
+
 
 
 const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_SERVICE_ACCOUNT!);
@@ -19,6 +21,10 @@ const providerG = new GoogleAuthProvider();
 
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth();
+
+const logout = () => {
+  signOut(auth);
+}
 
 type GenderOrUndefined = Gender | undefined;
 
@@ -105,6 +111,7 @@ const signInWithGoogle = async (
       if (err instanceof Error) {
         reject(err); // Reject the promise if an error occurs during sign-in
         alert("this email is already in use by an existing account");
+        logout()
         return;
       }
     }
@@ -200,9 +207,6 @@ const updateUser = async (userId: string, data: any) => {
   await setDoc(userRef, data, { merge: true });
 };
 
-const logout = () => {
-  signOut(auth);
-}
 
 export { auth, db, app, signInWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses };
 
