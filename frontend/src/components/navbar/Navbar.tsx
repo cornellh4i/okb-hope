@@ -1,4 +1,4 @@
-import { logout, signInWithGoogle } from "../../../firebase/firebase";
+import { logout, signInWithGoogle, logInWithGoogle } from "../../../firebase/firebase";
 import { useAuth } from "../../../contexts/AuthContext";
 import Link from "next/link";
 import Logo from '@/assets/logo.svg'
@@ -84,7 +84,7 @@ const Navbar = () => {
             <div className="flex justify-center items-center">
               <button
                 className="w-[104px] h-8 py-1.5 bg-sky-700 rounded-[10px] border-2 border-sky-700 justify-center items-center flex text-white"
-                onClick={() => signInWithGoogle()}
+                onClick={() => logInWithGoogle()}
               >
                 <div className="text-[18px] font-[600]">Log In</div>
               </button>
