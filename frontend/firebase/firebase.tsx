@@ -98,19 +98,18 @@ const signInWithGoogle = async (
         console.log("Updated database")
       }
       else {
-        console.log("already exists")
+        throw new Error("user already exists");
       }
       resolve(); // Resolve the promise once sign-in is complete
     } catch (err) {
       if (err instanceof Error) {
         reject(err); // Reject the promise if an error occurs during sign-in
+        alert("this email is already in use by an existing account");
+        return;
       }
     }
   });
 };
-
-
-
 
 // const user = res.user;
 // const q = query(collection(db, "users"), where("uid", "==", user.uid));
@@ -201,10 +200,9 @@ const updateUser = async (userId: string, data: any) => {
   await setDoc(userRef, data, { merge: true });
 };
 
-const logout = () => { 
+const logout = () => {
   signOut(auth);
 }
-
 
 export { auth, db, app, signInWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses };
 

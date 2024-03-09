@@ -25,10 +25,6 @@ const PsychQuestionnaire = () => {
     const [languages, setLanguages] = useState<string[]>([]);
     const [aboutYourself, setAboutYourself] = useState<string>("");
 
-    const [prevExp, setPrevExp] = useState<string>("");
-    const [prevExpTime, setPrevExpTime] = useState<string>("");
-    const [concerns, setConcerns] = useState<string>("");
-
     const [patient, setPatient] = useState<boolean>(false);
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
     const router = useRouter();
@@ -97,6 +93,11 @@ const PsychQuestionnaire = () => {
         }
     };
 
+    const handleAboutYourselfChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setAboutYourself(event.target.value);
+    }
+
+
     const handlePosition = (event: ChangeEvent<HTMLInputElement>) => {
         const selectedPosition = (event.target.value);
         switch (selectedPosition) {
@@ -128,20 +129,6 @@ const PsychQuestionnaire = () => {
         console.log(languages);
         console.log(newChecked);
     };
-
-    const handlePrevExpChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setPrevExp(event.target.value);
-    }
-    const handlePrevExpTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setPrevExpTime(event.target.value);
-    }
-    const handleConcernsChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setConcerns(event.target.value);
-    }
-
-    const handleAboutYourself = (event: ChangeEvent<HTMLInputElement>) => {
-        setAboutYourself(event.target.value);
-    }
 
     const handleOptionChange = (option: 'patient' | 'psychiatrist') => {
         if (option === 'patient') {
@@ -220,7 +207,6 @@ const PsychQuestionnaire = () => {
                 // setDocumentAdded(true);
             } catch (error) {
                 console.error('Error signing in:', error);
-                // Handle error if sign-in fails
             }
         }
     };
@@ -252,7 +238,8 @@ const PsychQuestionnaire = () => {
                     setChecked={setChecked}
                     handleCheck={handleCheck}
                     handlePosition={handlePosition}
-                    handleAboutYourself={handleAboutYourself}
+                    handleAboutYourself={handleAboutYourselfChange}
+
                 />}
             <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3`}>
                 <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>

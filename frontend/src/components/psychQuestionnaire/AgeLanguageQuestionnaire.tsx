@@ -9,22 +9,27 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
+import { Gender } from "@/schema";
+
 
 interface QuestionnaireProps {
     setPosition: string;
     languages: string[];
     aboutYourself: string;
+    gender: Gender | undefined;
     setLanguages: React.Dispatch<React.SetStateAction<string[]>>;
     checked: { [key: string]: boolean };
     setChecked: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
     handleAge: (event: ChangeEvent<HTMLInputElement>) => void;
     handleCheck: (event: ChangeEvent<HTMLInputElement>) => void;
     handleAboutYourself: (event: ChangeEvent<HTMLInputElement>) => void;
+    handleGender: (event: ChangeEvent<HTMLInputElement>) => void;
+
 
 }
 
 //2nd page of questionnaire
-const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, setChecked, handleAge, handleCheck, handleAboutYourself }: QuestionnaireProps) => {
+const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, gender, setLanguages, checked, setChecked, handleGender, handleAge, handleCheck, handleAboutYourself }: QuestionnaireProps) => {
 
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 mb-5`}>
@@ -51,14 +56,14 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
                     } />
                 </RadioGroup>
             </FormControl>
+
             <div>
                 <span className={`text-lg font-semibold font-montserrat`}>Tell us and your patients about yourself.</span>
-                <input
-                    type="text"
+                <input type="text"
                     value={aboutYourself}
                     onChange={handleAboutYourself}
                     placeholder="Type here"
-                    className={`input input-bordered w-full mr-3 border-2 rounded-2xl h-500`}
+                    className={`input input-bordered w-full mr-3 border-2 rounded-2xl`}
                     style={{
                         borderColor: okb_colors.light_blue,
                         height: '560px'

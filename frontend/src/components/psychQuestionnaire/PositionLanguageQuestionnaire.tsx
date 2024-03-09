@@ -14,7 +14,7 @@ interface QuestionnaireProps {
     setPosition: string;
     languages: string[];
     aboutYourself: string;
-    handleAboutYourself: (event: ChangeEvent<HTMLInputElement>) => void;
+    handleAboutYourself: (event: ChangeEvent<HTMLTextAreaElement>) => void
     setLanguages: React.Dispatch<React.SetStateAction<string[]>>;
     checked: { [key: string]: boolean };
     setChecked: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
@@ -22,7 +22,6 @@ interface QuestionnaireProps {
     handlePosition: (event: ChangeEvent<HTMLInputElement>) => void;
 
 }
-
 //2nd page of questionnaire
 const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, handleAboutYourself, setChecked, handleCheck, handlePosition }: QuestionnaireProps) => {
 
@@ -59,7 +58,7 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
                     className={`input input-bordered resize-none w-full mr-3 border-2 rounded-2xl`}
                     style={{
                         borderColor: okb_colors.light_blue,
-                        height: 190
+                        height: 150,  // Set the desired height for your textarea
                     }}
                 />
             </div>

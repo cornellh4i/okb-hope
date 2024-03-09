@@ -147,7 +147,6 @@ const PatientQuestionnaire = () => {
                 // setDocumentAdded(true);
             } catch (error) {
                 console.error('Error signing in:', error);
-                // Handle error if sign-in fails
             }
         }
     };
