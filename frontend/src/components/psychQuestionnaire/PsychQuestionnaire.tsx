@@ -9,7 +9,7 @@ import { Gender, IPatient, IUser } from "@/schema";
 import ProgressBar0 from '../../assets/progressbar0.svg';
 import ProgressBar33 from '../../assets/progressbar33.svg';
 import ProgressBar67 from '../../assets/progressbar67.svg';
-import { db, signInWithGoogle, logout } from "../../../firebase/firebase";
+import { db, signUpWithGoogle, logout } from "../../../firebase/firebase";
 import { useAuth } from "../../../contexts/AuthContext";
 import { collection, getDocs, query, where } from "firebase/firestore";
 
@@ -182,7 +182,7 @@ const PsychQuestionnaire = () => {
         if (currentStep === 3) {
             console.log("adding to database");
             try {
-                await signInWithGoogle(
+                await signUpWithGoogle(
                     "psychiatrist",
                     firstName,
                     lastName,

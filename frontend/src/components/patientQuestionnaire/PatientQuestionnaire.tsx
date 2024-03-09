@@ -6,7 +6,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Gender } from "@/schema";
 import { useRouter } from 'next/router';
 
-import { signInWithGoogle, logout } from "../../../firebase/firebase";
+import { signUpWithGoogle, logout } from "../../../firebase/firebase";
 
 import ProgressBar25 from '../../assets/progressbar25.svg';
 import ProgressBar50 from '../../assets/progressbar50.svg';
@@ -90,7 +90,7 @@ const PatientQuestionnaire = () => {
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
         } else {
-            router.push('/psych_questionnaire');
+            router.push('/questionnaire');
         }
     };
 
@@ -122,7 +122,7 @@ const PatientQuestionnaire = () => {
         if (currentStep === 3) {
             console.log("adding to database");
             try {
-                await signInWithGoogle(
+                await signUpWithGoogle(
                     "patient",
                     firstName,
                     lastName,

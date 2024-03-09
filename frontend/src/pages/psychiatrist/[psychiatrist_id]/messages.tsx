@@ -26,7 +26,7 @@ const MessagesPage = () => {
   };
 
   const signUpWithGoogleAndRedirect = async (onClose: () => void) => {
-    router.push('/psych_questionnaire'); // Moved this line before the closing of the popup
+    router.push('/questionnaire'); // Moved this line before the closing of the popup
     setShowPopup(false);
     onClose();
   };
