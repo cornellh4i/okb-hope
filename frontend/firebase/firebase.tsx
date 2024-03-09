@@ -52,7 +52,7 @@ const logInWithGoogle = async () => {
 };
 
 
-const signInWithGoogle = async (
+const signUpWithGoogle = async (
   role: string,
   firstName: string,
   lastName: string,
@@ -232,5 +232,5 @@ const updateUser = async (userId: string, data: any) => {
 };
 
 
-export { auth, db, app, logInWithGoogle, signInWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses };
+export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses };
 
