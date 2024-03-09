@@ -3,10 +3,10 @@ import chevron_down from '@/assets/chevron_down';
 import search_icon from '@/assets/search_icon';
 import okb_colors from '../colors';
 
-export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTerm, setSubmittedSearchTerm, 
+export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTerm, setSubmittedSearchTerm,
   filters, setFilters, submittedFilters, setSubmittedFilters, monday, setMonday, tuesday, setTuesday, wednesday,
   setWednesday, thursday, setThursday, friday, setFriday, saturday, setSaturday, sunday, setSunday, allDays, setAllDays,
-  english, setEnglish, ga, setGa, twi, setTwi, hausa, setHausa, allLanguages, setAllLanguages,
+  english, setEnglish, twi, setTwi, fante, setFante, ewe, setEwe, ga, setGa, hausa, setHausa, allLanguages, setAllLanguages,
   male, setMale, female, setFemale, bothGenders, setBothGenders }: any) {
 
   const FilterEnum = {
@@ -19,8 +19,10 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
     sunday: "Sunday",
     allDays: "allDays",
     english: "English",
-    ga: "Ga",
     twi: "Twi",
+    fante: "Fante",
+    ewe: "Ewe",
+    ga: "Ga",
     hausa: "Hausa",
     allLanguages: "allLanguages",
     male: "male",
@@ -28,7 +30,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
     bothGenders: "bothGenders"
   }
   const days = [FilterEnum.monday, FilterEnum.tuesday, FilterEnum.wednesday, FilterEnum.thursday, FilterEnum.friday, FilterEnum.saturday, FilterEnum.sunday];
-  const languages = [FilterEnum.english, FilterEnum.ga, FilterEnum.twi, FilterEnum.hausa]
+  const languages = [FilterEnum.english, FilterEnum.twi, FilterEnum.fante, FilterEnum.ewe, FilterEnum.ga, FilterEnum.hausa]
   const genders = [FilterEnum.male, FilterEnum.female]
 
   const selected: any = [...filters]
@@ -175,8 +177,10 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
       setSunday(false)
       setAllLanguages(false)
       setEnglish(false)
-      setGa(false)
       setTwi(false)
+      setFante(false)
+      setEwe(false)
+      setGa(false)
       setHausa(false)
       setBothGenders(false)
       setMale(false)
@@ -212,12 +216,16 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
     else if (filterName === FilterEnum.allLanguages) {
       setAllLanguages(event.target.checked)
       setEnglish(event.target.checked)
-      setGa(event.target.checked)
       setTwi(event.target.checked)
+      setFante(event.target.checked)
+      setEwe(event.target.checked)
+      setGa(event.target.checked)
       setHausa(event.target.checked)
       updateSelected(FilterEnum.english, event.target.checked)
-      updateSelected(FilterEnum.ga, event.target.checked)
       updateSelected(FilterEnum.twi, event.target.checked)
+      updateSelected(FilterEnum.fante, event.target.checked)
+      updateSelected(FilterEnum.ewe, event.target.checked)
+      updateSelected(FilterEnum.ga, event.target.checked)
       updateSelected(FilterEnum.hausa, event.target.checked)
     } else if (filterName === FilterEnum.bothGenders) {
       setBothGenders(event.target.checked)
@@ -232,8 +240,8 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
         if (event.target.checked === false) {
           setAllDays(false)
         }
-      } else if (filterName === FilterEnum.english || filterName === FilterEnum.ga || filterName === FilterEnum.twi
-        || filterName === FilterEnum.hausa) {
+      } else if (filterName === FilterEnum.english || filterName === FilterEnum.twi ||
+        filterName === FilterEnum.fante || filterName === FilterEnum.ewe || filterName === FilterEnum.ga || filterName === FilterEnum.hausa) {
         if (event.target.checked === false) {
           setAllLanguages(false)
         }
@@ -390,17 +398,31 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
                 </label>
                 <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                   <input type="checkbox"
-                    checked={ga}
-                    onChange={(e) => handleFilterChange(FilterEnum.ga, ga, setGa, e)}
-                    className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                  <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Ga</span>
-                </label>
-                <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
-                  <input type="checkbox"
                     checked={twi}
                     onChange={(e) => handleFilterChange(FilterEnum.twi, twi, setTwi, e)}
                     className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
                   <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Twi</span>
+                </label>
+                <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
+                  <input type="checkbox"
+                    checked={fante}
+                    onChange={(e) => handleFilterChange(FilterEnum.fante, fante, setFante, e)}
+                    className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                  <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Fante</span>
+                </label>
+                <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
+                  <input type="checkbox"
+                    checked={ewe}
+                    onChange={(e) => handleFilterChange(FilterEnum.ewe, ewe, setEwe, e)}
+                    className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                  <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Ewe</span>
+                </label>
+                <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
+                  <input type="checkbox"
+                    checked={ga}
+                    onChange={(e) => handleFilterChange(FilterEnum.ga, ga, setGa, e)}
+                    className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                  <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Ga</span>
                 </label>
                 <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                   <input type="checkbox"
