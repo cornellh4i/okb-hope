@@ -12,7 +12,7 @@ import Photo from '../../assets/dummy_photo.jpg';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
-import { db, signInWithGoogle } from '../../../firebase/firebase';
+import { db, logInWithGoogle, signInWithGoogle } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
 
 
@@ -139,10 +139,19 @@ const ProfProfile = () => {
         }
     };
 
-    const handleSendMessage = (event: React.MouseEvent) => {
+    const handleSendMessage = () => {
         if (!user) {
-            event.preventDefault();
             setShowPopup(true);
+        } else if (professional) {
+            router.push({
+                pathname: `/patient/${user.uid}/messages`,
+                query: {
+                    psych_id: professional.uid,
+                    psych_name: `${professional.firstName} ${professional.lastName}`
+                }
+            });
+        } else {
+            console.error("Professional data is unavailable.");
         }
     };
 
@@ -152,11 +161,10 @@ const ProfProfile = () => {
     };
 
     const signInWithGoogleAndRedirect = async (onClose: () => void) => {
-        await signInWithGoogle();
-        router.push('/messages'); // Moved this line before the closing of the popup
+        await logInWithGoogle();
         setShowPopup(false);
         onClose();
-      };
+    };
 
     // Render conditionally based on whether professional data is available
     if (professional === null) {

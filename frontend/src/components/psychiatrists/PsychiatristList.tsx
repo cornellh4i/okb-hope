@@ -4,7 +4,7 @@ import SavedBookmark from '@/assets/saved_bookmark.svg'
 import Message from '@/assets/message.svg'
 import Link from 'next/link';
 import { useAuth } from '../../../contexts/AuthContext';
-import { db, fetchUser, signInWithGoogle } from '../../../firebase/firebase';
+import { db, fetchUser, logInWithGoogle, signInWithGoogle } from '../../../firebase/firebase';
 import { useRouter } from 'next/router';
 import { LoginPopup } from '../LoginPopup';
 import { IPsychiatrist, IUser } from '@/schema';
@@ -24,6 +24,8 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
   const router = useRouter();
   const [users, setUsers] = useState<IUser[]>([]);
   const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
+  const [professional, setProfessional] = useState<IPsychiatrist | null>(null);
+
 
 
   // Get all users from the database
@@ -69,13 +71,28 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
       }
     }
     fetchUser();
-  }, []);
+  }, [savedPsychiatrists, user]);
 
-  const handleSendMessage = (event: React.MouseEvent) => {
+  const handleSendMessage = (event: React.MouseEvent, psychiatrist) => {
     event.stopPropagation();
     if (!user) {
       event.preventDefault();
       setShowPopup(true);
+    } else {
+      try {
+        event.stopPropagation();
+        router.push({
+          pathname: `/patient/${user.uid}/messages`,
+          query: {
+            psych_id: psychiatrist.uid,
+            psych_name: `${psychiatrist.firstName} ${psychiatrist.lastName}`
+          }
+        });
+        console.log("went to message page")
+      }
+      catch (error) {
+        console.error('Error going to message page');
+      }
     }
   };
 
@@ -122,8 +139,8 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
   }
 
   const signInWithGoogleAndRedirect = async (onClose: () => void) => {
-    await signInWithGoogle();
-    router.push('/messages'); // Moved this line before the closing of the popup
+    await logInWithGoogle();
+    // router.push('/messages'); // Moved this line before the closing of the popup
     setShowPopup(false);
     onClose();
   };
@@ -152,15 +169,13 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
                     {savedPsychiatrists.includes(psychiatrist.uid) ? <SavedBookmark /> : <Bookmark />}
                     <div>Save</div>
                   </button>
-                  <Link href="/messages">
-                    <div
-                      className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[${okb_colors.okb_blue}] text-[${okb_colors.white}] text-[16px] flex`}
-                      onClick={handleSendMessage}
-                    >
-                      <Message />
-                      <div>Message</div>
-                    </div>
-                  </Link>
+                  <button
+                    className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[${okb_colors.okb_blue}] text-[${okb_colors.white}] text-[16px] flex`}
+                    onClick={(event) => handleSendMessage(event, psychiatrist)}
+                  >
+                    <Message />
+                    <div>Message</div>
+                  </button>
                 </div>
               </div>
               {/* Additional psychiatrist info */}

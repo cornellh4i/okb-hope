@@ -32,21 +32,16 @@ const logInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, new GoogleAuthProvider());
     const user = res.user;
-    const q = query(collection(db, "users"), where("uid", "==", user.uid));
+    const q = query(collection(db, 'users'), where('uid', '==', user.uid));
     const docs = await getDocs(q);
-
     if (docs.docs.length === 0) {
-      await addDoc(collection(db, "users"), {
-        uid: user.uid,
-        name: user.displayName,
-        authProvider: "google",
-        email: user.email,
-      });
+      alert('An account with this email does not yet exist.Please sign up for an account first.');
+      logout();
     }
   }
   catch (err) {
     if (err instanceof Error) {
-      alert("An error occurred while signing in with Google: " + err.message);
+      alert('An error occurred while signing in with Google: ' + err.message);
     }
   }
 };
