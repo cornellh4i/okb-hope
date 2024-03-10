@@ -146,6 +146,13 @@ const ProfProfile = () => {
         }
     };
 
+    const handleBookAppointment = (event: React.MouseEvent) => {
+        if (!user) {
+            event.preventDefault();
+            setShowPopup(true);
+        }
+    };
+
     // Navigate to the user's discover page
     const handleGoToDashboard = () => {
         router.push(`/${user?.userType}/${user?.uid}/discover`);
@@ -171,7 +178,7 @@ const ProfProfile = () => {
 
     return (
         <div className={`w-2/3 h-full flex flex-wrap flex-col justify-center content-center gap-5`}>
-            {showPopup && <LoginPopup onClose={() => setShowPopup(false)} logInWithGoogleAndRedirect={logInWithGoogleAndRedirect} signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect}/>}
+            {showPopup && <LoginPopup onClose={() => setShowPopup(false)} logInWithGoogleAndRedirect={logInWithGoogleAndRedirect} signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect} />}
             <div className={`flex flex-row`}>
                 {/* Back arrow to return to go back to Discover Professionals */}
                 <figure className={`cursor-pointer`} onClick={handleGoToDashboard}><Arrow /></figure>
@@ -246,6 +253,7 @@ const ProfProfile = () => {
                 <button
                     className={`bg-okb-blue text-okb-white active:bg-gray-500 font-bold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
                     type="button"
+                    onClick={handleBookAppointment}
                 >
                     Book Appointment
                 </button>
