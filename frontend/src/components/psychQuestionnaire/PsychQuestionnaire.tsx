@@ -203,7 +203,7 @@ const PsychQuestionnaire = () => {
                     gender,
                     [],
                 );
-                //router.push(`/${user?.userType}/${user?.uid}/psych_dashboard`);
+                router.push(`/${user?.userType}/${user?.uid}/psych_dashboard`);
                 // setDocumentAdded(true);
             } catch (error) {
                 console.error('Error signing in:', error);

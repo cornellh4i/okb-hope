@@ -144,8 +144,7 @@ const PatientQuestionnaire = () => {
                     [], //savedPsychiatrists
                 );
 
-                router.push(`/${user?.userType}/${user?.uid}/psych_dashboard`);
-                // setDocumentAdded(true);
+                router.push(`/${user?.userType}/${user?.uid}/dashboard`);
             } catch (error) {
                 console.error('Error signing in:', error);
                 logout();
