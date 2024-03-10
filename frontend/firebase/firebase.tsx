@@ -36,12 +36,8 @@ const logInWithGoogle = async () => {
     const docs = await getDocs(q);
 
     if (docs.docs.length === 0) {
-      await addDoc(collection(db, "users"), {
-        uid: user.uid,
-        name: user.displayName,
-        authProvider: "google",
-        email: user.email,
-      });
+      alert("An account with this email does not yet exist. Please sign up for an account first.");
+      logout();
     }
   }
   catch (err) {
