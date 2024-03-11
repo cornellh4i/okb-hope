@@ -75,10 +75,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
 
   const handleSendMessage = (event: React.MouseEvent, psychiatrist) => {
     event.stopPropagation();
-    if (user) {
-      router.push(`/${user?.userType}/${user?.uid}/messages`)
-    }
-    else {
+    if (!user) {
       event.preventDefault();
       setShowPopup(true);
     } else {
