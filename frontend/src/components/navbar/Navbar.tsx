@@ -10,12 +10,6 @@ const Navbar = () => {
   const { user } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!user) {
-      router.push(`/`);
-    }
-  }, [user]);
-
   return (
     <div className={`flex p-2.5 bg-[${colors.white}] items-end boxShadow-custom-shadow`}>
 
