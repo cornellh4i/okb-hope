@@ -3,22 +3,28 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import ChatApp from '@/components/chatapp/ChatApp';
 import { LoginPopup } from '@/components/LoginPopup';
+import router from 'next/router';
 
 const MessagesPage = () => {
   const { user, login } = useAuth();
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     if (!user) {
-      setShowLoginPopup(true);
+      setShowPopup(true);
     }
   }, [user]);
 
-  const signInWithGoogleAndRedirect = async (onClose) => {
+  const logInWithGoogleAndRedirect = async (onClose) => {
     await login();
     onClose();
   };
 
+  const signUpWithGoogleAndRedirect = async (onClose: () => void) => {
+    router.push('/questionnaire'); // Moved this line before the closing of the popup
+    setShowPopup(false);
+    onClose();
+  };
   return (
     <>
       <Head>
@@ -31,11 +37,13 @@ const MessagesPage = () => {
         <ChatApp />
       ) : (
         <>
-          {showLoginPopup && (
+          {showPopup && (
             <LoginPopup
-              onClose={() => setShowLoginPopup(false)}
-              signInWithGoogleAndRedirect={signInWithGoogleAndRedirect}
-            />
+            onClose={() => setShowPopup(false)}
+            logInWithGoogleAndRedirect={logInWithGoogleAndRedirect}
+            signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect}
+
+          />
           )}
         </>
       )}

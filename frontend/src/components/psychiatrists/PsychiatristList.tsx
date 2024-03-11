@@ -4,12 +4,12 @@ import SavedBookmark from '@/assets/saved_bookmark.svg'
 import Message from '@/assets/message.svg'
 import Link from 'next/link';
 import { useAuth } from '../../../contexts/AuthContext';
-import { db, fetchUser, logInWithGoogle, signInWithGoogle } from '../../../firebase/firebase';
+import { db, logInWithGoogle } from '../../../firebase/firebase';
 import { useRouter } from 'next/router';
 import { LoginPopup } from '../LoginPopup';
 import { IPsychiatrist, IUser } from '@/schema';
 import okb_colors from "@/colors";
-import { fetchAllUsers, updateUser, fetchPatientDetails, fetchDocumentId } from '../../../firebase/fetchData';
+import { fetchAllUsers, fetchPatientDetails, fetchDocumentId } from '../../../firebase/fetchData';
 import { doc, updateDoc } from 'firebase/firestore';
 
 interface PsychiatristListProps {
@@ -75,7 +75,10 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
 
   const handleSendMessage = (event: React.MouseEvent, psychiatrist) => {
     event.stopPropagation();
-    if (!user) {
+    if (user) {
+      router.push(`/${user?.userType}/${user?.uid}/messages`)
+    }
+    else {
       event.preventDefault();
       setShowPopup(true);
     } else {
@@ -97,6 +100,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
   };
 
   const handleSave = async (event: React.MouseEvent, psychiatrist) => {
+    event.stopPropagation();
     if (!user) {
       event.preventDefault();
       setShowPopup(true);
@@ -131,23 +135,34 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
 
   // Redirects to a professional's profile page and passes their uid as query parameter
   function handleGoToProfProfile(psych_uid: string) {
-    console.log(psych_uid)
-    router.push({
-      pathname: `/${user?.userType}/${user?.uid}/prof_profile`,
-      query: { psych_uid: psych_uid }
-    })
+    {
+      user ?
+        router.push({
+          pathname: `/${user?.userType}/${user?.uid}/prof_profile`,
+          query: { psych_uid: psych_uid }
+        })
+        : router.push({
+          pathname: `/prof_profile`,
+          query: { psych_uid: psych_uid }
+        })
+    }
   }
 
-  const signInWithGoogleAndRedirect = async (onClose: () => void) => {
+  const logInWithGoogleAndRedirect = async (onClose: () => void) => {
     await logInWithGoogle();
-    // router.push('/messages'); // Moved this line before the closing of the popup
+    setShowPopup(false);
+    onClose();
+  };
+
+  const signUpWithGoogleAndRedirect = async (onClose: () => void) => {
+    router.push('/questionnaire'); // Moved this line before the closing of the popup
     setShowPopup(false);
     onClose();
   };
 
   return (
     <div className={`psychiatrist-list flex flex-col items-start gap-6`}>
-      {showPopup && <LoginPopup onClose={() => setShowPopup(false)} signInWithGoogleAndRedirect={signInWithGoogleAndRedirect} />}
+      {showPopup && <LoginPopup onClose={() => setShowPopup(false)} logInWithGoogleAndRedirect={logInWithGoogleAndRedirect} signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect} />}
       {results.map((psychiatrist) => (
         <div key={psychiatrist.uid} className="psychiatrist" onClick={() => handleGoToProfProfile(psychiatrist.uid)}>
           {/* Display the psychiatrist's information here */}

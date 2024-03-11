@@ -3,7 +3,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/
 import { addDoc, collection, getDocs, getFirestore, query, where, doc, getDoc, setDoc } from "firebase/firestore";
 import { FacebookAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { Gender, IUser } from "@/schema";
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 
 
 
@@ -35,8 +35,10 @@ const logInWithGoogle = async () => {
     const q = query(collection(db, 'users'), where('uid', '==', user.uid));
     const docs = await getDocs(q);
     if (docs.docs.length === 0) {
-      alert('An account with this email does not yet exist.Please sign up for an account first.');
+      alert("An account with this email does not yet exist. Please sign up for an account first.");
       logout();
+    } else {
+      router.push('/');
     }
   }
   catch (err) {
@@ -47,7 +49,7 @@ const logInWithGoogle = async () => {
 };
 
 
-const signInWithGoogle = async (
+const signUpWithGoogle = async (
   role: string,
   firstName: string,
   lastName: string,
@@ -130,7 +132,7 @@ const signInWithGoogle = async (
       if (err instanceof Error) {
         reject(err); // Reject the promise if an error occurs during sign-in
         alert("this email is already in use by an existing account");
-        logout()
+        logout();
         return;
       }
     }
@@ -227,5 +229,5 @@ const updateUser = async (userId: string, data: any) => {
 };
 
 
-export { auth, db, app, logInWithGoogle, signInWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses };
+export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses };
 

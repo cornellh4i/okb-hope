@@ -12,7 +12,7 @@ import Photo from '../../assets/dummy_photo.jpg';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
-import { db, logInWithGoogle, signInWithGoogle } from '../../../firebase/firebase';
+import { db, logInWithGoogle, signUpWithGoogle } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
 
 
@@ -72,7 +72,7 @@ const ProfProfile = () => {
             const psych_uid = router.query.psych_uid as string;
 
             // Check if both first name and last name are defined
-            if (userId && psych_uid) {
+            if (psych_uid) {
                 // Fetch professional data based on first name and last name
                 const data = await fetchProfessionalData(psych_uid);
                 console.log(data);
@@ -155,13 +155,27 @@ const ProfProfile = () => {
         }
     };
 
+    const handleBookAppointment = (event: React.MouseEvent) => {
+        if (!user) {
+            event.preventDefault();
+            setShowPopup(true);
+        }
+    };
+
     // Navigate to the user's discover page
     const handleGoToDashboard = () => {
         router.push(`/${user?.userType}/${user?.uid}/discover`);
     };
 
-    const signInWithGoogleAndRedirect = async (onClose: () => void) => {
+    const logInWithGoogleAndRedirect = async (onClose: () => void) => {
         await logInWithGoogle();
+        router.push('/messages'); // Moved this line before the closing of the popup
+        setShowPopup(false);
+        onClose();
+    };
+
+    const signUpWithGoogleAndRedirect = async (onClose: () => void) => {
+        router.push('/questionnaire'); // Moved this line before the closing of the popup
         setShowPopup(false);
         onClose();
     };
@@ -173,7 +187,7 @@ const ProfProfile = () => {
 
     return (
         <div className={`w-2/3 h-full flex flex-wrap flex-col justify-center content-center gap-5`}>
-            {showPopup && <LoginPopup onClose={() => setShowPopup(false)} signInWithGoogleAndRedirect={signInWithGoogleAndRedirect} />}
+            {showPopup && <LoginPopup onClose={() => setShowPopup(false)} logInWithGoogleAndRedirect={logInWithGoogleAndRedirect} signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect} />}
             <div className={`flex flex-row`}>
                 {/* Back arrow to return to go back to Discover Professionals */}
                 <figure className={`cursor-pointer`} onClick={handleGoToDashboard}><Arrow /></figure>
@@ -227,7 +241,7 @@ const ProfProfile = () => {
                         {/* Link tag, currently not in the IPsychiatrist so hard coded with default link */}
                         <div className="px-4 py-2 border-2 rounded-s-2xl rounded-[20px] border-light-blue bg-lightest-blue hover:shadow-xl transition cursor-pointer flex flex-row gap-2">
                             <a
-                                href="https://www.mentalhealthsite.com"
+                                href="https://www.wohohiame.com/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center"
@@ -248,6 +262,7 @@ const ProfProfile = () => {
                 <button
                     className={`bg-okb-blue text-okb-white active:bg-gray-500 font-bold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
                     type="button"
+                    onClick={handleBookAppointment}
                 >
                     Book Appointment
                 </button>
