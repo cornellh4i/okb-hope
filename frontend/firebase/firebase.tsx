@@ -3,7 +3,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/
 import { addDoc, collection, getDocs, getFirestore, query, where, doc, getDoc, setDoc } from "firebase/firestore";
 import { FacebookAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { Gender, IUser } from "@/schema";
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 
 
 
@@ -38,6 +38,8 @@ const logInWithGoogle = async () => {
     if (docs.docs.length === 0) {
       alert("An account with this email does not yet exist. Please sign up for an account first.");
       logout();
+    } else {
+      router.push('/');
     }
   }
   catch (err) {
