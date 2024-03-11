@@ -25,10 +25,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         // Check if user is available and navigate to dashboard if so
         if (user) {
-          if (user.userType == "psychiatrist")
-            router.push(`/${user.userType}/${user.uid}/psych_dashboard`);
-          else if (user.userType == "patient")
-            router.push(`/${user.userType}/${user.uid}/dashboard`);
+          console.log(router.pathname)
+          if (user.userType == "psychiatrist") {
+            if (router.pathname == "/psych_dashboard" || router.pathname == `/psychiatrist/[psychiatrist_id]/psych_dashboard`)
+              router.push(`/psychiatrist/${user.uid}/psych_dashboard`);
+            else if (router.pathname == "/messages" || router.pathname == `/psychiatrist/[psychiatrist_id]/messages`)
+              router.push(`/psychiatrist/${user.uid}/messages`);
+            else if (router.pathname == "/edit_psych" || router.pathname == `/psychiatrist/[psychiatrist_id]/edit_psych`)
+              router.push(`/psychiatrist/${user.uid}/edit_psych`);
+            else {
+              router.push(`/psychiatrist/${user.uid}/psych_dashboard`);
+            }
+          }
+          else if (user.userType == "patient") {
+            if (router.pathname == "/dashboard" || router.pathname == `/patient/[patient_id]/dashboard`)
+              router.push(`/patient/${user.uid}/dashboard`);
+            else if (router.pathname == "/discover" || router.pathname == `/patient/[patient_id]/discover`)
+              router.push(`/patient/${user.uid}/discover`);
+            else if (router.pathname == "/messages" || router.pathname == `/patient/[patient_id]/messages`)
+              router.push(`/patient/${user.uid}/messages`);
+            else if (router.pathname == "/edit_profile" || router.pathname == `/patient/[patient_id]/edit_profile`)
+              router.push(`/patient/${user.uid}/edit_profile`);
+            else
+              router.push(`/patient/${user.uid}/dashboard`);
+          }
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -46,10 +66,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const user = auth.currentUser;
         if (user) {
-          console.log(user.uid)
           setRole(null); // Reset role state
           const userRole = await fetchRole(user.uid);
-          console.log(userRole);
           setCurrentUser({ ...(user as User), userType: userRole });
           setRole(userRole); // Update role state after fetchRole
         } else {
@@ -72,8 +90,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function logOut() {
+    router.push('/');
     await logout();
   }
+
+
 
   const value: AuthContextType = {
     user,
