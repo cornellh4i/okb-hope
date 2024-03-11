@@ -63,7 +63,7 @@ const Navbar = () => {
         </li> : <div></div>}
 
         <li className={`${router.pathname === '/about' ? 'underline-offset-1 custom-active' : ''}`}>
-          <Link href="https://www.wohohiame.com/" className="w-18">
+          <Link href="/data-analytics" className="w-18">
             <div className="text-[18px] text-[#195BA5]">About Us</div>
           </Link>
         </li>
