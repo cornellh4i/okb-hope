@@ -36,8 +36,7 @@ const Menu: React.FC = (): JSX.Element => {
   const itemSelection = (item: string): void => {
     setSelectItem(item);
   };
-
-  //const roundedClass = showDropDown ? 'rounded-t-lg' : 'rounded-lg';
+  const roundedClass = showDropDown ? 'rounded-t-lg' : 'rounded-lg';
   return (
     <>
       <button
@@ -47,7 +46,7 @@ const Menu: React.FC = (): JSX.Element => {
           dismissHandler(e)
         }
       >
-        <div className = "bg-[#0568a0] rounded-lg text-white p-2">{"Export To..."} </div>
+        <div className={`bg-[#0568a0] ${roundedClass} text-white p-2`}>{"Export To..."}</div>
         {showDropDown && (
           <DropDown
             items={items()}
