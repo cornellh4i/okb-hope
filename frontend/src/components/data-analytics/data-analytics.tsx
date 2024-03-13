@@ -1,5 +1,6 @@
 import React from "react";
 import Menu from "./export-menu";
+import Filter from "./FilterSidebar";
 
 const DataAnalytics = () => {
   return (
@@ -8,6 +9,7 @@ const DataAnalytics = () => {
       <div className="text-[32px] font-semibold font-montserrat">Client Data</div>
       <div className="text-2xl font-semibold font-montserrat">Question Type</div>
       <Menu />
+      <Filter />
     </div>
     </>
   );
