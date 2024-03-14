@@ -15,10 +15,10 @@ import { doc, updateDoc } from 'firebase/firestore';
 
 interface PsychiatristListProps {
   results: IPsychiatrist[];
-  buttonType: string; 
+  buttonType: string;
 }
 
-const PsychiatristList: React.FC<PsychiatristListProps> = ({results, buttonType = "discover"}) => {
+const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType = "discover" }) => {
   const { user } = useAuth();
   const uid = user?.uid;
   const [docId, setDocId] = useState<string | undefined>(undefined);
@@ -27,6 +27,72 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({results, buttonType 
   const [users, setUsers] = useState<IUser[]>([]);
   const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
 
+  const [showReportHistoryPopup, setShowReportHistoryPopup] = useState(false);
+
+  const overlayStyle: React.CSSProperties = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000,
+  };
+
+  const popupStyle: React.CSSProperties = {
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '10px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    display: 'flex',
+    flexDirection: 'column',
+    width: '30%', // adjust the width as needed
+    maxWidth: '500px', // maximum width of the popup
+    zIndex: 1001,
+  };
+
+  const textareaStyle: React.CSSProperties = {
+    width: '100%',
+    height: '150px', // Increased height for more text
+    margin: '10px 0 20px 0', // Added some margin top and bottom
+    borderColor: '#ddd', // Light grey border color
+    padding: '10px', // Padding inside the textarea
+  };
+
+  const buttonsContainerStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'flex-end', // Aligns the buttons to the right
+  };
+
+  const buttonStyle: React.CSSProperties = {
+    border: '1px solid #ccc',
+    padding: '10px 20px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    margin: '0 5px', // Adds margin between buttons
+    fontWeight: 'normal', // Resets button text to normal weight
+  };
+
+  const submitButtonStyle: React.CSSProperties = {
+    ...buttonStyle, // Spread the existing button styles
+    backgroundColor: '#007bff', // Use a blue background
+    color: '#fff', // White text color
+    fontWeight: 'bold', // Make text bold
+    marginLeft: '10px', // Add some left margin
+  };
+  const continueButtonStyle: React.CSSProperties = {
+    // Add your styling here similar to the submit button
+    backgroundColor: '#007bff', // or any other color you prefer
+    color: '#fff',
+    fontWeight: 'bold',
+    padding: '10px 20px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    border: 'none',
+  };
 
   // Get all users from the database
   useEffect(() => {
@@ -130,30 +196,44 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({results, buttonType 
     onClose();
   };
 
+  // Trigger report popup to show up
+  const handleReport = (event) => {
+    event.preventDefault();
+    setShowReportHistoryPopup(true);
+  };
+
+  // Trigger report popup to close
+  const handleCloseReport = () => {
+    setShowReportHistoryPopup(false);
+  };
+  //break
   const renderButtons = (psychiatrist: IPsychiatrist) => {
     if (buttonType === "report") {
       return (
-        <button  className={` rounded-s-2xl rounded-[12px] transition cursor-pointer text-okb-white flex flex-row gap-2`}>
-        <ViewReport className="object-cover" />
-      </button>
-      );
-    } else {
-      return (
         <>
-          <button className="btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-white text-[16px] flex" onClick={(event) => handleSave(event, psychiatrist)}>
-            {savedPsychiatrists.includes(psychiatrist.uid) ? <SavedBookmark /> : <Bookmark />}
-            <div>Save</div>
-          </button>
-          <Link href="/messages">
-            <div className="btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-white text-[16px] flex" onClick={handleSendMessage}>
-              <Message />
-              <div>Message</div>
+          {showReportHistoryPopup && (
+            <div style={overlayStyle}>
+              <div style={popupStyle}>
+                <h3 style={{ fontWeight: 'bold', marginBottom: '15px' }}>Report Dr. Gloria Shi?</h3>
+                <p style={{ marginBottom: '15px' }}>
+                  We are committed to ensuring your right to privacy and safety. If you feel
+                  like any of these rights have been violated by a psychiatrist that you are
+                  seeing, please fill out the report form below.
+                </p>
+                <textarea style={textareaStyle}></textarea>
+                <div style={buttonsContainerStyle}>
+                  <button onClick={handleCloseReport} style={buttonStyle}>Close</button>
+                </div>
+              </div>
             </div>
-          </Link>
+          )}
         </>
       );
     }
-  };
+  }
+
+
+  //break
 
   return (
     <div className={`psychiatrist-list flex flex-col items-start gap-6`}>
