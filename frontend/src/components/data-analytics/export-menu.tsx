@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import DropDown from "./export-dropdown";
-import { Accordion, AccordionSummary, AccordionDetails, Typography, Stack, Card } from '@mui/material/';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Stack, Card, Box } from '@mui/material/';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 
 const Menu: React.FC = (): JSX.Element => {
@@ -41,18 +42,23 @@ const Menu: React.FC = (): JSX.Element => {
   };
 
   const roundedClass = showDropDown ? 'rounded-t-lg' : 'rounded-lg';
+  const changeExpand = showDropDown ? <ExpandLessIcon sx={{ color: 'white'}} /> : <ExpandMoreIcon sx={{ color: 'white'}} />;
+
   return (
     <>
       <button
-        className= "w-32"
+        className= "w-36"
         onClick={(): void => toggleDropDown()}
         onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
           dismissHandler(e)
         }
       >
-        <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: 'white' }} />}>
-        <div className={`bg-[#0568a0] ${roundedClass} text-white p-2`}>{"Export To..."}</div>
+        <div className={`w-36 bg-[#0568a0] ${roundedClass} text-white`}>
+        <AccordionSummary expandIcon={changeExpand}>
+        {"Export To..."}
         </AccordionSummary>
+        </div>
+
         {showDropDown && (
           <DropDown
             items={items()}
