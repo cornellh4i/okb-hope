@@ -10,6 +10,8 @@ interface ArrObject {
 
 interface AppState {
   age: ArrObject[];
+  gender: ArrObject[];
+  ethnicity: ArrObject[];
 }
 
 class Filter extends React.Component<AppProps, AppState> {
@@ -17,21 +19,21 @@ class Filter extends React.Component<AppProps, AppState> {
     super(props);
     this.state = {
       ages: [
-        { id: 1, label: " 19-29", value: " 19-29", isChecked: false },
-        { id: 2, label: " 30-40", value: " 30-40", isChecked: false },
-        { id: 3, label: " 41-51", value: " 41-51", isChecked: false },
-        { id: 4, label: " 52-62", value: " 52-62", isChecked: false }
+        { id: 1, label: " 19-29", value: " 19-29", isChecked: true },
+        { id: 2, label: " 30-40", value: " 30-40", isChecked: true },
+        { id: 3, label: " 41-51", value: " 41-51", isChecked: true },
+        { id: 4, label: " 52-62", value: " 52-62", isChecked: true }
       ],
       genders: [
-        { id: 1, label: " Male", value: " Male", isChecked: false },
-        { id: 2, label: " Female", value: " Female", isChecked: false },
-        { id: 3, label: " Other", value: " Other1", isChecked: false },
+        { id: 1, label: " Male", value: " Male", isChecked: true },
+        { id: 2, label: " Female", value: " Female", isChecked: true },
+        { id: 3, label: " Other", value: " Other1", isChecked: true },
       ],
       ethnicities: [
-        { id: 1, label: " Ewe", value: " Ewe", isChecked: false },
-        { id: 2, label: " Akan", value: " Akan", isChecked: false },
-        { id: 3, label: " Ga", value: " Ga", isChecked: false },
-        { id: 4, label: " Other", value: " Other2", isChecked: false }
+        { id: 1, label: " Ewe", value: " Ewe", isChecked: true },
+        { id: 2, label: " Akan", value: " Akan", isChecked: true },
+        { id: 3, label: " Ga", value: " Ga", isChecked: true },
+        { id: 4, label: " Other", value: " Other2", isChecked: true }
       ]
     };
   }
@@ -91,7 +93,9 @@ class Filter extends React.Component<AppProps, AppState> {
                         <input
                             type="checkbox"
                             onClick={this.handleAllCheckedAge}
-                            value="checkedall" />{" "}
+                            value="checkedall"
+                            defaultChecked={true}
+                            className="w-4 h-4" />{" "}
                         All
                     </div>
                     {this.state.ages.map(age => {
@@ -117,7 +121,9 @@ class Filter extends React.Component<AppProps, AppState> {
                         <input
                             type="checkbox"
                             onClick={this.handleAllCheckedGender}
-                            value="checkedall" />{" "}
+                            value="checkedall" 
+                            defaultChecked={true}
+                            className="w-4 h-4"/>{" "}
                         All
                     </div>
                     {this.state.genders.map(gender => {
@@ -144,6 +150,8 @@ class Filter extends React.Component<AppProps, AppState> {
                 type="checkbox"
                 onClick={this.handleAllCheckedEthnicity}
                 value="checkedall"
+                defaultChecked={true}
+                className="w-4 h-4"
                 />{" "}
                 All
             </div>

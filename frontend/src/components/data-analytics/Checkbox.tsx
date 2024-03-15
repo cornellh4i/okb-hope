@@ -17,8 +17,8 @@ const Checkbox = (props: CheckboxProps) => {
         onClick={props.handleCheckChildElement}
         type="checkbox"
         checked={props.isChecked}
-        label={props.label}
         value={props.value}
+        className="w-4 h-4 text-blue-600"
       />
       {props.label}
     </li>

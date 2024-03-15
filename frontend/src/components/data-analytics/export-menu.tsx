@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import DropDown from "./export-dropdown";
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Stack, Card } from '@mui/material/';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 
 const Menu: React.FC = (): JSX.Element => {
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
@@ -29,13 +32,14 @@ const Menu: React.FC = (): JSX.Element => {
 
   /**
    * Callback function to consume the
-   * city name from the child component
+   * item label from the child component
    *
-   * @param city  The selected city
+   * @param item  The selected item
    */
   const itemSelection = (item: string): void => {
     setSelectItem(item);
   };
+
   const roundedClass = showDropDown ? 'rounded-t-lg' : 'rounded-lg';
   return (
     <>
@@ -46,7 +50,9 @@ const Menu: React.FC = (): JSX.Element => {
           dismissHandler(e)
         }
       >
+        <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: 'white' }} />}>
         <div className={`bg-[#0568a0] ${roundedClass} text-white p-2`}>{"Export To..."}</div>
+        </AccordionSummary>
         {showDropDown && (
           <DropDown
             items={items()}

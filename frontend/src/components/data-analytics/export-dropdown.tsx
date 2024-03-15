@@ -14,10 +14,10 @@ const DropDown: React.FC<DropDownProps> = ({
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
 
   /**
-   * Handle passing the city name
+   * Handle passing the item label
    * back to the parent component
    *
-   * @param city  The selected city
+   * @param item  The selected item
    */
   const onClickHandler = (item: string): void => {
     itemSelection(item);
@@ -28,7 +28,6 @@ const DropDown: React.FC<DropDownProps> = ({
   }, [showDropDown]);
 
   return (
-    <>
       <div className="">
         {items.map(
           (item: string, index: number): JSX.Element => {
@@ -48,7 +47,6 @@ const DropDown: React.FC<DropDownProps> = ({
           }
         )}
       </div>
-    </>
   );
 };
 
