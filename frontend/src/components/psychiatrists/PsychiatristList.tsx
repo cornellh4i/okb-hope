@@ -197,39 +197,57 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
   };
 
   // Trigger report popup to show up
-  const handleReport = (event) => {
+  const handleOpenReportHistory = (event) => {
     event.preventDefault();
+    event.stopPropagation();
     setShowReportHistoryPopup(true);
   };
 
   // Trigger report popup to close
-  const handleCloseReport = () => {
+  const handleCloseReportHistory = (event) => {
+    event.stopPropagation();
     setShowReportHistoryPopup(false);
   };
+
+
   //break
   const renderButtons = (psychiatrist: IPsychiatrist) => {
     if (buttonType === "report") {
       return (
         <>
           {showReportHistoryPopup && (
-            <div style={overlayStyle}>
-              <div style={popupStyle}>
-                <h3 style={{ fontWeight: 'bold', marginBottom: '15px' }}>Report Dr. Gloria Shi?</h3>
-                <p style={{ marginBottom: '15px' }}>
-                  We are committed to ensuring your right to privacy and safety. If you feel
-                  like any of these rights have been violated by a psychiatrist that you are
-                  seeing, please fill out the report form below.
-                </p>
-                <textarea style={textareaStyle}></textarea>
-                <div style={buttonsContainerStyle}>
-                  <button onClick={handleCloseReport} style={buttonStyle}>Close</button>
-                </div>
-              </div>
-            </div>
-          )}
-        </>
+      <div style={overlayStyle}>
+        <div style={popupStyle}>
+          <h2>Dr. Gloria Shi</h2>
+          <h3>Report Box</h3>
+          <p>Psychiatrist at Wohiame Hospital</p>
+          <p>The following report for Dr. Gloria Shi was submitted on: October 12th, 2023 at 7:16 PM.</p>
+          {/* Other content and styles from the report would go here. */}
+          <button onClick={(event) => handleCloseReportHistory(event)}>Close</button>
+        </div>
+      </div>
+    )} 
+      <button onClick={(event) => handleOpenReportHistory(event)}>
+              <ViewReport />
+      </button>
+
+              </>
       );
     }
+    else {
+      return (
+        <>
+          <button className="btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-white text-[16px] flex" onClick={(event) => handleSave(event, psychiatrist)}>
+            {savedPsychiatrists.includes(psychiatrist.uid) ? <SavedBookmark /> : <Bookmark />}
+            <div>Save</div>
+          </button>
+          <Link href="/messages" className="btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-white text-[16px] flex" onClick={handleSendMessage}>
+            <Message />
+            <div>Message</div>
+          </Link>
+        </>
+      );
+    }    
   }
 
 
