@@ -110,9 +110,14 @@ const Navbar = () => {
               </Link> : <Link href={`/${user.userType}/${user.uid}/edit_psych`}>
                 <li>Edit Profile</li>
               </Link>}
-              <Link href="/" onClick={logout}>
-                <li>Log Out</li>
+              <Link href={`/${user?.uid}/report_history`} className="w-18">
+                <li>Report History</li>
               </Link>
+              <li>
+                <button onClick={logout}>
+                  Log Out
+                </button>
+              </li>
             </ul>
           </div> : <li>
             <div className="flex justify-center items-center">
