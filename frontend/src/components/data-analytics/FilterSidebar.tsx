@@ -1,18 +1,21 @@
 import * as React from "react";
 import CheckBox from "./Checkbox";
-interface AppProps {}
+
+interface AppProps { }
 
 interface ArrObject {
   id: number;
+  label: string;
   value: string;
   isChecked: boolean;
 }
 
 interface AppState {
-  age: ArrObject[];
-  gender: ArrObject[];
-  ethnicity: ArrObject[];
+  ages: ArrObject[];
+  genders: ArrObject[];
+  ethnicities: ArrObject[];
 }
+
 
 class Filter extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
@@ -41,19 +44,19 @@ class Filter extends React.Component<AppProps, AppState> {
   handleAllCheckedAge = (event: any) => {
     let ages = this.state.ages;
     ages.forEach(age => (age.isChecked = event.target.checked));
-    this.setState({ ages: ages});
+    this.setState({ ages: ages });
   };
 
   handleAllCheckedGender = (event: any) => {
     let genders = this.state.genders;
     genders.forEach(gender => (gender.isChecked = event.target.checked));
-    this.setState({genders : genders})
+    this.setState({ genders: genders })
   };
 
   handleAllCheckedEthnicity = (event: any) => {
     let ethnicities = this.state.ethnicities;
     ethnicities.forEach(ethnicity => (ethnicity.isChecked = event.target.checked));
-    this.setState({ethnicities : ethnicities})
+    this.setState({ ethnicities: ethnicities })
   };
 
   handleCheckChildElement = (event: React.FormEvent<HTMLInputElement>) => {
@@ -85,93 +88,93 @@ class Filter extends React.Component<AppProps, AppState> {
   render() {
     return (
       <>
-            <div className="w-56 bg-white rounded-2xl border-2 border-[#0568a0]">
-                <h1 className="ml-3 mt-3"> Age </h1>
-                <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
-                <ul className="columns-2 list-none mb-3">
-                    <div className="mx-3">
-                        <input
-                            type="checkbox"
-                            onClick={this.handleAllCheckedAge}
-                            value="checkedall"
-                            defaultChecked={true}
-                            className="w-4 h-4 text-blue-500" />{" "}
-                        All
-                    </div>
-                    {this.state.ages.map(age => {
-                        return (
-                            <div className="mx-3 my-1">
-                                <CheckBox
-                                    handleCheckChildElement={this.handleCheckChildElement}
-                                    id={age.id}
-                                    label={age.label}
-                                    value={age.value}
-                                    isChecked={age.isChecked} />
-                            </div>
-                        );
-                    })}
-                </ul>
+        <div className="w-56 bg-white rounded-2xl border-2 border-[#0568a0]">
+          <h1 className="ml-3 mt-3"> Age </h1>
+          <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
+          <ul className="columns-2 list-none mb-3">
+            <div className="mx-3">
+              <input
+                type="checkbox"
+                onClick={this.handleAllCheckedAge}
+                value="checkedall"
+                defaultChecked={true}
+                className="w-4 h-4 text-blue-500" />{" "}
+              All
             </div>
-
-            <div className="w-56 bg-white rounded-2xl border-2 border-[#0568a0]">
-                <h1 className="ml-3 mt-3"> Gender </h1>
-                <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
-                <ul className="columns-2 list-none mb-3">
-                    <div className="mx-3">
-                        <input
-                            type="checkbox"
-                            onClick={this.handleAllCheckedGender}
-                            value="checkedall" 
-                            defaultChecked={true}
-                            className="w-4 h-4"/>{" "}
-                        All
-                    </div>
-                    {this.state.genders.map(gender => {
-                        return (
-                            <div className="mx-3 my-1">
-                                <CheckBox
-                                    handleCheckChildElement={this.handleCheckChildElement}
-                                    id={gender.id}
-                                    label={gender.label}
-                                    value={gender.value}
-                                    isChecked={gender.isChecked} />
-                            </div>
-                        );
-                    })}
-                </ul>
-            </div>
+            {this.state.ages.map(age => {
+              return (
+                <div className="mx-3 my-1">
+                  <CheckBox
+                    handleCheckChildElement={this.handleCheckChildElement}
+                    id={age.id}
+                    label={age.label}
+                    value={age.value}
+                    isChecked={age.isChecked} />
+                </div>
+              );
+            })}
+          </ul>
+        </div>
 
         <div className="w-56 bg-white rounded-2xl border-2 border-[#0568a0]">
-            <h1 className="ml-3 mt-3"> Ethnicitiy</h1>
-            <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
-            <ul className="columns-2 list-none mb-3">
+          <h1 className="ml-3 mt-3"> Gender </h1>
+          <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
+          <ul className="columns-2 list-none mb-3">
             <div className="mx-3">
-                <input
+              <input
+                type="checkbox"
+                onClick={this.handleAllCheckedGender}
+                value="checkedall"
+                defaultChecked={true}
+                className="w-4 h-4" />{" "}
+              All
+            </div>
+            {this.state.genders.map(gender => {
+              return (
+                <div className="mx-3 my-1">
+                  <CheckBox
+                    handleCheckChildElement={this.handleCheckChildElement}
+                    id={gender.id}
+                    label={gender.label}
+                    value={gender.value}
+                    isChecked={gender.isChecked} />
+                </div>
+              );
+            })}
+          </ul>
+        </div>
+
+        <div className="w-56 bg-white rounded-2xl border-2 border-[#0568a0]">
+          <h1 className="ml-3 mt-3"> Ethnicitiy</h1>
+          <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
+          <ul className="columns-2 list-none mb-3">
+            <div className="mx-3">
+              <input
                 type="checkbox"
                 onClick={this.handleAllCheckedEthnicity}
                 value="checkedall"
                 defaultChecked={true}
                 className="w-4 h-4"
-                />{" "}
-                All
+              />{" "}
+              All
             </div>
-          {this.state.ethnicities.map(ethnicity => {
-            return (
-            <div className="mx-3 my-1">
-              <CheckBox
-                handleCheckChildElement={this.handleCheckChildElement}
-                id={ethnicity.id}
-                label={ethnicity.label}
-                value={ethnicity.value}
-                isChecked={ethnicity.isChecked}
-              />
-            </div>
-            );
-          })}
-        </ul>
-      </div>
-            
-    </>
+            {this.state.ethnicities.map(ethnicity => {
+              return (
+                <div className="mx-3 my-1">
+                  <CheckBox
+                    handleCheckChildElement={this.handleCheckChildElement}
+                    id={ethnicity.id}
+                    label={ethnicity.label}
+                    value={ethnicity.value}
+                    isChecked={ethnicity.isChecked}
+                  />
+                </div>
+              );
+            })}
+          </ul>
+        </div>
+
+      </>
     );
   }
 }
