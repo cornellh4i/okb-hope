@@ -95,7 +95,7 @@ class Filter extends React.Component<AppProps, AppState> {
                             onClick={this.handleAllCheckedAge}
                             value="checkedall"
                             defaultChecked={true}
-                            className="w-4 h-4" />{" "}
+                            className="w-4 h-4 text-blue-500" />{" "}
                         All
                     </div>
                     {this.state.ages.map(age => {

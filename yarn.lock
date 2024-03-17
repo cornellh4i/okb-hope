@@ -97,7 +97,7 @@
   resolved "https://registry.npmjs.org/@emotion/memoize/-/memoize-0.8.1.tgz"
   integrity sha512-W2P2c/VRW1/1tLox0mVUalvnWXxavmv/Oum2aPsRcoDJuob75FC3Y8FbpfLwUegRcxINtGUMPq0tFCvYNTBXNA==
 
-"@emotion/react@^11.0.0-rc.0", "@emotion/react@^11.11.4", "@emotion/react@^11.4.1", "@emotion/react@^11.5.0":
+"@emotion/react@^11.11.4":
   version "11.11.4"
   resolved "https://registry.npmjs.org/@emotion/react/-/react-11.11.4.tgz"
   integrity sha512-t8AjMlF0gHpvvxk5mAtCqR4vmxiGHCeJBaQO6gncUSdklELOgtwjerNY2yuJNfwnc6vi16U/+uMF+afIawJ9iw==
@@ -127,7 +127,7 @@
   resolved "https://registry.npmjs.org/@emotion/sheet/-/sheet-1.2.2.tgz"
   integrity sha512-0QBtGvaqtWi+nx6doRwDdBIzhNdZrXUppvTM4dtZZWEGTXL/XE/yJxLMGlDT1Gt+UHH5IX1n+jkXyytE/av7OA==
 
-"@emotion/styled@^11.11.0", "@emotion/styled@^11.3.0":
+"@emotion/styled@^11.11.0":
   version "11.11.0"
   resolved "https://registry.npmjs.org/@emotion/styled/-/styled-11.11.0.tgz"
   integrity sha512-hM5Nnvu9P3midq5aaXj4I+lnSfNi7Pmd4EWk1fOZ3pxookaQTNew6bp4JaCBYM4HVFZF9g7UjJmsUmC2JlxOng==
@@ -211,7 +211,7 @@
   dependencies:
     "@babel/runtime" "^7.23.9"
 
-"@mui/material@^5.0.0", "@mui/material@^5.15.13":
+"@mui/material@^5.15.13":
   version "5.15.13"
   resolved "https://registry.npmjs.org/@mui/material/-/material-5.15.13.tgz"
   integrity sha512-E+QisOJcIzTTyeJ0o3lgYMcyrmCydb2S4cn9vTtGpIB9uR6fQ6La3dIGsXgYEGyeOB9YkWzQbNzYzvyODGEWKA==
@@ -299,7 +299,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^17.0.0 || ^18.0.0":
+"@types/react@*":
   version "18.2.66"
   resolved "https://registry.npmjs.org/@types/react/-/react-18.2.66.tgz"
   integrity sha512-OYTmMI4UigXeFMF/j4uv0lBBEbongSgptPrHBxqME44h9+yNov+oL6Z3ocJKo0WyXR84sQUNeyIp9MRfckvZpg==
@@ -313,12 +313,30 @@
   resolved "https://registry.npmjs.org/@types/scheduler/-/scheduler-0.16.8.tgz"
   integrity sha512-WZLiwShhwLRmeV6zH+GkbOFT6Z6VklCItrDioxUnv+u4Ll+8vKeFySoFyK/0ctcRpOmwAicELfmys1sDc/Rw+A==
 
+"@yr/monotone-cubic-spline@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@yr/monotone-cubic-spline/-/monotone-cubic-spline-1.0.3.tgz#7272d89f8e4f6fb7a1600c28c378cc18d3b577b9"
+  integrity sha512-FQXkOta0XBSUPHndIKON2Y9JeQz5ZeMqLYZVVK93FliNBFm7LNMIZmY6FrMEB9XPcDbE2bekMbZD6kzDkxwYjA==
+
 ansi-styles@^3.2.1:
   version "3.2.1"
   resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-3.2.1.tgz"
   integrity sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==
   dependencies:
     color-convert "^1.9.0"
+
+apexcharts@^3.47.0:
+  version "3.47.0"
+  resolved "https://registry.yarnpkg.com/apexcharts/-/apexcharts-3.47.0.tgz#887db702b7246119d3e9077a45bbe05f236fbe84"
+  integrity sha512-s/fgNCA69b8lJdhI3R7Z+/Df47RPplLyHwuvttecR+aaZ3/Pm6wHYPiAGjqDNbVsMGXhuA9mcOpIYU5ZWeSdeg==
+  dependencies:
+    "@yr/monotone-cubic-spline" "^1.0.3"
+    svg.draggable.js "^2.2.2"
+    svg.easing.js "^2.0.0"
+    svg.filter.js "^2.0.2"
+    svg.pathmorphing.js "^0.1.3"
+    svg.resize.js "^1.4.3"
+    svg.select.js "^3.0.1"
 
 babel-plugin-macros@^3.1.0:
   version "3.1.0"
@@ -470,7 +488,7 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
-loose-envify@^1.1.0, loose-envify@^1.4.0:
+loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz"
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -518,20 +536,14 @@ prop-types@^15.6.2, prop-types@^15.8.1:
     object-assign "^4.1.1"
     react-is "^16.13.1"
 
-"react-dom@^17.0.0 || ^18.0.0", react-dom@>=16.6.0, react-dom@>=16.8.0:
-  version "18.2.0"
-  resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.2.0.tgz"
-  integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
+react-apexcharts@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/react-apexcharts/-/react-apexcharts-1.4.1.tgz#95ab31e4d2201308f59f3d2a4b65d10d9d0ea4bb"
+  integrity sha512-G14nVaD64Bnbgy8tYxkjuXEUp/7h30Q0U33xc3AwtGFijJB9nHqOt1a6eG0WBn055RgRg+NwqbKGtqPxy15d0Q==
   dependencies:
-    loose-envify "^1.1.0"
-    scheduler "^0.23.0"
+    prop-types "^15.8.1"
 
-react-is@^16.13.1:
-  version "16.13.1"
-  resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
-  integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
-
-react-is@^16.7.0:
+react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -551,13 +563,6 @@ react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-"react@^17.0.0 || ^18.0.0", react@^18.2.0, react@>=16.6.0, react@>=16.8.0:
-  version "18.2.0"
-  resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
-  integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
-  dependencies:
-    loose-envify "^1.1.0"
-
 regenerator-runtime@^0.14.0:
   version "0.14.1"
   resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.14.1.tgz"
@@ -576,13 +581,6 @@ resolve@^1.19.0:
     is-core-module "^2.13.0"
     path-parse "^1.0.7"
     supports-preserve-symlinks-flag "^1.0.0"
-
-scheduler@^0.23.0:
-  version "0.23.0"
-  resolved "https://registry.npmjs.org/scheduler/-/scheduler-0.23.0.tgz"
-  integrity sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==
-  dependencies:
-    loose-envify "^1.1.0"
 
 source-map@^0.5.7:
   version "0.5.7"
@@ -605,6 +603,61 @@ supports-preserve-symlinks-flag@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
+
+svg.draggable.js@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/svg.draggable.js/-/svg.draggable.js-2.2.2.tgz#c514a2f1405efb6f0263e7958f5b68fce50603ba"
+  integrity sha512-JzNHBc2fLQMzYCZ90KZHN2ohXL0BQJGQimK1kGk6AvSeibuKcIdDX9Kr0dT9+UJ5O8nYA0RB839Lhvk4CY4MZw==
+  dependencies:
+    svg.js "^2.0.1"
+
+svg.easing.js@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/svg.easing.js/-/svg.easing.js-2.0.0.tgz#8aa9946b0a8e27857a5c40a10eba4091e5691f12"
+  integrity sha512-//ctPdJMGy22YoYGV+3HEfHbm6/69LJUTAqI2/5qBvaNHZ9uUFVC82B0Pl299HzgH13rKrBgi4+XyXXyVWWthA==
+  dependencies:
+    svg.js ">=2.3.x"
+
+svg.filter.js@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/svg.filter.js/-/svg.filter.js-2.0.2.tgz#91008e151389dd9230779fcbe6e2c9a362d1c203"
+  integrity sha512-xkGBwU+dKBzqg5PtilaTb0EYPqPfJ9Q6saVldX+5vCRy31P6TlRCP3U9NxH3HEufkKkpNgdTLBJnmhDHeTqAkw==
+  dependencies:
+    svg.js "^2.2.5"
+
+svg.js@>=2.3.x, svg.js@^2.0.1, svg.js@^2.2.5, svg.js@^2.4.0, svg.js@^2.6.5:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/svg.js/-/svg.js-2.7.1.tgz#eb977ed4737001eab859949b4a398ee1bb79948d"
+  integrity sha512-ycbxpizEQktk3FYvn/8BH+6/EuWXg7ZpQREJvgacqn46gIddG24tNNe4Son6omdXCnSOaApnpZw6MPCBA1dODA==
+
+svg.pathmorphing.js@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/svg.pathmorphing.js/-/svg.pathmorphing.js-0.1.3.tgz#c25718a1cc7c36e852ecabc380e758ac09bb2b65"
+  integrity sha512-49HWI9X4XQR/JG1qXkSDV8xViuTLIWm/B/7YuQELV5KMOPtXjiwH4XPJvr/ghEDibmLQ9Oc22dpWpG0vUDDNww==
+  dependencies:
+    svg.js "^2.4.0"
+
+svg.resize.js@^1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/svg.resize.js/-/svg.resize.js-1.4.3.tgz#885abd248e0cd205b36b973c4b578b9a36f23332"
+  integrity sha512-9k5sXJuPKp+mVzXNvxz7U0uC9oVMQrrf7cFsETznzUDDm0x8+77dtZkWdMfRlmbkEEYvUn9btKuZ3n41oNA+uw==
+  dependencies:
+    svg.js "^2.6.5"
+    svg.select.js "^2.1.2"
+
+svg.select.js@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/svg.select.js/-/svg.select.js-2.1.2.tgz#e41ce13b1acff43a7441f9f8be87a2319c87be73"
+  integrity sha512-tH6ABEyJsAOVAhwcCjF8mw4crjXSI1aa7j2VQR8ZuJ37H2MBUbyeqYr5nEO7sSN3cy9AR9DUwNg0t/962HlDbQ==
+  dependencies:
+    svg.js "^2.2.5"
+
+svg.select.js@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/svg.select.js/-/svg.select.js-3.0.1.tgz#a4198e359f3825739226415f82176a90ea5cc917"
+  integrity sha512-h5IS/hKkuVCbKSieR9uQCj9w+zLHoPh+ce19bBYyqF53g6mnPB8sAtIbe1s9dh2S2fCmYX2xel1Ln3PJBbK4kw==
+  dependencies:
+    svg.js "^2.6.5"
 
 to-fast-properties@^2.0.0:
   version "2.0.0"

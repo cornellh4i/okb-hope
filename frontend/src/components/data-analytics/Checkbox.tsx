@@ -18,7 +18,7 @@ const Checkbox = (props: CheckboxProps) => {
         type="checkbox"
         checked={props.isChecked}
         value={props.value}
-        className="w-4 h-4 text-blue-600"
+        className="w-4 h-4 text-blue-500"
       />
       {props.label}
     </li>
