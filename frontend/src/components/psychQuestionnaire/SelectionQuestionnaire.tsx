@@ -7,13 +7,15 @@ import CheckedPatient from '../../assets/checked_patient.svg';
 interface SelectionQuestionnaireProps {
   patient: boolean;
   psychiatrist: boolean;
+  onChange: (option: 'patient' | 'psychiatrist') => void;
 }
 
-const SelectionQuestionnaire = ({ patient, psychiatrist }: SelectionQuestionnaireProps) => {
-  const [selectedOption, setSelectedOption] = useState(null);
+const SelectionQuestionnaire = ({ patient, psychiatrist, onChange }: SelectionQuestionnaireProps) => {
+  const [selectedOption, setSelectedOption] = useState<null | 'patient' | 'psychiatrist'>(null);
 
-  const handleOptionClick = (option) => {
+  const handleOptionClick = (option: 'patient' | 'psychiatrist') => {
     setSelectedOption(option);
+    onChange(option)
   };
 
   return (
@@ -33,9 +35,9 @@ const SelectionQuestionnaire = ({ patient, psychiatrist }: SelectionQuestionnair
         </div>
         <div
           className={`flex items-center justify-start ml-7 mr-2 pb-3`}
-          onClick={() => handleOptionClick('psych')}
+          onClick={() => handleOptionClick('psychiatrist')}
         >
-          {selectedOption === 'psych' ? <CheckedPsych /> : <UncheckedPsych />}
+          {selectedOption === 'psychiatrist' ? <CheckedPsych /> : <UncheckedPsych />}
         </div>
       </div>
     </div>

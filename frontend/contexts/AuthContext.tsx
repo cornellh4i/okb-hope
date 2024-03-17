@@ -1,13 +1,11 @@
-import { createContext, useState, ReactNode, useContext, useEffect, FC } from 'react';
-import { auth, signInWithGoogle, logout, fetchRole } from "../firebase/firebase";
-import { onAuthStateChanged, User } from "firebase/auth";
-// import { auth } from "../firebase/firebase";
+import { createContext, useState, ReactNode, useContext, useEffect } from 'react';
+import { auth, logout, fetchRole, logInWithGoogle } from "../firebase/firebase";
+import { onAuthStateChanged, User as FirebaseAuthUser } from "firebase/auth";
+import router from 'next/router';
 
-// type AuthUser = User | null;
-// type AuthData = { user?: AuthUser }
-
-// const AuthUserContext = createContext<AuthData | undefined>(undefined)
-
+interface User extends FirebaseAuthUser {
+  userType: string;
+}
 
 type AuthContextType = {
   user: User | null;
@@ -18,44 +16,85 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-
-// type FCProps = { children?: ReactNode }
-
-// export const AuthProvider: FC<FCProps> = ({ children }) => {
-//   const [user, setUser] = useState<AuthUser>(null);
-
-//   useEffect(() => (auth.onAuthStateChanged(
-//     setUser
-//   )), []);
-
-//   return (<AuthUserContext.Provider value={{ user }}>{children}</AuthUserContext.Provider>);
-// }
-
-export function AuthProvider({ children }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setCurrentUser] = useState<User | null>(null);
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setCurrentUser(user);
-      if (user) {
-        const userRole = await fetchRole(user.uid);
-        setRole(userRole);
-      } else {
-        setRole(null);
+    const fetchData = async () => {
+      try {
+        // Check if user is available and navigate to dashboard if so
+        if (user) {
+          console.log(router.pathname)
+          if (user.userType == "psychiatrist") {
+            if (router.pathname == "/psych_dashboard" || router.pathname == `/psychiatrist/[psychiatrist_id]/psych_dashboard`)
+              router.push(`/psychiatrist/${user.uid}/psych_dashboard`);
+            else if (router.pathname == "/messages" || router.pathname == `/psychiatrist/[psychiatrist_id]/messages`)
+              router.push(`/psychiatrist/${user.uid}/messages`);
+            else if (router.pathname == "/edit_psych" || router.pathname == `/psychiatrist/[psychiatrist_id]/edit_psych`)
+              router.push(`/psychiatrist/${user.uid}/edit_psych`);
+            else {
+              router.push(`/psychiatrist/${user.uid}/psych_dashboard`);
+            }
+          }
+          else if (user.userType == "patient") {
+            if (router.pathname == "/dashboard" || router.pathname == `/patient/[patient_id]/dashboard`)
+              router.push(`/patient/${user.uid}/dashboard`);
+            else if (router.pathname == "/discover" || router.pathname == `/patient/[patient_id]/discover`)
+              router.push(`/patient/${user.uid}/discover`);
+            else if (router.pathname == "/messages" || router.pathname == `/patient/[patient_id]/messages`)
+              router.push(`/patient/${user.uid}/messages`);
+            else if (router.pathname == "/edit_profile" || router.pathname == `/patient/[patient_id]/edit_profile`)
+              router.push(`/patient/${user.uid}/edit_profile`);
+            else
+              router.push(`/patient/${user.uid}/dashboard`);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
-    });
+    };
+
+    // Check if user is available before fetching data
+    if (user) {
+      fetchData();
+    }
+  }, [user, router]);
+
+  useEffect(() => {
+    const signInAndFetchRole = async () => {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          setRole(null); // Reset role state
+          const userRole = await fetchRole(user.uid);
+          setCurrentUser({ ...(user as User), userType: userRole });
+          setRole(userRole); // Update role state after fetchRole
+        } else {
+          setRole(null);
+          setCurrentUser(null);
+        }
+      } catch (error) {
+        console.error('Error during sign-in:', error);
+        // Handle sign-in error
+      }
+    };
+
+    const unsubscribe = onAuthStateChanged(auth, signInAndFetchRole);
 
     return unsubscribe;
   }, []);
 
-  function login() {
-    return signInWithGoogle();
+  async function login() {
+    await logInWithGoogle();
   }
 
-  function logOut() {
-    return logout();
+  async function logOut() {
+    router.push('/');
+    await logout();
   }
+
+
 
   const value: AuthContextType = {
     user,
@@ -67,12 +106,8 @@ export function AuthProvider({ children }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-
-
 export const useAuth = () => {
-  const context = useContext(AuthContext)
-  //   const context = useContext(AuthUserContext);
-  // if (!context) throw new Error("AuthUserContext has no value")
-  if (!context) throw new Error("AuthContext has no value")
-  return context
-}
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("AuthContext has no value");
+  return context;
+};

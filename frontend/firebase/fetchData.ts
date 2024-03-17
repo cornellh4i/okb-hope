@@ -1,13 +1,12 @@
 import { db } from './firebase';
 import { getDocs, query, where, collection, onSnapshot, doc, updateDoc } from "firebase/firestore";
-import { IAppointment, IAvailability, IPatient, IPsychiatrist, IUser} from '@/schema';
+import { IAppointment, IAvailability, IPatient, IPsychiatrist, IUser } from '@/schema';
 import { useAuth } from '../contexts/AuthContext';
 
 /**
- * Fetches professional data from the Firestore based on first and last name.
+ * Fetches professional data from the Firestore based on psych_uid.
  * 
- * @param firstName - The first name of the professional.
- * @param lastName - The last name of the professional.
+ * @param psych_uid - The uid of the professional.
  * @returns The professional data, or null if not found.
  */
 const fetchProfessionalData = async (psych_uid: string) => {
@@ -56,24 +55,24 @@ const fetchAllUsers = async () => {
 }
 
 
-const updateUser = async (userId: string, savedPsychiatrists: string[]) => {
-  try {
-    console.log("hi")
-    const userDocRef = doc(db, 'User', userId);
-    console.log(userDocRef)
+// const updateUser = async (userId: string, savedPsychiatrists: string[]) => {
+//   try {
+//     console.log("hi")
+//     const userDocRef = doc(db, 'User', userId);
+//     console.log(userDocRef)
 
-    // Update only the savedPsychiatrists field
-    const updateUserPayload: Partial<IUser> = {
-      savedPsychiatrists: savedPsychiatrists,
-    };
+//     // Update only the savedPsychiatrists field
+//     const updateUserPayload: Partial<IUser> = {
+//       savedPsychiatrists: savedPsychiatrists,
+//     };
 
-    await updateDoc(userDocRef, updateUserPayload);
-    console.log(`User with ID ${userId} updated successfully`);
-  } catch (error) {
-    console.error(`Error updating user with ID ${userId}:`, error);
-    throw error;
-  }
-};
+//     await updateDoc(userDocRef, updateUserPayload);
+//     console.log(`User with ID ${userId} updated successfully`);
+//   } catch (error) {
+//     console.error(`Error updating user with ID ${userId}:`, error);
+//     throw error;
+//   }
+// };
 
 const fetchPatientDetails = async (uid: string) => {
   try {
@@ -98,11 +97,11 @@ const fetchPatientDetails = async (uid: string) => {
 }
 
 const fetchApptDetails = async (uid: string) => {
-  try{
+  try {
     const apptRef = collection(db, "appointments");
-    const q = query(apptRef, where("patientId", "==", uid)); 
+    const q = query(apptRef, where("patientId", "==", uid));
     const response = await getDocs(q);
-    if(!response.empty){
+    if (!response.empty) {
       const docData: IAppointment[] = response.docs.map((doc) => doc.data() as IAppointment);
       return docData
     } else {
@@ -139,7 +138,7 @@ function fetchUserChats(setMessages) {
   return unsubscribe;
 }
 
-const fetchDocumentId = async (type: string, uid: string)  => {
+const fetchDocumentId = async (type: string, uid: string) => {
   try {
     const q = query(
       collection(db, type),
@@ -176,6 +175,6 @@ const fetchAvailability = async (availId: string) => {
     throw error;
   }
 }
-export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId, fetchApptDetails, fetchAvailability, fetchAllUsers, updateUser };
+export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId, fetchApptDetails, fetchAvailability, fetchAllUsers };
 
 

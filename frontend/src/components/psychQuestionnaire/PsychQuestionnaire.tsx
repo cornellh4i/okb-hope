@@ -1,16 +1,17 @@
 import NameGenderImageQuestionnaire from "./NameGenderImageQuestionnaire";
 import PositionLanguageQuestionnaire from "./PositionLanguageQuestionnaire";
-import SelectionQuestioinnaire from "./SelectionQuestionnaire";
+import SelectionQuestionnaire from "./SelectionQuestionnaire";
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Gender } from "@/schema";
+import Link from "next/link";
+import { useRouter } from 'next/router';
+import { Gender, IPatient, IUser } from "@/schema";
 import ProgressBar0 from '../../assets/progressbar0.svg';
 import ProgressBar33 from '../../assets/progressbar33.svg';
 import ProgressBar67 from '../../assets/progressbar67.svg';
-
-
-
-
+import { db, signUpWithGoogle, logout } from "../../../firebase/firebase";
+import { useAuth } from "../../../contexts/AuthContext";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 const PsychQuestionnaire = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -20,16 +21,52 @@ const PsychQuestionnaire = () => {
     const [image, setImage] = useState<string>("");
     const [position, setPosition] = useState<string>("");
     const [checked, setChecked] = useState<{ [key: string]: boolean }>(
-        { 'english': false, 'twi': false, 'fante': false, 'ewe': false, 'ga': false, 'other': false });
+        { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
     const [languages, setLanguages] = useState<string[]>([]);
     const [aboutYourself, setAboutYourself] = useState<string>("");
 
-    const [prevExp, setPrevExp] = useState<string>("");
-    const [prevExpTime, setPrevExpTime] = useState<string>("");
-    const [concerns, setConcerns] = useState<string>("");
-
     const [patient, setPatient] = useState<boolean>(false);
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
+    const router = useRouter();
+    const { user } = useAuth();
+
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             // Check if user is available and navigate to dashboard if so
+    //             if (user) {
+    //                 router.push(`/${user.userType}/${user.uid}/psych_dashboard`);
+    //                 // const q = query(
+    //                 //     collection(db, "users"),
+    //                 //     where("uid", "==", user?.uid)
+    //                 // );
+    //                 // const response = await getDocs(q);
+    //                 // if (!response.empty) {
+    //                 //     const doc = response.docs[0];
+    //                 //     const docId = doc.id;
+    //                 //     const docData = doc.data();
+    //                 //     const userData = docData as IUser;
+    //                 //     console.log("userData.userType:", userData.userType);
+    //                 //     console.log("userData.uid:", userData.uid);
+    //                 //     router.push(`/${userData.userType}/${userData.uid}/psych_dashboard`);
+    //                 // } else {
+    //                 //     console.error("No document found");
+    //                 // }
+    //             }
+    //         } catch (error) {
+    //             console.error("Error fetching user data:", error);
+    //         }
+    //     };
+
+    //     // Check if user is available before fetching data
+    //     if (user) {
+    //         fetchData();
+    //     }
+    // }, [user]);
+
+
+
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
@@ -48,10 +85,18 @@ const PsychQuestionnaire = () => {
             case 'female':
                 setGender(Gender.Female);
                 break;
+            case 'other':
+                setGender(Gender.Other);
+                break;
             default:
                 setGender(undefined);
         }
     };
+
+    const handleAboutYourselfChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setAboutYourself(event.target.value);
+    }
+
 
     const handlePosition = (event: ChangeEvent<HTMLInputElement>) => {
         const selectedPosition = (event.target.value);
@@ -85,14 +130,14 @@ const PsychQuestionnaire = () => {
         console.log(newChecked);
     };
 
-    const handlePrevExpChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setPrevExp(event.target.value);
-    }
-    const handlePrevExpTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setPrevExpTime(event.target.value);
-    }
-    const handleConcernsChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setConcerns(event.target.value);
+    const handleOptionChange = (option: 'patient' | 'psychiatrist') => {
+        if (option === 'patient') {
+            setPatient(true);
+            setPsychiatrist(false);
+        } else {
+            setPatient(false);
+            setPsychiatrist(true);
+        }
     }
 
     const goBack = () => {
@@ -101,7 +146,15 @@ const PsychQuestionnaire = () => {
         }
     };
 
-    const goNext = () => {
+    const goNext = async () => {
+        if (currentStep === 1 && (patient === false && psychiatrist === false)) {
+            alert("Please select either patient or psychiatrist");
+            return;
+        }
+        if (currentStep === 1 && patient) {
+            router.push('/patient_questionnaire');
+        }
+
         if (currentStep === 2 && (firstName.trim() === "" || lastName.trim() === "")) {
             alert("Please fill out both first and last name.");
             return;
@@ -125,11 +178,47 @@ const PsychQuestionnaire = () => {
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
         }
+
+        if (currentStep === 3) {
+            console.log("adding to database");
+            try {
+                await signUpWithGoogle(
+                    "psychiatrist",
+                    firstName,
+                    lastName,
+                    position,
+                    image,
+                    [],
+                    gender,
+                    "",
+                    languages,
+                    [],
+                    aboutYourself,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    [],
+                    gender,
+                    [],
+                );
+                router.push(`/${user?.userType}/${user?.uid}/psych_dashboard`);
+                // setDocumentAdded(true);
+            } catch (error) {
+                console.error('Error signing in:', error);
+                logout();
+            }
+        }
     };
 
     return (
         <div className={'flex flex-col bg-off-white'}>
-            {currentStep === 1 && <SelectionQuestioinnaire patient={patient} psychiatrist={psychiatrist} />}
+            {currentStep === 1 && <SelectionQuestionnaire
+                patient={patient}
+                psychiatrist={psychiatrist}
+                onChange={handleOptionChange}
+            />}
             {currentStep === 2 &&
                 <NameGenderImageQuestionnaire
                     firstName={firstName}
@@ -150,6 +239,8 @@ const PsychQuestionnaire = () => {
                     setChecked={setChecked}
                     handleCheck={handleCheck}
                     handlePosition={handlePosition}
+                    handleAboutYourself={handleAboutYourselfChange}
+
                 />}
             <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3`}>
                 <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>

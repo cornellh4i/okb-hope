@@ -1,13 +1,18 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
 import ChatApp from '@/components/chatapp/ChatApp';
 import { LoginPopup } from '@/components/LoginPopup';
-import router from 'next/router';
+import { useAuth } from '../../../../contexts/AuthContext';
+import { useRouter } from 'next/router';
 
 const MessagesPage = () => {
   const { user, login } = useAuth();
   const [showPopup, setShowPopup] = useState(false);
+  console.log(user)
+
+  const router = useRouter();
+  const { userId } = router.query;
+  console.log(userId)
 
   useEffect(() => {
     if (!user) {
@@ -25,6 +30,7 @@ const MessagesPage = () => {
     setShowPopup(false);
     onClose();
   };
+
   return (
     <>
       <Head>
@@ -32,6 +38,7 @@ const MessagesPage = () => {
         <meta name="description" content="Messages page" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        {/* <script dangerouslySetInnerHTML={{ __html: 'window.scrollTo(0, 0);' }} /> */}
       </Head>
       {user ? (
         <ChatApp />
@@ -39,11 +46,11 @@ const MessagesPage = () => {
         <>
           {showPopup && (
             <LoginPopup
-            onClose={() => setShowPopup(false)}
-            logInWithGoogleAndRedirect={logInWithGoogleAndRedirect}
-            signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect}
+              onClose={() => setShowPopup(false)}
+              logInWithGoogleAndRedirect={logInWithGoogleAndRedirect}
+              signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect}
 
-          />
+            />
           )}
         </>
       )}
