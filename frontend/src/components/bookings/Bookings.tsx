@@ -1,37 +1,34 @@
-import React from "react";
-import { PopupModal } from "react-calendly";
+import React, { useEffect, useState } from "react";
+// Allows for dynamic importing of components
+import dynamic from "next/dynamic";
 
-class Bookings extends React.Component {
-  
-  constructor(props) {
-    super(props);
+/* 
+We want the popup button to be dynamically imported to avoid 
+SSR (Server-side rendering) errors related to the usage of document or window 
+objects and to ensure that the PopupButton component is loaded only on the 
+client-side.
+*/
+const PopupButton = dynamic(() => import("react-calendly").then(mod => mod.PopupButton), { ssr: false });
 
-    this.state = {
-      isOpen: false,
-    };
-  }
+export default function Booking({ url }) {
+  const [rootElement, setRootElement] = useState<HTMLElement | null>(null);
 
-  render() {
-    return (
-      <div>
-        <button
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setRootElement(document.getElementById("root"));
+    }
+  }, []);
+
+  return (
+    <div id="root">
+      {rootElement && (
+        <PopupButton
           className={`bg-okb-blue text-okb-white active:bg-gray-500 font-bold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
-          onClick={() => this.setState({ isOpen: true })}
-        >
-          Book Appointment
-        </button>
-        <PopupModal
-          url="https://calendly.com/sz389"
-          pageSettings={this.props.pageSettings}
-          utm={this.props.utm}
-          prefill={this.props.prefill}
-          onModalClose={() => this.setState({ isOpen: false })}
-          open={this.state.isOpen}
-          rootElement={document.getElementById("root")}
+          url={url} // Pass the URL as a prop
+          rootElement={rootElement}
+          text="Book Appointment"
         />
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 }
-
-export default Bookings;
