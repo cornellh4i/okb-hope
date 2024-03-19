@@ -3,8 +3,10 @@ import MessageItem from './MessageItem';
 import { db, auth } from '../../../firebase/firebase';
 import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 import { useRouter } from 'next/router';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const MessageList: React.FC = () => {
+  const { user } = useAuth();
   const router = useRouter();
   const uid = auth.currentUser?.uid;
   const photoURL = auth.currentUser?.photoURL;
@@ -17,22 +19,38 @@ const MessageList: React.FC = () => {
   const [psychiatristId, setPsychiatristId] = useState('');
   const [patientId, setPatientId] = useState('');
 
+  // useEffect(() => {
+  //   const { psych_id } = router.query;
+  //   if (psych_id) {
+  //     setPsychiatristId(psych_id as string);
+  //   }
+  // }, [router.query]);
+
+  // useEffect(() => {
+  //   const { patient_id } = router.query;
+  //   if (patient_id) {
+  //     setPatientId(patient_id as string);
+  //   }
+  // }, [router.query]);
+
   useEffect(() => {
-    const { psych_id } = router.query;
-    if (psych_id) {
-      setPsychiatristId(psych_id as string);
+    if (user?.userType === "patient") {
+      const { psych_id } = router.query;
+      if (psych_id) {
+        setPsychiatristId(psych_id as string);
+      }
+      setPatientId(user.uid);
+    } else if (user?.userType === "psychiatrist") {
+      const { patient_id } = router.query;
+      if (patient_id) {
+        setPatientId(patient_id as string);
+      }
+      setPsychiatristId(user.uid);
     }
   }, [router.query]);
 
   useEffect(() => {
-    const { patient_id } = router.query;
-    if (patient_id) {
-      setPatientId(patient_id as string);
-    }
-  }, [router.query]);
-
-  useEffect(() => {
-    if (uid && psychiatristId) {
+    if (patientId && psychiatristId) {
       const queryDoc = query(
         messagesRef,
         where("uid", "==", uid),

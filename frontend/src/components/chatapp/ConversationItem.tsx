@@ -44,8 +44,13 @@ const ConversationItem: React.FC<{ read: boolean, conversation: any, isLast: boo
 
   const handleClick = () => {
     const { patientId, psychiatristId } = conversation;
-    const url = `/patient/${patientId}/messages?psych_id=${psychiatristId}&psych_name=${encodeURIComponent(displayName)}`;
-    router.push(url);
+    if (user?.userType === "patient") {
+      const url = `/patient/${patientId}/messages?psych_id=${psychiatristId}&psych_name=${encodeURIComponent(displayName)}`;
+      router.push(url);
+    } else {
+      const url = `/psychiatrist/${psychiatristId}/messages?patient_id=${patientId}&patient_name=${encodeURIComponent(displayName)}`;
+      router.push(url);
+    }
   };
 
   return (

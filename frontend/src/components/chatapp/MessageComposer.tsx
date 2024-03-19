@@ -2,16 +2,28 @@ import React, { useState, useEffect } from "react";
 import { db, auth } from '../../../firebase/firebase';
 import { collection, addDoc, query, where, getDocs, serverTimestamp, doc, updateDoc } from "firebase/firestore";
 import { useRouter } from 'next/router';
+import { useAuth } from "../../../contexts/AuthContext";
 
 const MessageComposer: React.FC = () => {
+  const { user } = useAuth();
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [psychiatristId, setPsychiatristId] = useState('');
+  const [patientId, setPatientId] = useState('');
 
   useEffect(() => {
-    const { psych_id } = router.query;
-    if (psych_id) {
-      setPsychiatristId(psych_id as string);
+    if (user?.userType === "patient") {
+      const { psych_id } = router.query;
+      if (psych_id) {
+        setPsychiatristId(psych_id as string);
+      }
+      setPatientId(user.uid);
+    } else if (user?.userType === "psychiatrist") {
+      const { patient_id } = router.query;
+      if (patient_id) {
+        setPatientId(patient_id as string);
+      }
+      setPsychiatristId(user.uid);
     }
   }, [router.query]);
 
@@ -22,23 +34,34 @@ const MessageComposer: React.FC = () => {
   const sendMessage = async (e: any) => {
     e.preventDefault();
 
-    const patientId = auth.currentUser?.uid;
-    const uid = auth.currentUser?.uid;
+    // const patientId = auth.currentUser?.uid;
+    // const uid = auth.currentUser?.uid;
     const photoURL = auth.currentUser?.photoURL;
-    const participants = [uid, psychiatristId]; // Now includes the psychiatrist's ID
+    const participants = [patientId, psychiatristId]; // Now includes the psychiatrist's ID
     console.log(participants);
     const messagesRef = collection(db, "Chats");
 
     if (message !== "" && psychiatristId && patientId) {
       try {
-        const docRef = await addDoc(messagesRef, {
-          text: message,
-          createdAt: serverTimestamp(),
-          uid: participants[0],
-          recipientId: participants[1],
-          photoURL
-        });
-        console.log("Document written with ID: ", docRef.id);
+        if (user?.userType === "patient") {
+          const docRef = await addDoc(messagesRef, {
+            text: message,
+            createdAt: serverTimestamp(),
+            uid: participants[0],
+            recipientId: participants[1],
+            photoURL
+          });
+          console.log("Document written with ID: ", docRef.id);
+        } else if (user?.userType === "psychiatrist") {
+          const docRef = await addDoc(messagesRef, {
+            text: message,
+            createdAt: serverTimestamp(),
+            uid: participants[1],
+            recipientId: participants[0],
+            photoURL
+          });
+          console.log("Document written with ID: ", docRef.id);
+        }
       } catch (e) {
         console.error("error adding document: ", e);
       }
