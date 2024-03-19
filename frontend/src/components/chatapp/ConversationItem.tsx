@@ -51,9 +51,12 @@ const ConversationItem: React.FC<{ read: boolean, conversation: any, isLast: boo
   return (
     <button
       className={`conversation-item group ${!isLast ? 'border-b-[1px]' : ''}`}
+      style={hoverStyles}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       onClick={handleClick}
     >
-      <div className='flex flex-row px-3 py-4 gap-4 bg-white items-center mx-5'>
+      <div className='flex flex-row px-3 py-4 gap-4 bg-white items-center mx-5' style={hoverStyles}>
         <div className='flex flex-col items-start rounded-[10px]'>
           <button className="font-semibold mb-1 text-black text-[16px]">{displayName}</button>
           <p className="text-[12px] text-black">{conversation.recentMessage.text || 'No messages'}</p>
