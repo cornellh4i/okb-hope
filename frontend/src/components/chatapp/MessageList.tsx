@@ -56,57 +56,29 @@ const MessageList: React.FC = () => {
 
   useEffect(() => {
     if (uid && psychiatristId && patientId) {
-      let recipientIdQuery;
+      const recipientIdQuery = (uid === psychiatristId) ? [patientId, psychiatristId] : [psychiatristId, patientId];
 
-      if (uid === psychiatristId) {
-        // If the current user is the psychiatrist, they should be able to see messages sent to and from the patient.
-        recipientIdQuery = [patientId, psychiatristId];
-      } else if (uid === patientId) {
-        // If the current user is the patient, they should be able to see messages sent to and from the psychiatrist.
-        recipientIdQuery = [psychiatristId, patientId];
-      } else {
-        // If we can't determine the role, don't set up a query.
-        console.error("Unable to determine user role for messaging.");
-        return;
-      }
-
-      const query1 = query(
+      const queryDoc = query(
         messagesRef,
-        where("uid", "==", uid),
-        where("recipientId", "in", recipientIdQuery),
-        orderBy('createdAt')
-      );
-
-      const query2 = query(
-        messagesRef,
+        orderBy('createdAt'),
         where("uid", "in", recipientIdQuery),
-        where("recipientId", "==", uid),
-        orderBy('createdAt')
+        where("recipientId", "in", recipientIdQuery)
       );
 
-
-      const unsubscribe1 = onSnapshot(query1, (querySnapshot) => {
+      const unsubscribe = onSnapshot(queryDoc, (querySnapshot) => {
         const messageData = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
-        setMessages((prevMessages) => [...prevMessages, ...messageData]);
-      }, (error) => { console.error("Error fetching data: ", error); });
-
-      const unsubscribe2 = onSnapshot(query2, (querySnapshot) => {
-        const messageData = querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setMessages((prevMessages) => [...prevMessages, ...messageData]);
+        setMessages(messageData);
       }, (error) => { console.error("Error fetching data: ", error); });
 
       return () => {
-        unsubscribe1();
-        unsubscribe2();
+        unsubscribe();
       };
     }
   }, [uid, psychiatristId, patientId]);
+
 
 
 
@@ -117,12 +89,6 @@ const MessageList: React.FC = () => {
       inputElement.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
-  // useEffect(() => {
-  //   const inputElement = scrollEnd.current;
-  //   if (inputElement) {
-  //     inputElement.scrollIntoView({ behavior: 'smooth' });
-  //   }
-  // }, [messages.length]);
 
   return (
     <div>
