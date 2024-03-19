@@ -12,12 +12,12 @@ const ConversationItem: React.FC<{ conversation: any }> = ({ conversation }) => 
       const messageData = querySnapshot.docs.map((doc) => doc.data())[0];
       setLastMessage(messageData?.content || null);
     });
-  
+
     return () => {
       unsubscribe();
     };
   }, [collection(db, `conversations/${conversation.id}/messages`)]);
-  
+
 
   return (
     <div className="conversation-item bg-white border-b-4 rounded-b-md px-2 py-2">

@@ -132,17 +132,17 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
 
   // Redirects to a professional's profile page and passes their uid as query parameter
   function handleGoToProfProfile(psych_uid: string) {
-    {
-      user ?
-        router.push({
-          pathname: `/${user?.userType}/${user?.uid}/prof_profile`,
-          query: { psych_uid: psych_uid }
-        })
-        : router.push({
-          pathname: `/prof_profile`,
-          query: { psych_uid: psych_uid }
-        })
-    }
+
+    user ?
+      router.push({
+        pathname: `/${user?.userType}/${user?.uid}/prof_profile`,
+        query: { psych_uid: psych_uid }
+      })
+      : router.push({
+        pathname: `/prof_profile`,
+        query: { psych_uid: psych_uid }
+      })
+
   }
 
   const logInWithGoogleAndRedirect = async (onClose: () => void) => {
