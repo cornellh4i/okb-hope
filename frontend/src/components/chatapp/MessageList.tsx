@@ -31,28 +31,84 @@ const MessageList: React.FC = () => {
     }
   }, [router.query]);
 
+  // useEffect(() => {
+  //   if (uid && psychiatristId) {
+  //     const queryDoc = query(
+  //       messagesRef,
+  //       where("uid", "==", uid),
+  //       where("recipientId", "==", (uid === psychiatristId) ? patientId : psychiatristId),
+  //       orderBy('createdAt')
+  //     );
+
+  //     const unsubscribe = onSnapshot(queryDoc, (querySnapshot) => {
+  //       const messageData = querySnapshot.docs.map((doc) => ({
+  //         ...doc.data(),
+  //         id: doc.id,
+  //       }));
+  //       setMessages(messageData);
+  //     }, (error) => { console.error("Error fetching data: ", error); });
+
+  //     return () => {
+  //       unsubscribe();
+  //     };
+  //   }
+  // }, [uid, psychiatristId]);
+
   useEffect(() => {
-    if (uid && psychiatristId) {
-      const queryDoc = query(
+    if (uid && psychiatristId && patientId) {
+      let recipientIdQuery;
+
+      if (uid === psychiatristId) {
+        // If the current user is the psychiatrist, they should be able to see messages sent to and from the patient.
+        recipientIdQuery = [patientId, psychiatristId];
+      } else if (uid === patientId) {
+        // If the current user is the patient, they should be able to see messages sent to and from the psychiatrist.
+        recipientIdQuery = [psychiatristId, patientId];
+      } else {
+        // If we can't determine the role, don't set up a query.
+        console.error("Unable to determine user role for messaging.");
+        return;
+      }
+
+      const query1 = query(
         messagesRef,
         where("uid", "==", uid),
-        where("recipientId", "==", (uid === psychiatristId) ? patientId : psychiatristId),
+        where("recipientId", "in", recipientIdQuery),
         orderBy('createdAt')
       );
 
-      const unsubscribe = onSnapshot(queryDoc, (querySnapshot) => {
+      const query2 = query(
+        messagesRef,
+        where("uid", "in", recipientIdQuery),
+        where("recipientId", "==", uid),
+        orderBy('createdAt')
+      );
+
+
+      const unsubscribe1 = onSnapshot(query1, (querySnapshot) => {
         const messageData = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
-        setMessages(messageData);
+        setMessages((prevMessages) => [...prevMessages, ...messageData]);
+      }, (error) => { console.error("Error fetching data: ", error); });
+
+      const unsubscribe2 = onSnapshot(query2, (querySnapshot) => {
+        const messageData = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setMessages((prevMessages) => [...prevMessages, ...messageData]);
       }, (error) => { console.error("Error fetching data: ", error); });
 
       return () => {
-        unsubscribe();
+        unsubscribe1();
+        unsubscribe2();
       };
     }
-  }, [uid, psychiatristId]);
+  }, [uid, psychiatristId, patientId]);
+
+
 
   useEffect(() => {
     const inputElement = scrollEnd.current;
@@ -61,6 +117,12 @@ const MessageList: React.FC = () => {
       inputElement.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+  // useEffect(() => {
+  //   const inputElement = scrollEnd.current;
+  //   if (inputElement) {
+  //     inputElement.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // }, [messages.length]);
 
   return (
     <div>

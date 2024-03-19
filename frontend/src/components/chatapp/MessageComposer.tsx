@@ -7,11 +7,19 @@ const MessageComposer: React.FC = () => {
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [psychiatristId, setPsychiatristId] = useState('');
+  const [patientId, setPatientId] = useState('');
 
   useEffect(() => {
     const { psych_id } = router.query;
     if (psych_id) {
       setPsychiatristId(psych_id as string);
+    }
+  }, [router.query]);
+
+  useEffect(() => {
+    const { patient_id } = router.query;
+    if (patient_id) {
+      setPatientId(patient_id as string);
     }
   }, [router.query]);
 
@@ -22,10 +30,11 @@ const MessageComposer: React.FC = () => {
   const sendMessage = async (e: any) => {
     e.preventDefault();
 
-    const patientId = auth.currentUser?.uid;
     const uid = auth.currentUser?.uid;
     const photoURL = auth.currentUser?.photoURL;
-    const participants = [uid, psychiatristId]; // Now includes the psychiatrist's ID
+    const participants = (uid === patientId)
+      ? [patientId, psychiatristId]
+      : [psychiatristId, patientId];// Now includes the psychiatrist's ID
     console.log(participants);
     const messagesRef = collection(db, "Chats");
 
