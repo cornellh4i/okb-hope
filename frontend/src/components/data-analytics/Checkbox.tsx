@@ -6,6 +6,7 @@ interface CheckboxProps {
   isChecked?: boolean;
   label?: string;
   value?: string;
+  color?: string;
 
 }
 
@@ -18,7 +19,7 @@ const Checkbox = (props: CheckboxProps) => {
         type="checkbox"
         checked={props.isChecked}
         value={props.value}
-        className="w-4 h-4 text-blue-500"
+        className={props.color}
       />
       {props.label}
     </li>

@@ -7,6 +7,7 @@ interface ArrObject {
   id: number;
   label: string;
   value: string;
+  color: string;
   isChecked: boolean;
 }
 
@@ -22,21 +23,21 @@ class Filter extends React.Component<AppProps, AppState> {
     super(props);
     this.state = {
       ages: [
-        { id: 1, label: " 19-29", value: " 19-29", isChecked: true },
-        { id: 2, label: " 30-40", value: " 30-40", isChecked: true },
-        { id: 3, label: " 41-51", value: " 41-51", isChecked: true },
-        { id: 4, label: " 52-62", value: " 52-62", isChecked: true }
+        { id: 1, label: " 19-29", value: " 19-29", color:"w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 2, label: " 30-40", value: " 30-40", color:"w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 3, label: " 41-51", value: " 41-51", color:"w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 4, label: " 52-62", value: " 52-62", color:"w-4 h-4 accent-[#0568a0]", isChecked: true }
       ],
       genders: [
-        { id: 1, label: " Male", value: " Male", isChecked: true },
-        { id: 2, label: " Female", value: " Female", isChecked: true },
-        { id: 3, label: " Other", value: " Other1", isChecked: true },
+        { id: 1, label: " Male", value: " Male", color:"w-4 h-4 accent-[#7392c1]", isChecked: true },
+        { id: 2, label: " Female", value: " Female", color:"w-4 h-4 accent-[#D371BE]", isChecked: true },
+        { id: 3, label: " Other", value: " Other1", color:"w-4 h-4 accent-[#848484]", isChecked: true },
       ],
       ethnicities: [
-        { id: 1, label: " Ewe", value: " Ewe", isChecked: true },
-        { id: 2, label: " Akan", value: " Akan", isChecked: true },
-        { id: 3, label: " Ga", value: " Ga", isChecked: true },
-        { id: 4, label: " Other", value: " Other2", isChecked: true }
+        { id: 1, label: " Ewe", value: " Ewe", color:"w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 2, label: " Akan", value: " Akan", color:"w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 3, label: " Ga", value: " Ga", color:"w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 4, label: " Other", value: " Other2", color:"w-4 h-4 accent-[#0568a0]", isChecked: true }
       ]
     };
   }
@@ -97,8 +98,9 @@ class Filter extends React.Component<AppProps, AppState> {
                 type="checkbox"
                 onClick={this.handleAllCheckedAge}
                 value="checkedall"
+                checked={this.state.ages.every(age => age.isChecked)}
                 defaultChecked={true}
-                className="w-4 h-4 text-blue-500" />{" "}
+                className="w-4 h-4 accent-[#0568a0]"/>{" "}
               All
             </div>
             {this.state.ages.map(age => {
@@ -109,6 +111,7 @@ class Filter extends React.Component<AppProps, AppState> {
                     id={age.id}
                     label={age.label}
                     value={age.value}
+                    color={age.color}
                     isChecked={age.isChecked} />
                 </div>
               );
@@ -125,8 +128,9 @@ class Filter extends React.Component<AppProps, AppState> {
                 type="checkbox"
                 onClick={this.handleAllCheckedGender}
                 value="checkedall"
+                checked={this.state.genders.every(gender => gender.isChecked)}
                 defaultChecked={true}
-                className="w-4 h-4" />{" "}
+                className="w-4 h-4 accent-[#0568a0]" />{" "}
               All
             </div>
             {this.state.genders.map(gender => {
@@ -137,6 +141,7 @@ class Filter extends React.Component<AppProps, AppState> {
                     id={gender.id}
                     label={gender.label}
                     value={gender.value}
+                    color={gender.color}
                     isChecked={gender.isChecked} />
                 </div>
               );
@@ -153,8 +158,9 @@ class Filter extends React.Component<AppProps, AppState> {
                 type="checkbox"
                 onClick={this.handleAllCheckedEthnicity}
                 value="checkedall"
+                checked={this.state.ethnicities.every(ethnicity => ethnicity.isChecked)}
                 defaultChecked={true}
-                className="w-4 h-4"
+                className="w-4 h-4 accent-[#0568a0]"
               />{" "}
               All
             </div>
@@ -166,6 +172,7 @@ class Filter extends React.Component<AppProps, AppState> {
                     id={ethnicity.id}
                     label={ethnicity.label}
                     value={ethnicity.value}
+                    color={ethnicity.color}
                     isChecked={ethnicity.isChecked}
                   />
                 </div>

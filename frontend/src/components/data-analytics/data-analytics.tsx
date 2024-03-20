@@ -3,7 +3,6 @@ import Menu from "./export-menu";
 import Filter from "./FilterSidebar";
 import Questions from "./FilterQuestions"
 import StackedBarChart from "./StackedBarGraph"
-import IndeterminateCheckbox from "./filter-sidebar"
 
 const DataAnalytics = () => {
   return (
@@ -12,7 +11,6 @@ const DataAnalytics = () => {
       <div className="text-2xl font-semibold font-montserrat">Question Type</div>
       <Questions />
       <StackedBarChart />
-      <IndeterminateCheckbox />
       <Filter />
       <Menu />
     </div>
