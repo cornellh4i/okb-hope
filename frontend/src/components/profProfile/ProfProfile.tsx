@@ -14,6 +14,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db, logInWithGoogle, signUpWithGoogle } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
+import Bookings from '../bookings/Bookings';
 
 
 interface ProfProfileProps {
@@ -250,12 +251,10 @@ const ProfProfile = () => {
 
             <div className={`flex flex-row justify-center content-center`}>
                 {/* Book Appointment button, action undefined but should lead to calendly */}
+                <Bookings url = "https://calendly.com/sz389"></Bookings>
                 <button
-                    className={`bg-okb-blue text-okb-white active:bg-gray-500 font-bold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
-                    type="button"
                     onClick={handleBookAppointment}
                 >
-                    Book Appointment
                 </button>
             </div>
         </div>
