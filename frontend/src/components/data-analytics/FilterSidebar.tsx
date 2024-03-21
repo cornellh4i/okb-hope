@@ -89,6 +89,7 @@ class Filter extends React.Component<AppProps, AppState> {
   render() {
     return (
       <>
+      <div className="grid grid-cols-1 gap-4">
         <div className="w-56 bg-white rounded-2xl border-2 border-[#0568a0]">
           <h1 className="ml-3 mt-3"> Age </h1>
           <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
@@ -180,7 +181,7 @@ class Filter extends React.Component<AppProps, AppState> {
             })}
           </ul>
         </div>
-
+      </div>
       </>
     );
   }

@@ -10,7 +10,7 @@ function StackedBarChart() {
                 <div className="container-fluid mb-3">
                     <Chart
                         type="bar"
-                        width={900}
+                        width={800}
                         height={300}
                         series={[
                             {
