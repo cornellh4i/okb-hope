@@ -47,20 +47,20 @@ const Questions: React.FC = (): JSX.Element => {
   return (
     <>
       <button
-        className="w-68 text-[#888888]"
+        className={`w-8/12 text-[#888888] rounded-lg border-2 border-[#0568a0]`}
         onClick={(): void => toggleDropDown()}
         onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
           dismissHandler(e)
         }
       >
-        <div className={`w-68 bg-[#ffffff] ${roundedClass} text-[#888888]`}>
+        <div className={`w-auto bg-[#ffffff] text-[#888888] rounded-lg`}>
           <AccordionSummary expandIcon={changeExpand}>
-            {"Export To..."}
+            {"Select"}
           </AccordionSummary>
         </div>
 
         {showDropDown && (
-          <div className={`border borderColor -[#0568a0]`}>
+          <div className={`border borderColor-[#0568a0] rounded-lg`}>
             <QuestionDropDown
               items={items()}
               showDropDown={false}
