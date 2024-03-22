@@ -38,6 +38,12 @@ function StackedBarChart() {
                             },
                             chart: {
                                 stacked: true,
+                                toolbar: {
+                                    show: true,
+                                    tools: {
+                                        download: false
+                                    }
+                                }
                             },
                             plotOptions: {
                                 bar: {

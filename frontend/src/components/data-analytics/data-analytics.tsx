@@ -14,7 +14,7 @@ const DataAnalytics = () => {
       <Grid container spacing={2}>
         <Grid item xs={9} >
           <Box display="flex" justifyContent="flex-end" marginRight={10}> <StackedBarChart /> </Box>
-          <Box display="flex" justifyContent="flex-end" marginRight={10}> <Menu /> </Box>
+          <Box display="flex" justifyContent="flex-end" marginRight={12}> <Menu /> </Box>
         </Grid>
         <Grid item xs={3}>
           <Filter />
