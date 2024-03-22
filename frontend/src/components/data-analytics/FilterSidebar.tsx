@@ -23,21 +23,21 @@ class Filter extends React.Component<AppProps, AppState> {
     super(props);
     this.state = {
       ages: [
-        { id: 1, label: " 19-29", value: " 19-29", color:"w-4 h-4 accent-[#0568a0]", isChecked: true },
-        { id: 2, label: " 30-40", value: " 30-40", color:"w-4 h-4 accent-[#0568a0]", isChecked: true },
-        { id: 3, label: " 41-51", value: " 41-51", color:"w-4 h-4 accent-[#0568a0]", isChecked: true },
-        { id: 4, label: " 52-62", value: " 52-62", color:"w-4 h-4 accent-[#0568a0]", isChecked: true }
+        { id: 1, label: " 19-29", value: " 19-29", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 2, label: " 30-40", value: " 30-40", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 3, label: " 41-51", value: " 41-51", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 4, label: " 52-62", value: " 52-62", color: "w-4 h-4 accent-[#0568a0]", isChecked: true }
       ],
       genders: [
-        { id: 1, label: " Male", value: " Male", color:"w-4 h-4 accent-[#7392c1]", isChecked: true },
-        { id: 2, label: " Female", value: " Female", color:"w-4 h-4 accent-[#D371BE]", isChecked: true },
-        { id: 3, label: " Other", value: " Other1", color:"w-4 h-4 accent-[#848484]", isChecked: true },
+        { id: 1, label: " Male", value: " Male", color: "w-4 h-4 accent-[#7392c1]", isChecked: true },
+        { id: 2, label: " Female", value: " Female", color: "w-4 h-4 accent-[#D371BE]", isChecked: true },
+        { id: 3, label: " Other", value: " Other1", color: "w-4 h-4 accent-[#848484]", isChecked: true },
       ],
       ethnicities: [
-        { id: 1, label: " Ewe", value: " Ewe", color:"w-4 h-4 accent-[#0568a0]", isChecked: true },
-        { id: 2, label: " Akan", value: " Akan", color:"w-4 h-4 accent-[#0568a0]", isChecked: true },
-        { id: 3, label: " Ga", value: " Ga", color:"w-4 h-4 accent-[#0568a0]", isChecked: true },
-        { id: 4, label: " Other", value: " Other2", color:"w-4 h-4 accent-[#0568a0]", isChecked: true }
+        { id: 1, label: " Ewe", value: " Ewe", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 2, label: " Akan", value: " Akan", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 3, label: " Ga", value: " Ga", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 4, label: " Other", value: " Other2", color: "w-4 h-4 accent-[#0568a0]", isChecked: true }
       ]
     };
   }
@@ -89,99 +89,102 @@ class Filter extends React.Component<AppProps, AppState> {
   render() {
     return (
       <>
-      <div className="grid grid-cols-1 gap-4">
-        <div className="w-56 bg-white rounded-2xl border-2 border-[#0568a0]">
-          <h1 className="ml-3 mt-3"> Age </h1>
-          <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
-          <ul className="columns-2 list-none mb-3">
-            <div className="mx-3">
-              <input
-                type="checkbox"
-                onClick={this.handleAllCheckedAge}
-                value="checkedall"
-                checked={this.state.ages.every(age => age.isChecked)}
-                defaultChecked={true}
-                className="w-4 h-4 accent-[#0568a0]"/>{" "}
-              All
-            </div>
-            {this.state.ages.map(age => {
-              return (
-                <div className="mx-3 my-1">
-                  <CheckBox
-                    handleCheckChildElement={this.handleCheckChildElement}
-                    id={age.id}
-                    label={age.label}
-                    value={age.value}
-                    color={age.color}
-                    isChecked={age.isChecked} />
-                </div>
-              );
-            })}
-          </ul>
-        </div>
+        <div className="grid grid-cols-1 gap-4">
+          <div className="w-56 bg-white rounded-2xl border-2 border-[#0568a0]">
+            <h1 className="ml-3 mt-3"> Age </h1>
+            <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
+            <ul className="columns-2 list-none mb-3">
+              <div className="mx-3">
+                <input
+                  type="checkbox"
+                  onChange={this.handleAllCheckedAge}
+                  //value="checkedall"
+                  checked={this.state.ages.every(age => age.isChecked)}
+                  //defaultChecked={true}
+                  //defaultChecked={this.state.ages.every(age => age.isChecked)}
+                  className="w-4 h-4 accent-[#0568a0]" />{" "}
+                All
+              </div>
+              {this.state.ages.map(age => {
+                return (
+                  <div key={age.id} className="mx-3 my-1">
+                    <CheckBox
+                      handleCheckChildElement={this.handleCheckChildElement}
+                      id={age.id}
+                      label={age.label}
+                      value={age.value}
+                      color={age.color}
+                      isChecked={age.isChecked} />
+                  </div>
+                );
+              })}
+            </ul>
+          </div>
 
-        <div className="w-56 bg-white rounded-2xl border-2 border-[#0568a0]">
-          <h1 className="ml-3 mt-3"> Gender </h1>
-          <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
-          <ul className="columns-2 list-none mb-3">
-            <div className="mx-3">
-              <input
-                type="checkbox"
-                onClick={this.handleAllCheckedGender}
-                value="checkedall"
-                checked={this.state.genders.every(gender => gender.isChecked)}
-                defaultChecked={true}
-                className="w-4 h-4 accent-[#0568a0]" />{" "}
-              All
-            </div>
-            {this.state.genders.map(gender => {
-              return (
-                <div className="mx-3 my-1">
-                  <CheckBox
-                    handleCheckChildElement={this.handleCheckChildElement}
-                    id={gender.id}
-                    label={gender.label}
-                    value={gender.value}
-                    color={gender.color}
-                    isChecked={gender.isChecked} />
-                </div>
-              );
-            })}
-          </ul>
-        </div>
+          <div className="w-56 bg-white rounded-2xl border-2 border-[#0568a0]">
+            <h1 className="ml-3 mt-3"> Gender </h1>
+            <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
+            <ul className="columns-2 list-none mb-3">
+              <div className="mx-3">
+                <input
+                  type="checkbox"
+                  onChange={this.handleAllCheckedGender}
+                  //value="checkedall"
+                  checked={this.state.genders.every(gender => gender.isChecked)}
+                  //defaultChecked={true}
+                  //defaultChecked={this.state.genders.every(gender => gender.isChecked)}
+                  className="w-4 h-4 accent-[#0568a0]" />{" "}
+                All
+              </div>
+              {this.state.genders.map(gender => {
+                return (
+                  <div key={gender.id} className="mx-3 my-1">
+                    <CheckBox
+                      handleCheckChildElement={this.handleCheckChildElement}
+                      id={gender.id}
+                      label={gender.label}
+                      value={gender.value}
+                      color={gender.color}
+                      isChecked={gender.isChecked} />
+                  </div>
+                );
+              })}
+            </ul>
+          </div>
 
-        <div className="w-56 bg-white rounded-2xl border-2 border-[#0568a0]">
-          <h1 className="ml-3 mt-3"> Ethnicitiy</h1>
-          <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
-          <ul className="columns-2 list-none mb-3">
-            <div className="mx-3">
-              <input
-                type="checkbox"
-                onClick={this.handleAllCheckedEthnicity}
-                value="checkedall"
-                checked={this.state.ethnicities.every(ethnicity => ethnicity.isChecked)}
-                defaultChecked={true}
-                className="w-4 h-4 accent-[#0568a0]"
-              />{" "}
-              All
-            </div>
-            {this.state.ethnicities.map(ethnicity => {
-              return (
-                <div className="mx-3 my-1">
-                  <CheckBox
-                    handleCheckChildElement={this.handleCheckChildElement}
-                    id={ethnicity.id}
-                    label={ethnicity.label}
-                    value={ethnicity.value}
-                    color={ethnicity.color}
-                    isChecked={ethnicity.isChecked}
-                  />
-                </div>
-              );
-            })}
-          </ul>
+          <div className="w-56 bg-white rounded-2xl border-2 border-[#0568a0]">
+            <h1 className="ml-3 mt-3"> Ethnicitiy</h1>
+            <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
+            <ul className="columns-2 list-none mb-3">
+              <div className="mx-3">
+                <input
+                  type="checkbox"
+                  onChange={this.handleAllCheckedEthnicity}
+                  //value="checkedall"
+                  checked={this.state.ethnicities.every(ethnicity => ethnicity.isChecked)}
+                  //defaultChecked={true}
+                  //defaultChecked={this.state.ethnicities.every(ethnicity => ethnicity.isChecked)}
+                  className="w-4 h-4 accent-[#0568a0]"
+                />{" "}
+                All
+              </div>
+              {this.state.ethnicities.map(ethnicity => {
+                return (
+                  <div key={ethnicity.id} className="mx-3 my-1">
+                    <CheckBox
+                      handleCheckChildElement={this.handleCheckChildElement}
+                      id={ethnicity.id}
+                      label={ethnicity.label}
+                      value={ethnicity.value}
+                      color={ethnicity.color}
+                      isChecked={ethnicity.isChecked}
+                    />
+                  </div>
+                );
+              })}
+            </ul>
+          </div>
         </div>
-      </div>
       </>
     );
   }
