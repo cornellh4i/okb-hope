@@ -15,7 +15,7 @@ const App = () => {
     if (user) {
       // Construct the URL to the user's dashboard based on their unique user ID (UID).
       // This URL will navigate the user to their personalized dashboard.
-      router.push(`/${user.uid}/dashboard`);
+      router.push(`/patient/${user.uid}/dashboard`);
     }
   }, [user, router]);
 
