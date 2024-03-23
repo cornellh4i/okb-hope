@@ -13,9 +13,7 @@ const PsychiatristCardsListing = ({ max_size }: { max_size: number }) => {
     const fetchUser = async () => {
       if (user) {
         const data = await fetchPatientDetails(user.uid);
-        console.log(data)
         setSavedPsychiatrists(data.savedPsychiatrists)
-        console.log(data.savedPsychiatrists)
       }
     }
     fetchUser();

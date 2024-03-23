@@ -151,7 +151,6 @@ const fetchRole = async (uid: string) => {
       where("uid", "==", uid)
     );
     const response = await getDocs(q);
-    console.log(response);
     if (!response.empty) {
       const doc = response.docs[0];
       const docId = doc.id;

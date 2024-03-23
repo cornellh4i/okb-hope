@@ -75,7 +75,6 @@ const ProfProfile = () => {
             if (psych_uid) {
                 // Fetch professional data based on first name and last name
                 const data = await fetchProfessionalData(psych_uid);
-                console.log(data);
                 setProfessional(data);
             }
         };
@@ -88,7 +87,6 @@ const ProfProfile = () => {
             if (user) {
                 const data = await fetchPatientDetails(user.uid);
                 setSavedPsychiatrists(data.savedPsychiatrists)
-                console.log(savedPsychiatrists)
             }
         }
         fetchUser();
@@ -99,7 +97,6 @@ const ProfProfile = () => {
             if (user) {
                 const documentId = await fetchDocumentId("patients", user.uid);
                 setDocId(documentId);
-                console.log(documentId)
             }
         }
         fetchDocId();

@@ -45,7 +45,6 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
     const fetchUser = async () => {
       if (uid) {
         const data = await fetchPatientDetails(uid);
-        console.log(data)
       }
     }
     fetchUser();
@@ -56,7 +55,6 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
       if (user) {
         const documentId = await fetchDocumentId("patients", user.uid);
         setDocId(documentId);
-        console.log(documentId)
       }
     }
     fetchDocId();
@@ -67,7 +65,6 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
       if (user) {
         const data = await fetchPatientDetails(user.uid);
         setSavedPsychiatrists(data.savedPsychiatrists)
-        console.log(savedPsychiatrists)
       }
     }
     fetchUser();

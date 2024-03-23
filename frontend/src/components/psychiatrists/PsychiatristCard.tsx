@@ -23,15 +23,12 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
     setIsShown(!isShown);
   };
 
-  console.log(psych_uid)
-
   useEffect(() => {
     const fetchProfessional = async () => {
       // Check if both first name and last name are defined
       if (psych_uid) {
         // Fetch professional data based on psychiatrist's uid
         const data = await fetchProfessionalData(psych_uid);
-        console.log(data);
         setProfessional(data);
       }
     };
@@ -44,7 +41,6 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
       if (user) {
         const data = await fetchPatientDetails(user.uid);
         setSavedPsychiatrists(data.savedPsychiatrists)
-        console.log(savedPsychiatrists)
       }
     }
     fetchUser();
@@ -59,7 +55,6 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
       if (user) {
         const documentId = await fetchDocumentId("patients", user.uid);
         setDocId(documentId);
-        console.log(documentId)
       }
     }
     fetchDocId();
@@ -73,7 +68,7 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
         if (index !== -1) {
           updatedSavedPsychiatrists.splice(index, 1);
         }
-        
+
         setSavedPsychiatrists(updatedSavedPsychiatrists)
 
         // Update the result to firebase
@@ -92,7 +87,6 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
 
   // Redirects to a professional's profile page and passes their uid as query parameter
   function handleGoToProfProfile(psych_uid: string) {
-    console.log(psych_uid)
     router.push({
       pathname: `/${user?.userType}/${user?.uid}/prof_profile`,
       query: { psych_uid: psych_uid }

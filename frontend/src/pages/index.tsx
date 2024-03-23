@@ -14,11 +14,6 @@ const App = () => {
   useEffect(() => {
     // Check if there is a logged-in user. If 'user' is not null, a user is logged in.
     if (user) {
-      // Construct the URL to the user's dashboard based on their unique user ID (UID).
-      // This URL will navigate the user to their personalized dashboard.
-
-      console.log(user)
-
       // Check if userType exists in the user object
       if (user.userType) {
         // Construct the URL to the user's dashboard based on their unique user ID (UID).
