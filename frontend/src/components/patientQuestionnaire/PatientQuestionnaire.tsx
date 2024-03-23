@@ -143,8 +143,9 @@ const PatientQuestionnaire = () => {
                     gender, //genderPref
                     [], //savedPsychiatrists
                 );
-
-                router.push(`/${user?.userType}/${user?.uid}/dashboard`);
+                if (user && user.userType == "patient") {
+                    router.push(`/patient/${user?.uid}/dashboard`);
+                }
             } catch (error) {
                 console.error('Error signing in:', error);
                 logout();

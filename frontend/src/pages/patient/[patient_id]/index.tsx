@@ -12,7 +12,7 @@ const App = () => {
   // This effect runs when the component mounts or when 'user' or 'router' change.
   useEffect(() => {
     // Check if there is a logged-in user. If 'user' is not null, a user is logged in.
-    if (user) {
+    if (user && user.userType == "patient") {
       // Construct the URL to the user's dashboard based on their unique user ID (UID).
       // This URL will navigate the user to their personalized dashboard.
       router.push(`/patient/${user.uid}/dashboard`);
