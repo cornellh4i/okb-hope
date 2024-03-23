@@ -139,10 +139,19 @@ const ProfProfile = () => {
         }
     };
 
-    const handleSendMessage = (event: React.MouseEvent) => {
+    const handleSendMessage = () => {
         if (!user) {
-            event.preventDefault();
             setShowPopup(true);
+        } else if (professional) {
+            router.push({
+                pathname: `/patient/${user.uid}/messages`,
+                query: {
+                    psych_id: professional.uid,
+                    psych_name: `${professional.firstName} ${professional.lastName}`
+                }
+            });
+        } else {
+            console.error("Professional data is unavailable.");
         }
     };
 
