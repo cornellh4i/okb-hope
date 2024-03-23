@@ -23,10 +23,12 @@ const App = () => {
       if (user.userType) {
         // Construct the URL to the user's dashboard based on their unique user ID (UID).
         // This URL will navigate the user to their personalized dashboard.
-        if (user.userType == "patient"){
+        if (user.userType == "patient") {
           router.push(`/${user.userType}/${user.uid}/dashboard`);
-        } else if (user.userType == "psychiatrist"){
+        } else if (user.userType == "psychiatrist") {
           router.push(`/${user.userType}/${user.uid}/psych_dashboard`);
+        } else if (user.userType == "admin") {
+          router.push(`/${user.userType}/${user.uid}/database`);
         }
       } else {
         console.log('User type not found');
