@@ -8,9 +8,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 const Questions: React.FC = (): JSX.Element => {
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<string>("");
-  const items = () => {
-    return ["When was the last time you spoke with a counselor? ", "What would you like to talk about with your counselor?"];
-  };
+  const questions = ["When was the last time you spoke with a counselor?", "What would you like to talk about with your counselor?", "Filler", "Filler2"];
 
   /**
    * Toggle the drop down menu
@@ -39,6 +37,7 @@ const Questions: React.FC = (): JSX.Element => {
    */
   const itemSelection = (item: string): void => {
     setSelectItem(item);
+    setShowDropDown(false); // Hide the dropdown after selecting an item
   };
 
   const roundedClass = showDropDown ? 'rounded-t-lg' : 'rounded-lg';
@@ -55,17 +54,17 @@ const Questions: React.FC = (): JSX.Element => {
       >
         <div className={`w-auto bg-[#ffffff] text-[#888888] rounded-lg`}>
           <AccordionSummary expandIcon={changeExpand}>
-            {"Select"}
+            {selectItem || "Select"}
           </AccordionSummary>
         </div>
 
         {showDropDown && (
           <div className={`border borderColor-[#0568a0] rounded-lg`}>
             <QuestionDropDown
-              items={items()}
-              showDropDown={false}
-              toggleDropDown={(): void => toggleDropDown()}
+              items={questions}
               itemSelection={itemSelection}
+              showDropDown={showDropDown}
+              toggleDropDown={() => { }} // Dummy function
             />
           </div>
         )}
