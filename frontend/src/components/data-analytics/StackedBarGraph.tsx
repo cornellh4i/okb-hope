@@ -1,16 +1,20 @@
 import React from "react";
 import dynamic from 'next/dynamic'
+import useWindowSize from './window-size';
+
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 function StackedBarChart() {
+    const { width } = useWindowSize();
+    const containerWidth = width > 1178 ? 800 : width > 893 ? width - 350 : width - 80;
     if (typeof window !== 'undefined') {
         return (
             <React.Fragment>
                 <div className="container-fluid mb-3">
                     <Chart
                         type="bar"
-                        width={800}
+                        width={containerWidth}
                         height={300}
                         series={[
                             {
