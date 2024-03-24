@@ -122,7 +122,7 @@ const signUpWithGoogle = async (
           });
           console.log("Added patient")
         }
-        console.log("Updated database")
+        console.log("Updated database");
       }
       else {
         throw new Error("user already exists");

@@ -162,10 +162,8 @@ const PsychQuestionnaire = () => {
                     [],
                     gender,
                     [],
-                );
-                if (user && user.userType == "psychiatrist"){
-                    router.push(`/psychiatrist/${user?.uid}/psych_dashboard`);
-                }
+                )
+                router.push('/loading?init=true');
             } catch (error) {
                 console.error('Error signing in:', error);
                 logout();
