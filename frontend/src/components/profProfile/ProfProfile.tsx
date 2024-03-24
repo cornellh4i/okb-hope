@@ -161,7 +161,8 @@ const ProfProfile = () => {
 
     // Navigate to the user's discover page
     const handleGoToDashboard = () => {
-        router.push(`/${user?.userType}/${user?.uid}/discover`);
+        if (user) router.push(`/${user?.userType}/${user?.uid}/discover`);
+        else router.push(`/discover`);
     };
 
     const logInWithGoogleAndRedirect = async (onClose: () => void) => {
