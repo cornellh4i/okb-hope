@@ -26,12 +26,12 @@ export interface IPatient {
     firstName: string;
     lastName: string;
     email: string;
-    concerns: string;
+    concerns: string[];
     previousTherapyExperience: string;
     lastTherapyTimeframe: string;
     ageRange: string;
     prefLanguages: string[];
-    genderPref: Gender;
+    gender: Gender;
     savedPsychiatrists: string[];
 }
 

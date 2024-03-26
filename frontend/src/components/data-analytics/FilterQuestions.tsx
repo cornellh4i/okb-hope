@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import QuestionDropDown from "./question-dropdown";
-import { Accordion, AccordionSummary, AccordionDetails, Typography, Stack, Card, Box } from '@mui/material/';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Stack, Card, Box, Grid } from '@mui/material/';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-
+import Vertical_line from "@/assets/vertical_line_data.svg";
+import { setGlobalQuestionType, getGlobalQuestionType, setGlobalAgeRanges, getGlobalAgeRanges, setGlobalGenders, getGlobalGenders, setGlobalLanguages, getGlobalLanguages } from './global';
 
 const Questions: React.FC = (): JSX.Element => {
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<string>("");
-  const questions = ["When was the last time you spoke with a counselor?", "What would you like to talk about with your counselor?", "Filler", "Filler2"];
-
+  const questions = () => {
+    return ["Are there any specific concerns you would like to discuss with your conselor?", "When was the last time you spoke with a counselor?"];
+  };
   /**
    * Toggle the drop down menu
    */
@@ -38,37 +40,49 @@ const Questions: React.FC = (): JSX.Element => {
   const itemSelection = (item: string): void => {
     setSelectItem(item);
     setShowDropDown(false); // Hide the dropdown after selecting an item
+    setGlobalQuestionType(item); 
   };
 
-  const roundedClass = showDropDown ? 'rounded-t-lg' : 'rounded-lg';
+  const roundedClass = showDropDown ? 'rounded-t-2xl' : 'rounded-2xl';
   const changeExpand = showDropDown ? <ExpandLessIcon sx={{ color: '#0568a0' }} /> : <ExpandMoreIcon sx={{ color: '#0568a0' }} />;
 
   return (
     <>
+      <Grid container spacing={2}>
+      <Grid item xs={0.2}>
+      <Vertical_line className="stroke-[#0568a0] "></Vertical_line>
+      </Grid>
+      <Grid item xs={11}>
       <button
-        className={`w-8/12 text-[#888888] rounded-lg border-2 border-[#0568a0]`}
+        className={`w-9/12 text-[#888888] rounded-2xl border-2 border-[#0568a0]`}
         onClick={(): void => toggleDropDown()}
         onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
           dismissHandler(e)
         }
       >
-        <div className={`w-auto bg-[#ffffff] text-[#888888] rounded-lg`}>
+        <div className={`w-auto bg-[#ffffff] text-[#888888] ${roundedClass}`}>
           <AccordionSummary expandIcon={changeExpand}>
             {selectItem || "Select"}
           </AccordionSummary>
         </div>
 
+        {/* <div>
+          {getGlobalQuestionType()}
+        </div> */}
+
         {showDropDown && (
-          <div className={`border borderColor-[#0568a0] rounded-lg`}>
+          <div className={`border borderColor-[#0568a0] rounded-2xl`}>
             <QuestionDropDown
-              items={questions}
+              items={questions()}
               itemSelection={itemSelection}
               showDropDown={showDropDown}
-              toggleDropDown={() => { }} // Dummy function
+              toggleDropDown={(): void => toggleDropDown()} // Dummy function
             />
           </div>
         )}
       </button>
+      </Grid>
+      </Grid>
     </>
   );
 };

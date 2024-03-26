@@ -3,6 +3,7 @@ import DropDown from "./export-dropdown";
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Stack, Card, Box } from '@mui/material/';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ImportExportIcon from '@mui/icons-material/ImportExport';
 
 
 const Menu: React.FC = (): JSX.Element => {
@@ -47,14 +48,17 @@ const Menu: React.FC = (): JSX.Element => {
   return (
     <>
       <button
-        className= "w-36"
+        className= "w-42"
         onClick={(): void => toggleDropDown()}
         onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
           dismissHandler(e)
         }
       >
-        <div className={`w-36 bg-[#0568a0] ${roundedClass} text-white`}>
+        <div className={`w-42 bg-[#0568a0] ${roundedClass} text-white`}>
         <AccordionSummary expandIcon={changeExpand}>
+        <div className={`pr-1`}> 
+        <ImportExportIcon></ImportExportIcon>
+        </div>
         {"Export To..."}
         </AccordionSummary>
         </div>

@@ -1,13 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from 'next/dynamic'
 import useWindowSize from './window-size';
-
+import { setGlobalQuestionType, getGlobalQuestionType, setGlobalAgeRanges, getGlobalAgeRanges, setGlobalGenders, getGlobalGenders, setGlobalLanguages, getGlobalLanguages, setGlobalMen, getGlobalMen, setGlobalWomen, getGlobalWomen, setGlobalOther, getGlobalOther } from './global';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-function StackedBarChart() {
+function StackedBarChart() {    
     const { width } = useWindowSize();
-    const containerWidth = width > 1178 ? 800 : width > 893 ? width - 350 : width - 80;
+    const containerWidth = width > 1178 ? 800 : width > 900 ? width - 350 : width - 80;
+ 
+    const [questions, setQuestions] = useState<string[]>([]);
+
+    useEffect(() => {
+        // Update questions based on the global question type
+        const updatedQuestions = (getGlobalQuestionType() === "When was the last time you spoke with a counselor?")
+            ? ['Within the last month', 'Within the last 6 months', 'Within the last year', 'Over a year ago', 'I have never spoken with a counselor/therapist before.']
+            : ['my relationships', 'addiction', 'suicidal thoughts', 'family distress', 'substance abuse', 'academic distress', 'social anxiety', 'depression', 'other'];
+    
+        // Set the updated questions array
+        setQuestions(updatedQuestions);
+    }, [getGlobalQuestionType()]);
+
+    
+    
     if (typeof window !== 'undefined') {
         return (
             <React.Fragment>
@@ -19,17 +34,17 @@ function StackedBarChart() {
                         series={[
                             {
                                 name: "men",
-                                data: [345, 578, 898, 532, 465, 578, 898, 532, 465],
+                                data: getGlobalMen(),
                                 color: '#7392c1'
                             },
                             {
                                 name: "women",
-                                data: [190, 321, 112, 537, 333, 321, 112, 537, 333],
+                                data: getGlobalWomen(),
                                 color: '#d47cbc'
                             },
                             {
                                 name: "other",
-                                data: [560, 121, 675, 907, 233, 121, 675, 907, 233],
+                                data: getGlobalOther(),
                                 color: '#c4c5c6'
                             }
 
@@ -62,7 +77,7 @@ function StackedBarChart() {
                                 title: {
                                     text: ""
                                 },
-                                categories: ['my relationships', 'addiction', 'suicidal thoughts', 'family distress', 'substance abuse', 'academic distress', 'social anxiety', 'depression', 'other'],
+                                categories: questions,
                                 axisBorder: {
                                     show: true,
                                     offsetX: -1,

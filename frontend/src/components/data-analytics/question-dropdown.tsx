@@ -32,7 +32,7 @@ const QuestionDropDown: React.FC<DropDownProps> = ({
       {items.map(
         (item: string, index: number): JSX.Element => {
           const isLastItem = index === items.length - 1;
-          const roundedClass = isLastItem ? 'rounded-b-lg' : 'border-b';
+          const roundedClass = isLastItem ? 'rounded-b-2xl' : 'border-b';
           return (
             <p
               className={`p-2 bg-white hover:bg-[#D0DBE9] hover:text-[#888888] active:text-[#888888] ${roundedClass}`}

@@ -1,5 +1,7 @@
 import * as React from "react";
 import CheckBox from "./Checkbox";
+import { setGlobalQuestionType, getGlobalQuestionType, setGlobalAgeRanges, getGlobalAgeRanges, setGlobalGenders, getGlobalGenders, setGlobalLanguages, getGlobalLanguages } from './global';
+
 
 interface AppProps { }
 
@@ -14,7 +16,7 @@ interface ArrObject {
 interface AppState {
   ages: ArrObject[];
   genders: ArrObject[];
-  ethnicities: ArrObject[];
+  languages: ArrObject[];
 }
 
 
@@ -23,21 +25,27 @@ class Filter extends React.Component<AppProps, AppState> {
     super(props);
     this.state = {
       ages: [
-        { id: 1, label: " 19-29", value: " 19-29", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
-        { id: 2, label: " 30-40", value: " 30-40", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
-        { id: 3, label: " 41-51", value: " 41-51", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
-        { id: 4, label: " 52-62", value: " 52-62", color: "w-4 h-4 accent-[#0568a0]", isChecked: true }
+        { id: 1, label: " 18-24", value: " 18-24", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 2, label: " 25-34", value: " 25-34", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 3, label: " 35-44", value: " 35-44", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 4, label: " 45-54", value: " 45-54", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 5, label: " 55-64", value: " 55-64", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 6, label: " 65+", value: " 65+", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+
       ],
       genders: [
         { id: 1, label: " Male", value: " Male", color: "w-4 h-4 accent-[#7392c1]", isChecked: true },
         { id: 2, label: " Female", value: " Female", color: "w-4 h-4 accent-[#D371BE]", isChecked: true },
         { id: 3, label: " Other", value: " Other1", color: "w-4 h-4 accent-[#848484]", isChecked: true },
       ],
-      ethnicities: [
+      languages: [
         { id: 1, label: " Ewe", value: " Ewe", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
-        { id: 2, label: " Akan", value: " Akan", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 2, label: " Hausa", value: " Hausa", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
         { id: 3, label: " Ga", value: " Ga", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
-        { id: 4, label: " Other", value: " Other2", color: "w-4 h-4 accent-[#0568a0]", isChecked: true }
+        { id: 4, label: " Fante", value: " Fante", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 5, label: " Twi", value: " Twi", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 6, label: " English", value: " English", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
+        { id: 7, label: " Other", value: " Other2", color: "w-4 h-4 accent-[#0568a0]", isChecked: true }
       ]
     };
   }
@@ -46,18 +54,22 @@ class Filter extends React.Component<AppProps, AppState> {
     let ages = this.state.ages;
     ages.forEach(age => (age.isChecked = event.target.checked));
     this.setState({ ages: ages });
+
+    setGlobalAgeRanges(["18-24", "25-34", "35-44","45-54","55-64","65 and over"]);
   };
 
   handleAllCheckedGender = (event: any) => {
     let genders = this.state.genders;
     genders.forEach(gender => (gender.isChecked = event.target.checked));
     this.setState({ genders: genders })
+    setGlobalGenders([0, 1, 2])
   };
 
-  handleAllCheckedEthnicity = (event: any) => {
-    let ethnicities = this.state.ethnicities;
-    ethnicities.forEach(ethnicity => (ethnicity.isChecked = event.target.checked));
-    this.setState({ ethnicities: ethnicities })
+  handleAllCheckedLanguage = (event: any) => {
+    let languages = this.state.languages;
+    languages.forEach(language => (language.isChecked = event.target.checked));
+    this.setState({ languages: languages })
+    setGlobalLanguages(["Ewe", "Hausa", "Ga", "Fante", "Twi", "English", "Other"])
   };
 
   handleCheckChildElement = (event: React.FormEvent<HTMLInputElement>) => {
@@ -69,6 +81,17 @@ class Filter extends React.Component<AppProps, AppState> {
     });
     this.setState({ ages: ages });
 
+    const { value } = event.currentTarget;
+    const checkedAges = this.state.ages.filter(age => age.isChecked).map(age => age.value.trim());
+    // Change "65+" to "65 and over" in the array
+    const checkedAgesModified = checkedAges.map(element => {
+    if (element === "65+") {
+      return "65 and over";
+    }
+    return element;
+    });
+    setGlobalAgeRanges(checkedAgesModified);
+
     let genders = this.state.genders;
     genders.forEach(gender => {
       if (gender.value === event.currentTarget.value) {
@@ -77,13 +100,36 @@ class Filter extends React.Component<AppProps, AppState> {
     });
     this.setState({ genders: genders });
 
-    let ethnicities = this.state.ethnicities;
-    ethnicities.forEach(ethnicity => {
-      if (ethnicity.value === event.currentTarget.value) {
-        ethnicity.isChecked = event.currentTarget.checked;
+    const checkedGenders = this.state.genders.filter(gender => gender.isChecked).map(gender => gender.value.trim());
+    // Change "Other1" to "Other" in the array
+    const checkedGendersModified = checkedGenders.map(element => {
+      if (element === "Other1") {
+        return 2;
+      } else if( element === "Female")
+        return 1;
+      else {
+        return 0;
+      }
+      });
+    setGlobalGenders(checkedGendersModified);
+
+    let languages = this.state.languages;
+    languages.forEach(language => {
+      if (language.value === event.currentTarget.value) {
+        language.isChecked = event.currentTarget.checked;
       }
     });
-    this.setState({ ethnicities: ethnicities });
+    this.setState({ languages: languages });
+
+    const checkedLanguage = this.state.languages.filter(language => language.isChecked).map(language => language.value.trim());
+    // Change "65+" to "65 and over" in the array
+    const checkedLanguageModified = checkedLanguage.map(element => {
+      if (element === "Other2") {
+        return "Other";
+      }
+      return element;
+      });
+    setGlobalLanguages(checkedLanguageModified);
   };
 
   render() {
@@ -98,10 +144,7 @@ class Filter extends React.Component<AppProps, AppState> {
                 <input
                   type="checkbox"
                   onChange={this.handleAllCheckedAge}
-                  //value="checkedall"
                   checked={this.state.ages.every(age => age.isChecked)}
-                  //defaultChecked={true}
-                  //defaultChecked={this.state.ages.every(age => age.isChecked)}
                   className="w-4 h-4 accent-[#0568a0]" />{" "}
                 All
               </div>
@@ -129,10 +172,7 @@ class Filter extends React.Component<AppProps, AppState> {
                 <input
                   type="checkbox"
                   onChange={this.handleAllCheckedGender}
-                  //value="checkedall"
                   checked={this.state.genders.every(gender => gender.isChecked)}
-                  //defaultChecked={true}
-                  //defaultChecked={this.state.genders.every(gender => gender.isChecked)}
                   className="w-4 h-4 accent-[#0568a0]" />{" "}
                 All
               </div>
@@ -153,31 +193,28 @@ class Filter extends React.Component<AppProps, AppState> {
           </div>
 
           <div className="w-56 bg-white rounded-2xl border-2 border-[#0568a0]">
-            <h1 className="ml-3 mt-3"> Ethnicitiy</h1>
+            <h1 className="ml-3 mt-3"> Language</h1>
             <hr className="w-48 h-0.5 mx-3 my-1 bg-[#0568a0] rounded"></hr>
             <ul className="columns-2 list-none mb-3">
               <div className="mx-3">
                 <input
                   type="checkbox"
-                  onChange={this.handleAllCheckedEthnicity}
-                  //value="checkedall"
-                  checked={this.state.ethnicities.every(ethnicity => ethnicity.isChecked)}
-                  //defaultChecked={true}
-                  //defaultChecked={this.state.ethnicities.every(ethnicity => ethnicity.isChecked)}
+                  onChange={this.handleAllCheckedLanguage}
+                  checked={this.state.languages.every(language => language.isChecked)}
                   className="w-4 h-4 accent-[#0568a0]"
                 />{" "}
                 All
               </div>
-              {this.state.ethnicities.map(ethnicity => {
+              {this.state.languages.map(language => {
                 return (
-                  <div key={ethnicity.id} className="mx-3 my-1">
+                  <div key={language.id} className="mx-3 my-1">
                     <CheckBox
                       handleCheckChildElement={this.handleCheckChildElement}
-                      id={ethnicity.id}
-                      label={ethnicity.label}
-                      value={ethnicity.value}
-                      color={ethnicity.color}
-                      isChecked={ethnicity.isChecked}
+                      id={language.id}
+                      label={language.label}
+                      value={language.value}
+                      color={language.color}
+                      isChecked={language.isChecked}
                     />
                   </div>
                 );

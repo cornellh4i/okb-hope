@@ -1,5 +1,41 @@
 import { db } from './firebase';
-import { getDocs, query, where, collection, onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { IAppointment, IAvailability, IPatient, IPsychiatrist, IUser } from '@/schema';
-import { useAuth } from '../contexts/AuthContext';
+import { getDoc, getDocs, collection, addDoc, updateDoc, deleteDoc, doc, QueryConstraint, query } from "firebase/firestore";
+
+const PATIENT = "patients";
+
+const fetchPatient = async (constraints: QueryConstraint[]): Promise<IPatient[] | null> => {
+    try {
+        const baseQuery = collection(db, PATIENT);
+        const q = query(baseQuery, ...constraints);
+        const querySnapshot = await getDocs(q);
+
+        const patients: IPatient[] = [];
+        querySnapshot.forEach(doc => {
+            patients.push(doc.data() as IPatient);
+        });
+        console.log(patients)
+        return patients;
+    } catch (error) {
+        console.error("Error fetching patient entry: ", error);
+        return null;
+    }
+}
+
+// const fetchAllPatients = async () => {
+//     try {
+//       console.log("hello");
+//       const patientRef = collection(db, 'patients');
+//       const snapshot = await getDocs(patientRef);
+//       const fetchedPatients: IPatient[] = snapshot.docs.map((doc) => doc.data() as IPatient);
+//       return fetchedPatients;
+//     } catch (err: any) {
+//       console.error(err.message);
+//       throw err;
+//     }
+//   }
+
+  const fetchAllPatients = () => {
+  }
+  export {fetchAllPatients, fetchPatient};
 

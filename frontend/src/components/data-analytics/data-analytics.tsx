@@ -1,9 +1,10 @@
-import React from "react";
+import React, { ChangeEvent, use, useEffect, useState } from 'react';
 import Menu from "./export-menu";
 import Filter from "./FilterSidebar";
 import Questions from "./FilterQuestions"
 import StackedBarChart from "./StackedBarGraph"
 import { Grid, Box } from "@mui/material"
+import PatientList from "./PatientList";
 
 const DataAnalytics = () => {
   return (
@@ -16,8 +17,9 @@ const DataAnalytics = () => {
           <Box display="flex" justifyContent="flex-end" marginRight="5%">
             <StackedBarChart />
           </Box>
-          <Box display="flex" justifyContent="flex-end" marginRight="10%">
+          <Box display="flex" justifyContent="flex-end" marginRight="6%">
             <Menu />
+            <PatientList results={[]} />
           </Box>
         </Grid>
         <Grid item xs={12} md={3}>
