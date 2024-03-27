@@ -12,7 +12,6 @@ function StackedBarChart({ questionType }) {
 
     const [questions, setQuestions] = useState<string[]>([]);
 
-    console.log(questionType);
     // we still need this to set the question
     useEffect(() => {
         // Update questions based on the global question type
@@ -24,12 +23,10 @@ function StackedBarChart({ questionType }) {
         setQuestions(updatedQuestions);
     }, [questionType]);
 
-    console.log(questionType);
 
     if (typeof window !== 'undefined') {
         return (
             <React.Fragment>
-                {/* <div className="container-fluid mb-3"> */}
                 <div>
                     <Chart
                         type="bar"
