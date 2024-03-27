@@ -5,28 +5,32 @@ import { setGlobalQuestionType, getGlobalQuestionType, setGlobalAgeRanges, getGl
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-function StackedBarChart() {    
+function StackedBarChart({ questionType }) {
+    // can only rerender if the the prop change, so we need to add a prop to change/rerender the component
     const { width } = useWindowSize();
     const containerWidth = width > 1178 ? 800 : width > 900 ? width - 350 : width - 80;
- 
+
     const [questions, setQuestions] = useState<string[]>([]);
 
+    console.log(questionType);
+    // we still need this to set the question
     useEffect(() => {
         // Update questions based on the global question type
-        const updatedQuestions = (getGlobalQuestionType() === "When was the last time you spoke with a counselor?")
+        const updatedQuestions = (questionType === "When was the last time you spoke with a counselor?")
             ? ['Within the last month', 'Within the last 6 months', 'Within the last year', 'Over a year ago', 'I have never spoken with a counselor/therapist before.']
             : ['my relationships', 'addiction', 'suicidal thoughts', 'family distress', 'substance abuse', 'academic distress', 'social anxiety', 'depression', 'other'];
-    
+
         // Set the updated questions array
         setQuestions(updatedQuestions);
-    }, [getGlobalQuestionType()]);
+    }, [questionType]);
 
-    
-    
+    console.log(questionType);
+
     if (typeof window !== 'undefined') {
         return (
             <React.Fragment>
-                <div className="container-fluid mb-3">
+                {/* <div className="container-fluid mb-3"> */}
+                <div>
                     <Chart
                         type="bar"
                         width={containerWidth}
@@ -124,4 +128,4 @@ function StackedBarChart() {
     return (<div></div>)
 }
 
-export default StackedBarChart;
+export default StackedBarChart; 

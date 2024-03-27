@@ -1,7 +1,7 @@
 let globalQuestionType: string;
 let globalAgeRanges: string[];
 let globalGenders: number[];
-let globalLanguages: string[]; 
+let globalLanguages: string[];
 let globalMen: number[];
 let globalWomen: number[];
 let globalOther: number[];
@@ -15,24 +15,24 @@ export function getGlobalQuestionType() {
     return globalQuestionType;
 }
 
-export function setGlobalAgeRanges(newValue: string[]){
-    return globalAgeRanges = newValue; 
+export function setGlobalAgeRanges(newValue: string[]) {
+    return globalAgeRanges = newValue;
 }
 
 export function getGlobalAgeRanges() {
     return globalAgeRanges;
 }
 
-export function setGlobalGenders(newValue: number[]){
-    return globalGenders = newValue; 
+export function setGlobalGenders(newValue: number[]) {
+    return globalGenders = newValue;
 }
 
 export function getGlobalGenders() {
     return globalGenders;
 }
 
-export function setGlobalLanguages(newValue: string[]){
-    return globalLanguages = newValue; 
+export function setGlobalLanguages(newValue: string[]) {
+    return globalLanguages = newValue;
 }
 
 export function getGlobalLanguages() {
@@ -43,23 +43,23 @@ export function getGlobalMen() {
     return globalMen;
 }
 
-export function setGlobalMen(newValue: number[]){
-    return globalMen = newValue; 
+export function setGlobalMen(newValue: number[]) {
+    return globalMen = newValue;
 }
 
 export function getGlobalWomen() {
     return globalWomen;
 }
 
-export function setGlobalWomen(newValue: number[]){
-    return globalWomen = newValue; 
+export function setGlobalWomen(newValue: number[]) {
+    return globalWomen = newValue;
 }
 
 export function getGlobalOther() {
     return globalOther;
 }
 
-export function setGlobalOther(newValue: number[]){
-    return globalOther = newValue; 
+export function setGlobalOther(newValue: number[]) {
+    return globalOther = newValue;
 }
 

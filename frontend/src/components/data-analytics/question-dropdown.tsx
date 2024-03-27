@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { setGlobalQuestionType } from './global';
 
 type DropDownProps = {
   items: string[];
