@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import AppointmentCard from './AppointmentCard';
-import { db,auth } from '../../../firebase/firebase';
-import {  getDoc, doc } from 'firebase/firestore';
-import {  fetchApptDetails } from '../../../firebase/fetchData';
+import { db, auth } from '../../../firebase/firebase';
+import { getDoc, doc } from 'firebase/firestore';
+import { fetchApptDetails } from '../../../firebase/fetchData';
 import { IAppointment } from '@/schema';
 // import NoUpcomingAppointments from './NoUpcomingAppointments';
 
@@ -13,12 +13,11 @@ const AppointmentList = () => {
   useEffect(() => {
     const fetchAppts = async () => {
       if (uid) {
-        const apptData = await fetchApptDetails(uid);        
-        if (apptData){
+        const apptData = await fetchApptDetails(uid);
+        if (apptData) {
           const currTime = new Date().getTime()
 
           const filteredApptData = apptData.filter((data) => data !== null && Math.floor((data.startTime.toDate().getTime() - currTime) / (1000 * 60 * 60 * 24)) >= 0);
-          console.log(filteredApptData);
           setAppointments(filteredApptData);
         }
       }
@@ -29,19 +28,19 @@ const AppointmentList = () => {
   // connect to 'psychiatrists' collection to find psychiatrist's name. Match appointment's profId with psychiatrist's document id
   useEffect(() => {
     const fetchPsychNames = async () => {
-      if(appointments.length>0) {
-        const names : string[] = []
-        for (const appointment of appointments){
+      if (appointments.length > 0) {
+        const names: string[] = []
+        for (const appointment of appointments) {
           const psychiatristDocRef = doc(db, 'psychiatrists', appointment.profId);
           const psychiatristDocSnap = await getDoc(psychiatristDocRef);
-          const psychiatristName : string = psychiatristDocSnap.data()?.position + " " + psychiatristDocSnap.data()?.firstName + " " + psychiatristDocSnap.data()?.lastName || '';
+          const psychiatristName: string = psychiatristDocSnap.data()?.position + " " + psychiatristDocSnap.data()?.firstName + " " + psychiatristDocSnap.data()?.lastName || '';
           names.push(psychiatristName);
         }
         setPsychiatristNames(names)
       }
     };
     fetchPsychNames();
-  },[appointments]);
+  }, [appointments]);
 
   const appointmentCards = () => {
     if (appointments.length > 0) {
@@ -58,7 +57,7 @@ const AppointmentList = () => {
       return <div>You have no upcoming appointments.</div>;
     }
   };
-      
+
 
   return (
     // renders a card containing all of the AppointmentCards 

@@ -75,7 +75,6 @@ const ProfProfile = () => {
             if (psych_uid) {
                 // Fetch professional data based on first name and last name
                 const data = await fetchProfessionalData(psych_uid);
-                console.log(data);
                 setProfessional(data);
             }
         };
@@ -88,7 +87,6 @@ const ProfProfile = () => {
             if (user) {
                 const data = await fetchPatientDetails(user.uid);
                 setSavedPsychiatrists(data.savedPsychiatrists)
-                console.log(savedPsychiatrists)
             }
         }
         fetchUser();
@@ -99,7 +97,6 @@ const ProfProfile = () => {
             if (user) {
                 const documentId = await fetchDocumentId("patients", user.uid);
                 setDocId(documentId);
-                console.log(documentId)
             }
         }
         fetchDocId();
@@ -139,10 +136,19 @@ const ProfProfile = () => {
         }
     };
 
-    const handleSendMessage = (event: React.MouseEvent) => {
+    const handleSendMessage = () => {
         if (!user) {
-            event.preventDefault();
             setShowPopup(true);
+        } else if (professional) {
+            router.push({
+                pathname: `/patient/${user.uid}/messages`,
+                query: {
+                    psych_id: professional.uid,
+                    psych_name: `${professional.firstName} ${professional.lastName}`
+                }
+            });
+        } else {
+            console.error("Professional data is unavailable.");
         }
     };
 
@@ -155,7 +161,8 @@ const ProfProfile = () => {
 
     // Navigate to the user's discover page
     const handleGoToDashboard = () => {
-        router.push(`/${user?.userType}/${user?.uid}/discover`);
+        if (user) router.push(`/${user?.userType}/${user?.uid}/discover`);
+        else router.push(`/discover`);
     };
 
     const logInWithGoogleAndRedirect = async (onClose: () => void) => {

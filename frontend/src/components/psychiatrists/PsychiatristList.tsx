@@ -24,6 +24,8 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
   const router = useRouter();
   const [users, setUsers] = useState<IUser[]>([]);
   const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
+  const [professional, setProfessional] = useState<IPsychiatrist | null>(null);
+
 
 
   // Get all users from the database
@@ -43,7 +45,6 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
     const fetchUser = async () => {
       if (uid) {
         const data = await fetchPatientDetails(uid);
-        console.log(data)
       }
     }
     fetchUser();
@@ -54,7 +55,6 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
       if (user) {
         const documentId = await fetchDocumentId("patients", user.uid);
         setDocId(documentId);
-        console.log(documentId)
       }
     }
     fetchDocId();
@@ -65,20 +65,31 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
       if (user) {
         const data = await fetchPatientDetails(user.uid);
         setSavedPsychiatrists(data.savedPsychiatrists)
-        console.log(savedPsychiatrists)
       }
     }
     fetchUser();
-  }, []);
+  }, [savedPsychiatrists, user]);
 
-  const handleSendMessage = (event: React.MouseEvent) => {
+  const handleSendMessage = (event: React.MouseEvent, psychiatrist) => {
     event.stopPropagation();
-    if (user) {
-      router.push(`/${user?.userType}/${user?.uid}/messages`)
-    }
-    else {
+    if (!user) {
       event.preventDefault();
       setShowPopup(true);
+    } else {
+      try {
+        event.stopPropagation();
+        router.push({
+          pathname: `/patient/${user.uid}/messages`,
+          query: {
+            psych_id: psychiatrist.uid,
+            psych_name: `${psychiatrist.firstName} ${psychiatrist.lastName}`
+          }
+        });
+        console.log("went to message page")
+      }
+      catch (error) {
+        console.error('Error going to message page');
+      }
     }
   };
 
@@ -118,17 +129,17 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
 
   // Redirects to a professional's profile page and passes their uid as query parameter
   function handleGoToProfProfile(psych_uid: string) {
-    {
-      user ?
-        router.push({
-          pathname: `/${user?.userType}/${user?.uid}/prof_profile`,
-          query: { psych_uid: psych_uid }
-        })
-        : router.push({
-          pathname: `/prof_profile`,
-          query: { psych_uid: psych_uid }
-        })
-    }
+
+    user ?
+      router.push({
+        pathname: `/${user?.userType}/${user?.uid}/prof_profile`,
+        query: { psych_uid: psych_uid }
+      })
+      : router.push({
+        pathname: `/prof_profile`,
+        query: { psych_uid: psych_uid }
+      })
+
   }
 
   const logInWithGoogleAndRedirect = async (onClose: () => void) => {
@@ -167,13 +178,13 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results }) => {
                     {savedPsychiatrists.includes(psychiatrist.uid) ? <SavedBookmark /> : <Bookmark />}
                     <div>Save</div>
                   </button>
-                  <div
+                  <button
                     className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[${okb_colors.okb_blue}] text-[${okb_colors.white}] text-[16px] flex`}
-                    onClick={handleSendMessage}
+                    onClick={(event) => handleSendMessage(event, psychiatrist)}
                   >
                     <Message />
                     <div>Message</div>
-                  </div>
+                  </button>
                 </div>
               </div>
               {/* Additional psychiatrist info */}

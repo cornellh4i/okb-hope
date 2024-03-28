@@ -8,11 +8,9 @@ import { useRouter } from 'next/router';
 const MessagesPage = () => {
   const { user, login } = useAuth();
   const [showPopup, setShowPopup] = useState(false);
-  console.log(user)
 
   const router = useRouter();
   const { userId } = router.query;
-  console.log(userId)
 
   useEffect(() => {
     if (!user) {

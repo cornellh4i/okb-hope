@@ -1,8 +1,12 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
+import { fetchProfessionalData } from '../../../firebase/fetchData';
 import MessageList from './MessageList';
 import MessageComposer from './MessageComposer';
 import ellipsis from '../../assets/ellipses'
 import okb_colors from '@/colors';
+import { useRouter } from 'next/router';
+
 
 interface NameAreaType {
   name: string;
@@ -33,12 +37,40 @@ const NameArea = ({ name, credentials }: NameAreaType) => {
 const navbarHeight = 1440;
 
 /** The ChatArea displays the Name Area, the Message List, and the Message Composer. */
-const ChatArea: React.FC = () => {
+const ChatArea = () => {
+  const router = useRouter();
+  const [psychiatristName, setPsychiatristName] = useState('Doctor');
+
+  // Assuming you're fetching psychiatrist data if only ID is provided
+  useEffect(() => {
+    const fetchPsychiatristName = async () => {
+      const { psych_id, psych_name } = router.query;
+
+      if (psych_name) {
+        // Directly set the psychiatrist's name if it's in the query params
+        setPsychiatristName(decodeURIComponent(psych_name as string));
+      } else if (psych_id) {
+        // Fetch the psychiatrist's data using the ID if the name isn't in the query
+        try {
+          const psychiatristData = await fetchProfessionalData(psych_id as string);
+          if (psychiatristData) {
+            setPsychiatristName(`${psychiatristData.firstName} ${psychiatristData.lastName}`);
+          }
+        } catch (error) {
+          console.error('Failed to fetch psychiatrist data:', error);
+          // Optionally, handle the error (e.g., show a notification)
+        }
+      }
+    };
+
+    if (router.isReady) {
+      fetchPsychiatristName();
+    }
+  }, [router.isReady, router.query]);
+
   return (
     <div className="chat-area flex flex-col h-screen">
-
-      {/* Hard-coded the NameArea for now. This will depend on how we structure the data in Firebase. */}
-      <NameArea name="Doctor Name" credentials='Credentials' />
+      <NameArea name={psychiatristName} credentials="Credentials" />
       <div className="flex-grow overflow-scroll">
         <div className='h-full overflow-scroll'><MessageList /></div>
       </div>
