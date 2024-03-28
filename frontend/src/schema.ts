@@ -11,7 +11,7 @@ export interface IPsychiatrist {
     firstName: string;
     lastName: string;
     position: string;
-    profile_pic: null;
+    calendly: string;
     availability: string[]; //changed to string so it just stores the availability doc id
     gender: Gender;
     location: string;

@@ -16,7 +16,7 @@ const PsychQuestionnaire = () => {
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
     const [gender, setGender] = useState<Gender>();
-    const [image, setImage] = useState<string>("");
+    const [calendly, setCalendly] = useState<string>("");
     const [position, setPosition] = useState<string>("");
     const [checked, setChecked] = useState<{ [key: string]: boolean }>(
         { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
@@ -52,6 +52,10 @@ const PsychQuestionnaire = () => {
                 setGender(undefined);
         }
     };
+
+    const handleCalendlyChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setCalendly(event.target.value);
+    }
 
     const handleAboutYourselfChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setAboutYourself(event.target.value);
@@ -125,6 +129,11 @@ const PsychQuestionnaire = () => {
             return;
         }
 
+        else if (currentStep === 2 && (calendly.trim() === "")) {
+            alert("Please add your calendly scheduling link.")
+            return;
+        }
+
         else if (currentStep === 3 && (position === "")) {
             alert("Please select your position.");
             return;
@@ -147,7 +156,7 @@ const PsychQuestionnaire = () => {
                     firstName,
                     lastName,
                     position,
-                    image,
+                    calendly,
                     [],
                     gender,
                     "",
@@ -183,10 +192,11 @@ const PsychQuestionnaire = () => {
                     firstName={firstName}
                     lastName={lastName}
                     gender={gender}
-                    image={image}
+                    calendly={calendly}
                     handleFirstName={handleFirstNameChange}
                     handleLastName={handleLastNameChange}
                     handleGender={handleGenderChange}
+                    handleCalendly={handleCalendlyChange}
                 />}
             {currentStep === 3 &&
                 <PositionLanguageQuestionnaire
