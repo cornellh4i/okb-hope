@@ -251,7 +251,7 @@ const ProfProfile = () => {
 
             <div className={`flex flex-row justify-center content-center`}>
                 {/* Book Appointment button, action undefined but should lead to calendly */}
-                <Bookings url = "https://calendly.com/sz389"></Bookings>
+                <Bookings url={professional.calendly}></Bookings>
                 <button
                     onClick={handleBookAppointment}
                 >

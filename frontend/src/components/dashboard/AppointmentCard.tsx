@@ -140,7 +140,7 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
                       {apptQuestions.map(input => (
                         
                         <div key={input.id.toString()} className="appointment_question">
-                          <AppointmentQuestion value={input.answer.toString()} name={input.id.toString()} question={input.question.toString()}></AppointmentQuestion>
+                          <AppointmentQuestion value={input.answer} name={input.id.toString()} question={input.question.toString()}></AppointmentQuestion>
                         </div>
                       ))}
                     </div>
