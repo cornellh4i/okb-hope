@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../../firebase/firebase';
-import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
+import { collection, query, orderBy, limit, onSnapshot, doc, updateDoc, getDocs, where } from 'firebase/firestore';
 import { fetchProfessionalData, fetchPatientDetails } from '../../../firebase/fetchData';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useRouter } from 'next/router';
 
-const ConversationItem: React.FC<{ read: boolean, conversation: any, isLast: boolean }> = ({ read, conversation, isLast }) => {
+// Updated props type to include onSelect and isSelected
+const ConversationItem: React.FC<{ conversation: any, isLast: boolean, onSelect: () => void, isSelected: boolean }> = ({ conversation, isLast, onSelect, isSelected }) => {
   const { user } = useAuth();
   const [displayName, setDisplayName] = useState('');
   const [isHovered, setIsHovered] = useState(false);
   const [lastMessage, setLastMessage] = useState<string | null>(null);
+  const [unreadMessages, setUnreadMessages] = useState<number>(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -26,44 +28,60 @@ const ConversationItem: React.FC<{ read: boolean, conversation: any, isLast: boo
     fetchNames();
   }, [user?.uid, conversation.patientId, conversation.psychiatristId]);
 
-  // useEffect(() => {
-  //   // This assumes that the conversation object has a property `id` for identifying the conversation
-  //   // Adjust the logic here if your conversation identifiers are structured differently
-  //   const messagesRef = collection(db, `conversations/${conversation.id}/messages`);
-  //   const queryDoc = query(messagesRef, orderBy('createdAt', 'desc'), limit(1));
-
-  //   const unsubscribe = onSnapshot(queryDoc, (querySnapshot) => {
-  //     const messageData = querySnapshot.docs.map((doc) => doc.data())[0];
-  //     setLastMessage(messageData?.content || conversation.recentMessage?.text || null);
-  //   });
-
-  //   return () => unsubscribe();
-  // }, [conversation.id, conversation.recentMessage?.text]);
-
-  const hoverStyles = isHovered ? { backgroundColor: '#D0DBEA' } : {};
+  useEffect(() => {
+    // Update unread messages count
+    setUnreadMessages(user?.uid === conversation.patientId ? conversation.messagesUnreadByPatient : conversation.messagesUnreadByPsych);
+  }, [user?.uid, conversation.messagesUnreadByPatient, conversation.messagesUnreadByPsych, conversation.patientId]);
 
   const handleClick = () => {
+    updateUnreadMessages();
+
+    onSelect(); // Call onSelect to update selected state in parent
     const { patientId, psychiatristId } = conversation;
+    localStorage.setItem('selectedConversationId', `${conversation.patientId}-${conversation.psychiatristId}`);
     const url = `/patient/${patientId}/messages?psych_id=${psychiatristId}&psych_name=${encodeURIComponent(displayName)}`;
     router.push(url);
+
+  };
+
+  const updateUnreadMessages = async () => {
+    try {
+      const conversationsRef = collection(db, "Conversations");
+      const q = query(conversationsRef, where("patientId", "==", conversation.patientId), where("psychiatristId", "==", conversation.psychiatristId));
+      const querySnapshot = await getDocs(q);
+      const conversationDocRef = doc(db, "Conversations", querySnapshot.docs[0].id);
+      const unreadMessagesField = user?.uid === conversation.patientId ? "messagesUnreadByPatient" : "messagesUnreadByPsych";
+
+      await updateDoc(conversationDocRef, {
+        [unreadMessagesField]: 0
+      });
+
+      console.log("Unread messages count updated successfully");
+    } catch (error) {
+      console.error("Error updating unread messages count: ", error);
+    }
   };
 
   return (
     <button
-      className={`conversation-item group ${!isLast ? 'border-b-[1px]' : ''}`}
-      style={hoverStyles}
+      onClick={handleClick}
+      className={`conversation-item group ${!isLast ? 'border-b-[1px]' : ''} ${isSelected ? 'bg-[#D0DBEA]' : 'bg-white'} hover:bg-[#D0DBEA]`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={handleClick}
     >
-      <div className='flex flex-row px-3 py-4 gap-4 bg-white items-center mx-5' style={hoverStyles}>
-        <div className='flex flex-col items-start rounded-[10px]'>
+      <div className='flex flex-row px-3 py-4 gap-4 items-center w-full'>
+        <div className='flex-grow flex flex-col items-start rounded-[10px]'>
           <button className="font-semibold mb-1 text-black text-[16px]">{displayName}</button>
           <p className="text-[12px] text-black">{conversation.recentMessage.text || 'No messages'}</p>
         </div>
-        {!read ? <div className='flex py-0.5 px-1.5 w-[20px] h-[19px] justify-center items-center rounded-[25px] bg-[#519AEB] text-white text-xs font-bold'>2</div> : ""}
+        {unreadMessages > 0 ? (
+          <div className='flex py-0.5 px-1.5 min-w-[20px] h-[19px] justify-center items-center rounded-[25px] bg-[#519AEB] text-white text-xs font-bold mr-auto'>
+            {unreadMessages}
+          </div>
+        ) : ""}
       </div>
     </button>
+
   );
 };
 

@@ -62,6 +62,8 @@ const MessageComposer: React.FC = () => {
           const docRef = await addDoc(conversationsRef, {
             patientId: patientId,
             psychiatristId: psychiatristId,
+            messagesUnreadByPatient: uid === patientId ? 0 : 1,
+            messagesUnreadByPsych: uid === patientId ? 1 : 0,
             recentMessage: {
               text: message,
               createdAt: serverTimestamp(),
@@ -76,12 +78,18 @@ const MessageComposer: React.FC = () => {
         // Existing conversation found, update the recent message
         const conversationDocRef = doc(db, "Conversations", querySnapshot.docs[0].id);
         try {
+          const conversationData = querySnapshot.docs[0].data();
+          const unreadByPatient = conversationData.messagesUnreadByPatient + (uid === patientId ? 0 : 1);
+          const unreadByPsych = conversationData.messagesUnreadByPsych + (uid === patientId ? 1 : 0);
+
           await updateDoc(conversationDocRef, {
             recentMessage: {
               text: message,
               createdAt: serverTimestamp(),
               photoURL: auth.currentUser?.photoURL
-            }
+            },
+            messagesUnreadByPatient: unreadByPatient,
+            messagesUnreadByPsych: unreadByPsych
           });
           console.log("Conversation updated with new message");
         } catch (error) {
