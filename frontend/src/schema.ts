@@ -60,3 +60,10 @@ export interface IUser {
     userType: string;
 }
 
+    export interface IReport {
+        description: string;
+        patientID: string;
+        psychiatristID: string;
+        submittedAt: Timestamp;
+    }
+

@@ -16,6 +16,8 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db, logInWithGoogle, signUpWithGoogle } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
+import { addDoc, collection } from 'firebase/firestore';
+import { Timestamp } from "firebase/firestore";
 
 
 
@@ -126,6 +128,7 @@ const ProfProfile = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [showReportPopup, setShowReportPopup] = useState(false);
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    const [reportText, setReportText] = useState('');
 
 
 
@@ -212,7 +215,12 @@ const ProfProfile = () => {
                 console.error('Error saving psychiatrist');
             }
         }
-    };
+    };  
+
+    // Handle the text change in textarea
+    const handleReportTextChange = (event) => {
+        setReportText(event.target.value);
+      };
 
     // Trigger report popup to show up
     const handleReport = (event) => {
@@ -223,20 +231,41 @@ const ProfProfile = () => {
     // Trigger report popup to close
     const handleCloseReport = () => {
         setShowReportPopup(false);
-    };
+    }
 
     const handleContinue = () => {
         setShowSuccessPopup(false);
         // Add additional logic for what happens when the user clicks continue
       };
-      const handleSubmitReport = () => {
-        setShowSuccessPopup(true);
-        setShowReportPopup(false);
-        // Add additional logic for what happens when the user clicks continue
-      };
+
+    const handleSubmitReport = async () => {
+        // Make sure a user and a professional are defined before submitting
+        if (user && professional) {
+          try {
+            const reportData = {
+              description: reportText,
+              patientID: user.uid,
+              psychiatristID: professional.uid,
+              submittedAt: Timestamp.now()
+            };
+            
+            // Add the report to the "reports" collection in Firestore
+            await addDoc(collection(db, "reports"), reportData);
       
+            setShowSuccessPopup(true);
+            setShowReportPopup(false);
+            // Reset the report text
+            setReportText('');
       
-    
+            // Add logic for redirecting the user or other post-submit actions here
+          } catch (error) {
+            console.error("Error submitting the report: ", error);
+            // Handle the error appropriately
+          }
+        } else {
+          // Handle the case when there is no user or professional
+        }
+    };
 
     const handleSendMessage = (event: React.MouseEvent) => {
         if (!user) {
@@ -289,7 +318,11 @@ const ProfProfile = () => {
                     like any of these rights have been violated by a psychiatrist that you are
                     seeing, please fill out the report form below.
                 </p>
-                <textarea style={textareaStyle}></textarea>
+                <textarea
+                    style={textareaStyle}
+                    value={reportText}
+                    onChange={handleReportTextChange}
+                ></textarea>
                 <div style={buttonsContainerStyle}>
                     <button onClick={handleCloseReport} style={buttonStyle}>Cancel</button>
                     <button onClick = {handleSubmitReport} style={submitButtonStyle}>Submit</button>
