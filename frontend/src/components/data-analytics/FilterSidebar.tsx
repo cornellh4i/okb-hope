@@ -1,9 +1,13 @@
 import * as React from "react";
 import CheckBox from "./Checkbox";
-import { setGlobalAgeRanges, setGlobalGenders, setGlobalLanguages } from './global';
+// import { setGlobalAgeRanges, setGlobalGenders, setGlobalLanguages } from './global';
 
 
-interface AppProps { }
+interface AppProps { 
+  setGlobalAgeRanges: Function;
+  setGlobalGenders: Function;
+  setGlobalLanguages: Function;
+}
 
 interface ArrObject {
   id: number;
@@ -17,10 +21,12 @@ interface AppState {
   ages: ArrObject[];
   genders: ArrObject[];
   languages: ArrObject[];
+  setGlobalAgeRanges: Function;
+  setGlobalGenders: Function;
+  setGlobalLanguages: Function;
 }
 
-
-class Filter extends React.Component<AppProps, AppState> {
+class Filter extends React.Component<AppProps, AppState > {
   constructor(props: AppProps) {
     super(props);
     this.state = {
@@ -46,7 +52,10 @@ class Filter extends React.Component<AppProps, AppState> {
         { id: 5, label: " Twi", value: " Twi", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
         { id: 6, label: " English", value: " English", color: "w-4 h-4 accent-[#0568a0]", isChecked: true },
         { id: 7, label: " Other", value: " Other2", color: "w-4 h-4 accent-[#0568a0]", isChecked: true }
-      ]
+      ],
+      setGlobalAgeRanges: props.setGlobalAgeRanges,
+      setGlobalGenders: props.setGlobalGenders,
+      setGlobalLanguages: props.setGlobalLanguages
     };
   }
 
@@ -55,21 +64,21 @@ class Filter extends React.Component<AppProps, AppState> {
     ages.forEach(age => (age.isChecked = event.target.checked));
     this.setState({ ages: ages });
 
-    setGlobalAgeRanges(["18-24", "25-34", "35-44","45-54","55-64","65 and over"]);
+    this.state.setGlobalAgeRanges(["18-24", "25-34", "35-44","45-54","55-64","65 and over"]);
   };
 
   handleAllCheckedGender = (event: any) => {
     let genders = this.state.genders;
     genders.forEach(gender => (gender.isChecked = event.target.checked));
     this.setState({ genders: genders })
-    setGlobalGenders([0, 1, 2])
+    this.state.setGlobalGenders([0, 1, 2])
   };
 
   handleAllCheckedLanguage = (event: any) => {
     let languages = this.state.languages;
     languages.forEach(language => (language.isChecked = event.target.checked));
     this.setState({ languages: languages })
-    setGlobalLanguages(["Ewe", "Hausa", "Ga", "Fante", "Twi", "English", "Other"])
+    this.state.setGlobalLanguages(["Ewe", "Hausa", "Ga", "Fante", "Twi", "English", "Other"])
   };
 
   handleCheckChildElement = (event: React.FormEvent<HTMLInputElement>) => {
@@ -90,7 +99,7 @@ class Filter extends React.Component<AppProps, AppState> {
     }
     return element;
     });
-    setGlobalAgeRanges(checkedAgesModified);
+    this.state.setGlobalAgeRanges(checkedAgesModified);
 
     let genders = this.state.genders;
     genders.forEach(gender => {
@@ -111,7 +120,7 @@ class Filter extends React.Component<AppProps, AppState> {
         return 0;
       }
       });
-    setGlobalGenders(checkedGendersModified);
+    this.state.setGlobalGenders(checkedGendersModified);
 
     let languages = this.state.languages;
     languages.forEach(language => {
@@ -129,7 +138,7 @@ class Filter extends React.Component<AppProps, AppState> {
       }
       return element;
       });
-    setGlobalLanguages(checkedLanguageModified);
+    this.state.setGlobalLanguages(checkedLanguageModified);
   };
 
   render() {
