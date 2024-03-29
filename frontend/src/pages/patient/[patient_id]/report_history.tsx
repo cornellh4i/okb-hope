@@ -11,7 +11,7 @@ import okb_colors from "@/colors";
 const ReportCard = ({ report }) => {
   // Format the date string
   const formattedDate = report.submittedAt.toDate().toLocaleString();
-  
+
   return (
     <div className="card bg-base-100 shadow-xl mb-4">
       <div className="card-body">
@@ -140,13 +140,13 @@ const ReportList: React.FC = () => {
 
   const renderReportPopup = () => {
     if (!showReportHistoryPopup || !selectedPsychiatrist) return null;
-  
+
     return (
       <div className="modal modal-open">
         <div className="modal-box">
           <div className="text-center">
-          <h2 className="text-3xl font-bold mb-2">{selectedPsychiatrist.firstName} {selectedPsychiatrist.lastName}</h2>
-          <h3 className="text-xl font-bold mb-4">Report Information</h3>
+            <h2 className="text-3xl font-bold mb-2">{selectedPsychiatrist.firstName} {selectedPsychiatrist.lastName}</h2>
+            <h3 className="text-xl font-bold mb-4">Report Information</h3>
           </div>
           <div className="space-y-4">
             {selectedPsychiatristReports.map(report => (
@@ -160,12 +160,13 @@ const ReportList: React.FC = () => {
       </div>
     );
   };
-  
-  
+
+
 
 
   return (
     <div className={'px-32 pt-9 pb-14'}>
+      <h1 className="text-3xl font-bold mb-6">Report History</h1> {/* Title added here */}
       <div className={`psychiatrist-list flex flex-col items-start gap-6`}>
         {/*showPopup && <LoginPopup onClose={() => setShowPopup(false)} logInWithGoogleAndRedirect={logInWithGoogleAndRedirect} signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect} />*/}
         {psychiatrists.map((psychiatrist) => (
@@ -185,10 +186,10 @@ const ReportList: React.FC = () => {
                     <p className={`text-[${okb_colors.black}] text-[16px] font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
                   </div>
                   <div className={`flex justify-end items-center gap-4`}>
-                  <button onClick={(event) => handleViewReport(event, psychiatrist)}>
+                    <button onClick={(event) => handleViewReport(event, psychiatrist)}>
                       <ViewReport />
                     </button>
-                    
+
                   </div>
                 </div>
                 {/* Additional psychiatrist info */}
