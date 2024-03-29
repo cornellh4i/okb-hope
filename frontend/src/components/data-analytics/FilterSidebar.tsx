@@ -1,6 +1,6 @@
 import * as React from "react";
 import CheckBox from "./Checkbox";
-import { setGlobalQuestionType, getGlobalQuestionType, setGlobalAgeRanges, getGlobalAgeRanges, setGlobalGenders, getGlobalGenders, setGlobalLanguages, getGlobalLanguages } from './global';
+import { setGlobalAgeRanges, setGlobalGenders, setGlobalLanguages } from './global';
 
 
 interface AppProps { }

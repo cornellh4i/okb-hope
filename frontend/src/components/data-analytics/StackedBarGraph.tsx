@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import dynamic from 'next/dynamic'
 import useWindowSize from './window-size';
-import { setGlobalQuestionType, getGlobalQuestionType, setGlobalAgeRanges, getGlobalAgeRanges, setGlobalGenders, getGlobalGenders, setGlobalLanguages, getGlobalLanguages, setGlobalMen, getGlobalMen, setGlobalWomen, getGlobalWomen, setGlobalOther, getGlobalOther } from './global';
+import { getGlobalMen, getGlobalWomen, getGlobalOther } from './global';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 

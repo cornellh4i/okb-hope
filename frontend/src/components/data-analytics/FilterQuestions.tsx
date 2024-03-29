@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import QuestionDropDown from "./question-dropdown";
-import { AccordionSummary, AccordionDetails, Typography, Stack, Card, Box, Grid } from '@mui/material/';
+import { AccordionSummary, Grid } from '@mui/material/';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Vertical_line from "@/assets/vertical_line_data.svg";

@@ -1,6 +1,6 @@
 import { db } from './firebase';
-import { IAppointment, IAvailability, IPatient, IPsychiatrist, IUser } from '@/schema';
-import { getDoc, getDocs, collection, addDoc, updateDoc, deleteDoc, doc, QueryConstraint, query } from "firebase/firestore";
+import { IPatient } from '@/schema';
+import { getDocs, collection, QueryConstraint, query } from "firebase/firestore";
 
 const PATIENT = "patients";
 

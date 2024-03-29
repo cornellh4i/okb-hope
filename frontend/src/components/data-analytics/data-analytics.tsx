@@ -1,11 +1,10 @@
-import React, { ChangeEvent, use, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Menu from "./export-menu";
 import Filter from "./FilterSidebar";
 import Questions from "./FilterQuestions"
 import StackedBarChart from "./StackedBarGraph"
 import { Grid, Box } from "@mui/material"
 import PatientList from "./PatientList";
-import { getGlobalQuestionType } from './global';
 
 const DataAnalytics = () => {
   // left is the state and right is a setter to change that variables
@@ -23,7 +22,7 @@ const DataAnalytics = () => {
           </Box>
           <Box display="flex" justifyContent="flex-end" marginRight="6%">
             <Menu />
-            <PatientList results={[]} />
+            {/* <PatientList results={[]} /> */}
           </Box>
         </Grid>
         <Grid item xs={12} md={3}>

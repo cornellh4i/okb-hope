@@ -13,7 +13,6 @@ interface CheckboxProps {
 const Checkbox = (props: CheckboxProps) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Call the handleCheckChildElement function if it exists
     if (props.handleCheckChildElement) {
       props.handleCheckChildElement(event);
     }
@@ -24,7 +23,7 @@ const Checkbox = (props: CheckboxProps) => {
     <li>
       <input
         key={props.id}
-        onChange={handleChange} // Use onChange instead of onClick
+        onChange={handleChange} 
         type="checkbox"
         checked={props.isChecked}
         value={props.value}

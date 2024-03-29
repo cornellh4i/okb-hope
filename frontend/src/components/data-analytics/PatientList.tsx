@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchAllPatients } from '../../../firebase/fetchGraphData';
 import {IPatient} from '@/schema';
-import { setGlobalQuestionType, getGlobalQuestionType, setGlobalAgeRanges, getGlobalAgeRanges, setGlobalGenders, getGlobalGenders, setGlobalLanguages, getGlobalLanguages, setGlobalMen, getGlobalMen, setGlobalWomen, getGlobalWomen, setGlobalOther, getGlobalOther } from './global';
+import { getGlobalAgeRanges, getGlobalGenders, getGlobalLanguages, setGlobalMen, setGlobalWomen, setGlobalOther } from './global';
 
 interface PatientListProps {
   results: IPatient[];
