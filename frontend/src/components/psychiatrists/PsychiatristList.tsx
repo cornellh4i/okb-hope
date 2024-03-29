@@ -231,22 +231,22 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
       return (
         <>
           {showReportHistoryPopup && (
-      <div style={overlayStyle}>
-        <div style={popupStyle}>
-          <h2>Dr. Gloria Shi</h2>
-          <h3>Report Box</h3>
-          <p>Psychiatrist at Wohiame Hospital</p>
-          <p>The following report for Dr. Gloria Shi was submitted on: October 12th, 2023 at 7:16 PM.</p>
-          {/* Other content and styles from the report would go here. */}
-          <button onClick={(event) => handleCloseReportHistory(event)}>Close</button>
-        </div>
-      </div>
-    )} 
-      <button onClick={(event) => handleOpenReportHistory(event)}>
-              <ViewReport />
-      </button>
+            <div style={overlayStyle}>
+              <div style={popupStyle}>
+                <h2>Dr. Gloria Shi</h2>
+                <h3>Report Box</h3>
+                <p>Psychiatrist at Wohiame Hospital</p>
+                <p>The following report for Dr. Gloria Shi was submitted on: October 12th, 2023 at 7:16 PM.</p>
+                {/* Other content and styles from the report would go here. */}
+                <button onClick={(event) => handleCloseReportHistory(event)}>Close</button>
+              </div>
+            </div>
+          )}
+          <button onClick={(event) => handleOpenReportHistory(event)}>
+            <ViewReport />
+          </button>
 
-              </>
+        </>
       );
     }
     else {
@@ -262,45 +262,49 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
           </Link>
         </>
       );
-    }    
+    }
   }
 
 
   //break
 
   return (
-    <div className={`psychiatrist-list flex flex-col items-start gap-6`}>
-      {showPopup && <LoginPopup onClose={() => setShowPopup(false)} logInWithGoogleAndRedirect={logInWithGoogleAndRedirect} signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect} />}
-      {results.map((psychiatrist) => (
-        <div key={psychiatrist.uid} className="psychiatrist" onClick={() => handleGoToProfProfile(psychiatrist.uid)}>
-          {/* Display the psychiatrist's information here */}
-          <div className={`card card-side flex flex-row justify-center items-center gap-2.5 rounded-lg bg-[${okb_colors.white}] shadow-[0_0px_5px_0px_rgb(0,0,0,0.15)] items-start gap-x-6 bg-base-100 grid-cols-5 hover:brightness-90 p-6 self-stretch`}>
-            <div className={`col-span-1 flex items-center justify-center`}>
-              <figure>
-                <img src="https://lh3.googleusercontent.com/a/AGNmyxZobZdPI78Xzk3dOtXciW5fAE3Wn-QIZYlJTdk_=s96-c" alt="Profile Pic" className={`rounded-full w-32 h-32 object-cover`} />
-              </figure>
-            </div>
-            <div className={`flex flex-col items-start gap-4 flex-1 w-full h-auto`}>
-              {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}
-              <div className={`flex justify-between items-start self-stretch`}>
-                <div className={`flex flex-col items-start gap-2`}>
-                  <h2 className={`card-title col-span-2 text-[${okb_colors.black}] text-[24px] font-semibold not-italic`}>{psychiatrist.firstName} {psychiatrist.lastName}</h2>
-                  <p className={`text-[${okb_colors.black}] text-[16px] font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
+    <div className={'px-24 pt-9 pb-14'}>
+      <div className='pb-8'>
+        <div className={`psychiatrist-list flex flex-col items-start gap-6`}>
+          {showPopup && <LoginPopup onClose={() => setShowPopup(false)} logInWithGoogleAndRedirect={logInWithGoogleAndRedirect} signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect} />}
+          {results.map((psychiatrist) => (
+            <div key={psychiatrist.uid} className="psychiatrist" onClick={() => handleGoToProfProfile(psychiatrist.uid)}>
+              {/* Display the psychiatrist's information here */}
+              <div className={`card card-side flex flex-row justify-center items-center gap-2.5 rounded-lg bg-[${okb_colors.white}] shadow-[0_0px_5px_0px_rgb(0,0,0,0.15)] items-start gap-x-6 bg-base-100 grid-cols-5 hover:brightness-90 p-6 self-stretch`}>
+                <div className={`col-span-1 flex items-center justify-center`}>
+                  <figure>
+                    <img src="https://lh3.googleusercontent.com/a/AGNmyxZobZdPI78Xzk3dOtXciW5fAE3Wn-QIZYlJTdk_=s96-c" alt="Profile Pic" className={`rounded-full w-32 h-32 object-cover`} />
+                  </figure>
                 </div>
-                <div className={`flex justify-end items-center gap-4`}>
-                  {renderButtons(psychiatrist)}
+                <div className={`flex flex-col items-start gap-4 flex-1 w-full h-auto`}>
+                  {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}
+                  <div className={`flex justify-between items-start self-stretch`}>
+                    <div className={`flex flex-col items-start gap-2`}>
+                      <h2 className={`card-title col-span-2 text-[${okb_colors.black}] text-[24px] font-semibold not-italic`}>{psychiatrist.firstName} {psychiatrist.lastName}</h2>
+                      <p className={`text-[${okb_colors.black}] text-[16px] font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
+                    </div>
+                    <div className={`flex justify-end items-center gap-4`}>
+                      {renderButtons(psychiatrist)}
+                    </div>
+                  </div>
+                  {/* Additional psychiatrist info */}
+                  <div className={`self-stretch`}>
+                    <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-normal`}>{psychiatrist.description}</p>
+                  </div>
                 </div>
               </div>
-              {/* Additional psychiatrist info */}
-              <div className={`self-stretch`}>
-                <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-normal`}>{psychiatrist.description}</p>
-              </div>
-            </div>
-          </div>
+            </div >
+          ))
+          }
         </div >
-      ))
-      }
-    </div >
+      </div>
+    </div>
   );
 };
 

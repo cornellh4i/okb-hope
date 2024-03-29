@@ -77,7 +77,7 @@ const Navbar = () => {
               </Link> : <Link href={`/${user.userType}/${user.uid}/edit_psych`}>
                 <li>Edit Profile</li>
               </Link>}
-              <Link href={`/${user?.uid}/report_history`} className="w-18">
+              <Link href={`/patient/${user?.uid}/report_history`} className="w-18">
                 <li>Report History</li>
               </Link>
               <li>
@@ -101,5 +101,6 @@ const Navbar = () => {
     </div>
   )
 }
+
 
 export default Navbar;

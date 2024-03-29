@@ -238,19 +238,22 @@ const ProfProfile = () => {
         // Add additional logic for what happens when the user clicks continue
       };
 
-    const handleSubmitReport = async () => {
+      const handleSubmitReport = async () => {
         // Make sure a user and a professional are defined before submitting
         if (user && professional) {
           try {
+            // Adjusted to match the Firebase collection's key IDs
             const reportData = {
               description: reportText,
-              patientID: user.uid,
-              psychiatristID: professional.uid,
-              submittedAt: Timestamp.now()
+              patient_id: user.uid, // changed from patientID to patient_id
+              psych_id: professional.uid, // changed from psychiatristID to psych_id
+              submittedAt: Timestamp.now() // Firebase automatically generates a unique ID for each document, so 'report_id' is not manually set here
             };
             
             // Add the report to the "reports" collection in Firestore
-            await addDoc(collection(db, "reports"), reportData);
+            const docRef = await addDoc(collection(db, "reports"), reportData); // This returns a reference to the newly added document
+    
+            console.log("Report submitted with ID: ", docRef.id); // You can log or use the document ID as needed (e.g., for 'report_id' if you wish to store it elsewhere)
       
             setShowSuccessPopup(true);
             setShowReportPopup(false);
@@ -266,6 +269,7 @@ const ProfProfile = () => {
           // Handle the case when there is no user or professional
         }
     };
+    
 
     const handleSendMessage = (event: React.MouseEvent) => {
         if (!user) {
@@ -380,7 +384,7 @@ const ProfProfile = () => {
                         </div>
                     </div>
                     <div className={`text-normal text-xl italic text-dark-grey`}>
-                        {professional.position}
+                         {professional.position}
                     </div>
                     {/* Speciality/language/location tags */}
                     <div className={`flex flex-row flex-start gap-2`}>

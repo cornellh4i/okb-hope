@@ -8,7 +8,6 @@ import router, { useRouter } from 'next/router';
 
 
 const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_SERVICE_ACCOUNT!);
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
