@@ -3,17 +3,33 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import { useRouter } from 'next/router';
 import { db } from '../../../../firebase/firebase';
 import Link from 'next/link';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { IPsychiatrist, IReport } from '@/schema';
 import ViewReport from '@/assets/view_reports.svg';
 import okb_colors from "@/colors";
+
+const ReportCard = ({ report }) => {
+  // Format the date string
+  const formattedDate = report.submittedAt.toDate().toLocaleString();
+  
+  return (
+    <div className="card bg-base-100 shadow-xl mb-4">
+      <div className="card-body">
+        <p>Report submitted on: {formattedDate}</p>
+        <p>Description: {report.description}</p>
+      </div>
+    </div>
+  );
+};
 
 const ReportList: React.FC = () => {
   const { user } = useAuth();
   const router = useRouter();
   const [reports, setReports] = useState<IReport[]>([]);
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
+  const [selectedPsychiatristReports, setSelectedPsychiatristReports] = useState<IReport[]>([]);
   const [showReportHistoryPopup, setShowReportHistoryPopup] = useState(false);
+  const [selectedPsychiatrist, setSelectedPsychiatrist] = useState<IPsychiatrist | null>(null);
 
   const overlayStyle: React.CSSProperties = {
     position: 'fixed',
@@ -46,10 +62,10 @@ const ReportList: React.FC = () => {
       const reportCollectionRef = collection(db, 'reports');
       const q = query(reportCollectionRef, where('patient_id', '==', user?.uid));
       const querySnapshot = await getDocs(q);
-      const fetchedReports: IReport[] = [];
-      querySnapshot.forEach((doc) => {
-        fetchedReports.push(doc.data() as IReport);
-      });
+      const fetchedReports: IReport[] = querySnapshot.docs.map(doc => ({
+        ...doc.data() as IReport,
+        id: doc.id // Include the document ID
+      }));
       setReports(fetchedReports);
     };
 
@@ -60,17 +76,21 @@ const ReportList: React.FC = () => {
 
   // Fetch psychiatrist information based on the reports
   useEffect(() => {
-    const fetchPsychiatrists = async () => {
-      const uniquePsychIds = Array.from(new Set(reports.map((report) => report.psych_id)));
-      const psychiatristCollectionRef = collection(db, 'psychiatrists');
-      const psychPromises = uniquePsychIds.map(async (id) => {
-        const q = query(psychiatristCollectionRef, where('uid', '==', id));
-        const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map((doc) => doc.data() as IPsychiatrist);
-      });
-      const psychiatristResults = await Promise.all(psychPromises);
-      setPsychiatrists(psychiatristResults.flat());
-    };
+    async function fetchPsychiatrists() {
+      const uniquePsychIds = new Set(reports.map(report => report.psych_id));
+      const fetchedPsychiatrists: IPsychiatrist[] = [];
+
+      for (let id of Array.from(uniquePsychIds)) {
+        const docRef = doc(db, 'psychiatrists', id);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          fetchedPsychiatrists.push(docSnap.data() as IPsychiatrist);
+        }
+      }
+
+      setPsychiatrists(fetchedPsychiatrists);
+    }
 
     if (reports.length > 0) {
       fetchPsychiatrists();
@@ -78,9 +98,12 @@ const ReportList: React.FC = () => {
   }, [reports]);
 
   // Function to handle when a report is clicked
-  const handleViewReport = (psychiatristId: string) => {
-    // Navigate to report details page or show a popup with report details
-    // router.push(`/report/${psychiatristId}`);
+  const handleViewReport = async (event, psychiatrist: IPsychiatrist) => {
+    event.stopPropagation();
+    setSelectedPsychiatrist(psychiatrist);
+    const filteredReports = reports.filter(report => report.psych_id === psychiatrist.uid);
+    setSelectedPsychiatristReports(filteredReports);
+    setShowReportHistoryPopup(true);
   };
 
   // Redirects to a professional's profile page and passes their uid as query parameter
@@ -113,28 +136,32 @@ const ReportList: React.FC = () => {
 
 
 
-  const renderButtons = (psychiatrist: IPsychiatrist) => {
-    return (
-      <>
-        {showReportHistoryPopup && (
-          <div style={overlayStyle}>
-            <div style={popupStyle}>
-              <h2>Dr. Gloria Shi</h2>
-              <h3>Report Box</h3>
-              <p>Psychiatrist at Wohiame Hospital</p>
-              <p>The following report for Dr. Gloria Shi was submitted on: October 12th, 2023 at 7:16 PM.</p>
-              {/* Other content and styles from the report would go here. */}
-              <button onClick={(event) => handleCloseReportHistory(event)}>Close</button>
-            </div>
-          </div>
-        )}
-        <button onClick={(event) => handleOpenReportHistory(event)}>
-          <ViewReport />
-        </button>
 
-      </>
+
+  const renderReportPopup = () => {
+    if (!showReportHistoryPopup || !selectedPsychiatrist) return null;
+  
+    return (
+      <div className="modal modal-open">
+        <div className="modal-box">
+          <div className="text-center">
+          <h2 className="text-3xl font-bold mb-2">{selectedPsychiatrist.firstName} {selectedPsychiatrist.lastName}</h2>
+          <h3 className="text-xl font-bold mb-4">Report Information</h3>
+          </div>
+          <div className="space-y-4">
+            {selectedPsychiatristReports.map(report => (
+              <ReportCard key={report.report_id} report={report} />
+            ))}
+          </div>
+          <div className="modal-action">
+            <button className="btn" onClick={() => setShowReportHistoryPopup(false)}>Close</button>
+          </div>
+        </div>
+      </div>
     );
-  }
+  };
+  
+  
 
 
   return (
@@ -158,7 +185,10 @@ const ReportList: React.FC = () => {
                     <p className={`text-[${okb_colors.black}] text-[16px] font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
                   </div>
                   <div className={`flex justify-end items-center gap-4`}>
-                    {renderButtons(psychiatrist)}
+                  <button onClick={(event) => handleViewReport(event, psychiatrist)}>
+                      <ViewReport />
+                    </button>
+                    
                   </div>
                 </div>
                 {/* Additional psychiatrist info */}
@@ -170,6 +200,7 @@ const ReportList: React.FC = () => {
           </div >
         ))
         }
+        {renderReportPopup()}
       </div >
     </div>
   );

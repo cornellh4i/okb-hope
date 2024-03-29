@@ -254,6 +254,10 @@ const ProfProfile = () => {
             const docRef = await addDoc(collection(db, "reports"), reportData); // This returns a reference to the newly added document
     
             console.log("Report submitted with ID: ", docRef.id); // You can log or use the document ID as needed (e.g., for 'report_id' if you wish to store it elsewhere)
+
+            await updateDoc(doc(db, "reports", docRef.id), {
+                report_id: docRef.id
+            });
       
             setShowSuccessPopup(true);
             setShowReportPopup(false);
