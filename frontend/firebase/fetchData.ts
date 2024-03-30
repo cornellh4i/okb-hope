@@ -1,6 +1,6 @@
 import { db } from './firebase';
 import { getDocs, query, where, collection, onSnapshot, doc, updateDoc } from "firebase/firestore";
-import { IAppointment, IAvailability, IPatient, IPsychiatrist, IUser } from '@/schema';
+import { IAppointment, IAvailability, IPatient, IPsychiatrist, IReport, IUser } from '@/schema';
 import { useAuth } from '../contexts/AuthContext';
 
 /**
@@ -41,6 +41,44 @@ const fetchAllProfessionals = async () => {
     throw err;
   }
 }
+
+const fetchUnreportedProfessionals = async (patient_id) => {
+  try {
+    const fetchedReports = fetchPatientReports(patient_id);
+    const reportedPsychIds = [
+      ...new Set((await fetchedReports).map(report => report.psych_id))
+    ];
+    console.log(reportedPsychIds)
+
+    const psychRef = collection(db, 'psychiatrists');
+    const q = query(psychRef, where('uid', 'not-in', reportedPsychIds));
+    const snapshot = await getDocs(q);
+    const fetchedPsychiatrists: IPsychiatrist[] = snapshot.docs.map((doc) => doc.data() as IPsychiatrist);
+
+    return fetchedPsychiatrists;
+  } catch (err: any) {
+    console.error(err.message);
+    throw err;
+  }
+}
+
+
+
+const fetchPatientReports = async (patient_id) => {
+  try {
+    const reportCollectionRef = collection(db, 'reports');
+    const q = query(reportCollectionRef, where('patient_id', '==', patient_id));
+    const querySnapshot = await getDocs(q);
+    const fetchedReports: IReport[] = querySnapshot.docs.map(doc => ({
+      ...doc.data() as IReport,
+      id: doc.id // Include the document ID
+    }));
+    return fetchedReports;
+  } catch (err: any) {
+    console.error(err.message);
+    throw err;
+  }
+};
 
 const fetchAllUsers = async () => {
   try {
@@ -175,6 +213,6 @@ const fetchAvailability = async (availId: string) => {
     throw error;
   }
 }
-export { fetchProfessionalData, fetchAllProfessionals, fetchPatientDetails, fetchUserChats, fetchDocumentId, fetchApptDetails, fetchAvailability, fetchAllUsers };
+export { fetchProfessionalData, fetchAllProfessionals, fetchUnreportedProfessionals, fetchPatientDetails, fetchPatientReports, fetchUserChats, fetchDocumentId, fetchApptDetails, fetchAvailability, fetchAllUsers };
 
 

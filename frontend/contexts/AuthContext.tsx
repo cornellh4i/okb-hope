@@ -46,6 +46,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               router.push(`/patient/${user.uid}/messages`);
             else if (router.pathname == "/edit_profile" || router.pathname == `/patient/[patient_id]/edit_profile`)
               router.push(`/patient/${user.uid}/edit_profile`);
+            else if (router.pathname == "/report_history" || router.pathname == `/patient/[patient_id]/report_history`)
+              router.push(`/patient/${user.uid}/report_history`);
             else
               router.push(`/patient/${user.uid}/dashboard`);
           }

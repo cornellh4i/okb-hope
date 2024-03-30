@@ -8,6 +8,7 @@ import { IPsychiatrist, IReport } from '@/schema';
 import ViewReport from '@/assets/view_reports.svg';
 import Close from '@/assets/close.svg';
 import okb_colors from "@/colors";
+import { fetchPatientReports } from '../../../../firebase/fetchData';
 
 const ReportCard = ({ report }) => {
   // Format the date string
@@ -75,18 +76,34 @@ const ReportList: React.FC = () => {
   };
 
   // Fetch all reports for the user
-  useEffect(() => {
-    const fetchReports = async () => {
-      const reportCollectionRef = collection(db, 'reports');
-      const q = query(reportCollectionRef, where('patient_id', '==', user?.uid));
-      const querySnapshot = await getDocs(q);
-      const fetchedReports: IReport[] = querySnapshot.docs.map(doc => ({
-        ...doc.data() as IReport,
-        id: doc.id // Include the document ID
-      }));
-      setReports(fetchedReports);
-    };
+  // useEffect(() => {
 
+  //   const fetchReports = async () => {
+  //     const reportCollectionRef = collection(db, 'reports');
+  //     const q = query(reportCollectionRef, where('patient_id', '==', user?.uid));
+  //     const querySnapshot = await getDocs(q);
+  //     const fetchedReports: IReport[] = querySnapshot.docs.map(doc => ({
+  //       ...doc.data() as IReport,
+  //       id: doc.id // Include the document ID
+  //     }));
+  //     setReports(fetchedReports);
+  //   };
+
+  //   if (user) {
+  //     fetchReports();
+  //   }
+  // }, [user]);
+
+  // Fetch all reports for the user
+  useEffect(() => {
+    async function fetchReports() {
+      try {
+        const fetchedReports: IReport[] = await fetchPatientReports(user?.uid);
+        setReports(fetchedReports);
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    }
     if (user) {
       fetchReports();
     }
@@ -96,16 +113,12 @@ const ReportList: React.FC = () => {
   useEffect(() => {
     async function fetchPsychiatrists() {
       const uniquePsychIds = new Set(reports.map(report => report.psych_id));
-      const fetchedPsychiatrists: IPsychiatrist[] = [];
+      const psychIdsArray = Array.from(uniquePsychIds);
 
-      for (let id of Array.from(uniquePsychIds)) {
-        const docRef = doc(db, 'psychiatrists', id);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          fetchedPsychiatrists.push(docSnap.data() as IPsychiatrist);
-        }
-      }
+      const psychRef = collection(db, 'psychiatrists');
+      const q = query(psychRef, where('uid', 'in', psychIdsArray));
+      const snapshot = await getDocs(q);
+      const fetchedPsychiatrists: IPsychiatrist[] = snapshot.docs.map((doc) => doc.data() as IPsychiatrist);
 
       setPsychiatrists(fetchedPsychiatrists);
     }
@@ -114,6 +127,7 @@ const ReportList: React.FC = () => {
       fetchPsychiatrists();
     }
   }, [reports]);
+
 
   // Function to handle when a report is clicked
   const handleViewReport = async (event, psychiatrist: IPsychiatrist) => {
