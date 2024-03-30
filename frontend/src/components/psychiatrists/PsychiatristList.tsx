@@ -170,6 +170,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
           if (index !== -1) {
             updatedSavedPsychiatrists.splice(index, 1);
           }
+
         }
         setSavedPsychiatrists(updatedSavedPsychiatrists)
 
