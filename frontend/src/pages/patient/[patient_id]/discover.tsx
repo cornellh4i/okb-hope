@@ -4,7 +4,7 @@ import { IAvailability, IPsychiatrist } from '@/schema';
 import colors from "@/colors";
 import { collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { fetchAllProfessionals, fetchAvailability } from '../../../../firebase/fetchData';
+import { fetchUnreportedProfessionals, fetchAvailability } from '../../../../firebase/fetchData';
 import SearchBar from '@/components/SearchBar';
 import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
 import { useAuth } from '../../../../contexts/AuthContext';
@@ -56,14 +56,16 @@ const DiscoverPage: React.FC = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const fetchedPsychiatrists: IPsychiatrist[] = await fetchAllProfessionals();
-        setPsychiatrists(fetchedPsychiatrists);
+        if (user) {
+          const fetchedPsychiatrists: IPsychiatrist[] = await fetchUnreportedProfessionals(user.uid);
+          setPsychiatrists(fetchedPsychiatrists);
+        }
       } catch (err: any) {
         console.error(err.message);
       }
     }
     fetchData();
-  }, []);
+  }, [router]);
 
   // Processes all psychiatrists availabilities to a dictionary mapping each psychiatrist's uid to their availabilities in the form of the days of the week
   useEffect(() => {
@@ -180,7 +182,7 @@ const DiscoverPage: React.FC = () => {
   const searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
 
   return (
-    <div className={'px-24 pt-9 pb-14'}>
+    <div className={'px-23 pt-9 pb-14'}>
       <div className='pb-8'>
         <SearchBar
           searchTerm={searchTerm} setSearchTerm={setSearchTerm}
@@ -207,7 +209,7 @@ const DiscoverPage: React.FC = () => {
           bothGenders={bothGenders} setBothGenders={setBothGenders} />
       </div>
       {searchFilterResults.length > 0 ? (
-        <PsychiatristList results={searchFilterResults} />
+        <PsychiatristList results={searchFilterResults} buttonType={'discover'} />
       ) : (
         <div className="text-center my-10">
           <p className="mb-4">No Psychiatrists found based on your filters.</p>

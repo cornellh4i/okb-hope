@@ -60,3 +60,11 @@ export interface IUser {
     userType: string;
 }
 
+export interface IReport {
+    description: string;
+    patient_id: string;
+    psych_id: string;
+    report_id: string
+    submittedAt: Timestamp;
+}
+
