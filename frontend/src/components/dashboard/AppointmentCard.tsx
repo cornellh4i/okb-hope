@@ -5,6 +5,7 @@ import ClockIcon from '@/assets/clock.svg'
 import AppointmentQuestion from './AppointmentQuestion'
 import Link from 'next/link';
 import { fetchPatientDetails } from '../../../firebase/fetchData';
+import { deleteAppointment, deleteAvailability } from '../../../firebase/IAvailability';
 import answers from '@/temp_data/appointment_answers.json'
 
 //structure of dictionary representing each element in the apptQuestions array in "Appointment Details" section
@@ -58,6 +59,7 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
       setApptQuestions(updatedApptQuestions);
     }
   };
+
 
   useEffect(() => {
     populateApptQuestions();

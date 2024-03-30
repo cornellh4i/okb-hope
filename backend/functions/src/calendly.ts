@@ -31,6 +31,8 @@ export const calendlyAuth = functions.https.onRequest(async (req, res) => {
     const authUrl = `https://auth.calendly.com/oauth/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}`;
     res.redirect(authUrl);
   });
+
+  
   
 // calendly callback function to get access token and save it to db 
 export const calendlyCallback = functions.https.onRequest(async (req, res) => {
