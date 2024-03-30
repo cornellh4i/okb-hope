@@ -180,7 +180,7 @@ const DiscoverPage: React.FC = () => {
   const searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
 
   return (
-    <div className={'px-24 pt-9 pb-14'}>
+    <div className={'px-23 pt-9 pb-14'}>
       <div className='pb-8'>
         <SearchBar
           searchTerm={searchTerm} setSearchTerm={setSearchTerm}
