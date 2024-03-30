@@ -1,73 +1,91 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ConversationItem from './ConversationItem';
-import { db } from "../../../firebase/firebase"
-import { collection, onSnapshot } from "firebase/firestore"
-import { useState, useEffect } from 'react';
+import { db } from "../../../firebase/firebase";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useAuth } from '../../../contexts/AuthContext';
-import { fetchPatientDetails, fetchProfessionalData } from '../../../firebase/fetchData';
 
+// Assuming the Conversation type is correctly defined as before
 type RecentMessage = {
   text: string;
-  createdAt: any; // Update the type based on your actual data type
+  createdAt: any; // Consider using firebase.firestore.Timestamp or Date depending on your data
   photoURL: string;
 };
 
 type Conversation = {
   patientId: string;
   psychiatristId: string;
-  recentMessage: RecentMessage
+  recentMessage: RecentMessage;
+  messagesUnreadByPatient: number;
+  messagesUnreadByPsych: number;
 };
 
-type ConversationListProps = {
-  read: boolean,
+interface ConversationListProps {
+  read: boolean;
+  selectedConversationId: string; // Receive selectedConversationId
+  onSelectConversation: (conversationId: string) => void; // Receive onSelectConversation function
   conversations: Conversation[];
-};
+}
 
-const ConversationList: React.FC<ConversationListProps> = ({ read, conversations }) => {
-  const conversationsRef = collection(db, "Conversations");
+const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConversationId, onSelectConversation }) => {
   const [conversationList, setConversationsList] = useState<Conversation[]>([]);
+
   const { user } = useAuth();
 
-  // useEffect(() => {
-  //   const fetchNames = async () => {
-  //     if (user?.uid === conversations.patientId) {
-
-  //     } else if (user?.uid === conversations.psychatristId) {
-
-  //     }
-  //   };
-
-  //   fetchNames();
-  // }, [user?.uid, conversation.patientId, conversation.psychiatristId]);
-
-
   useEffect(() => {
-    const unsubscribe = onSnapshot(conversationsRef, (querySnapshot) => {
+    if (!user?.uid) return;
+
+    const conversationsRef = collection(db, "Conversations");
+    // Fetch all conversations without initially filtering by messages unread
+    const q = query(conversationsRef);
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const conversationData: Conversation[] = [];
       querySnapshot.forEach((doc) => {
-        const conversation = doc.data() as Conversation;
-        if (user?.uid === conversation.patientId) {
-          conversationData.push(conversation);
-        } else if (user?.uid === conversation.psychiatristId) {
-          conversationData.push(conversation);
+        const data = doc.data();
+        if (data.patientId === user.uid || data.psychiatristId === user.uid) {
+          // Apply filtering logic here based on whether the user is a patient or psychiatrist in this conversation
+          const isPatient = data.patientId === user.uid;
+          const messagesUnread = isPatient ? data.messagesUnreadByPatient : data.messagesUnreadByPsych;
+          const shouldInclude = read ? messagesUnread < 1 : messagesUnread >= 1;
+
+          if (shouldInclude) {
+            const conversation: Conversation = {
+              patientId: data.patientId,
+              psychiatristId: data.psychiatristId,
+              recentMessage: data.recentMessage,
+              messagesUnreadByPatient: data.messagesUnreadByPatient,
+              messagesUnreadByPsych: data.messagesUnreadByPsych,
+            };
+            conversationData.push(conversation);
+          }
         }
       });
+      conversationData.sort((a, b) => b.recentMessage.createdAt - a.recentMessage.createdAt);
+
       setConversationsList(conversationData);
     });
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+    return () => unsubscribe();
+  }, [user?.uid, read]);
+
+
+  const handleSelectConversation = (conversationId: string) => {
+    onSelectConversation(conversationId);
+    // localStorage.setItem('selectedConversationId', conversationId);
+    // setSelectedConversationId(conversationId);
+  };
 
   return (
     <div className="conversation-list">
       {conversationList.map((conversation, index) => (
         <ConversationItem
-          key={index}
-          read={read}
+          // read={read}
+          key={`${conversation.patientId}-${conversation.psychiatristId}`} // Unique key based on patientId and psychiatristId
           conversation={conversation}
           isLast={index === conversationList.length - 1}
+          onSelect={() => handleSelectConversation(`${conversation.patientId}-${conversation.psychiatristId}`)}
+          isSelected={selectedConversationId === `${conversation.patientId}-${conversation.psychiatristId}`}
+
         />
       ))}
       <style jsx>{`
