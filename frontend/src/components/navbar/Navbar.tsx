@@ -5,6 +5,7 @@ import Logo from '@/assets/logo.svg'
 import colors from "@/colors";
 import { useRouter } from 'next/router';
 import { useEffect } from "react";
+import Logout from "@/assets/logout.svg";
 
 const Navbar = () => {
   const { user } = useAuth();
@@ -72,19 +73,29 @@ const Navbar = () => {
             <div tabIndex={0} className={`btn btn-circle bg-[${colors.okb_blue}] text-[18px] font-normal`}>{user.displayName?.charAt(0)}</div>
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
               {/* A link to the user's edit profile page */}
-              {user.userType == "patient" ? <Link href={`/${user.userType}/${user.uid}/edit_profile`}>
-                <li>Edit Profile</li>
-              </Link> : <Link href={`/${user.userType}/${user.uid}/edit_psych`}>
-                <li>Edit Profile</li>
-              </Link>}
-              <Link href={`/patient/${user?.uid}/report_history`} className="w-18">
-                <li>Report History</li>
-              </Link>
+              {/* {user.userType == "patient" ?
+                <><Link href={`/${user.userType}/${user.uid}/edit_profile`}>
+                  <li>Edit Profile</li>
+                </Link><Link href={`/patient/${user?.uid}/report_history`} className="w-18">
+                    <li>Report History</li>
+                  </Link></> :
+                <Link href={`/${user.userType}/${user.uid}/edit_psych`}>
+                  <li>Edit Profile</li>
+                </Link>}
               <li>
                 <button onClick={logout}>
                   Log Out
                 </button>
-              </li>
+              </li> */}
+              <div style={{ width: '100%', height: '100%', paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8, background: 'white', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 48, display: 'inline-flex' }}>
+                {user.userType == "patient" ?
+                  <><Link href={`/patient/${user.uid}/edit_profile`} className={`text-[18px] font-normal`} style={{ color: '#195BA5', wordWrap: 'break-word' }}>Edit Profile</Link>
+                    <Link href={`/patient/${user?.uid}/report_history`} className={`text-[18px] font-normal`} style={{ color: '#195BA5', wordWrap: 'break-word' }}>Report History</Link></> : user.userType == "psychiatrist" ?
+                    <Link href={`/psychiatrist/${user.uid}/edit_psych`} className={`text-[18px] font-normal`} style={{ color: '#195BA5', wordWrap: 'break-word' }}>Edit Profile</Link> : <></>}
+                <div onClick={logout} style={{ justifyContent: 'center', alignItems: 'center', display: 'inline-flex', gap: '15px', cursor: 'pointer' }}>
+                  <div className={`text-[18px] font-normal`} style={{ textAlign: 'center', color: '#A52119', wordWrap: 'break-word' }}>Log Out</div><Logout />
+                </div>
+              </div>
             </ul>
           </div> : <li>
             <div className="flex justify-center items-center">

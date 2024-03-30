@@ -18,6 +18,9 @@ import { db, logInWithGoogle, signUpWithGoogle } from '../../../firebase/firebas
 import { LoginPopup } from '../LoginPopup';
 import { addDoc, collection } from 'firebase/firestore';
 import { Timestamp } from "firebase/firestore";
+import Cancel from "@/assets/cancel.svg";
+import Submit from "@/assets/submit.svg";
+import Continue from "@/assets/continue.svg";
 
 
 
@@ -65,12 +68,12 @@ const overlayStyle: React.CSSProperties = {
 
 const popupStyle: React.CSSProperties = {
     backgroundColor: '#fff',
-    padding: '20px',
+    padding: 24,
     borderRadius: '10px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
     display: 'flex',
     flexDirection: 'column',
-    width: '30%', // adjust the width as needed
+    width: '45%', // adjust the width as needed
     maxWidth: '500px', // maximum width of the popup
     zIndex: 1001,
     alignItems: 'center', // Center items vertically
@@ -81,13 +84,16 @@ const textareaStyle: React.CSSProperties = {
     width: '100%',
     height: '150px', // Increased height for more text
     margin: '10px 0 20px 0', // Added some margin top and bottom
+    borderWidth: '2px',
     borderColor: '#ddd', // Light grey border color
     padding: '10px', // Padding inside the textarea
+    fontSize: 14
 };
 
 const buttonsContainerStyle: React.CSSProperties = {
     display: 'flex',
     justifyContent: 'flex-end', // Aligns the buttons to the right
+    gap: '8px'
 };
 
 const buttonStyle: React.CSSProperties = {
@@ -318,8 +324,9 @@ const ProfProfile = () => {
 
     return (
         <div className={`w-2/3 h-full flex flex-wrap flex-col justify-center content-center gap-5`}>
-            {showPopup && <LoginPopup onClose={() => setShowPopup(false)} signInWithGoogleAndRedirect={signInWithGoogleAndRedirect} />}
-
+            {showPopup && <LoginPopup onClose={() => setShowPopup(false)}
+                logInWithGoogleAndRedirect={logInWithGoogleAndRedirect}
+                signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect} />}
 
             {showReportPopup && (
                 <div style={overlayStyle}>
@@ -328,35 +335,38 @@ const ProfProfile = () => {
                         <h3 style={{ fontWeight: 'bold', marginBottom: '15px' }}>
                             Report Dr. {professional.firstName} {professional.lastName}?
                         </h3>
-                        <p style={{ marginBottom: '15px' }}>
+                        <p style={{ fontSize: 14, marginBottom: '15px' }}>
                             We are committed to ensuring your right to privacy and safety. If you feel
                             like any of these rights have been violated by a psychiatrist that you are
                             seeing, please fill out the report form below.
                         </p>
                         <textarea
                             style={textareaStyle}
+                            placeholder={"Please provide a detailed description of your situation here."}
                             value={reportText}
                             onChange={handleReportTextChange}
                         ></textarea>
                         <div style={buttonsContainerStyle}>
-                            <button onClick={handleCloseReport} style={buttonStyle}>Cancel</button>
-                            <button onClick={handleSubmitReport} style={submitButtonStyle}>Submit</button>
+                            <Cancel onClick={handleCloseReport} style={{ cursor: 'pointer' }} />
+                            <Submit onClick={handleSubmitReport} style={{ cursor: 'pointer' }} />
                         </div>
                     </div>
                 </div>
             )}
             {showSuccessPopup && (
                 <div style={overlayStyle}>
-                    <div style={popupStyle}>
+                    <div style={{ ...popupStyle, gap: '12px' }} >
                         {/* Assuming you have the SVG as a React component */}
-                        <CheckCircle />
-                        <h3 style={{ fontWeight: 'bold', marginBottom: '15px' }}>You have successfully reported Dr. {professional.firstName} {professional.lastName}.</h3>
-                        <p style={{ marginBottom: '15px' }}>
-                            Dr. {professional.firstName} {professional.lastName}'s profile will be removed from your view and you will now be
-                            redirected back to the list of available psychiatrists. If you'd like to access
-                            your reported psychiatrists, check out the report section in your profile.
-                        </p>
-                        <button style={continueButtonStyle} onClick={handleContinue}>Continue</button>
+                        <CheckCircle style={{ top: 20 }} />
+                        <div style={{ display: 'inline-flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 14 }}>
+                            <h3 style={{ fontWeight: 'bold', marginBottom: '15px', fontSize: 14 }}>You have successfully reported Dr. {professional.firstName} {professional.lastName}.</h3>
+                            <p style={{ marginBottom: '15px', fontSize: 13 }}>
+                                Dr. {professional.firstName} {professional.lastName}'s profile will be removed from your view and you will now be
+                                redirected back to the list of available psychiatrists. If you'd like to access
+                                your reported psychiatrists, check out the report section in your profile.
+                            </p>
+                            <Continue onClick={handleContinue} />
+                        </div>
                     </div>
                 </div>
             )}

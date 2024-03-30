@@ -6,21 +6,39 @@ import Link from 'next/link';
 import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { IPsychiatrist, IReport } from '@/schema';
 import ViewReport from '@/assets/view_reports.svg';
+import Close from '@/assets/close.svg';
 import okb_colors from "@/colors";
 
 const ReportCard = ({ report }) => {
   // Format the date string
   const formattedDate = report.submittedAt.toDate().toLocaleString();
 
+  const cardStyle: React.CSSProperties = {
+    background: 'white',
+    borderRadius: '10px',
+    border: '1px solid #519AEB',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    padding: '12px 24px',
+    margin: '0 0 12px 0',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+  };
+
   return (
-    <div className="card bg-base-100 shadow-xl mb-4">
-      <div className="card-body">
-        <p>Report submitted on: {formattedDate}</p>
-        <p>Description: {report.description}</p>
+    <div style={cardStyle} className="card bg-base-100 shadow-xl mb-4">
+      <div>
+        <p style={{ fontSize: 14 }}>The following report for Dr. Gloria Shi was submitted on: {formattedDate}</p>
       </div>
+      <p style={{ fontSize: 14 }}>Report Log</p>
+      <div>
+        <p style={{ fontSize: 14, border: '1px solid #9A9A9A', color: '#000000', padding: '8px 12px' }}>{report.description}</p>
+      </div>
+      <p style={{ fontSize: 14, textAlign: 'left' }}>Report Status: Verified on {formattedDate}</p>
     </div>
   );
 };
+
 
 const ReportList: React.FC = () => {
   const { user } = useAuth();
@@ -142,22 +160,62 @@ const ReportList: React.FC = () => {
     if (!showReportHistoryPopup || !selectedPsychiatrist) return null;
 
     return (
+      // <div className="modal modal-open">
+      //   <div className="modal-box" style={{ display: 'flex', flexDirection: 'column', height: '50%', gap: 12 }}>
+      //     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      //       <Close className="modal-action" onClick={() => setShowReportHistoryPopup(false)} style={{ cursor: 'pointer' }} />
+      //     </div>
+      //     <div className="text-xl font-bold mb-4" style={{ display: 'flex', justifyContent: 'center', fontSize: 15 }}>Report Information</div>
+      //     {/* <div className="text-center">
+      //       <h2 className="text-3xl font-bold mb-2">{selectedPsychiatrist.firstName} {selectedPsychiatrist.lastName}</h2>
+      //       <h3 className="text-xl font-bold mb-4">Report Information</h3>
+      //     </div> */}
+      //     <div className="space-y-4" style={{ width: '100%', height: '100%', paddingLeft: 24, paddingRight: 24, paddingTop: 12, paddingBottom: 12, background: 'white', borderRadius: 10, border: '1px #519AEB solid', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-end', gap: 12, display: 'inline-flex' }}>
+      //       {selectedPsychiatristReports.map(report => (
+      //         <ReportCard key={report.report_id} report={report} />
+      //       ))}
+      //     </div>
+      //   </div>
+      // </div>
       <div className="modal modal-open">
-        <div className="modal-box">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold mb-2">{selectedPsychiatrist.firstName} {selectedPsychiatrist.lastName}</h2>
-            <h3 className="text-xl font-bold mb-4">Report Information</h3>
-          </div>
-          <div className="space-y-4">
+        <div className="modal-box" style={{
+          position: 'relative', // Allows absolute positioning within this box
+          display: 'flex',
+          flexDirection: 'column',
+          height: '50%',
+          gap: 12,
+          padding: 24, // Adjusted for internal spacing
+          alignItems: 'center' // Centers the title horizontally
+        }}>
+          <Close className="modal-action" onClick={() => setShowReportHistoryPopup(false)} style={{
+            position: 'absolute', // Position absolutely within the modal box
+            top: 12, // Distance from the top of the modal box
+            right: 12, // Distance from the right of the modal box
+            cursor: 'pointer'
+          }} />
+          <div className="text-xl font-bold" style={{
+            margin: '0 auto', // Centers the div
+            fontSize: 15
+          }}>Report Information</div>
+
+          <div className="space-y-4" style={{
+            width: '100%',
+            height: '100%',
+            overflowY: 'auto', // Makes this area scrollable
+            background: 'white',
+            borderRadius: 10,
+            flexDirection: 'column',
+            justifyContent: 'flex-start', // Aligns content to the start
+            gap: 12,
+            display: 'flex' // Sets display to flex for flex properties to take effect
+          }}>
             {selectedPsychiatristReports.map(report => (
               <ReportCard key={report.report_id} report={report} />
             ))}
           </div>
-          <div className="modal-action">
-            <button className="btn" onClick={() => setShowReportHistoryPopup(false)}>Close</button>
-          </div>
         </div>
       </div>
+
     );
   };
 

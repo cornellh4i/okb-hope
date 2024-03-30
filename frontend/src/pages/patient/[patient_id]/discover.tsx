@@ -207,7 +207,7 @@ const DiscoverPage: React.FC = () => {
           bothGenders={bothGenders} setBothGenders={setBothGenders} />
       </div>
       {searchFilterResults.length > 0 ? (
-        <PsychiatristList results={searchFilterResults} />
+        <PsychiatristList results={searchFilterResults} buttonType={'discover'} />
       ) : (
         <div className="text-center my-10">
           <p className="mb-4">No Psychiatrists found based on your filters.</p>
