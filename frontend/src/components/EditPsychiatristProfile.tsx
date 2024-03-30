@@ -88,7 +88,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
   }, [docId]);
 
   const handleCancel = () => {
-    router.push(`/${user?.userType}/${uid}/psych_dashboard`);
+    router.push(`/psychiatrist/${uid}/psych_dashboard`);
   }
 
 
@@ -102,7 +102,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
       language: languages,
       gender: gender
     })
-    router.push(`/${user?.userType}/${uid}/psych_dashboard`);
+    router.push(`/psychiatrist/${uid}/psych_dashboard`);
   };
 
   return (

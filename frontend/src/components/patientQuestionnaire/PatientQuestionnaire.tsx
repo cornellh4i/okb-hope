@@ -143,8 +143,7 @@ const PatientQuestionnaire = () => {
                     gender, //genderPref
                     [], //savedPsychiatrists
                 );
-
-                router.push(`/${user?.userType}/${user?.uid}/dashboard`);
+                router.push('/loading?init=true');
             } catch (error) {
                 console.error('Error signing in:', error);
                 logout();

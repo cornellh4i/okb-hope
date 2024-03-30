@@ -19,17 +19,22 @@ const Navbar = () => {
           <Link href="/" className="w-18">
             <Logo />
           </Link>
-          {user ? user.userType == "patient" ? <li className={`${router.pathname === '/dashboard' ? 'underline-offset-1 custom-active' : ''}`}>
-            {/* A link to the patient's dashboard */}
-            <Link href={`/${user.userType}/${user.uid}/dashboard`} className="w-18">
-              <div className="text-[18px] text-[#195BA5]">My Dashboard</div>
-            </Link>
-          </li> : <li className={`${router.pathname === '/psych_dashboard' ? 'underline-offset-1 custom-active' : ''}`}>
-            {/* A link to the psychiatrist's dashboard */}
-            <Link href={`/${user.userType}/${user.uid}/psych_dashboard`} className="w-18">
-              <div className="text-[18px] text-[#195BA5]">My Dashboard</div>
-            </Link>
-          </li> : <div></div>}
+          {user ? user.userType == "patient" ?
+            <li className={`${router.pathname === '/dashboard' ? 'underline-offset-1 custom-active' : ''}`}>
+              {/* A link to the patient's dashboard */}
+              <Link href={`/${user.userType}/${user.uid}/dashboard`} className="w-18">
+                <div className="text-[18px] text-[#195BA5]">My Dashboard</div>
+              </Link>
+            </li>
+            : user.userType == "psychiatrist" ?
+              <li className={`${router.pathname === '/psych_dashboard' ? 'underline-offset-1 custom-active' : ''}`}>
+                {/* A link to the psychiatrist's dashboard */}
+                <Link href={`/${user.userType}/${user.uid}/psych_dashboard`} className="w-18">
+                  <div className="text-[18px] text-[#195BA5]">My Dashboard</div>
+                </Link>
+              </li>
+              : <div></div>
+            : <div></div>}
         </ul>
       </div>
 
@@ -50,18 +55,46 @@ const Navbar = () => {
             </Link>
           </li>}
 
-        {user ? <li className={`${router.pathname === '/messages' ? 'underline-offset-1 custom-active' : ''}`}>
-          {/* A link to the user's messages */}
-          <Link href={`/${user.userType}/${user.uid}/messages`} className="w-18">
-            <div className="text-[18px] text-[#195BA5]">Messages</div>
-          </Link>
-        </li> : <div></div>}
+        {user && (user.userType == "patient" || user.userType == "psychiatrist") ?
+          <li className={`${router.pathname === '/messages' ? 'underline-offset-1 custom-active' : ''}`}>
+            {/* A link to the user's messages */}
+            <Link href={`/${user.userType}/${user.uid}/messages`} className="w-18">
+              <div className="text-[18px] text-[#195BA5]">Messages</div>
+            </Link>
+          </li>
+          :
+          <div></div>}
 
-        <li className={`${router.pathname === '/about' ? 'underline-offset-1 custom-active' : ''}`}>
-          <Link href="https://www.wohohiame.com/" className="w-18">
-            <div className="text-[18px] text-[#195BA5]">About Us</div>
-          </Link>
-        </li>
+        {!user || (user.userType == "patient" || user.userType == "psychiatrist") ?
+          <li className={`${router.pathname === '/about' ? 'underline-offset-1 custom-active' : ''}`}>
+            <Link href="https://www.wohohiame.com/" className="w-18">
+              <div className="text-[18px] text-[#195BA5]">About</div>
+            </Link>
+          </li>
+          : <div></div>}
+
+        {user && user.userType == "admin" ?
+          <>
+            <li className={`${router.pathname === '/database' ? 'underline-offset-1 custom-active' : ''}`}>
+              <Link href={`/${user?.userType}/${user?.uid}/database`} className="w-18">
+                <div className="text-[18px] text-[#195BA5]">Database</div>
+              </Link>
+            </li><li className={`${router.pathname === '/analytics' ? 'underline-offset-1 custom-active' : ''}`}>
+              {/* Update this href to go to the analytics page */}
+              <Link href="https://www.wohohiame.com/" className="w-18">
+                <div className="text-[18px] text-[#195BA5]">Analytics</div>
+              </Link>
+            </li>
+            <li className={`${router.pathname === '/reports' ? 'underline-offset-1 custom-active' : ''}`}>
+              {/* Update this href to go to the reports page */}
+              <Link href="https://www.wohohiame.com/" className="w-18">
+                <div className="text-[18px] text-[#195BA5]">Reports</div>
+              </Link>
+            </li>
+          </>
+          : <div></div>}
+
+
         {!user ? <li className={`${router.pathname === '/questionnaire' ? 'underline-offset-1 custom-active' : ''}`}>
           <Link href="/questionnaire" className="w-18">
             <div className="text-[18px] text-[#195BA5]">Sign Up</div>

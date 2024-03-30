@@ -2,6 +2,14 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 import { useAuth } from "../../../contexts/AuthContext";
+import { Timestamp } from 'firebase/firestore'; // Importing Timestamp from Firestore for the type definition
+
+
+type RecentMessage = {
+  text: string;
+  createdAt: Timestamp; // Using Timestamp type for the createdAt field
+  photoURL: string;
+};
 
 type Conversation = {
   user: {
@@ -24,7 +32,7 @@ const PsychiatristInbox = () => {
       if (!user) return;
 
       const q = query(
-        collection(db, "Chats"),
+        collection(db, "Conversations"),
         where("psychiatrist.uid", "==", user.uid)
       );
       const querySnapshot = await getDocs(q);

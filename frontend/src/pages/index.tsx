@@ -14,19 +14,16 @@ const App = () => {
   useEffect(() => {
     // Check if there is a logged-in user. If 'user' is not null, a user is logged in.
     if (user) {
-      // Construct the URL to the user's dashboard based on their unique user ID (UID).
-      // This URL will navigate the user to their personalized dashboard.
-
-      console.log(user)
-
       // Check if userType exists in the user object
       if (user.userType) {
         // Construct the URL to the user's dashboard based on their unique user ID (UID).
         // This URL will navigate the user to their personalized dashboard.
-        if (user.userType == "patient"){
-          router.push(`/${user.userType}/${user.uid}/dashboard`);
-        } else if (user.userType == "psychiatrist"){
-          router.push(`/${user.userType}/${user.uid}/psych_dashboard`);
+        if (user.userType == "patient") {
+          router.push(`/patient/${user.uid}/dashboard`);
+        } else if (user.userType == "psychiatrist") {
+          router.push(`/psychiatrist/${user.uid}/psych_dashboard`);
+        } else if (user.userType == "admin") {
+          router.push(`/admin/${user.uid}/database`);
         }
       } else {
         console.log('User type not found');
