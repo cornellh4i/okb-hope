@@ -160,54 +160,14 @@ const ReportList: React.FC = () => {
     if (!showReportHistoryPopup || !selectedPsychiatrist) return null;
 
     return (
-      // <div className="modal modal-open">
-      //   <div className="modal-box" style={{ display: 'flex', flexDirection: 'column', height: '50%', gap: 12 }}>
-      //     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-      //       <Close className="modal-action" onClick={() => setShowReportHistoryPopup(false)} style={{ cursor: 'pointer' }} />
-      //     </div>
-      //     <div className="text-xl font-bold mb-4" style={{ display: 'flex', justifyContent: 'center', fontSize: 15 }}>Report Information</div>
-      //     {/* <div className="text-center">
-      //       <h2 className="text-3xl font-bold mb-2">{selectedPsychiatrist.firstName} {selectedPsychiatrist.lastName}</h2>
-      //       <h3 className="text-xl font-bold mb-4">Report Information</h3>
-      //     </div> */}
-      //     <div className="space-y-4" style={{ width: '100%', height: '100%', paddingLeft: 24, paddingRight: 24, paddingTop: 12, paddingBottom: 12, background: 'white', borderRadius: 10, border: '1px #519AEB solid', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-end', gap: 12, display: 'inline-flex' }}>
-      //       {selectedPsychiatristReports.map(report => (
-      //         <ReportCard key={report.report_id} report={report} />
-      //       ))}
-      //     </div>
-      //   </div>
-      // </div>
       <div className="modal modal-open">
         <div className="modal-box" style={{
-          position: 'relative', // Allows absolute positioning within this box
-          display: 'flex',
-          flexDirection: 'column',
-          height: '50%',
-          gap: 12,
-          padding: 24, // Adjusted for internal spacing
-          alignItems: 'center' // Centers the title horizontally
+          position: 'relative', display: 'flex', flexDirection: 'column', height: '50%', gap: 12, padding: 24, alignItems: 'center'
         }}>
-          <Close className="modal-action" onClick={() => setShowReportHistoryPopup(false)} style={{
-            position: 'absolute', // Position absolutely within the modal box
-            top: 12, // Distance from the top of the modal box
-            right: 12, // Distance from the right of the modal box
-            cursor: 'pointer'
-          }} />
-          <div className="text-xl font-bold" style={{
-            margin: '0 auto', // Centers the div
-            fontSize: 15
-          }}>Report Information</div>
-
+          <Close className="modal-action" onClick={() => setShowReportHistoryPopup(false)} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
+          <div className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 15 }}>Report Information</div>
           <div className="space-y-4" style={{
-            width: '100%',
-            height: '100%',
-            overflowY: 'auto', // Makes this area scrollable
-            background: 'white',
-            borderRadius: 10,
-            flexDirection: 'column',
-            justifyContent: 'flex-start', // Aligns content to the start
-            gap: 12,
-            display: 'flex' // Sets display to flex for flex properties to take effect
+            width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex'
           }}>
             {selectedPsychiatristReports.map(report => (
               <ReportCard key={report.report_id} report={report} />
