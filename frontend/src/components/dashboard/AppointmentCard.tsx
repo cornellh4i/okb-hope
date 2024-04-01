@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {auth} from '../../../firebase/firebase';
+import React, { useState, useEffect } from 'react';
+import { auth } from '../../../firebase/firebase';
 import CalendarIcon from '@/assets/calendar.svg'
 import ClockIcon from '@/assets/clock.svg'
 import AppointmentQuestion from './AppointmentQuestion'
@@ -61,9 +61,9 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
 
   useEffect(() => {
     populateApptQuestions();
-    
+
   }, [uid]);
-  
+
   // calculation of # days remaining until appt
   const daysTo = Math.floor((start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
   const month = start.toLocaleString('default', { month: 'long' });
@@ -93,7 +93,7 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
               <div
                 className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
               >
-                <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                <div className="relative w-auto h-2/3 my-6 mx-auto max-w-3xl">
                   {/*content*/}
                   <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                     {/*header*/}
@@ -105,32 +105,31 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
                     </div>
                     {/*body*/}
                     <div className="relative p-6 flex-auto">
-                      <div className="col-span-4"><p>{day}, {month} {start.getDate()}</p></div>
-                      <div className="col-span-4"><p>{start.getHours()}:{(start.getMinutes() < 10 ? '0' : '') + start.getMinutes()} - {end.getHours()}:{(end.getMinutes() < 10 ? '0' : '') + end.getMinutes()}</p></div>
+                      <div className="col-span-4"><p>{day}, {month} {start.getDate()} • {start.getHours()}:{(start.getMinutes() < 10 ? '0' : '') + start.getMinutes()} - {end.getHours()}:{(end.getMinutes() < 10 ? '0' : '') + end.getMinutes()}</p></div>
                       <br></br>
                       {/* button to start appointment */}
                       <Link href="./video-chat">
                         <button
-                          className="bg-slate-200 text-black active:bg-gray-500 font-bold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full"
+                          className="mb-4 bg-[#519AEB] text-[#FFFDFD] active:bg-gray-500 font-bold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full"
                           type="button"
                         >
                           Start Appointment
                         </button>
                       </Link>
-                      <br></br>
-                      <br></br>
                       {/* reschedule button */}
-                      <div className="flex space-x-10">
+                      <div className="flex space-x-4">
                         <button
-                          className="bg-slate-50 text-black active:bg-gray-500 text-sm px-6 py-3 rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2 outline outline-offset-2 outline-1 rounded-lg"
+                          className="text-[#5F5F5F] active:bg-gray-500 text-sm rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2"
                           type="button"
+                          style={{ width: '50%', height: '100%', paddingLeft: 30, paddingRight: 30, paddingTop: 12, paddingBottom: 12, borderRadius: 10, border: '3px #519AEB solid', justifyContent: 'center', alignItems: 'center', gap: 10, display: 'inline-flex' }}
                         >
                           Reschedule Appointment
                         </button>
                         {/* delete appt button */}
                         <button
-                          className="bg-slate-50 text-black active:bg-gray-500 text-sm px-6 py-3 rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2 outline outline-offset-2 outline-1 rounded-lg"
+                          className="text-[#5F5F5F] active:bg-gray-500 text-sm rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2"
                           type="button"
+                          style={{ width: '50%', height: '100%', paddingLeft: 30, paddingRight: 30, paddingTop: 12, paddingBottom: 12, borderRadius: 10, border: '3px #519AEB solid', justifyContent: 'center', alignItems: 'center', gap: 10, display: 'inline-flex' }}
                         >
                           Delete Appointment
                         </button>
@@ -138,7 +137,7 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
                       <br></br>
                       {/* questionnaire answers: map each JSON object to each individual Appointment Question */}
                       {apptQuestions.map(input => (
-                        
+
                         <div key={input.id.toString()} className="appointment_question">
                           <AppointmentQuestion value={input.answer.toString()} name={input.id.toString()} question={input.question.toString()}></AppointmentQuestion>
                         </div>

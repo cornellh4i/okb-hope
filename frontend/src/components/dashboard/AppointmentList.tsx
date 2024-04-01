@@ -42,7 +42,7 @@ const AppointmentList = () => {
           if (!response.empty) {
             const docData = response.docs[0].data();
             const psychiatrist = docData as IPsychiatrist;
-            const psychiatristName: string = psychiatrist.position + " " + psychiatrist.firstName + " " + psychiatrist.lastName || '';
+            const psychiatristName: string = psychiatrist.firstName + " " + psychiatrist.lastName || '';
             names.push(psychiatristName);
           } else {
             throw new Error(`No psychiatrist found with the uid: ${appointment.profId}`);

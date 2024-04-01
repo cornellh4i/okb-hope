@@ -84,8 +84,8 @@ const PsychiatristDashboard = () => {
     const todaysAppointments = aptsForTheWeek.filter(apt => dayjs(apt.startTime.toDate()).isSame(currentDate, 'day')).map((apt) => (
         <AppointmentCard
             patientId={apt.patientId}
-            startTime={dayjs(apt.startTime.toDate()).format('HH:mm')}
-            endTime={dayjs(apt.endTime.toDate()).format('HH:mm')}
+            startTime={dayjs(apt.startTime.toDate())}
+            endTime={dayjs(apt.endTime.toDate())}
         />
     ));
 
@@ -99,8 +99,8 @@ const PsychiatristDashboard = () => {
                 <AppointmentCard
                     key={apt.id}
                     patientId={patientId}
-                    startTime={time_start.format('HH:mm')}
-                    endTime={time_end.format('HH:mm')}
+                    startTime={time_start}
+                    endTime={time_end}
                 />
             );
         });
