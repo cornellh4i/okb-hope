@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-// import AppointmentList from './AppointmentList';
 import AppointmentCard from './AppointmentCard';
-import PsychiatristList from '../psychiatrists/PsychiatristCardsListing';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { sizing } from '@mui/system';
-import { db } from "../../../firebase/firebase";
-import App from '@/pages/_app';
-import results from '../../temp_data/appointments.json'; // appointment info
-import fetchAppointments, { AppointmentType } from '../../../firebase/fetchAppointments';
 import { IAppointment } from '@/schema';
-import { createAppointments } from '../../../firebase/crudTesting';
-import { useMonthCalendarDefaultizedProps } from '@mui/x-date-pickers/MonthCalendar/MonthCalendar';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
+import { fetchApptDetails } from '../../../firebase/fetchData';
 
 
 const PsychiatristDashboard = () => {
@@ -54,39 +46,26 @@ const PsychiatristDashboard = () => {
         setCurrentDate(previousWeek);
     };
 
-    const [appointments, setAppointments] = useState<AppointmentType[]>([]); // State to store appointments
+    const [appointments, setAppointments] = useState<IAppointment[]>([]); // State to store appointments
+
+    // Fetch the psychiatrist's appointments
     useEffect(() => {
-        fetchAppointments().then((data) => {
-            setAppointments(data);
-        })
-            .catch((error) => {
-                console.error("Error fetching appointments:", error);
-            });
-    }, []);
-
-    const apts = Object.values(results);
-
-    // const appointmentCards = apts.map((apt: IAppointment) => {
-
-    //     const p_name = apt.name; 
-    //     const time_start = dayjs(apt.start);
-    //     const time_end = dayjs(apt.end);
-    //     const timeStartDateString = time_start.format('YYYY-MM-DD');
-    //     // returning the AppointmentCard for each appointment
-    //     if (timeStartDateString === dateMDY) {
-    //         return (
-    //             <AppointmentCard 
-    //                 p_name={p_name} 
-    //                 time_start={time_start.format('HH:mm')} 
-    //                 time_end={time_end.format('HH:mm')} 
-    //             />
-    //         );
-    //     }
-    // });
+        const fetchAppts = async () => {
+            if (user) {
+                const apptData = await fetchApptDetails(user.uid, user?.userType);
+                if (apptData) {
+                    const currTime = new Date().getTime()
+                    const filteredApptData = apptData.filter((data) => data !== null && Math.floor((data.startTime.toDate().getTime() - currTime) / (1000 * 60 * 60 * 24)) >= 0);
+                    setAppointments(filteredApptData);
+                }
+            }
+        }
+        fetchAppts();
+    }, [user]);
 
     const aptsByDay = {};
-    apts.forEach((apt) => {
-        const time_start = dayjs(apt.start);
+    appointments.forEach((apt) => {
+        const time_start = dayjs(apt.startTime.toDate());
         const timeStartDateString = time_start.format('YYYY-MM-DD');
 
         if (time_start.isAfter(startOfWeek) && time_start.isBefore(endOfWeek)) {
@@ -97,30 +76,29 @@ const PsychiatristDashboard = () => {
         }
     });
 
-    const aptsForTheWeek = apts.filter(apt => {
-        const time_start = dayjs(apt.start);
+    const aptsForTheWeek = appointments.filter(apt => {
+        const time_start = dayjs(apt.startTime.toDate());
         return (time_start.isAfter(currentDate) || time_start.isSame(currentDate, 'day')) && time_start.isBefore(currentDate.add(7, 'day'));
     });
 
-    const todaysAppointments = aptsForTheWeek.filter(apt => dayjs(apt.start).isSame(currentDate, 'day')).map((apt) => (
+    const todaysAppointments = aptsForTheWeek.filter(apt => dayjs(apt.startTime.toDate()).isSame(currentDate, 'day')).map((apt) => (
         <AppointmentCard
-            profId={apt.name}
-            startTime={dayjs(apt.start).format('HH:mm')}
-            endTime={dayjs(apt.end).format('HH:mm')}
+            patientId={apt.patientId}
+            startTime={dayjs(apt.startTime.toDate()).format('HH:mm')}
+            endTime={dayjs(apt.endTime.toDate()).format('HH:mm')}
         />
     ));
 
     const otherAppointments = Object.keys(aptsByDay).sort().map(dateKey => {
         const dayHeader = dayjs(dateKey).format('dddd, MMMM D');
         const dailyApts = aptsByDay[dateKey].map(apt => {
-            const p_name = apt.name;
-            const time_start = dayjs(apt.start);
-            const time_end = dayjs(apt.end);
-
+            const patientId = apt.patientId;
+            const time_start = dayjs(apt.startTime.toDate());
+            const time_end = dayjs(apt.endTime.toDate());
             return (
                 <AppointmentCard
                     key={apt.id}
-                    profId={p_name}
+                    patientId={patientId}
                     startTime={time_start.format('HH:mm')}
                     endTime={time_end.format('HH:mm')}
                 />
@@ -129,7 +107,7 @@ const PsychiatristDashboard = () => {
 
         return (
             <div key={dateKey}>
-                <div className="text-black text-xl font-semibold font-montserrat mt-5 ml-10">{dayHeader}</div>
+                <div className="text-black text-xl font-semibold font-montserrat mt-5">{dayHeader}</div>
                 {dailyApts}
             </div>
         );
@@ -137,10 +115,10 @@ const PsychiatristDashboard = () => {
 
 
     return (
-        <div className="w-full h-full">
+        <div className="w-full h-full flex flex-col justify-center items-center content-center">
             {/* the header part of dashboard, containing week */}
-            <div className="flex flex-col justify-center items-center">
-                <div id="blueheader" className="flex w-[1114px] h-[53px] py-3 bg-sky-700 rounded-[10px] justify-center items-center inline-flex">
+            <div className="flex flex-col justify-center items-center w-full md:w-4/5">
+                <div id="blueheader" className="flex w-full h-[53px] py-3 bg-sky-700 rounded-[10px] justify-center items-center inline-flex">
                     <div className="relative">
                         <div className="flex w-[362px] h-[29px] top-0 justify-center items-center gap-4 inline-flex">
                             <div className="text-white text-2xl font-semibold font-montserrat">Week of {dateHeaderString}</div>
@@ -171,23 +149,22 @@ const PsychiatristDashboard = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-row justify-center pt-10">
+            <div className="flex flex-col md:flex-row justify-center pt-10 w-4/5">
                 <div className="bg-white h-[330px] rounded-[10px] shadow" >
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DateCalendar value={currentDate} onChange={(newValue: dayjs.Dayjs | null) => { setCurrentDate(newValue ?? dayjs()); }} />
                     </LocalizationProvider>
                 </div>
-                <div className="ml-10 mb-10 w-[806px] h-[630px] h-full flex-col justify-start items-start gap-9 inline-flex overflow-y-auto">
+                <div className="md:ml-10 mb-10 w-full h-[630px] h-full flex-col justify-center md:justify-start items-center md:items-start gap-9 inline-flex">
                     {
                         todaysAppointments.length > 0 ?
                             (
-                                <div className="relative mb-5">
+                                <div className="relative mb-5 w-full pt-5 md:pt-0">
                                     <div className="text-black text-2xl font-semibold font-montserrat">Today's Appointments</div>
-
                                     {todaysAppointments}
                                 </div>
                             ) : (
-                                <div className="relative mb-5">
+                                <div className="relative mb-5 w-full pt-5 md:pt-0">
                                     <div className="text-black text-2xl font-semibold font-montserrat">Today's Appointments</div>
                                     <div className="text-black text-xl font-montserrat mt-5">{"No appointments booked for " + currentDate.format('dddd, MMMM D')}</div>
                                 </div>
@@ -196,15 +173,15 @@ const PsychiatristDashboard = () => {
                     {
                         otherAppointments.length > 0 ?
                             (
-                                <>
+                                <div className="relative mb-5 w-full">
                                     <div className="text-black text-2xl font-semibold font-montserrat">This Week's Appointments</div>
                                     {otherAppointments}
-                                </>
+                                </div>
                             ) : (
-                                <>
+                                <div className="relative mb-5 w-full">
                                     <div className="text-black text-2xl font-semibold font-montserrat">This Week's Appointments</div>
                                     <div className="text-black text-xl font-montserrat mt-5">{"No appointments booked for the week of " + currentDate.format('dddd, MMMM D')}</div>
-                                </>
+                                </div>
                             )
                     }
                 </div>

@@ -114,10 +114,10 @@ const fetchPatientDetails = async (uid: string) => {
   }
 }
 
-const fetchApptDetails = async (uid: string) => {
+const fetchApptDetails = async (uid: string, userType: string) => {
   try {
     const apptRef = collection(db, "appointments");
-    const q = query(apptRef, where("patientId", "==", uid));
+    const q = userType == "patient" ? query(apptRef, where("patientId", "==", uid)) : query(apptRef, where("profId", "==", uid));
     const response = await getDocs(q);
     if (!response.empty) {
       const docData: IAppointment[] = response.docs.map((doc) => doc.data() as IAppointment);

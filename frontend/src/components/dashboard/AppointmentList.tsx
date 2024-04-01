@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import AppointmentCard from './AppointmentCard';
 import { db, auth } from '../../../firebase/firebase';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc, query, collection, where, getDocs } from 'firebase/firestore';
 import { fetchApptDetails } from '../../../firebase/fetchData';
-import { IAppointment } from '@/schema';
-// import NoUpcomingAppointments from './NoUpcomingAppointments';
+import { IAppointment, IPsychiatrist } from '@/schema';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const AppointmentList = () => {
-  const uid = auth.currentUser?.uid;
+  const { user } = useAuth();
   const [appointments, setAppointments] = useState<IAppointment[]>([]);
   const [psychiatristNames, setPsychiatristNames] = useState<string[]>([]);
   useEffect(() => {
     const fetchAppts = async () => {
-      if (uid) {
-        const apptData = await fetchApptDetails(uid);
+      if (user) {
+        const apptData = await fetchApptDetails(user.uid, user?.userType);
         if (apptData) {
           const currTime = new Date().getTime()
-
           const filteredApptData = apptData.filter((data) => data !== null && Math.floor((data.startTime.toDate().getTime() - currTime) / (1000 * 60 * 60 * 24)) >= 0);
           setAppointments(filteredApptData);
         }
       }
     }
     fetchAppts();
-  }, [uid]);
+  }, [user]);
+
+  useEffect(() => {
+    console.log(appointments)
+  }, [appointments])
 
   // connect to 'psychiatrists' collection to find psychiatrist's name. Match appointment's profId with psychiatrist's document id
   useEffect(() => {
@@ -31,10 +34,19 @@ const AppointmentList = () => {
       if (appointments.length > 0) {
         const names: string[] = []
         for (const appointment of appointments) {
-          const psychiatristDocRef = doc(db, 'psychiatrists', appointment.profId);
-          const psychiatristDocSnap = await getDoc(psychiatristDocRef);
-          const psychiatristName: string = psychiatristDocSnap.data()?.position + " " + psychiatristDocSnap.data()?.firstName + " " + psychiatristDocSnap.data()?.lastName || '';
-          names.push(psychiatristName);
+          const q = query(
+            collection(db, "psychiatrists"),
+            where("uid", "==", appointment.profId)
+          );
+          const response = await getDocs(q);
+          if (!response.empty) {
+            const docData = response.docs[0].data();
+            const psychiatrist = docData as IPsychiatrist;
+            const psychiatristName: string = psychiatrist.position + " " + psychiatrist.firstName + " " + psychiatrist.lastName || '';
+            names.push(psychiatristName);
+          } else {
+            throw new Error(`No psychiatrist found with the uid: ${appointment.profId}`);
+          }
         }
         setPsychiatristNames(names)
       }

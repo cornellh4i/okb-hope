@@ -5,7 +5,6 @@ import { createPsychiatrist, fetchPsychiatrist, fetchAllPsychiatrist, updatePsyc
 import { IAppointment, IAvailability, IPsychiatrist, IPatient } from "@/schema";
 import { CollectionReference, DocumentData, Timestamp, where } from "firebase/firestore";
 import { fetchDocumentId } from "./fetchData";
-import fetchAppointments from "./fetchAppointments";
 
 const PYSCH = "psychiatrists"
 const PATIENT = "patients"
