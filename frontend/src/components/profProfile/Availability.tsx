@@ -41,8 +41,8 @@ const Availability = ({ availability = [] }: AvailabilityProps) => {
     }, [availability]);
 
     return (
-        <div className="h-fit">
-            <div className={`grid grid-cols-7 gap-8`}>
+        <div className="h-fit flex justify-center">
+            <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-8`}>
                 {days.map((day, index) => {
                     // console.log(index);
                     // const availField = availability[index] || ''; // Ensure times are available or an empty string

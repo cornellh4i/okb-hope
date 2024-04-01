@@ -284,33 +284,33 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
   //break
 
   return (
-    <div className={'px-24 pt-9 pb-14'}>
+    <div className={'px-4 lg:px-24 pt-9 pb-14'}>
       <div className='pb-8'>
-        <div className={`psychiatrist-list flex flex-col items-start gap-6`}>
+        <div className={`psychiatrist-list flex flex-col items-stretch gap-6 w-full`}>
           {showPopup && <LoginPopup onClose={() => setShowPopup(false)} logInWithGoogleAndRedirect={logInWithGoogleAndRedirect} signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect} />}
           {results.map((psychiatrist) => (
-            <div key={psychiatrist.uid} className="psychiatrist" onClick={() => handleGoToProfProfile(psychiatrist.uid)}>
+            <div key={psychiatrist.uid} className="psychiatrist w-full" onClick={() => handleGoToProfProfile(psychiatrist.uid)}>
               {/* Display the psychiatrist's information here */}
-              <div className={`card card-side flex flex-row justify-center items-center gap-2.5 rounded-lg bg-[${okb_colors.white}] shadow-[0_0px_5px_0px_rgb(0,0,0,0.15)] items-start gap-x-6 bg-base-100 grid-cols-5 hover:brightness-90 p-6 self-stretch`}>
-                <div className={`col-span-1 flex items-center justify-center`}>
+              <div className={`card card-side flex flex-col lg:flex-row justify-center lg:justify-between items-center lg:items-start gap-2.5 rounded-lg bg-[${okb_colors.white}] shadow-[0_0px_5px_0px_rgb(0,0,0,0.15)] gap-x-6 hover:brightness-90 p-6 w-full`}>
+                <div className={`flex items-center justify-center flex-shrink-0 mb-4 lg:mb-0`}>
                   <figure>
                     <img src="https://lh3.googleusercontent.com/a/AGNmyxZobZdPI78Xzk3dOtXciW5fAE3Wn-QIZYlJTdk_=s96-c" alt="Profile Pic" className={`rounded-full w-32 h-32 object-cover`} />
                   </figure>
                 </div>
-                <div className={`flex flex-col items-start gap-4 flex-1 w-full h-auto`}>
+                <div className={`flex flex-col flex-1 gap-4 w-full h-auto`}>
                   {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}
-                  <div className={`flex justify-between items-start self-stretch`}>
-                    <div className={`flex flex-col items-start gap-2`}>
+                  <div className={`flex flex-col lg:flex-row justify-between items-start w-full`}>
+                    <div className={`flex flex-col justify-center lg:items-start items-center gap-2 w-full`}>
                       <h2 className={`card-title col-span-2 text-[${okb_colors.black}] text-[24px] font-semibold not-italic`}>{psychiatrist.firstName} {psychiatrist.lastName}</h2>
                       <p className={`text-[${okb_colors.black}] text-[16px] font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
                     </div>
-                    <div className={`flex justify-end items-center gap-4`}>
+                    <div className={`flex justify-center lg:justify-end items-center gap-4 w-full lg:w-auto mt-4 lg:mt-0`}>
                       {renderButtons(psychiatrist)}
                     </div>
                   </div>
                   {/* Additional psychiatrist info */}
-                  <div className={`self-stretch`}>
-                    <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-normal`}>{psychiatrist.description}</p>
+                  <div className={`flex w-full justify-center lg:justify-start items-center lg:items-start min-h-[4rem] mt-4 lg:mt-0`}>
+                    <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-normal`}>{psychiatrist.description ? psychiatrist.description : "No description available"}</p>
                   </div>
                 </div>
               </div>

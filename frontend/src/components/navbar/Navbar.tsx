@@ -12,24 +12,24 @@ const Navbar = () => {
   const router = useRouter();
 
   return (
-    <div className={`flex p-2.5 bg-[${colors.white}] items-end boxShadow-custom-shadow`}>
+    <div className={`flex flex-row justify-between items-start w-full p-2.5 bg-[${colors.white}] items-end boxShadow-custom-shadow`}>
 
-      <div className="justify-start items-center gap-8 flex ml-2">
-        <ul className="menu menu-horizontal px-1 gap-5">
-          <Link href="/" className="w-18">
+      <div className="flex justify-start items-center gap-8 flex ml-2">
+        <ul className="menu lg:menu-horizontal px-1 gap-5">
+          <Link href="/" className="flex justify-start">
             <Logo />
           </Link>
           {user ? user.userType == "patient" ?
-            <li className={`${router.pathname === '/dashboard' ? 'underline-offset-1 custom-active' : ''}`}>
+            <li className={`${router.pathname === '/dashboard' || router.pathname == `/patient/[patient_id]/dashboard` ? 'underline-offset-1 custom-active' : ''}`}>
               {/* A link to the patient's dashboard */}
-              <Link href={`/${user.userType}/${user.uid}/dashboard`} className="w-18">
+              <Link href={`/${user.userType}/${user.uid}/dashboard`} className="flex justify-start">
                 <div className="text-[18px] text-[#195BA5]">My Dashboard</div>
               </Link>
             </li>
             : user.userType == "psychiatrist" ?
-              <li className={`${router.pathname === '/psych_dashboard' ? 'underline-offset-1 custom-active' : ''}`}>
+              <li className={`${router.pathname === '/psych_dashboard' || router.pathname == `/psychiatrist/[psychiatrist_id]/psych_dashboard` ? 'underline-offset-1 custom-active' : ''}`}>
                 {/* A link to the psychiatrist's dashboard */}
-                <Link href={`/${user.userType}/${user.uid}/psych_dashboard`} className="w-18">
+                <Link href={`/${user.userType}/${user.uid}/psych_dashboard`} className="flex justify-start">
                   <div className="text-[18px] text-[#195BA5]">My Dashboard</div>
                 </Link>
               </li>
@@ -38,110 +38,97 @@ const Navbar = () => {
         </ul>
       </div>
 
-      <div className="flex-1"></div>
-      <ul className="menu menu-horizontal px-1 gap-5">
-        {!user &&
-          <li className={`${router.pathname === '/discover' ? 'underline-offset-1 custom-active' : ''}`}>
-            {/* A link to the user's discover page */}
-            <Link href={`/discover`} className="w-18">
-              <div className="text-[18px] text-[#195BA5]">Discover Professionals</div>
-            </Link>
-          </li>}
-        {user && user.userType == "patient" &&
-          <li className={`${router.pathname === '/discover' ? 'underline-offset-1 custom-active' : ''}`}>
-            {/* A link to the user's discover page */}
-            <Link href={`/${user?.userType}/${user?.uid}/discover`} className="w-18">
-              <div className="text-[18px] text-[#195BA5]">Discover Professionals</div>
-            </Link>
-          </li>}
-
-        {user && (user.userType == "patient" || user.userType == "psychiatrist") ?
-          <li className={`${router.pathname === '/messages' ? 'underline-offset-1 custom-active' : ''}`}>
-            {/* A link to the user's messages */}
-            <Link href={`/${user.userType}/${user.uid}/messages`} className="w-18">
-              <div className="text-[18px] text-[#195BA5]">Messages</div>
-            </Link>
-          </li>
-          :
-          <div></div>}
-
-        {!user || (user.userType == "patient" || user.userType == "psychiatrist") ?
-          <li className={`${router.pathname === '/about' ? 'underline-offset-1 custom-active' : ''}`}>
-            <Link href="https://www.wohohiame.com/" className="w-18">
-              <div className="text-[18px] text-[#195BA5]">About</div>
-            </Link>
-          </li>
-          : <div></div>}
-
-        {user && user.userType == "admin" ?
-          <>
-            <li className={`${router.pathname === '/database' ? 'underline-offset-1 custom-active' : ''}`}>
-              <Link href={`/${user?.userType}/${user?.uid}/database`} className="w-18">
-                <div className="text-[18px] text-[#195BA5]">Database</div>
+      <div className="flex justify-center md:justify-end items-center">
+        <ul className="menu flex flex-col-reverse md:flex-row px-1 gap-5">
+          {!user &&
+            <li className={`${router.pathname === '/discover' ? 'underline-offset-1 custom-active' : ''}`}>
+              {/* A link to the user's discover page */}
+              <Link href={`/discover`} className="w-full">
+                <div className="text-right text-[18px] text-[#195BA5]">Discover Professionals</div>
               </Link>
-            </li><li className={`${router.pathname === '/analytics' ? 'underline-offset-1 custom-active' : ''}`}>
-              {/* Update this href to go to the analytics page */}
-              <Link href="https://www.wohohiame.com/" className="w-18">
-                <div className="text-[18px] text-[#195BA5]">Analytics</div>
+            </li>}
+          {user && user.userType == "patient" &&
+            <li className={`${router.pathname === '/discover' || router.pathname == `/patient/[patient_id]/discover` ? 'underline-offset-1 custom-active' : ''}`}>
+              {/* A link to the user's discover page */}
+              <Link href={`/${user?.userType}/${user?.uid}/discover`} className="flex w-full justify-end">
+                <div className="text-right text-[18px] text-[#195BA5]">Discover Professionals</div>
+              </Link>
+            </li>}
+
+          {user && (user.userType == "patient" || user.userType == "psychiatrist") ?
+            <li className={`${router.pathname === '/messages' || router.pathname == `/patient/[patient_id]/messages` || router.pathname == `/psychiatrist/[psychiatrist_id]/messages` ? 'underline-offset-1 custom-active' : ''}`}>
+              {/* A link to the user's messages */}
+              <Link href={`/${user.userType}/${user.uid}/messages`} className="flex w-full justify-end">
+                <div className="text-[18px] text-[#195BA5]">Messages</div>
               </Link>
             </li>
-            <li className={`${router.pathname === '/reports' ? 'underline-offset-1 custom-active' : ''}`}>
-              {/* Update this href to go to the reports page */}
-              <Link href="https://www.wohohiame.com/" className="w-18">
-                <div className="text-[18px] text-[#195BA5]">Reports</div>
+            :
+            <div></div>}
+
+          {!user || (user.userType == "patient" || user.userType == "psychiatrist") ?
+            <li className={`${router.pathname === '/about' ? 'underline-offset-1 custom-active' : ''}`}>
+              <Link href="https://www.wohohiame.com/" className="flex w-full justify-end">
+                <div className="text-[18px] text-[#195BA5]">About</div>
               </Link>
             </li>
-          </>
-          : <div></div>}
+            : <div></div>}
+
+          {user && user.userType == "admin" ?
+            <>
+              <li className={`${router.pathname === '/database' ? 'underline-offset-1 custom-active' : ''}`}>
+                <Link href={`/${user?.userType}/${user?.uid}/database`} className="flex w-full justify-end">
+                  <div className="text-[18px] text-[#195BA5]">Database</div>
+                </Link>
+              </li><li className={`${router.pathname === '/analytics' ? 'underline-offset-1 custom-active' : ''}`}>
+                {/* Update this href to go to the analytics page */}
+                <Link href="https://www.wohohiame.com/" className="flex w-full justify-end">
+                  <div className="text-[18px] text-[#195BA5]">Analytics</div>
+                </Link>
+              </li>
+              <li className={`${router.pathname === '/reports' ? 'underline-offset-1 custom-active' : ''}`}>
+                {/* Update this href to go to the reports page */}
+                <Link href="https://www.wohohiame.com/" className="flex w-full justify-end">
+                  <div className="text-[18px] text-[#195BA5]">Reports</div>
+                </Link>
+              </li>
+            </>
+            : <></>}
 
 
-        {!user ? <li className={`${router.pathname === '/questionnaire' ? 'underline-offset-1 custom-active' : ''}`}>
-          <Link href="/questionnaire" className="w-18">
-            <div className="text-[18px] text-[#195BA5]">Sign Up</div>
-          </Link>
-        </li> : <div></div>}
+          {!user ? <li className={`${router.pathname === '/questionnaire' ? 'underline-offset-1 custom-active' : ''}`}>
+            <Link href="/questionnaire" className="flex w-full justify-end">
+              <div className="text-[18px] text-[#195BA5]">Sign Up</div>
+            </Link>
+          </li> : <></>}
 
-        {
-          user ? <div className="dropdown dropdown-hover dropdown-bottom dropdown-end">
-            <div tabIndex={0} className={`btn btn-circle bg-[${colors.okb_blue}] text-[18px] font-normal`}>{user.displayName?.charAt(0)}</div>
-            <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
-              {/* A link to the user's edit profile page */}
-              {/* {user.userType == "patient" ?
-                <><Link href={`/${user.userType}/${user.uid}/edit_profile`}>
-                  <li>Edit Profile</li>
-                </Link><Link href={`/patient/${user?.uid}/report_history`} className="w-18">
-                    <li>Report History</li>
-                  </Link></> :
-                <Link href={`/${user.userType}/${user.uid}/edit_psych`}>
-                  <li>Edit Profile</li>
-                </Link>}
+          {
+            user ?
+              <div className="flex dropdown dropdown-hover dropdown-bottom dropdown-end justify-end">
+                <div tabIndex={0} className={`btn btn-circle bg-[${colors.okb_blue}] text-[18px] font-normal`}>{user.displayName?.charAt(0)}</div>
+                <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
+                  <div style={{ width: '100%', height: '100%', paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8, background: 'white', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 48, display: 'inline-flex' }}>
+                    {user.userType == "patient" ?
+                      <><Link href={`/patient/${user.uid}/edit_profile`} className={`text-[18px] font-normal`} style={{ color: '#195BA5', wordWrap: 'break-word' }}>Edit Profile</Link>
+                        <Link href={`/patient/${user?.uid}/report_history`} className={`text-[18px] font-normal`} style={{ color: '#195BA5', wordWrap: 'break-word' }}>Report History</Link></> : user.userType == "psychiatrist" ?
+                        <Link href={`/psychiatrist/${user.uid}/edit_psych`} className={`text-[18px] font-normal`} style={{ color: '#195BA5', wordWrap: 'break-word' }}>Edit Profile</Link> : <></>}
+                    <div onClick={logout} style={{ justifyContent: 'center', alignItems: 'center', display: 'inline-flex', gap: '15px', cursor: 'pointer' }}>
+                      <div className={`text-[18px] font-normal`} style={{ textAlign: 'center', color: '#A52119', wordWrap: 'break-word' }}>Log Out</div><Logout />
+                    </div>
+                  </div>
+                </ul>
+              </div> :
               <li>
-                <button onClick={logout}>
-                  Log Out
-                </button>
-              </li> */}
-              <div style={{ width: '100%', height: '100%', paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8, background: 'white', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 48, display: 'inline-flex' }}>
-                {user.userType == "patient" ?
-                  <><Link href={`/patient/${user.uid}/edit_profile`} className={`text-[18px] font-normal`} style={{ color: '#195BA5', wordWrap: 'break-word' }}>Edit Profile</Link>
-                    <Link href={`/patient/${user?.uid}/report_history`} className={`text-[18px] font-normal`} style={{ color: '#195BA5', wordWrap: 'break-word' }}>Report History</Link></> : user.userType == "psychiatrist" ?
-                    <Link href={`/psychiatrist/${user.uid}/edit_psych`} className={`text-[18px] font-normal`} style={{ color: '#195BA5', wordWrap: 'break-word' }}>Edit Profile</Link> : <></>}
-                <div onClick={logout} style={{ justifyContent: 'center', alignItems: 'center', display: 'inline-flex', gap: '15px', cursor: 'pointer' }}>
-                  <div className={`text-[18px] font-normal`} style={{ textAlign: 'center', color: '#A52119', wordWrap: 'break-word' }}>Log Out</div><Logout />
+                <div className="flex justify-end">
+                  <button
+                    className="w-[104px] h-8 py-1.5 bg-sky-700 rounded-[10px] border-2 border-sky-700 justify-center items-center flex text-white"
+                    onClick={() => logInWithGoogle()}>
+                    <div className="text-[18px] font-[600]">Log In</div>
+                  </button>
                 </div>
-              </div>
-            </ul>
-          </div> : <li>
-            <div className="flex justify-center items-center">
-              <button
-                className="w-[104px] h-8 py-1.5 bg-sky-700 rounded-[10px] border-2 border-sky-700 justify-center items-center flex text-white"
-                onClick={() => logInWithGoogle()}
-              >
-                <div className="text-[18px] font-[600]">Log In</div>
-              </button>
-            </div>
-          </li>
-        }
-      </ul>
+              </li>
+          }
+        </ul>
+      </div>
     </div>
   )
 }

@@ -382,39 +382,49 @@ const ProfProfile = () => {
                 {/* Back arrow to return to go back to Discover Professionals */}
                 <figure className={`cursor-pointer`} onClick={handleGoToDashboard}><Arrow /></figure>
             </div>
-            <div className={`flex flex-row gap-10`}>
-                <div className={`shrink`}>
+            <div className={`flex flex-col lg:flex-row gap-10 justify-center`}>
+                {/* <figure className='flex w-1/3 shrink'>
                     <Image src={Photo} alt="Photo" width={1200} height={600} />
+                </figure> */}
+                <div className={`flex justify-center items-center md:justify-start md:items-start lg:shrink`}>
+                    <Image src={Photo} alt="Photo" className={`w-1200 h-600`} />
                 </div>
-                <div className={`grow flex flex-col gap-4`}>
-                    <div className={`flex flex-row gap-4`}>
-                        <div className={`grow text-3xl text-bold`}>
-                            {professional.firstName + " " + professional.lastName}
-                        </div>
-                        {/* Report button, action is currently undefined */}
-                        <div className={`shrink`} >
-                            <button onClick={handleReport} className={` rounded-s-2xl rounded-[12px] transition cursor-pointer text-okb-white flex flex-row gap-2`}>
-                                <ReportIcon className="object-cover" />
-                            </button>
-                        </div>
-                        {/* Save button, action is currently undefined */}
-                        <div className={`shrink`}>
-                            <div onClick={(event) => handleSave(event, professional)} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold`}>
-                                <figure className="object-cover">{savedPsychiatrists.includes(professional.uid) ? <SavedBookmark /> : <Bookmark />}</figure>Save
+                <div className={`flex flex-col lg:w-2/3 gap-4 justify-center`}>
+                    <div className={`flex flex-col md:flex-row gap-4`}>
+                        <div className='flex gap-x-4 justify-center items-center md:justify-start md:items-start flex-row md:flex-col'>
+                            <div className={`text-3xl text-bold`}>
+                                {professional.firstName + " " + professional.lastName}
+                            </div>
+                            <div className={`text-normal text-xl italic text-dark-grey`}>
+                                {professional.position}
                             </div>
                         </div>
-                        {/* Message button, action is currently undefined */}
-                        <div className={`shrink`} >
-                            <div onClick={handleSendMessage} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2`}>
-                                <figure className="object-cover"><Chat /></figure>Message
+                        <div className='flex flex-row gap-4 justify-center items-center md:justify-start md:items-start'>
+                            {/* Report button, action is currently undefined */}
+                            <div className={`shrink`} >
+                                <button onClick={handleReport} className={` rounded-s-2xl rounded-[12px] transition cursor-pointer text-okb-white flex flex-row gap-2`}>
+                                    <ReportIcon className="object-cover" />
+                                </button>
+                            </div>
+                            {/* Save button, action is currently undefined */}
+                            <div className={`shrink`}>
+                                <div onClick={(event) => handleSave(event, professional)} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold`}>
+                                    <figure className="object-cover">{savedPsychiatrists.includes(professional.uid) ? <SavedBookmark /> : <Bookmark />}</figure>Save
+                                </div>
+                            </div>
+                            {/* Message button, action is currently undefined */}
+                            <div className={`shrink`} >
+                                <div onClick={handleSendMessage} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2`}>
+                                    <figure className="object-cover"><Chat /></figure>Message
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className={`text-normal text-xl italic text-dark-grey`}>
+                    {/* <div className={`text-normal text-xl italic text-dark-grey`}>
                         {professional.position}
-                    </div>
+                    </div> */}
                     {/* Speciality/language/location tags */}
-                    <div className={`flex flex-row flex-start gap-2`}>
+                    <div className={`flex flex-row justify-center items-center md:justify-start md:items-start gap-2`}>
                         {professional.specialty.map((speciality, index) => (
                             <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
                                 {speciality}
@@ -430,10 +440,10 @@ const ProfProfile = () => {
                         </div>
 
                     </div>
-                    <div className={`text-normal text-base`}>
+                    <div className={`text-normal text-center md:text-start text-base`}>
                         {professional.description}
                     </div>
-                    <div className={`flex flex-row`}>
+                    <div className={`flex flex-row justify-center items-center md:justify-start md:items-start`}>
                         {/* Link tag, currently not in the IPsychiatrist so hard coded with default link */}
                         <div className="px-4 py-2 border-2 rounded-s-2xl rounded-[20px] border-light-blue bg-lightest-blue hover:shadow-xl transition cursor-pointer flex flex-row gap-2">
                             <a
@@ -450,7 +460,7 @@ const ProfProfile = () => {
                     </div>
                 </div>
             </div>
-            <h2 className={`text-bold text-2xl`}>Availability</h2>
+            <h2 className={`text-center lg:text-start text-bold text-2xl`}>Availability</h2>
             <Availability availability={professional?.availability} />
 
             <div className={`flex flex-row justify-center content-center`}>

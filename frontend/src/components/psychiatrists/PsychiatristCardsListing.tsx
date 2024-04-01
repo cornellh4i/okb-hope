@@ -32,7 +32,7 @@ const PsychiatristCardsListing = ({ max_size }: { max_size: number }) => {
     ))
   );
 
-  const contentsStyle = savedPsychiatrists.length === 0 ? "" : "grid grid-cols-3 gap-4 items-center pb-1/12 shrink";
+  const contentsStyle = savedPsychiatrists.length === 0 ? "" : "grid lg:grid-cols-3 gap-4 items-center pb-1/12 shrink";
 
   return (
     <div className="card w-full bg-base-100 rounded-[6.5px] shadow-custom-shadow">
