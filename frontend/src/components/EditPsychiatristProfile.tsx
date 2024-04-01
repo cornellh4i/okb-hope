@@ -53,7 +53,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
     setPosition(value);
   }
 
-  const handleDescriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleDescriptionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(event.target.value);
   }
 
@@ -122,7 +122,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
               </div>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
-                <input type="text" value={firstName} placeholder="Type here" className={`input input-bordered w-full border-2 ml-3`} style={{ borderColor: okb_colors.light_blue }} />
+                <input type="text" value={firstName} placeholder="Type here" className={`input input-bordered w-full border-2 ml-3`} style={{ borderColor: okb_colors.light_blue }} onChange={handleFirstNameChange} />
               </div>
             </div>
 
@@ -133,7 +133,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
               </label>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
-                <input type="text" value={lastName} placeholder="Type here" className="input input-bordered w-full border-2 ml-3" style={{ borderColor: okb_colors.light_blue }} />
+                <input type="text" value={lastName} onChange={handleLastNameChange} placeholder="Type here" className="input input-bordered w-full border-2 ml-3" style={{ borderColor: okb_colors.light_blue }} />
               </div>
             </div>
           </div>
@@ -141,7 +141,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
           {/* Profile Image */}
           <div tabIndex={0} className="form-control w-full flex flex-col items-start">
             <label className="label">
-              <span className="text-lg">Profile Image (Required)</span>
+              <span className="text-lg">Profile Image</span>
             </label>
             <div id="Frame542" className="flex items-center justify-center w-full gap-3">
               <svg xmlns="http://www.w3.org/2000/svg" width="4" height="204" viewBox="0 0 4 204" fill="none">
@@ -217,7 +217,8 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
               </svg>
               <div id="Frame412" className="flex flex-col items-center w-full gap-2.5">
                 <div id="Frame407" className="flex w-full justify-center align-center" >
-                  <textarea placeholder="Type here" className="input input-bordered w-full border-2 ml-3 pt-3" style={{ borderColor: okb_colors.light_blue, height: "140px" }}></textarea>
+                  {/* <input type="text" value={description} onChange={handleDescriptionChange} placeholder="Type here" className="input input-bordered w-full border-2 ml-3 pt-3" style={{ borderColor: okb_colors.light_blue, height: "140px" }} /> */}
+                  <textarea placeholder="Type here" value={description} onChange={(e) => handleDescriptionChange(e)} className="input input-bordered w-full border-2 ml-3 pt-3" style={{ borderColor: okb_colors.light_blue, height: "140px" }}></textarea>
                 </div>
               </div>
             </div>
