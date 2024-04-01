@@ -115,7 +115,7 @@ export const createTest = async () => {
         lastTherapyTimeframe: "Months",
         ageRange: "18-22", //go on the figma and in the login profile it shows ranges not age
         prefLanguages: ["english"],
-        genderPref: 0,
+        gender: 0,
         savedPsychiatrists: ["John Paul"] //this should not be a string list...
     }
 
@@ -192,7 +192,7 @@ export const createTest = async () => {
         lastTherapyTimeframe: "Months",
         ageRange: "18-22",
         prefLanguages: ["english", "spanish"],
-        genderPref: 0,
+        gender: 0,
         savedPsychiatrists: ["John Paul"]
     }
     console.log("Before update")

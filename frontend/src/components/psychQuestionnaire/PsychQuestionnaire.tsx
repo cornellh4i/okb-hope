@@ -160,7 +160,6 @@ const PsychQuestionnaire = () => {
                     "",
                     "",
                     [],
-                    gender,
                     [],
                 )
                 router.push('/loading?init=true');

@@ -24,13 +24,13 @@ const EditPatientProfile = () => {
   const [lastTherapyTimeframe, setLastTherapyTimeframe] = useState('');
   const [ageRange, setAgeRange] = useState('');
   const [prefLanguages, setPrefLanguages] = useState<string[]>([]);
-  const [genderPref, setGenderPref] = useState(0);
+  const [gender, setGender] = useState(0);
 
   const spokenWithCounselor = ["Yes", "No"];
   const lastTimeSpoke = ["Within the last month", "Within the last 6 months", "Within the last year", "Over a year ago", "I have never spoken with a counselor/therapist before"];
   const ageRanges = ["18-24", "25-34", "35-44", "45-54", "55-64", "65 and over"];
-  const languagesSpoken = ["English", "Ga", "Twi", "Hausa"];
-  const preferredGender = ["Male", "Female"];
+  const languagesSpoken = ["English", "Ga", "Twi", "Hausa", "Fante", "Ewe", "Other"];
+  const genderList = ["Male", "Female", "Other"];
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -43,7 +43,7 @@ const EditPatientProfile = () => {
         setLastTherapyTimeframe(data.lastTherapyTimeframe);
         setAgeRange(data.ageRange);
         setPrefLanguages(data.prefLanguages);
-        setGenderPref(data.genderPref);
+        setGender(data.gender);
       }
     }
     fetchUser();
@@ -88,9 +88,9 @@ const EditPatientProfile = () => {
     setPrefLanguages(updatedLanguages);
   };
 
-  const handlePreferredGenderChange = (gender) => {
-    const newGenderPref = gender === "Female" ? 1 : 0;
-    setGenderPref(newGenderPref);
+  const handleGenderChange = (value) => {
+    const newGender = value === "Male" ? 0 : (value === "Female" ? 1 : 2);
+    setGender(newGender);
   }
 
   useEffect(() => {
@@ -113,7 +113,7 @@ const EditPatientProfile = () => {
       lastTherapyTimeframe: lastTherapyTimeframe,
       ageRange: ageRange,
       prefLanguages: prefLanguages,
-      genderPref: genderPref
+      gender: gender
     })
     router.push(`/${user?.userType}/${uid}/dashboard`);
   };
@@ -350,11 +350,11 @@ const EditPatientProfile = () => {
             </ul>
           </div>
 
-          {/* Preferred Counselor Gender */}
+          {/* Gender */}
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <label className="label">
-                <span className="text-lg">What kind of counselor do you want to speak with?</span>
+                <span className="text-lg">What is your gender?</span>
               </label>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
@@ -364,7 +364,7 @@ const EditPatientProfile = () => {
                       className="input input-bordered w-full border-2 pl-10 bg-white"
                       style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
                     >
-                      {genderPref === 1 ? "Female" : "Male"}
+                      {gender === 0 ? "Male" : (gender === 1 ? "Female" : "Other")}
                     </div>
                   </div>
                   <div id="chevron" className="flex flex-col absolute items-center justify-center align-center transform translate-x-8">
@@ -374,15 +374,15 @@ const EditPatientProfile = () => {
               </div>
             </div>
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
-              {preferredGender.map((gender) => (
-                <label key={gender} className="label cursor-pointer">
-                  <span className="label-text">{gender}</span>
+              {genderList.map((value) => (
+                <label key={value} className="label cursor-pointer">
+                  <span className="label-text">{value}</span>
                   <input
                     type="radio"
                     className="radio"
                     name="gender"
-                    checked={genderPref === 0 ? gender === "Male" : gender === "Female"}
-                    onChange={() => handlePreferredGenderChange(gender)}
+                    checked={gender === 0 ? value === "Male" : (gender === 1 ? value === "Female" : value === "Other")}
+                    onChange={() => handleGenderChange(value)}
                   />
                 </label>
               ))}

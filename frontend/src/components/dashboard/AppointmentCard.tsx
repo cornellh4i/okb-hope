@@ -46,7 +46,7 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
         {
           "id": "input5",
           "question": "What kind of counselor do you want to speak with?",
-          "answer": data.genderPref === 1 ? "Female" : "Male"
+          "answer": data.gender === 0 ? "Male" : (data.gender === 1 ? "Female" : "Other")
         },
         {
           "id": "input6",

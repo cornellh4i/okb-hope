@@ -31,7 +31,7 @@ export interface IPatient {
     lastTherapyTimeframe: string;
     ageRange: string;
     prefLanguages: string[];
-    genderPref: Gender;
+    gender: Gender;
     savedPsychiatrists: string[];
 }
 

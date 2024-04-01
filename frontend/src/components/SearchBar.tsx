@@ -7,7 +7,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
   filters, setFilters, submittedFilters, setSubmittedFilters, monday, setMonday, tuesday, setTuesday, wednesday,
   setWednesday, thursday, setThursday, friday, setFriday, saturday, setSaturday, sunday, setSunday, allDays, setAllDays,
   english, setEnglish, twi, setTwi, fante, setFante, ewe, setEwe, ga, setGa, hausa, setHausa, allLanguages, setAllLanguages,
-  male, setMale, female, setFemale, bothGenders, setBothGenders }: any) {
+  male, setMale, female, setFemale, otherGender, setOtherGender, allGenders, setAllGenders }: any) {
 
   const FilterEnum = {
     monday: "Monday",
@@ -27,11 +27,12 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
     allLanguages: "allLanguages",
     male: "male",
     female: "female",
-    bothGenders: "bothGenders"
+    otherGender: "other",
+    allGenders: "allGenders"
   }
   const days = [FilterEnum.monday, FilterEnum.tuesday, FilterEnum.wednesday, FilterEnum.thursday, FilterEnum.friday, FilterEnum.saturday, FilterEnum.sunday];
   const languages = [FilterEnum.english, FilterEnum.twi, FilterEnum.fante, FilterEnum.ewe, FilterEnum.ga, FilterEnum.hausa]
-  const genders = [FilterEnum.male, FilterEnum.female]
+  const genders = [FilterEnum.male, FilterEnum.female, FilterEnum.otherGender]
 
   const selected: any = [...filters]
   // const [searchTerm, setSearchTerm] = useState('');
@@ -150,7 +151,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
       handleSelectAll(days)
     } else if (filter === FilterEnum.allLanguages) {
       handleSelectAll(languages)
-    } else if (filter === FilterEnum.bothGenders) {
+    } else if (filter === FilterEnum.allGenders) {
       handleSelectAll(genders)
     } else {
       let index = 0
@@ -182,9 +183,11 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
       setEwe(false)
       setGa(false)
       setHausa(false)
-      setBothGenders(false)
+      setAllGenders(false)
       setMale(false)
       setFemale(false)
+      setOtherGender(false)
+
     }
   }, [submittedFilters])
 
@@ -227,12 +230,14 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
       updateSelected(FilterEnum.ewe, event.target.checked)
       updateSelected(FilterEnum.ga, event.target.checked)
       updateSelected(FilterEnum.hausa, event.target.checked)
-    } else if (filterName === FilterEnum.bothGenders) {
-      setBothGenders(event.target.checked)
+    } else if (filterName === FilterEnum.allGenders) {
+      setAllGenders(event.target.checked)
       setMale(event.target.checked)
       setFemale(event.target.checked)
+      setOtherGender(event.target.checked)
       updateSelected(FilterEnum.male, event.target.checked)
       updateSelected(FilterEnum.female, event.target.checked)
+      updateSelected(FilterEnum.otherGender, event.target.checked)
     } else {
       if (filterName === FilterEnum.monday || filterName === FilterEnum.tuesday || filterName === FilterEnum.wednesday
         || filterName === FilterEnum.thursday || filterName === FilterEnum.friday || filterName === FilterEnum.saturday
@@ -247,7 +252,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
         }
       } else {
         if (event.target.checked === false) {
-          setBothGenders(false)
+          setAllGenders(false)
         }
       }
       setFunction(event.target.checked)
@@ -268,8 +273,10 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
       } else {
         if (filter === FilterEnum.male) {
           filtersCategorized['genders'].push(0);
-        } else {
+        } else if (filter === FilterEnum.female) {
           filtersCategorized['genders'].push(1);
+        } else {
+          filtersCategorized['genders'].push(2);
         }
       }
     }
@@ -454,8 +461,8 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
                   className="form-control flex flex-col justify-center items-start">
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pb-3.5">
                     <input type="checkbox"
-                      checked={bothGenders}
-                      onChange={(e) => handleFilterChange(FilterEnum.bothGenders, bothGenders, setBothGenders, e)}
+                      checked={allGenders}
+                      onChange={(e) => handleFilterChange(FilterEnum.allGenders, allGenders, setAllGenders, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
                     <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Select All</span>
                   </label>
@@ -473,6 +480,13 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
                       onChange={(e) => handleFilterChange(FilterEnum.female, female, setFemale, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
                     <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Female</span>
+                  </label>
+                  <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
+                    <input type="checkbox"
+                      checked={otherGender}
+                      onChange={(e) => handleFilterChange(FilterEnum.otherGender, otherGender, setOtherGender, e)}
+                      className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Other</span>
                   </label>
                 </div>
               </ul>

@@ -76,25 +76,6 @@ const ReportList: React.FC = () => {
   };
 
   // Fetch all reports for the user
-  // useEffect(() => {
-
-  //   const fetchReports = async () => {
-  //     const reportCollectionRef = collection(db, 'reports');
-  //     const q = query(reportCollectionRef, where('patient_id', '==', user?.uid));
-  //     const querySnapshot = await getDocs(q);
-  //     const fetchedReports: IReport[] = querySnapshot.docs.map(doc => ({
-  //       ...doc.data() as IReport,
-  //       id: doc.id // Include the document ID
-  //     }));
-  //     setReports(fetchedReports);
-  //   };
-
-  //   if (user) {
-  //     fetchReports();
-  //   }
-  // }, [user]);
-
-  // Fetch all reports for the user
   useEffect(() => {
     async function fetchReports() {
       try {
@@ -166,10 +147,6 @@ const ReportList: React.FC = () => {
     setShowReportHistoryPopup(false);
   };
 
-
-
-
-
   const renderReportPopup = () => {
     if (!showReportHistoryPopup || !selectedPsychiatrist) return null;
 
@@ -192,9 +169,6 @@ const ReportList: React.FC = () => {
 
     );
   };
-
-
-
 
   return (
     <div className={'px-4 lg:px-24 px-32 pt-9 pb-14'}>

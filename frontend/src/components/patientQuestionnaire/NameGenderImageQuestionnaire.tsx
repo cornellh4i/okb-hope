@@ -25,7 +25,7 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 pb-4`}>
             <div className={`text-[32px] font-semibold font-montserrat`}>
-                Let’s start setting up your profile. 
+                Let’s start setting up your profile.
             </div>
             <div className={`text-2xl font-semibold font-montserrat`}>
                 First, let’s begin with some basic information.
@@ -36,7 +36,7 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                     <div className={`flex flex-row gap-1`}>
                         <span className={`text-lg font-semibold mb-2`}>First Name</span>
                         <span className={`text-lg mb-2 text-red-600`}>*</span>
-                    </div> 
+                    </div>
                     <div className={`flex items-center`}>
                         <Vertical_line className=""></Vertical_line>
                         <input type="text" value={firstName} onChange={handleFirstName} placeholder="Type here" className={`input input-bordered w-full border-2 ml-3 rounded-2xl`} style={{ borderColor: okb_colors.light_blue }} />
@@ -47,7 +47,7 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                     <div className={`flex flex-row gap-1`}>
                         <span className={`text-lg font-semibold mb-2`}>Last Name</span>
                         <span className={`text-lg mb-2 text-red-600`}>*</span>
-                    </div> 
+                    </div>
                     <div className={`flex items-center`}>
                         <Vertical_line className=""></Vertical_line>
                         <input type="text" value={lastName} onChange={handleLastName} placeholder="Type here" className={`input input-bordered w-full border-2 ml-3 rounded-2xl`} style={{ borderColor: okb_colors.light_blue }} />
@@ -58,26 +58,26 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                 <div className={`flex flex-row gap-1`}>
                     <span className={`text-lg font-semibold font-montserrat`}>What is your gender?</span>
                     <span className={`text-lg text-red-600`}>*</span>
-                </div> 
+                </div>
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="radio-buttons-group"
-                    defaultValue={gender === Gender.Male ? "male" : (gender === Gender.Female ? "female" : " ")}
+                    defaultValue={gender === Gender.Male ? "male" : (gender === Gender.Female ? "female" : (gender === Gender.Other ? "other" : " "))}
                     onChange={handleGender}
                 >
                     <FormControlLabel className={` ml-1 `} value="female" control={<Radio />} label={
-                        <span style={{fontWeight: 300, fontSize: 18 }}>
-                        Female
+                        <span style={{ fontWeight: 300, fontSize: 18 }}>
+                            Female
                         </span>
                     } />
                     <FormControlLabel className={` ml-1 `} value="male" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
-                        Male
+                            Male
                         </span>
                     } />
                     <FormControlLabel className={` ml-1 `} value="other" control={<Radio />} label={
-                        <span style={{ fontWeight: 300, fontSize: 18}}>
-                        Other
+                        <span style={{ fontWeight: 300, fontSize: 18 }}>
+                            Other
                         </span>
                     } />
                 </RadioGroup>

@@ -22,9 +22,9 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
   const [languages, setLanguages] = useState<string[]>([]);
   const [gender, setGender] = useState(0);
 
-  const positions = ["Nurse", "Doctor"]
-  const language = ["English", "Ga", "Twi", "Hausa"]
-  const genders = ["Male", "Female", "Other"]
+  const positions = ["Nurse", "Doctor"];
+  const language = ["English", "Ga", "Twi", "Hausa", "Fante", "Ewe", "Other"];
+  const genderList = ["Male", "Female", "Other"];
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -72,9 +72,9 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
     setLanguages(updatedLanguages);
   };
 
-  const handleGenderChange = (gender) => {
-    const newGenderPref = gender === "Female" ? 1 : 0;
-    setGender(newGenderPref);
+  const handleGenderChange = (value) => {
+    const newGender = value === "Male" ? 0 : (value === "Female" ? 1 : 2);
+    setGender(newGender);
   }
 
   useEffect(() => {
@@ -265,7 +265,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
 
           {/* Gender */}
           <div className="dropdown dropdown-bottom">
-            <div tabIndex={0} className="form-control w-full">
+            <div tabIndex={0} className="form-control w-full cursor-pointer">
               <label className="label">
                 <span className="text-lg">Gender (Required)</span>
               </label>
@@ -273,7 +273,12 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
                 <Vertical_line className=""></Vertical_line>
                 <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
                   <div className="input-container w-full ml-3" >
-                    <input type="text" placeholder="Select" className="input input-bordered w-full border-2 pl-10 bg-white" style={{ backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)" }} value={gender} disabled />
+                    <div
+                      className="input input-bordered w-full border-2 pl-10 bg-white"
+                      style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
+                    >
+                      {gender === 0 ? "Male" : (gender === 1 ? "Female" : "Other")}
+                    </div>
                   </div>
                   <div id="chevron" className="flex flex-col absolute items-center justify-center align-center transform translate-x-8">
                     <Chevron_down ></Chevron_down>
@@ -282,16 +287,18 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
               </div>
             </div>
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
-              {genders.map((gender) => <label key={gender} className="label cursor-pointer">
-                <span className="label-text">{gender}</span>
-                <input
-                  type="radio"
-                  className="radio"
-                  name="gender"
-                  value={gender}
-                  onChange={() => handleGenderChange(gender)}
-                />
-              </label>)}
+              {genderList.map((value) => (
+                <label key={value} className="label cursor-pointer">
+                  <span className="label-text">{value}</span>
+                  <input
+                    type="radio"
+                    className="radio"
+                    name="gender"
+                    checked={gender === 0 ? value === "Male" : (gender === 1 ? value === "Female" : value === "Other")}
+                    onChange={() => handleGenderChange(value)}
+                  />
+                </label>
+              ))}
             </ul>
           </div>
 

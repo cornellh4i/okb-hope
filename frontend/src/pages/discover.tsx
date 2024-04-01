@@ -47,7 +47,8 @@ const DiscoverPage: React.FC = () => {
   const [allLanguages, setAllLanguages] = useState(false);
   const [male, setMale] = useState(false);
   const [female, setFemale] = useState(false);
-  const [bothGenders, setBothGenders] = useState(false);
+  const [otherGender, setOtherGender] = useState(false);
+  const [allGenders, setAllGenders] = useState(false);
 
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
   const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
@@ -204,7 +205,8 @@ const DiscoverPage: React.FC = () => {
           allLanguages={allLanguages} setAllLanguages={setAllLanguages}
           male={male} setMale={setMale}
           female={female} setFemale={setFemale}
-          bothGenders={bothGenders} setBothGenders={setBothGenders} />
+          otherGender={otherGender} setOtherGender={setOtherGender}
+          allGenders={allGenders} setAllGenders={setAllGenders} />
       </div>
       {searchFilterResults.length > 0 ? (
         <PsychiatristList results={searchFilterResults} buttonType={'discover'} />
