@@ -30,6 +30,7 @@ const App = () => {
       }
     } else {
       console.log('No user logged in');
+      router.push(`/discover`);
     }
   }, [user, router]);
 
