@@ -62,7 +62,7 @@ const Sidebar: React.FC = () => {
       <div className="flex flex-col conversation-list bg-white">
         {/* Unread Messages */}
         <div className='flex flex-col unread-conversation-list'>
-          <div className='inline-flex justify-between align-center bg-okb-blue rounded-full py-2 px-6 items-center text-white mx-5 mb-2'>
+          <div className='inline-flex justify-between align-center bg-okb-blue md:rounded-full py-2 md:px-6 px-2 items-center text-white md:mx-5 mb-2'>
             <p className='text-[16px] font-semibold'>Unread Messages</p>
             <button onClick={toggleUnreadMessagesVisibility}>{showUnreadMessages ? chevron_up : chevron_down}</button>
           </div>
@@ -73,7 +73,7 @@ const Sidebar: React.FC = () => {
 
         {/* All Messages */}
         <div className='flex flex-col all-conversation-list'>
-          <div className='inline-flex justify-between align-center bg-okb-blue rounded-full py-2 px-6 items-center text-white mx-5 mb-2'>
+          <div className='inline-flex justify-between align-center bg-okb-blue md:rounded-full py-2 md:px-6 px-2 items-center text-white md:mx-5 mb-2'>
             <p className='text-[16px] font-semibold'>All Messages</p>
             <button onClick={toggleAllMessagesVisibility}>{showAllMessages ? chevron_up : chevron_down}</button>
           </div>

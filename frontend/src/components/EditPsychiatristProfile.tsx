@@ -107,7 +107,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
 
   return (
     <div className="flex justify-center">
-      <div className="card w-2/3">
+      <div className="card md:w-2/3 w-full">
         <div className="card-body">
           <text className="card-title font-montserrat text-4xl">Edit Profile</text>
           {/* Text input fields */}
