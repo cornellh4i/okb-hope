@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import BookmarkIcon from '@/assets/bookmark.svg'
 import PsychiatristIcon from '@/assets/psychiatrist.svg'
+import PsychiatristPhoto from '@/assets/dummy_photo.jpg';
 import { IPsychiatrist, IUser } from '@/schema';
 import { fetchAllUsers, fetchDocumentId, fetchPatientDetails, fetchProfessionalData } from '../../../firebase/fetchData';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -8,6 +9,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase/firebase';
 import { useRouter } from 'next/navigation';
 import router from 'next/router';
+import Image from 'next/image';
 
 const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
   const { user } = useAuth();
@@ -38,7 +40,7 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (user) {
+      if (user && user.userType == "patient") {
         const data = await fetchPatientDetails(user.uid);
         setSavedPsychiatrists(data.savedPsychiatrists)
       }
@@ -99,10 +101,11 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
   }
 
   return (
-    <div className="card w-11/12 bg-base-100 shadow-xl m-6 border-[3px]">
+    <div className="card w-11/12 bg-base-100 shadow-xl m-3 border-[3px]">
       <div className="card-body items-center p-4">
         {/* image of psychiatrist */}
-        <PsychiatristIcon />
+        <Image src={PsychiatristPhoto} alt="Photo" className={`w-1200 h-600`} />
+        {/* <PsychiatristIcon /> */}
         <h2 className="card-title">{professional?.firstName} {professional?.lastName}</h2>
         {/* <h2 className="font-[400] italic mb-0">{p_certifications}</h2> */}
         {/* view profile button */}

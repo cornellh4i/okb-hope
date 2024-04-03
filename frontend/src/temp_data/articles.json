@@ -1,22 +1,86 @@
 {
   "Article1": {
     "id": "art1",
-    "title": "This is the title of a mental health resource article",
-    "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim efficitur sapien id facilisis. In imperdiet ante ac fermentum aliquet. Nam pellentesque vestibulum nisl quis facilisis. Sed eget magna auctor."
+    "title": "Anxiety",
+    "body": "Learn about anxiety and what you can do to help you feel better when you are anxious.",
+    "href": "https://www.wohohiame.com/info-advice/feelings-and-emotions/anxiety"
   },
   "Article2": {
     "id": "art2",
-    "title": "This is the title of a mental health resource article",
-    "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim efficitur sapien id facilisis. In imperdiet ante ac fermentum aliquet. Nam pellentesque vestibulum nisl quis facilisis. Sed eget magna auctor."
+    "title": "Depression",
+    "body": "Learn about depression and how and what you can do to overcome depressive episodes.",
+    "href": "https://www.wohohiame.com/info-advice/feelings-and-emotions/depression"
   },
   "Article3": {
     "id": "art3",
-    "title": "This is the title of a mental health resource article",
-    "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim efficitur sapien id facilisis. In imperdiet ante ac fermentum aliquet. Nam pellentesque vestibulum nisl quis facilisis. Sed eget magna auctor."
+    "title": "Grounding techniques",
+    "body": "Simple techniques to help you refocus.",
+    "href": "https://www.wohohiame.com/tips/finding-your-inner-calm/grounding-techniques"
   },
   "Article4": {
     "id": "art4",
-    "title": "This is the title of a mental health resource article",
-    "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim efficitur sapien id facilisis. In imperdiet ante ac fermentum aliquet. Nam pellentesque vestibulum nisl quis facilisis. Sed eget magna auctor."
+    "title": "Basics of a healthy diet",
+    "body": "A balanced diet is crucial to maintaining good health, including mental health. Find out more about this here.",
+    "href": "https://www.wohohiame.com/tips/taking-care-of-yourself/basics-of-a-healthy-diet"
+  },
+  "Article5": {
+    "id": "art5",
+    "title": "Calming breathing exercises",
+    "body": "Easy breathing exercises that will help you relax.",
+    "href": "https://www.wohohiame.com/tips/finding-your-inner-calm/calming-breathing-exercises"
+  },
+  "Article6": {
+    "id": "art6",
+    "title": "Drugs",
+    "body": "Learn about drugs of abuse and how they affect your health and life.",
+    "href": "https://www.wohohiame.com/info-advice/substance-abuse/drugs"
+  },
+  "Article7": {
+    "id": "art7",
+    "title": "Addiction",
+    "body": "People can get addicted to pretty much everything! Learn more about it and how to quit an addiction.",
+    "href": "https://www.wohohiame.com/info-advice/substance-abuse/addiction"
+  },
+  "Article8": {
+    "id": "art8",
+    "title": "Alcohol",
+    "body": "Learn about the effects of alcohol on your health and how to drink responsibly.",
+    "href": "https://www.wohohiame.com/info-advice/substance-abuse/alcohol"
+  },
+  "Article9": {
+    "id": "art9",
+    "title": "Boost your mood",
+    "body": "Find some practical tips to help boost your mood.",
+    "href": "https://www.wohohiame.com/tips/finding-your-inner-calm/boost-your-mood"
+  },
+  "Article10": {
+    "id": "art10",
+    "title": "Physical Exercise",
+    "body": "Being physically active is also a way to take care of your mental health. Learn more about this here.",
+    "href": "https://www.wohohiame.com/tips/finding-your-inner-calm/physical-exercise"
+  },
+  "Article11": {
+    "id": "art11",
+    "title": "Sleep",
+    "body": "Sleep is an essential part of our life, but it is not always easy to get enough quality sleep. Learn more here.",
+    "href": "https://www.wohohiame.com/tips/taking-care-of-yourself/sleep"
+  },
+  "Article12": {
+    "id": "art12",
+    "title": "Relationships",
+    "body": "A romantic relationship can be wonderful, but there can also be ups and downs. Read up on this here.",
+    "href": "https://www.wohohiame.com/info-advice/you-and-others/relationships"
+  },
+  "Article13": {
+    "id": "art13",
+    "title": "Self-identity",
+    "body": "Read more about the concept of self-identity, peer pressure, family pressure and how to cope with them.",
+    "href": "https://www.wohohiame.com/info-advice/you-and-others/self-identity"
+  },
+  "Article14": {
+    "id": "art14",
+    "title": "Abusive Relationships",
+    "body": "Are you worried you might be in an unhealthy relationship? Get some some advice here and act quickly!",
+    "href": "https://www.wohohiame.com/info-advice/you-and-others/abusive-relationships"
   }
 }

@@ -24,7 +24,7 @@ const PsychiatristCardsListing = ({ max_size }: { max_size: number }) => {
     <NoSavedPsychComponent />
   ) : (
     savedPsychiatrists.map((psych_uid: any) => (
-      <div className="psychiatrist">
+      <div className="psychiatrist justify-center items-center content-center">
         <PsychiatristCard
           key={psych_uid} psych_uid={psych_uid}
         />
@@ -32,7 +32,7 @@ const PsychiatristCardsListing = ({ max_size }: { max_size: number }) => {
     ))
   );
 
-  const contentsStyle = savedPsychiatrists.length === 0 ? "" : "grid lg:grid-cols-3 gap-4 items-center pb-1/12 shrink";
+  const contentsStyle = savedPsychiatrists.length === 0 ? "" : "grid lg:grid-cols-3 gap-4 pb-1/12 shrink justify-center items-center";
 
   return (
     <div className="card w-full bg-base-100 rounded-[6.5px] shadow-custom-shadow">
