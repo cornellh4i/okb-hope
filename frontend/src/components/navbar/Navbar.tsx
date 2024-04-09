@@ -76,7 +76,7 @@ const Navbar = () => {
           {user && user.userType == "admin" ?
             <>
               <li className={`${router.pathname === '/database' ? 'underline-offset-1 custom-active' : ''}`}>
-                <Link href={`/${user?.userType}/${user?.uid}/database`} className="flex w-full justify-end">
+                <Link href={`/admin/${user?.uid}/database`} className="flex w-full justify-end">
                   <div className="text-[18px] text-[#195BA5]">Database</div>
                 </Link>
               </li><li className={`${router.pathname === '/analytics' ? 'underline-offset-1 custom-active' : ''}`}>
@@ -87,7 +87,7 @@ const Navbar = () => {
               </li>
               <li className={`${router.pathname === '/reports' ? 'underline-offset-1 custom-active' : ''}`}>
                 {/* Update this href to go to the reports page */}
-                <Link href="https://www.wohohiame.com/" className="flex w-full justify-end">
+                <Link href={`/admin/${user?.uid}/admin_reports`} className="flex w-full justify-end">
                   <div className="text-[18px] text-[#195BA5]">Reports</div>
                 </Link>
               </li>
