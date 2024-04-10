@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import dynamic from 'next/dynamic'
 import useWindowSize from './window-size';
-import { getGlobalMen, getGlobalWomen, getGlobalOther } from './global';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-function StackedBarChart({ questionType }) {
+function StackedBarChart({ questionType, men, women, other }) {
     // can only rerender if the the prop change, so we need to add a prop to change/rerender the component
     const { width } = useWindowSize();
     const containerWidth = width > 1178 ? 800 : width > 900 ? width - 350 : width - 80;
@@ -35,17 +34,17 @@ function StackedBarChart({ questionType }) {
                         series={[
                             {
                                 name: "men",
-                                data: getGlobalMen(),
+                                data: men,
                                 color: '#7392c1'
                             },
                             {
                                 name: "women",
-                                data: getGlobalWomen(),
+                                data: women,
                                 color: '#d47cbc'
                             },
                             {
                                 name: "other",
-                                data: getGlobalOther(),
+                                data: other,
                                 color: '#c4c5c6'
                             }
 
@@ -70,9 +69,6 @@ function StackedBarChart({ questionType }) {
                                     horizontal: true,
                                     columnWidth: '100%',
                                 }
-                            },
-                            stroke: {
-                                width: 1,
                             },
                             xaxis: {
                                 title: {

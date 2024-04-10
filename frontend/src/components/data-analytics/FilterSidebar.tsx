@@ -1,9 +1,7 @@
 import * as React from "react";
 import CheckBox from "./Checkbox";
-// import { setGlobalAgeRanges, setGlobalGenders, setGlobalLanguages } from './global';
 
-
-interface AppProps { 
+interface AppProps {
   setGlobalAgeRanges: Function;
   setGlobalGenders: Function;
   setGlobalLanguages: Function;
@@ -26,7 +24,7 @@ interface AppState {
   setGlobalLanguages: Function;
 }
 
-class Filter extends React.Component<AppProps, AppState > {
+class Filter extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
     this.state = {
@@ -57,14 +55,18 @@ class Filter extends React.Component<AppProps, AppState > {
       setGlobalGenders: props.setGlobalGenders,
       setGlobalLanguages: props.setGlobalLanguages
     };
+
+    this.state.setGlobalAgeRanges(["18-24", "25-34", "35-44", "45-54", "55-64", "65 and over"]);
+    this.state.setGlobalGenders([0, 1, 2]);
+    this.state.setGlobalLanguages(["Ewe", "Hausa", "Ga", "Fante", "Twi", "English", "Other"]);
   }
+
 
   handleAllCheckedAge = (event: any) => {
     let ages = this.state.ages;
     ages.forEach(age => (age.isChecked = event.target.checked));
     this.setState({ ages: ages });
-
-    this.state.setGlobalAgeRanges(["18-24", "25-34", "35-44","45-54","55-64","65 and over"]);
+    this.state.setGlobalAgeRanges(["18-24", "25-34", "35-44", "45-54", "55-64", "65 and over"]);
   };
 
   handleAllCheckedGender = (event: any) => {
@@ -94,10 +96,10 @@ class Filter extends React.Component<AppProps, AppState > {
     const checkedAges = this.state.ages.filter(age => age.isChecked).map(age => age.value.trim());
     // Change "65+" to "65 and over" in the array
     const checkedAgesModified = checkedAges.map(element => {
-    if (element === "65+") {
-      return "65 and over";
-    }
-    return element;
+      if (element === "65+") {
+        return "65 and over";
+      }
+      return element;
     });
     this.state.setGlobalAgeRanges(checkedAgesModified);
 
@@ -114,12 +116,12 @@ class Filter extends React.Component<AppProps, AppState > {
     const checkedGendersModified = checkedGenders.map(element => {
       if (element === "Other1") {
         return 2;
-      } else if( element === "Female")
+      } else if (element === "Female")
         return 1;
       else {
         return 0;
       }
-      });
+    });
     this.state.setGlobalGenders(checkedGendersModified);
 
     let languages = this.state.languages;
@@ -137,8 +139,21 @@ class Filter extends React.Component<AppProps, AppState > {
         return "Other";
       }
       return element;
-      });
+    });
     this.state.setGlobalLanguages(checkedLanguageModified);
+
+    if (this.state.ages.every(age => !age.isChecked)) {
+      this.state.setGlobalAgeRanges(["18-24", "25-34", "35-44", "45-54", "55-64", "65 and over"]);
+    }
+
+    if (this.state.genders.every(gender => !gender.isChecked)) {
+      this.state.setGlobalGenders([0, 1, 2]);
+    }
+
+    if (this.state.languages.every(language => !language.isChecked)) {
+      this.state.setGlobalLanguages(["Ewe", "Hausa", "Ga", "Fante", "Twi", "English", "Other"]);
+    }
+
   };
 
   render() {
