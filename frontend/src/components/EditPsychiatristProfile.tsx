@@ -7,9 +7,10 @@ import Upload from "@/assets/upload.svg";
 import okb_colors from "@/colors";
 import router from 'next/router';
 import { useAuth } from '../../contexts/AuthContext';
-import { auth, db } from '../../firebase/firebase';
+import { auth, db, uploadPicture } from '../../firebase/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { fetchDocumentId, fetchProfessionalData } from '../../firebase/fetchData';
+import colors from '@/colors';
 
 const EditPsychiatristProfile = ({ psychiatrist }) => {
   const { user } = useAuth();
@@ -21,6 +22,11 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
   const [description, setDescription] = useState('');
   const [languages, setLanguages] = useState<string[]>([]);
   const [gender, setGender] = useState(0);
+  const [photo, setPhoto] = useState(null);
+  const [photoURL, setPhotoURL] = useState("https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png");
+  const [loading, setLoading] = useState(false);
+  const [uploadedNewPicture, setUploadedNewPicture] = useState(false);
+
 
   const positions = ["Nurse", "Doctor"];
   const language = ["English", "Ga", "Twi", "Hausa", "Fante", "Ewe", "Other"];
@@ -40,6 +46,13 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
     }
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    if (user?.photoURL) {
+      console.log(user.photoURL);
+      setPhotoURL(user.photoURL);
+    }
+  }, [user])
 
   const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFirstName(event.target.value);
@@ -91,7 +104,6 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
     router.push(`/psychiatrist/${uid}/psych_dashboard`);
   }
 
-
   const handleSaveChanges = async () => {
     const userRef = doc(db, "psychiatrists", docId ?? "");
     await updateDoc(userRef, {
@@ -102,8 +114,18 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
       language: languages,
       gender: gender
     })
+    if (uploadedNewPicture) {
+      uploadPicture(photo, user?.uid, setLoading);
+    }
     router.push(`/psychiatrist/${uid}/psych_dashboard`);
   };
+
+  function handleProfilePictureChange(e) {
+    if (e.target.files[0]) {
+      setPhoto(e.target.files[0]);
+      setUploadedNewPicture(true);
+    }
+  }
 
   return (
     <div className="flex justify-center">
@@ -143,24 +165,34 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
             <label className="label">
               <span className="text-lg">Profile Image</span>
             </label>
-            <div id="Frame542" className="flex items-center justify-center w-full gap-3">
+            <div id="Frame542" className="flex flex-row items-center w-full gap-3">
               <svg xmlns="http://www.w3.org/2000/svg" width="4" height="204" viewBox="0 0 4 204" fill="none">
                 <path d="M2 2L2.00001 202" stroke="#519AEB" stroke-width="3" stroke-linecap="round" />
               </svg>
-              <div className="flex flex-col items-start w-full gap-2.5">
-                <div className="flex w-full justify-center align-center" >
-                  <div id="Frame278" className="flex flex-col absolute items-center justify-center align-center left-1/2 transform translate-x-[-50%] translate-y-[50%]">
-                    <Upload ></Upload>
-                    <label>
-                      <span className="font-montserrat text-xs " style={{ color: okb_colors.dark_gray }}>Upload Image</span>
-                    </label>
-                  </div>
-                  <div className="input-container w-full relative" >
-                    <span className="absolute top-0 left-0 right-0 bottom-0 border-2 rounded-lg flex items-center justify-center" style={{ borderColor: okb_colors.light_blue, height: 200 }}></span>  {/* to hide the Choose File */}
-                    <input type="file" placeholder="image/" className="input input-bordered border-2 opacity-0" style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }} />
+              {/* <div className="flex flex-col items-start w-full gap-2.5"> */}
+              <div className="flex justify-center align-center" >
+                <div className="flex input-container relative " >
+                  <input type="file" onChange={handleProfilePictureChange} className="input input-bordered border-2 opacity-0 absolute z-10" style={{ borderColor: "okb_colors.light_blue", height: 200, width: "100%" }} />
+                  <span className="absolute top-0 left-0 right-0 bottom-0 border-2 rounded-lg flex items-center justify-center" style={{ borderColor: "okb_colors.light_blue", height: 200 }}></span> {/* to hide the Choose File */}
+                  <div className="flex flex-col items-center justify-center align-center">
+                    {photoURL ? (
+                      // <img src={photoURL} alt="profile_picture" />
+                      <div style={{ width: 200, height: 200, backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`text-7xl font-normal text-white flex items-center justify-center`}>
+                        {firstName?.charAt(0).toUpperCase()}
+                      </div>
+                    ) : (
+                      <>
+                        {/* Assuming <Upload> is a component representing an upload icon */}
+                        <Upload />
+                        <label>
+                          <span className="font-montserrat text-xs " style={{ color: "okb_colors.dark_gray" }}>Upload Image</span>
+                        </label>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
+              {/* </div> */}
             </div>
           </div>
 

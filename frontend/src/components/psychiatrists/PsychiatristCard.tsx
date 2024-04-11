@@ -10,6 +10,8 @@ import { db } from '../../../firebase/firebase';
 import { useRouter } from 'next/navigation';
 import router from 'next/router';
 import Image from 'next/image';
+import { getDownloadURL, getStorage, ref } from 'firebase/storage';
+import colors from '@/colors';
 
 const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
   const { user } = useAuth();
@@ -20,6 +22,7 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
   const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
   const [docId, setDocId] = useState<string | undefined>(undefined);
   const router_navigation = useRouter();
+  const [photo, setPhoto] = useState<string | undefined>(undefined);
 
   const handleClick = event => {
     setIsShown(!isShown);
@@ -61,6 +64,20 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
     }
     fetchDocId();
   }, [docId]);
+
+  // useEffect(() => {
+  //   async function fetchImage() {
+  //     try {
+  //       const storage = getStorage();
+  //       const storageRef = ref(storage, 'profile_pictures/' + psych_uid + '.png');
+  //       const photoURL = await getDownloadURL(storageRef);
+  //       setPhoto(photoURL)
+  //     } catch (err: any) {
+  //       console.error(err.message);
+  //     }
+  //   }
+  //   fetchImage();
+  // }, []);
 
   const handleUnsave = async (event: React.MouseEvent, psychiatrist) => {
     if (user) {
@@ -104,7 +121,14 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
     <div className="card w-11/12 bg-base-100 shadow-xl m-3 border-[3px]">
       <div className="card-body items-center p-4">
         {/* image of psychiatrist */}
-        <Image src={PsychiatristPhoto} alt="Photo" className={`w-1200 h-600`} />
+        {/* <img src={photo} alt="profile_picture" style={{ width: 200, height: 200, objectFit: "cover"}}/> */}
+        {photo ?
+          <img src={photo} alt="profile_picture" style={{ width: 200, height: 200, objectFit: "cover" }} /> :
+          <div style={{ width: 200, height: 200, backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`text-7xl font-normal text-white flex items-center justify-center`}>
+            {professional?.firstName?.charAt(0).toUpperCase()}
+          </div>
+        }
+        {/* <Image src={photo} alt="Photo" className={`w-1200 h-600`} /> */}
         {/* <PsychiatristIcon /> */}
         <h2 className="card-title">{professional?.firstName} {professional?.lastName}</h2>
         {/* <h2 className="font-[400] italic mb-0">{p_certifications}</h2> */}

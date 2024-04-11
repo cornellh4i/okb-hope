@@ -104,7 +104,20 @@ const Navbar = () => {
           {
             user ?
               <div className="flex dropdown dropdown-hover dropdown-bottom dropdown-end justify-end">
-                <div tabIndex={0} className={`btn btn-circle bg-[${colors.okb_blue}] text-[18px] font-normal`}>{user.displayName?.charAt(0)}</div>
+                <button className={`btn btn-circle text-2xl font-normal text-white flex items-center justify-center`} style={{ aspectRatio: '1', backgroundColor: colors.okb_blue}}>
+                  {user.displayName?.charAt(0).toUpperCase()}
+                </button>
+                {/* {
+                  user.photoURL ? (
+                    <button className="btn btn-circle overflow-hidden">
+                      <img src={user.photoURL} alt="profile picture" className="w-full h-full object-cover" />
+                    </button>
+                  ) : (
+                    <button className={`btn btn-circle bg-${colors.okb_blue} text-2xl font-normal text-white flex items-center justify-center`} style={{ aspectRatio: '1' }}>
+                      {user.displayName?.charAt(0).toUpperCase()}
+                    </button>
+                  )
+                } */}
                 <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
                   <div style={{ width: '100%', height: '100%', paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8, background: 'white', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 48, display: 'inline-flex' }}>
                     {user.userType == "patient" ?

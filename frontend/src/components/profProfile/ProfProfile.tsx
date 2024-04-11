@@ -21,6 +21,8 @@ import { Timestamp } from "firebase/firestore";
 import Cancel from "@/assets/cancel.svg";
 import Submit from "@/assets/submit.svg";
 import Continue from "@/assets/continue.svg";
+import { getDownloadURL, getStorage, ref } from 'firebase/storage';
+import colors from '@/colors';
 
 
 
@@ -137,7 +139,7 @@ const ProfProfile = () => {
     const [showReportPopup, setShowReportPopup] = useState(false);
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [reportText, setReportText] = useState('');
-
+    const [photo, setPhoto] = useState<string | undefined>(undefined);
 
 
     // Set the initial state of professional to null instead of DummyPsychiatrist 
@@ -187,6 +189,21 @@ const ProfProfile = () => {
         }
         fetchDocId();
     }, [docId]);
+
+    // useEffect(() => {
+    //     async function fetchImage() {
+    //         try {
+    //             const psych_uid = router.query.psych_uid as string;
+    //             const storage = getStorage();
+    //             const storageRef = ref(storage, 'profile_pictures/' + psych_uid + '.png');
+    //             const photoURL = await getDownloadURL(storageRef);
+    //             setPhoto(photoURL)
+    //         } catch (err: any) {
+    //             console.error(err.message);
+    //         }
+    //     }
+    //     fetchImage();
+    // }, []);
 
     const handleSave = async (event: React.MouseEvent, psychiatrist) => {
         if (!user) {
@@ -383,11 +400,13 @@ const ProfProfile = () => {
                 <figure className={`cursor-pointer`} onClick={handleGoToDashboard}><Arrow /></figure>
             </div>
             <div className={`flex flex-col lg:flex-row gap-10 justify-center`}>
-                {/* <figure className='flex w-1/3 shrink'>
-                    <Image src={Photo} alt="Photo" width={1200} height={600} />
-                </figure> */}
                 <div className={`flex justify-center items-center md:justify-start md:items-start lg:shrink`}>
-                    <Image src={Photo} alt="Photo" className={`w-1200 h-600`} />
+                    {photo ?
+                        <img src={photo} alt="profile_picture" style={{ width: 300, height: 300, objectFit: "cover" }} /> :
+                        <div style={{ width: 300, height: 300, backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`text-9xl font-normal text-white flex items-center justify-center`}>
+                            {professional.firstName?.charAt(0).toUpperCase()}
+                        </div>
+                    }
                 </div>
                 <div className={`flex flex-col lg:w-2/3 gap-4 justify-center`}>
                     <div className={`flex flex-col md:flex-row gap-4`}>

@@ -8,7 +8,7 @@ import { Gender, IPatient, IUser } from "@/schema";
 import ProgressBar0 from '../../assets/progressbar0.svg';
 import ProgressBar33 from '../../assets/progressbar33.svg';
 import ProgressBar67 from '../../assets/progressbar67.svg';
-import { db, signUpWithGoogle, logout } from "../../../firebase/firebase";
+import { db, signUpWithGoogle, logout, uploadPicture } from "../../../firebase/firebase";
 import { useAuth } from "../../../contexts/AuthContext";
 
 const PsychQuestionnaire = () => {
@@ -16,12 +16,14 @@ const PsychQuestionnaire = () => {
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
     const [gender, setGender] = useState<Gender>();
-    const [image, setImage] = useState<string>("");
+    const [photo, setPhoto] = useState(null);
     const [position, setPosition] = useState<string>("");
     const [checked, setChecked] = useState<{ [key: string]: boolean }>(
         { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
     const [languages, setLanguages] = useState<string[]>([]);
     const [aboutYourself, setAboutYourself] = useState<string>("");
+    const [uploadedNewPicture, setUploadedNewPicture] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [patient, setPatient] = useState<boolean>(false);
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
@@ -52,6 +54,13 @@ const PsychQuestionnaire = () => {
                 setGender(undefined);
         }
     };
+
+    function handleProfilePictureChange(e) {
+        if (e.target.files[0]) {
+            setPhoto(e.target.files[0]);
+            setUploadedNewPicture(true);
+        }
+    }
 
     const handleAboutYourselfChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setAboutYourself(event.target.value);
@@ -147,7 +156,6 @@ const PsychQuestionnaire = () => {
                     firstName,
                     lastName,
                     position,
-                    image,
                     [],
                     gender,
                     "",
@@ -162,6 +170,9 @@ const PsychQuestionnaire = () => {
                     [],
                     [],
                 )
+                if (uploadedNewPicture) {
+                    uploadPicture(photo, user?.uid, setLoading);
+                }
                 router.push('/loading?init=true');
             } catch (error) {
                 console.error('Error signing in:', error);
@@ -182,10 +193,11 @@ const PsychQuestionnaire = () => {
                     firstName={firstName}
                     lastName={lastName}
                     gender={gender}
-                    image={image}
+                    photo={photo}
                     handleFirstName={handleFirstNameChange}
                     handleLastName={handleLastNameChange}
                     handleGender={handleGenderChange}
+                    handleProfilePictureChange={handleProfilePictureChange}
                 />}
             {currentStep === 3 &&
                 <PositionLanguageQuestionnaire

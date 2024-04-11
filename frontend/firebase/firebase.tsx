@@ -1,10 +1,10 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import { addDoc, collection, getDocs, getFirestore, query, where, doc, getDoc, setDoc } from "firebase/firestore";
 import { FacebookAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { Gender, IUser } from "@/schema";
 import router, { useRouter } from 'next/router';
-
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 
 const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_SERVICE_ACCOUNT!);
@@ -14,9 +14,9 @@ const app = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore through Firebase
 const db = getFirestore(app);
 
+const storage = getStorage();
+
 const providerG = new GoogleAuthProvider();
-// facebook: new FacebookAuthProvider(),
-// twitter: new TwitterAuthProvider(),
 
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth();
@@ -53,7 +53,6 @@ const signUpWithGoogle = async (
   firstName: string,
   lastName: string,
   position: string,
-  profile_pic: string,
   availability: string[],
   gender: GenderOrUndefined,
   location: string,
@@ -93,7 +92,6 @@ const signUpWithGoogle = async (
             firstName: firstName,
             lastName: lastName,
             position: position,
-            profile_pic: profile_pic,
             availability: availability,
             gender: gender,
             location: location,
@@ -164,31 +162,6 @@ const fetchRole = async (uid: string) => {
   }
 }
 
-// const fetchRole = async (userId: string) => {
-//   try {
-//     console.log("fetching role")
-//     const q = query(
-//       collection(db, "users"),
-//       where("uid", "==", userId)
-//     );
-
-//     const response = await getDocs(q);
-//     console.log(response)
-//     console.log(response.docs[0])
-//     if (!response.empty && response.docs[0]) {
-//       const docData = response.docs[0].data();
-//       const user = docData as IUser;
-//       console.log(user.userType);
-//       return user.userType;
-//     } else {
-//       throw new Error(`No user found with the uid: ${userId}`);
-//     }
-//   } catch (error) {
-//     console.error("Error fetching user data:", error);
-//     throw error;
-//   }
-// };
-
 const fetchUser = async (userId: string) => {
   const docRef = doc(db, "users", userId);
   const docSnap = await getDoc(docRef);
@@ -205,6 +178,29 @@ const updateUser = async (userId: string, data: any) => {
   await setDoc(userRef, data, { merge: true });
 };
 
+async function uploadPicture(file, userUID, setLoading) {
+  const auth = getAuth();
+  const user = auth.currentUser;
 
-export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses };
+  if (user) {
+    const storageRef = ref(storage, 'profile_pictures/' + userUID + '.png');
+    setLoading(true);
+    try {
+      await uploadBytes(storageRef, file);
+      const photoURL = await getDownloadURL(storageRef);
+      await updateProfile(user, { photoURL: photoURL });
+      alert("Uploaded file!");
+    } catch (error) {
+      console.error("Error updating profile: ", error);
+      alert("Failed to upload file.");
+    } finally {
+      setLoading(false);
+    }
+  } else {
+    alert("No authenticated user found.");
+  }
+}
+
+
+export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses, uploadPicture };
 

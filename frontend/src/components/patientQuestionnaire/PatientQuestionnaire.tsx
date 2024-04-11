@@ -130,7 +130,6 @@ const PatientQuestionnaire = () => {
                     firstName,
                     lastName,
                     "", //position
-                    image,
                     [], //availability
                     gender,
                     "", //location
