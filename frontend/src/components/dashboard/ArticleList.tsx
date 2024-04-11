@@ -13,7 +13,7 @@ const ArticleList = () => {
         <h1 className="card-title pt-1/15 text-[32px]">Additional Resources</h1>
         {/*not changing color of text to blue from the config so manually added */}
         <p className="text-[#195ba5] text-[20px] font-[600]">More information can be found at <a href="https://www.wohohiame.com/" className='underline'>wohohiame.com</a></p>
-        <div className="grid lg:grid-cols-3 h-auto gap-6 pb-1/12 mt-[24px] shrink items-center content-center">
+        <div className="grid lg:grid-cols-3 h-auto gap-6 pb-1/12 mt-[24px] shrink items-center">
           {/* map each JSON object to each individual ArticleCard*/}
           {articlesArr.map(article => (
             <div key={article.id.toString()} className="appointment h-full justify-center items-center content-center">
