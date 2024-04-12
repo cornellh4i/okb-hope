@@ -14,10 +14,10 @@ import { Gender } from "@/schema";
 
 interface QuestionnaireProps {
     setPosition: string;
-    languages: string[];
+    prefLanguages: string[];
     aboutYourself: string;
     gender: Gender | undefined;
-    setLanguages: React.Dispatch<React.SetStateAction<string[]>>;
+    setPrefLanguages: React.Dispatch<React.SetStateAction<string[]>>;
     checked: { [key: string]: boolean };
     setChecked: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
     handleAge: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -29,7 +29,7 @@ interface QuestionnaireProps {
 }
 
 //2nd page of questionnaire
-const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, gender, setLanguages, checked, setChecked, handleGender, handleAge, handleCheck, handleAboutYourself }: QuestionnaireProps) => {
+const PositionLanguageQuestionnaire = ({ setPosition, prefLanguages, aboutYourself, gender, setPrefLanguages, checked, setChecked, handleGender, handleAge, handleCheck, handleAboutYourself }: QuestionnaireProps) => {
 
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 mb-5`}>
