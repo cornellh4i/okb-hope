@@ -1,21 +1,25 @@
 // components/Inbox.tsx
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import PatientInbox from "./PatientInbox";
 import PsychiatristInbox from "./PsychiatristInbox";
 
-const Inbox = () => {
+type InboxProps = {
+  onSearch: string | null; // Prop to receive search input
+};
+
+const Inbox = ({ onSearch }: InboxProps) => {
   const { user, role } = useAuth();
 
   if (!user) {
     return <div>Please log in.</div>;
   }
 
-  if (role === "psychiatrist") {
-    return <PsychiatristInbox />;
-  } else {
-    return <PatientInbox />;
-  }
+  return (
+    <div>
+      {role === "psychiatrist" ? <PsychiatristInbox /> : <PatientInbox searchInput={onSearch} />}
+    </div>
+  );
 };
 
 export default Inbox;

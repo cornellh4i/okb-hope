@@ -17,7 +17,11 @@ type Conversation = {
   recentMessage: RecentMessage;
 };
 
-const PatientInbox = () => {
+type PatientInboxProps = {
+  searchInput: string | null;
+};
+
+const PatientInbox = ({ searchInput }: PatientInboxProps) => {
   const { user } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [psychiatristNames, setPsychiatristNames] = useState<{ [key: string]: string }>({});
@@ -32,13 +36,27 @@ const PatientInbox = () => {
       try {
         if (!user) return;
 
-        const q = query(
-          collection(db, "Conversations"),
-          where("patientId", "==", user.uid)
-        );
+        let q;
+        if (searchInput === null) {
+          // If searchInput is null, display all messages with patientId = current user id
+          q = query(
+            collection(db, "Conversations"),
+            where("patientId", "==", user.uid)
+          );
+        } else {
+          // If searchInput is not null, display messages with patientId = current user id and psychiatristId = searchInput
+          q = query(
+            collection(db, "Conversations"),
+            where("patientId", "==", user.uid),
+            where("psychiatristId", "==", searchInput)
+          );
+        }
+
         const querySnapshot = await getDocs(q);
         const convos = querySnapshot.docs.map((doc) => doc.data() as Conversation);
         setConversations(convos);
+        console.log("CONVOS")
+        console.log(convos);
 
         // Fetch psychiatrist names
         const psychiatristIds = convos.map(convo => convo.psychiatristId);
@@ -52,7 +70,7 @@ const PatientInbox = () => {
     };
 
     fetchConversations();
-  }, [user]);
+  }, [user, searchInput]);
 
   // Function to fetch psychiatrist names
   const fetchPsychiatristNames = async (psychiatristIds: string[]) => {
