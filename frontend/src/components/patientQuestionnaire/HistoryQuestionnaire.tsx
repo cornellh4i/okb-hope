@@ -16,7 +16,6 @@ interface QuestionnaireProps {
     aboutConcerns: string;
     handleAboutConcerns: (event: ChangeEvent<HTMLTextAreaElement>) => void
     setConcerns: React.Dispatch<React.SetStateAction<string[]>>;
-
     handlePrevExp: (event: ChangeEvent<HTMLInputElement>) => void;
     handlePrevExpTime: (event: ChangeEvent<HTMLInputElement>) => void;
     setCheck: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
@@ -152,7 +151,7 @@ const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, check, aboutConc
                         }}
                         />
                       )}
-                </FormGroup>
+            </FormGroup>
         </div>
     )
 };

@@ -17,12 +17,16 @@ const PsychQuestionnaire = () => {
     const [lastName, setLastName] = useState<string>("");
     const [gender, setGender] = useState<Gender>();
     const [image, setImage] = useState<string>("");
-    const [position, setPosition] = useState<string>("");
+    const [position, setPosition] = useState<string>();
     const [checked, setChecked] = useState<{ [key: string]: boolean }>(
         { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
     const [languages, setLanguages] = useState<string[]>([]);
     const [aboutYourself, setAboutYourself] = useState<string>("");
-
+    const [aboutPosition, setAboutPosition] = useState<string>("");
+    const [check, setCheck] = useState({
+        psychiatrist: false,
+        nurse: false,
+        Other: false,})
     const [patient, setPatient] = useState<boolean>(false);
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
     const router = useRouter();
@@ -67,10 +71,18 @@ const PsychQuestionnaire = () => {
             case 'nurse':
                 setPosition("nurse");
                 break;
+            case 'other':
+                setPosition('other');
+                break;
             default:
                 setPosition("")
         }
     }
+      
+
+      const handleAboutPosition = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setAboutPosition(event.target.value);
+      };
 
     const handleCheck = (event: ChangeEvent<HTMLInputElement>) => {
         const lang = event.target.value;
@@ -198,8 +210,8 @@ const PsychQuestionnaire = () => {
                     setChecked={setChecked}
                     handleCheck={handleCheck}
                     handlePosition={handlePosition}
+                    handleAboutPosition={handleAboutPosition}
                     handleAboutYourself={handleAboutYourselfChange}
-
                 />}
             <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3`}>
                 <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>

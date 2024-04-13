@@ -1,4 +1,3 @@
-// 2nd page of the Questionnaire
 import { ChangeEvent } from 'react';
 import okb_colors from "@/colors";
 
@@ -22,7 +21,6 @@ interface QuestionnaireProps {
     handlePosition: (event: ChangeEvent<HTMLInputElement>) => void;
 
 }
-//2nd page of questionnaire
 const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, handleAboutYourself, setChecked, handleCheck, handlePosition }: QuestionnaireProps) => {
 
     return (
@@ -45,6 +43,11 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
                     <FormControlLabel control={<Radio checked={checked['nurse']} value={`nurse`} />} className={` ml-1 `} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Nurse
+                        </span>
+                    } />
+                    <FormControlLabel control={<Radio checked={checked['other']} value={`other`} />} className={` ml-1 `} label={
+                        <span style={{ fontWeight: 300, fontSize: 18 }}>
+                            Other
                         </span>
                     } />
                 </RadioGroup>
