@@ -147,52 +147,9 @@ const PatientList: React.FC<PatientListProps> = ({ questionType, ageRanges, gend
     setGlobalOther(other);
   }
 
-
-  // Loop through each concern and count patients
-  //  function pushInformation() {
-  // allConcerns.forEach(concern => {
-  //   const patientCounts = filterPatientsByConcern(patients, concern, ageRanges, genders, languages);
-  //   men.push(patientCounts[0]);
-  //   women.push(patientCounts[1]);
-  //   other.push(patientCounts[2]);
-  // });
-
-  // setGlobalMen(men);
-  // setGlobalWomen(women);
-  // setGlobalOther(other);
-  // console.log(men);
-  // console.log(women);
-  // console.log(other);
-  // console.log(ageRanges);
-
-  // }
-
-  // if (patients.length === 0) {
-  //   // Patients list is empty
-  //   console.log("Patients list is empty");
-  // } else {
-  //   // Patients list is not empty
-  //   console.log("Patients list is not empty");
-  // }
-
   return (
     <>
       <div>
-
-        {/* <div>
-        {filterPatientsByConcern(patients, "Addiction", ["18-24"], [0, 1, 2], ["Ewe", "Hausa", "Ga", "Fante", "English", "Other"])}
-      </div><div>
-        {filterPatientsByConcern(patients, "Depression", ["18-24"], [0, 1], ["Hausa", "English", "Other"])}
-      </div><div>
-        {filterPatientsByConcern(patients, "My  Relationships", ["18-24"], [0, 1], ["Hausa", "English", "Other"])}
-      </div>
-      <div>
-        {results.map((patient, index) => (
-          <div key={index}>
-            <p>{`Patient ${index + 1}`}</p>
-          </div>))}
-      </div> */}
-
       </div>
     </>
   )
