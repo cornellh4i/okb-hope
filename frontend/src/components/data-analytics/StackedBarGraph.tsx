@@ -15,8 +15,8 @@ function StackedBarChart({ questionType, men, women, other }) {
     useEffect(() => {
         // Update questions based on the global question type
         const updatedQuestions = (questionType === "When was the last time you spoke with a counselor?")
-            ? ['Within the last month', 'Within the last 6 months', 'Within the last year', 'Over a year ago', 'I have never spoken with a counselor/therapist before.']
-            : ['my relationships', 'addiction', 'suicidal thoughts', 'family distress', 'substance abuse', 'academic distress', 'social anxiety', 'depression', 'other'];
+            ? ['Last Month', 'Last 6 Months', 'Last Year', 'Over a Year', 'Never']
+            : ['My Relationships', 'Addiction', 'Suicidal Thoughts', 'Family Distress', 'Substance Abuse', 'Academic Distress', 'Social Anxiety', 'Depression', 'Other'];
 
         // Set the updated questions array
         setQuestions(updatedQuestions);
@@ -30,20 +30,20 @@ function StackedBarChart({ questionType, men, women, other }) {
                     <Chart
                         type="bar"
                         width={containerWidth}
-                        height={300}
+                        height={400}
                         series={[
                             {
-                                name: "men",
+                                name: "Men",
                                 data: men,
                                 color: '#7392c1'
                             },
                             {
-                                name: "women",
+                                name: "Women",
                                 data: women,
                                 color: '#d47cbc'
                             },
                             {
-                                name: "other",
+                                name: "Other",
                                 data: other,
                                 color: '#c4c5c6'
                             }
@@ -79,7 +79,12 @@ function StackedBarChart({ questionType, men, women, other }) {
                                     show: true,
                                     offsetX: -1,
                                     color: '#000000',
-                                }
+                                },
+                                labels: {
+                                    style: {
+                                        fontSize: '14px'
+                                    }
+                               }
                             },
                             yaxis: {
                                 title: {
@@ -89,10 +94,16 @@ function StackedBarChart({ questionType, men, women, other }) {
                                     show: true,
                                     offsetY: 0,
                                     color: '#000000',
-                                }
+                                },
+                                labels: {
+                                    style: {
+                                        fontSize: '14px'
+                                    }
+                               }
                             },
                             legend: {
-                                position: 'bottom'
+                                position: 'bottom',
+                                fontSize: '14px'
                             },
                             dataLabels: {
                                 enabled: false,
