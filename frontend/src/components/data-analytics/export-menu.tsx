@@ -4,9 +4,20 @@ import { AccordionSummary } from '@mui/material/';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
+import * as FileSaver from "file-saver";
+import XLSX from "sheetjs-style";
+// import ExcelExporter from "./ExcelExporter";
 
 
-const Menu: React.FC = (): JSX.Element => {
+interface MenuProps {
+  questionType: string;
+  men: string[];
+  women: string[];
+  other: string[];
+  fileName: string;
+}
+
+const Menu: React.FC<MenuProps> = ({questionType, men, women, other , fileName}): JSX.Element => {
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<string>("");
   const items = () => {
@@ -42,6 +53,43 @@ const Menu: React.FC = (): JSX.Element => {
     setSelectItem(item);
   };
 
+  const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const fileExtension = '.xlsx';
+
+    if (men[0] != "Men"){
+        men.unshift("Men");
+        women.unshift("Women");
+        other.unshift("Other");
+    }
+
+    const questions = (questionType === "When was the last time you spoke with a counselor?")
+            ? ['Gender', 'Within the last month', 'Within the last 6 months', 'Within the last year', 'Over a year ago', 'I have never spoken with a counselor/therapist before.']
+            : ['Gender', 'my relationships', 'addiction', 'suicidal thoughts', 'family distress', 'substance abuse', 'academic distress', 'social anxiety', 'depression', 'other'];
+  
+    // Map the values to a data object
+    const exceldata = [men.map(String), women.map(String), other.map(String)].map(values => {
+        const obj = {};
+        questions.forEach((columnName, index) => {
+            obj[columnName] = values[index];
+        });
+        return obj;
+    });
+
+    const exportToExcel = async () => {
+        const ws = XLSX.utils.json_to_sheet(exceldata);
+        const wb = { Sheets: {'data' : ws}, SheetNames: ['data']};
+        const excelBuffer = XLSX.write(wb, {bookType: 'xlsx', type: 'array'});
+        const data = new Blob([excelBuffer], {type: fileType});
+        FileSaver.saveAs(data, fileName + fileExtension);
+    }
+
+  const handleExportToExcel = () => {
+    const questions = (questionType === "When was the last time you spoke with a counselor?")
+            ? ['Gender', 'Within the last month', 'Within the last 6 months', 'Within the last year', 'Over a year ago', 'I have never spoken with a counselor/therapist before.']
+            : ['Gender', 'my relationships', 'addiction', 'suicidal thoughts', 'family distress', 'substance abuse', 'academic distress', 'social anxiety', 'depression', 'other'];
+    exportToExcel();
+  };
+
   const roundedClass = showDropDown ? 'rounded-t-lg' : 'rounded-lg';
   const changeExpand = showDropDown ? <ExpandLessIcon sx={{ color: 'white'}} /> : <ExpandMoreIcon sx={{ color: 'white'}} />;
 
@@ -69,6 +117,7 @@ const Menu: React.FC = (): JSX.Element => {
             showDropDown={false}
             toggleDropDown={(): void => toggleDropDown()}
             itemSelection={itemSelection}
+            exportToExcel={handleExportToExcel} 
           />
         )}
       </button>

@@ -16,6 +16,7 @@
     "@mui/material": "^5.15.13",
     "@mui/x-date-pickers": "^6.16.2",
     "@svgr/webpack": "^7.0.0",
+    "@syncfusion/ej2-grids": "^25.1.39",
     "@syncfusion/ej2-react-grids": "^25.1.35",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "18.15.0",
@@ -30,6 +31,7 @@
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
     "eslint-config-react-app": "^7.0.1",
+    "file-saver": "^2.0.5",
     "firebase": "^9.19.1",
     "firebase-functions": "^4.2.1",
     "fuse.js": "^6.6.2",
@@ -44,6 +46,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.8.0",
     "react-smart-flexbox": "^0.0.7",
+    "sheetjs-style": "^0.15.8",
     "styled-components": "^5.3.9",
     "typescript": "4.9.5",
     "webpack": "^5.76.3"
