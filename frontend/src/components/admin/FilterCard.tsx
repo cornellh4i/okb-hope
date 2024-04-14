@@ -1,4 +1,7 @@
 import { useState } from "react";
+import WarningCircle from "@/assets/warning_circle.svg";
+import Check from "@/assets/green_check.svg";
+
 
 const FilterCard = ({ name, username, created, active, isChecked, onCheckChange }) => {
 
@@ -28,7 +31,10 @@ const FilterCard = ({ name, username, created, active, isChecked, onCheckChange 
           <div style={{ width: "40px", marginLeft: "10px" }}>
             <input type="checkbox" className="checkbox" checked={isChecked} onChange={handleOnChange} />
           </div>
-          <div style={{ width: "150px", marginLeft: "20px" }}>{name}</div>
+          <div className="flex flex-row" style={{ width: "200px", marginLeft: "20px" }}>
+            <div className="basis-4/5">{name}</div>
+            <div className="basis-1/5"><WarningCircle /></div>
+          </div>
           <div style={{ width: "150px", marginLeft: "180px" }}>{username}</div>
           <div style={{ width: "150px", marginLeft: "310px" }}>{created}</div>
           <div style={{ width: "150px", marginLeft: "320px" }}>{active}</div>

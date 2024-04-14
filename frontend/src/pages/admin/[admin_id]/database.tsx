@@ -1,10 +1,8 @@
-import FilterUser from "@/components/filter/FilterUser";
+import AdminDashboard from "@/components/admin/adminDashboard";
 
 export default function Filter() {
   return (
-    <div>
-      <FilterUser />
-    </div>
+    <AdminDashboard />
   );
 }
 
