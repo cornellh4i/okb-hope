@@ -35,6 +35,8 @@
     "firebase": "^9.19.1",
     "firebase-functions": "^4.2.1",
     "fuse.js": "^6.6.2",
+    "google-auth-library": "^9.7.0",
+    "google-spreadsheet": "^4.1.1",
     "http-proxy-middleware": "^2.0.6",
     "infisical-node": "^1.4.3",
     "next": "13.2.4",

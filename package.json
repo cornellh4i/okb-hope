@@ -5,6 +5,8 @@
     "@mui/icons-material": "^5.15.13",
     "@mui/material": "^5.15.13",
     "apexcharts": "^3.47.0",
+    "google-auth-library": "^9.7.0",
+    "google-sheets": "^0.0.7",
     "react-apexcharts": "^1.4.1"
   }
 }

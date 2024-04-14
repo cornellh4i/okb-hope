@@ -6,8 +6,8 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import * as FileSaver from "file-saver";
 import XLSX from "sheetjs-style";
-// import ExcelExporter from "./ExcelExporter";
-
+// import { GoogleSpreadsheet } from 'google-spreadsheet';
+// import { GoogleAuth } from 'google-auth-library';
 
 interface MenuProps {
   questionType: string;
@@ -75,20 +75,36 @@ const Menu: React.FC<MenuProps> = ({questionType, men, women, other , fileName})
         return obj;
     });
 
-    const exportToExcel = async () => {
+  const exportToExcel = async () => {
         const ws = XLSX.utils.json_to_sheet(exceldata);
         const wb = { Sheets: {'data' : ws}, SheetNames: ['data']};
         const excelBuffer = XLSX.write(wb, {bookType: 'xlsx', type: 'array'});
         const data = new Blob([excelBuffer], {type: fileType});
         FileSaver.saveAs(data, fileName + fileExtension);
-    }
+  }
 
-  const handleExportToExcel = () => {
-    const questions = (questionType === "When was the last time you spoke with a counselor?")
-            ? ['Gender', 'Within the last month', 'Within the last 6 months', 'Within the last year', 'Over a year ago', 'I have never spoken with a counselor/therapist before.']
-            : ['Gender', 'my relationships', 'addiction', 'suicidal thoughts', 'family distress', 'substance abuse', 'academic distress', 'social anxiety', 'depression', 'other'];
-    exportToExcel();
-  };
+  const exportToGoogleSheets = async () => {
+  }
+  
+  // const exportToGoogleSheets = async () => {
+  //   const {GoogleAuth} = require('google-auth-library');
+  //   // Load your service account credentials
+  //   const auth = new GoogleAuth({scopes: ['https://www.googleapis.com/auth/spreadsheets']});
+  //   // const client = await auth.getClient();
+  //   // Instantiate a new GoogleSpreadsheet object with your spreadsheet ID
+  //   const doc = new GoogleSpreadsheet('1Km9IgGBmFm_pCkBKRnVSAefrr6D2jRaaZv5s0a8Xdd0/edit#gid=0', auth);
+  //   try {
+  //     await doc.loadInfo();
+  //     await doc.updateProperties({ title: 'Patient Questionaire Data' });
+  //     const newSheet = doc.sheetsByIndex[0]; 
+  //     await newSheet.setHeaderRow(questions);
+  //     await newSheet.addRows(exceldata);
+  
+  //     console.log('Data exported to Google Sheets successfully.');
+  //   } catch (error) {
+  //     console.error('Error exporting data to Google Sheets:', error);
+  //   }
+  // };
 
   const roundedClass = showDropDown ? 'rounded-t-lg' : 'rounded-lg';
   const changeExpand = showDropDown ? <ExpandLessIcon sx={{ color: 'white'}} /> : <ExpandMoreIcon sx={{ color: 'white'}} />;
@@ -117,7 +133,8 @@ const Menu: React.FC<MenuProps> = ({questionType, men, women, other , fileName})
             showDropDown={false}
             toggleDropDown={(): void => toggleDropDown()}
             itemSelection={itemSelection}
-            exportToExcel={handleExportToExcel} 
+            exportToExcel={exportToExcel} 
+            exportToSheets={exportToGoogleSheets}
           />
         )}
       </button>
