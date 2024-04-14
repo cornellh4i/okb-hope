@@ -22,7 +22,7 @@ const PsychQuestionnaire = () => {
         { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
     const [languages, setLanguages] = useState<string[]>([]);
     const [aboutYourself, setAboutYourself] = useState<string>("");
-
+    const [location, setLocation] = useState<string>("");
     const [patient, setPatient] = useState<boolean>(false);
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
     const router = useRouter();
@@ -57,15 +57,19 @@ const PsychQuestionnaire = () => {
         setAboutYourself(event.target.value);
     }
 
+    const handleLocationChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setLocation(event.target.value);
+    }
+
 
     const handlePosition = (event: ChangeEvent<HTMLInputElement>) => {
         const selectedPosition = (event.target.value);
         switch (selectedPosition) {
-            case 'psychiatrist':
-                setPosition("psychiatrist");
+            case 'Psychiatrist':
+                setPosition("Psychiatrist");
                 break;
-            case 'nurse':
-                setPosition("nurse");
+            case 'Nurse':
+                setPosition("Nurse");
                 break;
             default:
                 setPosition("")
@@ -150,7 +154,7 @@ const PsychQuestionnaire = () => {
                     image,
                     [],
                     gender,
-                    "",
+                    location,
                     languages,
                     [],
                     aboutYourself,
@@ -190,11 +194,13 @@ const PsychQuestionnaire = () => {
             {currentStep === 3 &&
                 <PositionLanguageQuestionnaire
                     setPosition={position}
+                    location={location}
                     languages={languages}
                     aboutYourself={aboutYourself}
                     setLanguages={setLanguages}
                     checked={checked}
                     setChecked={setChecked}
+                    handleLocation={handleLocationChange}
                     handleCheck={handleCheck}
                     handlePosition={handlePosition}
                     handleAboutYourself={handleAboutYourselfChange}

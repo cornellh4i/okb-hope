@@ -62,9 +62,9 @@ const signUpWithGoogle = async (
   description: string,
   website: string,
   concerns: string,
-  previousTherapyExperience: string,
-  lastTherapyTimeframe: string,
   ageRange: string,
+  lastTherapyTimeframe: string,
+  previousTherapyExperience: string,
   prefLanguages: string[],
   savedPsychiatrists: string[],
 ) => {

@@ -158,7 +158,7 @@ const EditPatientProfile = () => {
           {/* Profile Image */}
           <div tabIndex={0} className="form-control w-full flex flex-col items-start">
             <label className="label">
-              <span className="text-lg">Profile Image</span>
+              <span className="text-lg">Profile Image (Required)</span>
             </label>
             <div id="Frame542" className="flex items-center justify-center w-full gap-3">
               <svg xmlns="http://www.w3.org/2000/svg" width="4" height="204" viewBox="0 0 4 204" fill="none">
@@ -184,7 +184,7 @@ const EditPatientProfile = () => {
           {/* Concerns */}
           <div tabIndex={0} className="form-control w-full">
             <label className="label">
-              <span className="text-lg">Are there any specific concerns you would like to discuss with your counselor?</span>
+              <span className="text-lg">Are there any specific concerns you would like to discuss with your counselor? (Required)</span>
             </label>
             <div className="flex items-center">
               <Vertical_line className=""></Vertical_line>
@@ -196,7 +196,7 @@ const EditPatientProfile = () => {
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <div className="label">
-                <span className="text-lg">Have you spoken with a counselor/therapist before?</span>
+                <span className="text-lg">Have you spoken with a counselor/therapist before? (Required)</span>
               </div>
               <div className="flex items-center">
                 <Vertical_line></Vertical_line>
@@ -237,7 +237,7 @@ const EditPatientProfile = () => {
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <label className="label">
-                <span className="text-lg">If yes, when was the last time you spoke with one?</span>
+                <span className="text-lg">If yes, when was the last time you spoke with one? (Required)</span>
               </label>
               <div className="flex items-center">
                 <Vertical_line></Vertical_line>
@@ -276,7 +276,7 @@ const EditPatientProfile = () => {
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <label className="label">
-                <span className="text-lg">What is your age?</span>
+                <span className="text-lg">What is your age? (Required)</span>
               </label>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
@@ -315,7 +315,7 @@ const EditPatientProfile = () => {
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <label className="label">
-                <span className="text-lg">What are your preferred languages?</span>
+                <span className="text-lg">What are your preferred languages? (Required)</span>
               </label>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
@@ -355,7 +355,7 @@ const EditPatientProfile = () => {
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <label className="label">
-                <span className="text-lg">What is your gender?</span>
+                <span className="text-lg">What is your gender? (Required)</span>
               </label>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
