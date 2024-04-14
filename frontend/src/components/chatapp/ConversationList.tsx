@@ -35,61 +35,69 @@ const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConve
 
   useEffect(() => {
 
-    const fetchConversations = async () => {
-      if (!user?.uid) return;
+const fetchConversations = async () => {
+  if (!user?.uid) return;
 
-      const conversationsRef = collection(db, "Conversations");
-      const chatsRef = collection(db, "Chats");
+  const conversationsRef = collection(db, "Conversations");
+  const chatsRef = collection(db, "Chats");
 
-      const unsubscribe = onSnapshot(conversationsRef, async (querySnapshot) => {
-        const conversationData: Conversation[] = [];
+  const unsubscribe = onSnapshot(conversationsRef, async (querySnapshot) => {
+    const conversationData: Conversation[] = [];
 
-        const chatPromises = querySnapshot.docs.map(async (doc) => {
-          const data = doc.data();
-          if (data.patientId === user.uid || data.psychiatristId === user.uid) {
-            const isPatient = data.patientId === user.uid;
-            const messagesUnread = isPatient ? data.messagesUnreadByPatient : data.messagesUnreadByPsych;
-            const shouldInclude = read ? messagesUnread < 1 : messagesUnread >= 1;
+    const chatPromises = querySnapshot.docs.map(async (doc) => {
+      const data = doc.data();
+      if (data.patientId === user.uid || data.psychiatristId === user.uid) {
+        const isPatient = data.patientId === user.uid;
+        const messagesUnread = isPatient ? data.messagesUnreadByPatient : data.messagesUnreadByPsych;
+        const shouldInclude = read ? messagesUnread < 1 : messagesUnread >= 1;
 
-            if (shouldInclude) {
-              let isSearched = true;
-              console.log(searchInput)
-              const searchTextLower = searchInput.toLowerCase(); // Convert search input to lowercase
+        if (shouldInclude) {
+          let isSearched = false;
+          const searchTextLower = searchInput.toLowerCase(); // Convert search input to lowercase
 
-              // Fetch the chat document to compare text field
-              const chatSnapshot = await getDocs(collection(chatsRef, doc.id));
-              chatSnapshot.forEach((chatDoc) => {
-                const chatData = chatDoc.data();
-                const chatTextLower = chatData.text.toLowerCase(); // Convert chat text to lowercase
-                if (chatTextLower.includes(searchTextLower)) {
-                  isSearched = true;
-                }
-              });
-              console.log("seached: ", isSearched)
-              console.log(isSearched && (isPatient ? !data.deletedByPatient : !data.deletedByPsych))
-              if (isSearched && (isPatient ? !data.deletedByPatient : !data.deletedByPsych)) {
-                const conversation: Conversation = {
-                  patientId: data.patientId,
-                  psychiatristId: data.psychiatristId,
-                  recentMessage: data.recentMessage,
-                  messagesUnreadByPatient: data.messagesUnreadByPatient,
-                  messagesUnreadByPsych: data.messagesUnreadByPsych,
-                };
-                conversationData.push(conversation);
-              }
+          // Fetch the chat documents for the current conversation
+          const chatQuery = query(
+            chatsRef,
+            where("uid", "in", [data.patientId, data.psychiatristId]),
+            where("recipientId", "in", [data.patientId, data.psychiatristId])
+          );
+          const chatDocs = (await getDocs(chatQuery)).docs.map(chatDoc => chatDoc.data());
+          
+          // Check each chat document
+          for (const chatData of chatDocs) {
+            const chatTextLower = chatData.text.toLowerCase(); // Convert chat text to lowercase
+          
+            if (chatTextLower.includes(searchTextLower)) {
+              isSearched = true;
+              break; // No need to continue searching if one chat matches
             }
           }
-        });
+          console.log("searched", isSearched)
 
-        await Promise.all(chatPromises);
+          if (searchInput === "" || isSearched) {
+            if (isPatient ? !data.deletedByPatient : !data.deletedByPsych) {
+              const conversation: Conversation = {
+                patientId: data.patientId,
+                psychiatristId: data.psychiatristId,
+                recentMessage: data.recentMessage,
+                messagesUnreadByPatient: data.messagesUnreadByPatient,
+                messagesUnreadByPsych: data.messagesUnreadByPsych,
+              };
+              conversationData.push(conversation);
+            }
+          }
+        }
+      }
+    });
 
+    await Promise.all(chatPromises);
 
-        conversationData.sort((a, b) => b.recentMessage.createdAt - a.recentMessage.createdAt);
-        setConversationsList(conversationData);
-      });
+    conversationData.sort((a, b) => b.recentMessage.createdAt - a.recentMessage.createdAt);
+    setConversationsList(conversationData);
+  });
 
-      return () => unsubscribe();
-    };
+  return () => unsubscribe();
+};
 
     fetchConversations();
   }, [user?.uid, read, searchInput]);
