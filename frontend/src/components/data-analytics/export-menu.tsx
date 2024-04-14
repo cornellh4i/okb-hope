@@ -14,10 +14,9 @@ interface MenuProps {
   men: string[];
   women: string[];
   other: string[];
-  fileName: string;
 }
 
-const Menu: React.FC<MenuProps> = ({questionType, men, women, other , fileName}): JSX.Element => {
+const Menu: React.FC<MenuProps> = ({questionType, men, women, other}): JSX.Element => {
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<string>("");
   const items = () => {
@@ -74,6 +73,8 @@ const Menu: React.FC<MenuProps> = ({questionType, men, women, other , fileName})
         });
         return obj;
     });
+
+  const fileName = (questionType === "When was the last time you spoke with a counselor?") ? "CounselorHistory" : "Concerns";
 
   const exportToExcel = async () => {
         const ws = XLSX.utils.json_to_sheet(exceldata);
