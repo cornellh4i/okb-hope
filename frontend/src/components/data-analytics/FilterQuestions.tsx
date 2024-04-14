@@ -53,7 +53,7 @@ const Questions = ({ setGlobalQuestionType }: { setGlobalQuestionType: Function 
         </Grid>
         <Grid item xs={11}>
           <button
-            className={`w-9/12 text-[#888888] rounded-2xl border-2 border-[#0568a0]`}
+            className={`w-full text-[#888888] rounded-2xl border-2 border-[#0568a0]`}
             onClick={(): void => toggleDropDown()}
             onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
               dismissHandler(e)
@@ -64,10 +64,6 @@ const Questions = ({ setGlobalQuestionType }: { setGlobalQuestionType: Function 
                 {selectItem || "Select"}
               </AccordionSummary>
             </div>
-
-            {/* <div>
-          {getGlobalQuestionType()}
-        </div> */}
 
             {showDropDown && (
               <div className={`border borderColor-[#0568a0] rounded-2xl`}>

@@ -7,7 +7,7 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 function StackedBarChart({ questionType, men, women, other }) {
     // can only rerender if the the prop change, so we need to add a prop to change/rerender the component
     const { width } = useWindowSize();
-    const containerWidth = width > 1178 ? 800 : width > 900 ? width - 350 : width - 80;
+    const containerWidth = width > 900 ? width*2/3 : width*5/6;
 
     const [questions, setQuestions] = useState<string[]>([]);
 

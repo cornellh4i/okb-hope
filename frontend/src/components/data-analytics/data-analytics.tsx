@@ -20,15 +20,15 @@ const DataAnalytics = () => {
     <div className="w-full h-full flex flex-wrap flex-col bg-off-white justify-start gap-6 p-8 pb-4">
       <div className="text-[32px] font-semibold font-montserrat">Client Data</div>
       <div className="text-2xl font-semibold font-montserrat">Question Type</div>
-      <Questions setGlobalQuestionType={setGlobalQuestionType} />
       <Grid container spacing={2}>
-        <Grid item xs={12} md={9} >
-          <Box display="flex" justifyContent="flex-end" marginRight="5%">
-            <PatientList questionType={globalQuestionType} ageRanges={globalAgeRanges} genders={globalGenders} languages={globalLanguages}
+        <Grid item xs={12} md={9}>
+        <Questions setGlobalQuestionType={setGlobalQuestionType} />
+        <PatientList questionType={globalQuestionType} ageRanges={globalAgeRanges} genders={globalGenders} languages={globalLanguages}
               setGlobalMen={setGlobalMen} setGlobalWomen={setGlobalWomen} setGlobalOther={setGlobalOther} />
+          {/* <Box display="flex" justifyContent="flex-end" marginRight="5%" width="100%"> */}
             <StackedBarChart questionType={globalQuestionType} men={globalMen} women={globalWomen} other={globalOther} />
-          </Box>
-          <Box display="flex" justifyContent="flex-end" marginRight="6%">
+          {/* </Box> */}
+          <Box display="flex" justifyContent="flex-end" marginRight="6%" marginLeft="6%">
             <Menu />
           </Box>
         </Grid>
