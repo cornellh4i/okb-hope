@@ -17,12 +17,13 @@ const PsychQuestionnaire = () => {
     const [lastName, setLastName] = useState<string>("");
     const [gender, setGender] = useState<Gender>();
     const [image, setImage] = useState<string>("");
-    const [position, setPosition] = useState<string>();
     const [checked, setChecked] = useState<{ [key: string]: boolean }>(
         { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
     const [languages, setLanguages] = useState<string[]>([]);
     const [aboutYourself, setAboutYourself] = useState<string>("");
-    const [aboutPosition, setAboutPosition] = useState<string>("");
+    const [position, setPosition] = useState("");
+    const [isOtherSelected, setIsOtherSelected] = useState(false);
+    const [otherPosition, setOtherPosition] = useState("");    
     const [check, setCheck] = useState({
         psychiatrist: false,
         nurse: false,
@@ -62,27 +63,22 @@ const PsychQuestionnaire = () => {
     }
 
 
-    const handlePosition = (event: ChangeEvent<HTMLInputElement>) => {
-        const selectedPosition = (event.target.value);
-        switch (selectedPosition) {
-            case 'psychiatrist':
-                setPosition("psychiatrist");
-                break;
-            case 'nurse':
-                setPosition("nurse");
-                break;
-            case 'other':
-                setPosition('other');
-                break;
-            default:
-                setPosition("")
+    const handlePosition = (event) => {
+        const selectedPosition = event.target.value;
+        if (selectedPosition === 'other') {
+          setIsOtherSelected(true);
+          setPosition(otherPosition);
+        } else {
+          setIsOtherSelected(false);
+          setPosition(selectedPosition);
         }
-    }
+      };
       
 
-      const handleAboutPosition = (event: ChangeEvent<HTMLTextAreaElement>) => {
-        setAboutPosition(event.target.value);
-      };
+      const handleOtherPosition = (event) => {
+        setOtherPosition(event.target.value);
+    };
+
 
     const handleCheck = (event: ChangeEvent<HTMLInputElement>) => {
         const lang = event.target.value;
@@ -202,16 +198,17 @@ const PsychQuestionnaire = () => {
                 />}
             {currentStep === 3 &&
                 <PositionLanguageQuestionnaire
-                    setPosition={position}
-                    languages={languages}
-                    aboutYourself={aboutYourself}
-                    setLanguages={setLanguages}
-                    checked={checked}
-                    setChecked={setChecked}
-                    handleCheck={handleCheck}
-                    handlePosition={handlePosition}
-                    handleAboutPosition={handleAboutPosition}
-                    handleAboutYourself={handleAboutYourselfChange}
+                setPosition={position}
+                languages={languages}
+                aboutYourself={aboutYourself}
+                setLanguages={setLanguages}
+                checked={checked}
+                setChecked={setChecked}
+                handleCheck={handleCheck}
+                handlePosition={handlePosition}
+                handleOtherPosition={handleOtherPosition}
+                handleAboutYourself={handleAboutYourselfChange}
+                otherPosition={""}
                 />}
             <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3`}>
                 <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>
