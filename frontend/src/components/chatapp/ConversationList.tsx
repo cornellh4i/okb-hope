@@ -32,30 +32,6 @@ const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConve
   const psychiatristNames = {}; 
 
   const { user } = useAuth();
-
-  // const fetchPsychiatristNames = async () => {
-  //   try {
-  //     const psychiatristNames = {};
-  //     const querySnapshot = await getDocs(query(collection(db, 'psychiatrists')));
-  //     querySnapshot.forEach((doc) => {
-  //       psychiatristNames[doc.data().uid] = doc.data().firstName + " " + doc.data().lastName;
-  //     });
-
-  //     console.log("Psychiatrist Names:", psychiatristNames);
-  //     console.log(psychiatristNames["V5ZfIvDczKhWHGhAL9C5jwwSwHx2"])
-
-  //     // Further code here...
-  //   } catch (error) {
-  //     console.error("Error fetching psychiatrist names:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     await fetchPsychiatristNames();
-  //   };
-  //   fetchData();
-  // }, []);
   
   useEffect(() => {
     const isPatient = user?.userType === 'psychiatrist' ? true : false
