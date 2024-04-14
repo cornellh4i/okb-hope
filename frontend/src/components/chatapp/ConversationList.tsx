@@ -19,14 +19,6 @@ type Conversation = {
   messagesUnreadByPsych: number;
 };
 
-type Chat = {
-  createdAt: Date;
-  photoURL: string;
-  recipientId: string;
-  text: string;
-  uid: string;
-}
-
 interface ConversationListProps {
   read: boolean;
   selectedConversationId: string; // Receive selectedConversationId
@@ -42,25 +34,6 @@ const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConve
   const { user } = useAuth();
 
   useEffect(() => {
-    const isPatient = user?.userType === 'psychiatrist' ? true : false
-
-    // const fetchPsychData = async () => {
-    //   const psychiatristNames = {};
-    //   const querySnapshot = await getDocs(collection(db, 'psychiatrists'));
-    //   querySnapshot.forEach((doc) => {
-    //     psychiatristNames[doc.data().uid] = doc.data().firstName + " " + doc.data().lastName;
-    //   });
-    //   return psychiatristNames;
-    // };
-
-    // const fetchPatientData = async () => {
-    //   const patientNames = {};
-    //   const querySnapshot = await getDocs(collection(db, 'patients'));
-    //   querySnapshot.forEach((doc) => {
-    //     patientNames[doc.data().uid] = doc.data().firstName + " " + doc.data().lastName;
-    //   });
-    //   return patientNames;
-    // };
 
     const fetchConversations = async () => {
       if (!user?.uid) return;
@@ -80,23 +53,21 @@ const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConve
 
             if (shouldInclude) {
               let isSearched = true;
-              // If searchInput is not blank, query for chats where searchInput is "test" and uid or recipientId is either data.patientId or data.psychiatristId
-              if (searchInput.trim() !== "") {
+              console.log(searchInput)
+              const searchTextLower = searchInput.toLowerCase(); // Convert search input to lowercase
 
-
-                const chatsQuerySnapshot = query(
-                  chatsRef,
-                  where("text", "==", searchInput),
-                  where("uid", "in", [data.patientId, data.psychiatristId]),
-                  where("recipientId", "in", [data.patientId, data.psychiatristId])
-                );
-                const querySnapshot = await getDocs(chatsQuerySnapshot);
-                if (querySnapshot.empty) {
-                  isSearched = false;
+              // Fetch the chat document to compare text field
+              const chatSnapshot = await getDocs(collection(chatsRef, doc.id));
+              chatSnapshot.forEach((chatDoc) => {
+                const chatData = chatDoc.data();
+                const chatTextLower = chatData.text.toLowerCase(); // Convert chat text to lowercase
+                if (chatTextLower.includes(searchTextLower)) {
+                  isSearched = true;
                 }
-              }
-
-              if (isSearched) {
+              });
+              console.log("seached: ", isSearched)
+              console.log(isSearched && (isPatient ? !data.deletedByPatient : !data.deletedByPsych))
+              if (isSearched && (isPatient ? !data.deletedByPatient : !data.deletedByPsych)) {
                 const conversation: Conversation = {
                   patientId: data.patientId,
                   psychiatristId: data.psychiatristId,
@@ -111,6 +82,7 @@ const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConve
         });
 
         await Promise.all(chatPromises);
+
 
         conversationData.sort((a, b) => b.recentMessage.createdAt - a.recentMessage.createdAt);
         setConversationsList(conversationData);

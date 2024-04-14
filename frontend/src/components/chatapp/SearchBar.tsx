@@ -15,10 +15,8 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      if (searchInput.trim() !== '') {
-        onSearch(searchInput.trim()); // Pass search input value to parent component
-        console.log(searchInput)
-      }
+      onSearch(searchInput.trim()); // Pass search input value to parent component
+      console.log(searchInput)
     }
   };
 

@@ -60,6 +60,8 @@ const MessageComposer: React.FC = () => {
         // No existing conversation found, create a new one
         try {
           const docRef = await addDoc(conversationsRef, {
+            deletedByPatient: false,
+            deletedByPsych: false,
             patientId: patientId,
             psychiatristId: psychiatristId,
             messagesUnreadByPatient: uid === patientId ? 0 : 1,

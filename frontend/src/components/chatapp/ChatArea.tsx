@@ -6,7 +6,7 @@ import ellipsis from '../../assets/ellipses';
 import okb_colors from '@/colors';
 import router, { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
-import { collection, onSnapshot, query, where, doc, getDocs, updateDoc } from "firebase/firestore";
+import { collection, onSnapshot, writeBatch, query, where, doc, getDoc, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 import DeleteModal from './DeleteModal';
 
@@ -34,13 +34,57 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   };
 
   const handleDelete = async () => {
+    console.log(patientId)
+
     // Logic to delete the message thread
     // This logic should be implemented based on your application's requirements
     // Example:
     try {
-      // Perform deletion logic here
-      // For example, you might delete the conversation document from the database
-      // Update the state or perform any necessary actions after deletion
+      const conversationQuery = query(collection(db, "Conversations"),
+        where("patientId", "==", patientId),
+        where("psychiatristId", "==", psychiatristId));
+      const querySnapshot = await getDocs(conversationQuery);
+
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async (doc) => {
+          // Update the conversation document
+          if (role === "patient") {
+            if (doc.data().deletedByPsych === true) {
+              await deleteDoc(doc.ref);
+
+              const chatQuery = query(collection(db, "Chats"),
+                where("uid", "in", [patientId, psychiatristId]),
+                where("recipientId", "in", [patientId, psychiatristId]));
+              const chatSnapshot = await getDocs(chatQuery);
+
+              chatSnapshot.forEach(async (doc) => {
+                await deleteDoc(doc.ref);
+              });
+            } else {
+              await updateDoc(doc.ref, { deletedByPatient: true });
+            }
+          }
+
+          if (role === "psychiatrist") {
+            if (doc.data().deletedByPatient === true) {
+              await deleteDoc(doc.ref);
+
+              const chatQuery = query(collection(db, "Chats"),
+                where("uid", "in", [patientId, psychiatristId]),
+                where("recipientId", "in", [patientId, psychiatristId]));
+              const chatSnapshot = await getDocs(chatQuery);
+
+              chatSnapshot.forEach(async (doc) => {
+                await deleteDoc(doc.ref);
+              });
+
+            } else {
+              await updateDoc(doc.ref, { deletedByPsych: true });
+            }
+          }
+
+        })
+      }
       console.log("Message thread deleted successfully");
     } catch (error) {
       console.error("Error deleting message thread:", error);
