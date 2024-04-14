@@ -32,12 +32,12 @@ const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, handlePrevExp, h
                     onChange={handlePrevExp}
                     className={`flex flex-col gap-2`}
                 >
-                    <FormControlLabel className={` ml-1 `} value="18-24" control={<Radio />} label={
+                    <FormControlLabel className={` ml-1 `} value="Yes" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Yes
                         </span>
                     } />
-                    <FormControlLabel className={` ml-1 `} value="25-34" control={<Radio />} label={
+                    <FormControlLabel className={` ml-1 `} value="No" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             No
                         </span>

@@ -139,9 +139,9 @@ const PatientQuestionnaire = () => {
                     "", //description
                     "", //website
                     concerns,
-                    prevExp,
+                    age,
                     prevExpTime,
-                    age, //ageRange
+                    prevExp, //ageRange
                     languages, //prefLanguages
                     [], //savedPsychiatrists
                 );

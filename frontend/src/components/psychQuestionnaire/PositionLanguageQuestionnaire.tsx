@@ -14,6 +14,8 @@ interface QuestionnaireProps {
     setPosition: string;
     languages: string[];
     aboutYourself: string;
+    location: string;
+    handleLocation: (event: ChangeEvent<HTMLTextAreaElement>) => void
     handleAboutYourself: (event: ChangeEvent<HTMLTextAreaElement>) => void
     setLanguages: React.Dispatch<React.SetStateAction<string[]>>;
     checked: { [key: string]: boolean };
@@ -23,7 +25,7 @@ interface QuestionnaireProps {
 
 }
 //2nd page of questionnaire
-const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, handleAboutYourself, setChecked, handleCheck, handlePosition }: QuestionnaireProps) => {
+const PositionLanguageQuestionnaire = ({ setPosition, languages, location, handleLocation, aboutYourself, setLanguages, checked, handleAboutYourself, setChecked, handleCheck, handlePosition }: QuestionnaireProps) => {
 
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 mb-5`}>
@@ -37,18 +39,30 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
                         <span className={`text-lg font-semibold font-montserrat`}>What is your current position?</span>
                         <span className={`text-lg text-red-600`}>*</span>
                     </div>
-                    <FormControlLabel control={<Radio checked={checked['psychiatrist']} value={`psychiatrist`} />} className={` ml-1 `} label={
+                    <FormControlLabel control={<Radio checked={checked['Psychiatrist']} value={`Psychiatrist`} />} className={` ml-1 `} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Psychiatrist
                         </span>
                     } />
-                    <FormControlLabel control={<Radio checked={checked['nurse']} value={`nurse`} />} className={` ml-1 `} label={
+                    <FormControlLabel control={<Radio checked={checked['Nurse']} value={`Nurse`} />} className={` ml-1 `} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Nurse
                         </span>
                     } />
                 </RadioGroup>
             </FormControl>
+            <div>
+                <span className={`text-lg font-semibold font-montserrat`}>Where do you work?</span>
+                <textarea
+                    value={location}
+                    onChange={handleLocation}
+                    placeholder="Type here"
+                    className={`input input-bordered w-full mr-3 border-2 rounded-2xl`}
+                    style={{
+                        borderColor: okb_colors.light_blue,
+                    }}
+                />
+            </div>
             <div>
                 <span className={`text-lg font-semibold font-montserrat`}>Tell us and your patients about yourself.</span>
                 <textarea
