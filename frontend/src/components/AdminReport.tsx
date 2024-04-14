@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import { IReport } from '@/schema';
+import ChevronDown from '@/assets/chevron_down';
+import ChevronUp from '@/assets/chevron_up';
+import Close from '@/assets/close.svg';
+import ReportPopup from './ReportPopup';
 
 const ReportCard = ({ report, onReportClick }) => {
   const formattedDate = report.submittedAt?.toDate
@@ -37,6 +41,12 @@ const ReportCard = ({ report, onReportClick }) => {
 const AdminReport = () => {
   const [selectedReport, setSelectedReport] = useState<IReport | null>(null);
   const [reports, setReports] = useState<IReport[]>([]);
+  const [unreadReports, setUnreadReports] = useState<Boolean>(false);
+  const [highPriorityReports, setHighPriorityReports] = useState<Boolean>(false);
+  const [mediumPrioityReports, setMediumPriorityReports] = useState<Boolean>(false);
+  const [lowPriorityReports, setLowPriorityReports] = useState<Boolean>(false);
+  const [spamReports, setSpamReports] = useState<Boolean>(false);
+  const [showPopup, setShowPopup] = useState<Boolean>(false);
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -57,18 +67,41 @@ const AdminReport = () => {
     fetchReports();
   }, []);
 
-  // Function to handle report card click
-  const handleReportClick = (report) => {
+
+  const toggleUnreadReports = () => {
+    setUnreadReports(!unreadReports)
+  }
+
+  const toggleHighPriorityReports = () => {
+    setHighPriorityReports(!highPriorityReports)
+  }
+
+  const toggleMediumPriorityReports = () => {
+    setMediumPriorityReports(!mediumPrioityReports)
+  }
+
+  const toggleLowPriorityReports = () => {
+    setLowPriorityReports(!lowPriorityReports)
+  }
+
+  const toggleSpamReports = () => {
+    setSpamReports(!spamReports)
+  }
+
+  // Trigger report popup to show up
+  const handleOpenPopup = (report) => {
     setSelectedReport(report);
+    setShowPopup(true);
   };
 
-  // Function to close the popup modal
+  // Trigger report popup to close
   const handleClosePopup = () => {
+    setShowPopup(false);
     setSelectedReport(null);
   };
 
   const ReportDetailsPopup = () => {
-    if (!selectedReport) return null;
+    if (!showPopup) return null;
 
     const formattedDate = "Unknown Date"
 
@@ -88,12 +121,20 @@ const AdminReport = () => {
     };
 
     return (
-      <div style={popupStyle}>
-        <h2>Report Subject</h2>
-        <p>Submitted By: {selectedReport.patient_id}</p>
-        <p>Submitted On: {selectedReport.submittedAt.toLocaleString()}</p>
-        <p>{selectedReport.description}</p>
-        <button onClick={handleClosePopup}>Close</button>
+      <div>
+        <div className="modal modal-open">
+          <div className="modal-box" style={{
+            position: 'relative', display: 'flex', flexDirection: 'column', height: '50%', gap: 12, padding: 24, alignItems: 'center'
+          }}>
+            <Close className="modal-action" onClick={() => handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
+            <div className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 15 }}>Report Information</div>
+            <div className="space-y-4" style={{
+              width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex'
+            }}>
+              <ReportPopup key={selectedReport?.report_id} report={selectedReport} />
+            </div>
+          </div>
+        </div>
       </div>
     );
   };
@@ -122,19 +163,51 @@ const AdminReport = () => {
           <div style={{ alignSelf: 'stretch', height: 0, border: '3px black solid' }}></div>
         </div>
       </div>
-
-
-
-      {/* Report list container with overflow */}
-      {reports.map((report, index) => (
-        <div
-          key={report.report_id}
-          className="report-card"
-          style={{ cursor: 'pointer' }}>
-          <ReportCard key={report.report_id} report={report} onReportClick={handleReportClick} />
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="text-black text-2xl font-semibold font-['Montserrat']">Unread Reports</div>
+          <button onClick={toggleUnreadReports}>
+            {unreadReports ? ChevronDown : ChevronUp}
+          </button>
         </div>
-      ))}
-      {ReportDetailsPopup()}
+
+
+        {/* Report list container with overflow */}
+        {unreadReports ? reports.map((report, index) => (
+          <div
+            key={report.report_id}
+            className="report-card"
+            style={{ cursor: 'pointer' }}>
+            <ReportCard key={report.report_id} report={report} onReportClick={handleOpenPopup} />
+          </div>
+        )) : null}
+        {ReportDetailsPopup()}
+
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="text-black text-2xl font-semibold font-['Montserrat']">High Priority</div>
+          <button onClick={toggleHighPriorityReports}>
+            {highPriorityReports ? ChevronDown : ChevronUp}
+          </button>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="text-black text-2xl font-semibold font-['Montserrat']">Medium Priority</div>
+          <button onClick={toggleMediumPriorityReports}>
+            {mediumPrioityReports ? ChevronDown : ChevronUp}
+          </button>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="text-black text-2xl font-semibold font-['Montserrat']">Low Priority</div>
+          <button onClick={toggleLowPriorityReports}>
+            {lowPriorityReports ? ChevronDown : ChevronUp}
+          </button>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="text-black text-2xl font-semibold font-['Montserrat']">Spam</div>
+          <button onClick={toggleSpamReports}>
+            {spamReports ? ChevronDown : ChevronUp}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
