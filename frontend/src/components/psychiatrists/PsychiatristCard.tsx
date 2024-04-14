@@ -10,6 +10,7 @@ import { db } from '../../../firebase/firebase';
 import { useRouter } from 'next/navigation';
 import router from 'next/router';
 import Image from 'next/image';
+import colors from '@/colors';
 
 const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
   const { user } = useAuth();
@@ -104,7 +105,10 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
     <div className="card w-11/12 bg-base-100 shadow-xl m-3 border-[3px]">
       <div className="card-body items-center p-4">
         {/* image of psychiatrist */}
-        <Image src={PsychiatristPhoto} alt="Photo" className={`w-1200 h-600`} />
+        {/* <Image src={PsychiatristPhoto} alt="Photo" className={`w-1200 h-600`} /> */}
+        <div style={{ width: 200, height: 200, backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`text-7xl font-normal text-white flex items-center justify-center`}>
+          {professional?.firstName?.charAt(0).toUpperCase()}
+        </div>
         {/* <PsychiatristIcon /> */}
         <h2 className="card-title">{professional?.firstName} {professional?.lastName}</h2>
         {/* <h2 className="font-[400] italic mb-0">{p_certifications}</h2> */}
