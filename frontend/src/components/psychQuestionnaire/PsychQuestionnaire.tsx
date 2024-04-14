@@ -198,6 +198,7 @@ const PsychQuestionnaire = () => {
                 />}
             {currentStep === 3 &&
                 <PositionLanguageQuestionnaire
+                position=""
                 setPosition={position}
                 languages={languages}
                 aboutYourself={aboutYourself}
