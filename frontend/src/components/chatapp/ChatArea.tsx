@@ -6,18 +6,48 @@ import ellipsis from '../../assets/ellipses';
 import okb_colors from '@/colors';
 import router, { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
+import { collection, onSnapshot, query, where, doc, getDocs, updateDoc } from "firebase/firestore";
+import { db } from "../../../firebase/firebase";
+import DeleteModal from './DeleteModal';
+
 
 interface NameAreaType {
   name: string;
   credentials: string;
   role: 'patient' | 'psychiatrist';
-
 }
 
 const NameArea = ({ name, credentials, role }: NameAreaType) => {
   const router = useRouter();  // Use useRouter hook for routing actions
   const [psychiatristId, setPsychiatristId] = useState('');
   const [patientId, setPatientId] = useState('');
+  const conversationsRef = collection(db, "Conversations");
+  const q = query(conversationsRef);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDelete = async () => {
+    // Logic to delete the message thread
+    // This logic should be implemented based on your application's requirements
+    // Example:
+    try {
+      // Perform deletion logic here
+      // For example, you might delete the conversation document from the database
+      // Update the state or perform any necessary actions after deletion
+      console.log("Message thread deleted successfully");
+    } catch (error) {
+      console.error("Error deleting message thread:", error);
+    } finally {
+      closeDeleteModal();
+    }
+  };
 
   useEffect(() => {
     const { psych_id } = router.query;
@@ -39,6 +69,27 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
       query: { psych_uid: psychiatristId },
     });
   };
+
+  const markAsUnread = async () => {
+    if (!patientId || !psychiatristId) return;
+    // Create a query to find the correct conversation document
+    const conversationsRef = collection(db, "Conversations");
+    const convQuery = query(conversationsRef, where("patientId", "==", patientId), where("psychiatristId", "==", psychiatristId));
+    try {
+      const querySnapshot = await getDocs(convQuery);
+      if (!querySnapshot.empty) {
+        // Assuming there is always exactly one matching document
+        const conversationDoc = querySnapshot.docs[0];
+        await updateDoc(conversationDoc.ref, {
+          messagesUnreadByPatient: role === 'patient' ? 1 : 0,
+          messagesUnreadByPsych: role === 'psychiatrist' ? 1 : 0,
+        });
+      }
+    } catch (error) {
+      console.error("Error updating conversation:", error);
+    }
+  };
+
   return (
     <div className='name-area flex py-4 px-6 justify-between items-center shrink-0 w-full bg-white border-b-solid border-b-2 border-[#DEDEDE]'>
       <p className='text-[24px] font-semibold color-black'>{name}</p>
@@ -49,19 +100,20 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
         <ul className='menu dropdown-content inline-flex py-2 px-4 flex-col items-start gap-[14px] rounded-[10px] border-[1px] border-[#C1C1C1] shadow bg-[#FFFDFD] -box w-52'>
           {role === 'psychiatrist' && (
             <>
-              <li>Mark as Unread</li>
-              <li>Delete Message Thread</li>
+              <button onClick={markAsUnread}>Mark as Unread</button>
+              <button onClick={openDeleteModal}>Delete Message Thread</button>
             </>
           )}
           {role === 'patient' && (
             <>
-              <li>Mark as Unread</li>
+              <button onClick={markAsUnread}>Mark as Unread</button>
               <button onClick={handleProfileClick}>View Profile</button>
-              <li>Delete Message Thread</li>
+              <button onClick={openDeleteModal}>Delete Message Thread</button>
             </>
           )}
         </ul>
       </div>
+      <DeleteModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onDelete={handleDelete} />
     </div>
   );
 };

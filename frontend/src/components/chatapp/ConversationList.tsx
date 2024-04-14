@@ -19,6 +19,14 @@ type Conversation = {
   messagesUnreadByPsych: number;
 };
 
+type Chat = {
+  createdAt: Date;
+  photoURL: string;
+  recipientId: string;
+  text: string;
+  uid: string;
+}
+
 interface ConversationListProps {
   read: boolean;
   selectedConversationId: string; // Receive selectedConversationId
@@ -29,79 +37,90 @@ interface ConversationListProps {
 
 const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConversationId, onSelectConversation, conversations, searchInput }) => {
   const [conversationList, setConversationsList] = useState<Conversation[]>([]);
-  const psychiatristNames = {}; 
+  const psychiatristNames = {};
 
   const { user } = useAuth();
-  
+
   useEffect(() => {
     const isPatient = user?.userType === 'psychiatrist' ? true : false
-    
-  const fetchPsychData = async () => {
-    const psychiatristNames = {};
-    const querySnapshot = await getDocs(collection(db, 'psychiatrists'));
-    querySnapshot.forEach((doc) => {
-      psychiatristNames[doc.data().uid] = doc.data().firstName + " " + doc.data().lastName;
-    });
-    return psychiatristNames;
-  };
 
-  const fetchPatientData = async () => {
-    const patientNames = {};
-    const querySnapshot = await getDocs(collection(db, 'patients'));
-    querySnapshot.forEach((doc) => {
-      patientNames[doc.data().uid] = doc.data().firstName + " " + doc.data().lastName;
-    });
-    return patientNames;
-  };
+    // const fetchPsychData = async () => {
+    //   const psychiatristNames = {};
+    //   const querySnapshot = await getDocs(collection(db, 'psychiatrists'));
+    //   querySnapshot.forEach((doc) => {
+    //     psychiatristNames[doc.data().uid] = doc.data().firstName + " " + doc.data().lastName;
+    //   });
+    //   return psychiatristNames;
+    // };
 
-  const fetchConversations = async () => {
-    if (!user?.uid) return;
-    const psychiatristNames = await fetchPsychData();
-    const patientNames = await fetchPsychData();
-    const conversationsRef = collection(db, "Conversations");
-    const q = query(conversationsRef);
+    // const fetchPatientData = async () => {
+    //   const patientNames = {};
+    //   const querySnapshot = await getDocs(collection(db, 'patients'));
+    //   querySnapshot.forEach((doc) => {
+    //     patientNames[doc.data().uid] = doc.data().firstName + " " + doc.data().lastName;
+    //   });
+    //   return patientNames;
+    // };
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const conversationData: Conversation[] = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        if (data.patientId === user.uid || data.psychiatristId === user.uid) {
-          const isPatient = data.patientId === user.uid;
-          const messagesUnread = isPatient ? data.messagesUnreadByPatient : data.messagesUnreadByPsych;
-          const shouldInclude = read ? messagesUnread < 1 : messagesUnread >= 1;
+    const fetchConversations = async () => {
+      if (!user?.uid) return;
 
-          console.log(psychiatristNames[data.psychiatristId] === searchInput)
+      const conversationsRef = collection(db, "Conversations");
+      const chatsRef = collection(db, "Chats");
 
-          if (
-            shouldInclude &&
-  (searchInput === "" ||
-    (isPatient
-      ? psychiatristNames[data.psychiatristId].toLowerCase() === searchInput.toLowerCase()
-      : patientNames[data.patientId].toLowerCase() === searchInput.toLowerCase())
-            )) {
-            const conversation: Conversation = {
-              patientId: data.patientId,
-              psychiatristId: data.psychiatristId,
-              recentMessage: data.recentMessage,
-              messagesUnreadByPatient: data.messagesUnreadByPatient,
-              messagesUnreadByPsych: data.messagesUnreadByPsych,
-            };
-            conversationData.push(conversation);
+      const unsubscribe = onSnapshot(conversationsRef, async (querySnapshot) => {
+        const conversationData: Conversation[] = [];
+
+        const chatPromises = querySnapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          if (data.patientId === user.uid || data.psychiatristId === user.uid) {
+            const isPatient = data.patientId === user.uid;
+            const messagesUnread = isPatient ? data.messagesUnreadByPatient : data.messagesUnreadByPsych;
+            const shouldInclude = read ? messagesUnread < 1 : messagesUnread >= 1;
+
+            if (shouldInclude) {
+              let isSearched = true;
+              // If searchInput is not blank, query for chats where searchInput is "test" and uid or recipientId is either data.patientId or data.psychiatristId
+              if (searchInput.trim() !== "") {
+
+
+                const chatsQuerySnapshot = query(
+                  chatsRef,
+                  where("text", "==", searchInput),
+                  where("uid", "in", [data.patientId, data.psychiatristId]),
+                  where("recipientId", "in", [data.patientId, data.psychiatristId])
+                );
+                const querySnapshot = await getDocs(chatsQuerySnapshot);
+                if (querySnapshot.empty) {
+                  isSearched = false;
+                }
+              }
+
+              if (isSearched) {
+                const conversation: Conversation = {
+                  patientId: data.patientId,
+                  psychiatristId: data.psychiatristId,
+                  recentMessage: data.recentMessage,
+                  messagesUnreadByPatient: data.messagesUnreadByPatient,
+                  messagesUnreadByPsych: data.messagesUnreadByPsych,
+                };
+                conversationData.push(conversation);
+              }
+            }
           }
-        }
+        });
+
+        await Promise.all(chatPromises);
+
+        conversationData.sort((a, b) => b.recentMessage.createdAt - a.recentMessage.createdAt);
+        setConversationsList(conversationData);
       });
-      conversationData.sort((a, b) => b.recentMessage.createdAt - a.recentMessage.createdAt);
-      setConversationsList(conversationData);
-    });
 
-    return () => unsubscribe();
-  };
+      return () => unsubscribe();
+    };
 
-  fetchConversations();
-}, [user?.uid, read, searchInput]);
-
-  
-
+    fetchConversations();
+  }, [user?.uid, read, searchInput]);
 
   const handleSelectConversation = (conversationId: string) => {
     onSelectConversation(conversationId);
