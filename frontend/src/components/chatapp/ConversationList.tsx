@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ConversationItem from './ConversationItem';
 import { db } from "../../../firebase/firebase";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, onSnapshot, query, where, doc, getDocs } from "firebase/firestore";
 import { useAuth } from '../../../contexts/AuthContext';
 
 // Assuming the Conversation type is correctly defined as before
@@ -24,18 +24,65 @@ interface ConversationListProps {
   selectedConversationId: string; // Receive selectedConversationId
   onSelectConversation: (conversationId: string) => void; // Receive onSelectConversation function
   conversations: Conversation[];
+  searchInput: string; // New prop for search input
 }
 
-const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConversationId, onSelectConversation }) => {
+const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConversationId, onSelectConversation, conversations, searchInput }) => {
   const [conversationList, setConversationsList] = useState<Conversation[]>([]);
+  const psychiatristNames = {}; 
 
   const { user } = useAuth();
 
-  useEffect(() => {
-    if (!user?.uid) return;
+  // const fetchPsychiatristNames = async () => {
+  //   try {
+  //     const psychiatristNames = {};
+  //     const querySnapshot = await getDocs(query(collection(db, 'psychiatrists')));
+  //     querySnapshot.forEach((doc) => {
+  //       psychiatristNames[doc.data().uid] = doc.data().firstName + " " + doc.data().lastName;
+  //     });
 
+  //     console.log("Psychiatrist Names:", psychiatristNames);
+  //     console.log(psychiatristNames["V5ZfIvDczKhWHGhAL9C5jwwSwHx2"])
+
+  //     // Further code here...
+  //   } catch (error) {
+  //     console.error("Error fetching psychiatrist names:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     await fetchPsychiatristNames();
+  //   };
+  //   fetchData();
+  // }, []);
+  
+  useEffect(() => {
+    const isPatient = user?.userType === 'psychiatrist' ? true : false
+    
+  const fetchPsychData = async () => {
+    const psychiatristNames = {};
+    const querySnapshot = await getDocs(collection(db, 'psychiatrists'));
+    querySnapshot.forEach((doc) => {
+      psychiatristNames[doc.data().uid] = doc.data().firstName + " " + doc.data().lastName;
+    });
+    return psychiatristNames;
+  };
+
+  const fetchPatientData = async () => {
+    const patientNames = {};
+    const querySnapshot = await getDocs(collection(db, 'patients'));
+    querySnapshot.forEach((doc) => {
+      patientNames[doc.data().uid] = doc.data().firstName + " " + doc.data().lastName;
+    });
+    return patientNames;
+  };
+
+  const fetchConversations = async () => {
+    if (!user?.uid) return;
+    const psychiatristNames = await fetchPsychData();
+    const patientNames = await fetchPsychData();
     const conversationsRef = collection(db, "Conversations");
-    // Fetch all conversations without initially filtering by messages unread
     const q = query(conversationsRef);
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -43,12 +90,19 @@ const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConve
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         if (data.patientId === user.uid || data.psychiatristId === user.uid) {
-          // Apply filtering logic here based on whether the user is a patient or psychiatrist in this conversation
           const isPatient = data.patientId === user.uid;
           const messagesUnread = isPatient ? data.messagesUnreadByPatient : data.messagesUnreadByPsych;
           const shouldInclude = read ? messagesUnread < 1 : messagesUnread >= 1;
 
-          if (shouldInclude) {
+          console.log(psychiatristNames[data.psychiatristId] === searchInput)
+
+          if (
+            shouldInclude &&
+  (searchInput === "" ||
+    (isPatient
+      ? psychiatristNames[data.psychiatristId].toLowerCase() === searchInput.toLowerCase()
+      : patientNames[data.patientId].toLowerCase() === searchInput.toLowerCase())
+            )) {
             const conversation: Conversation = {
               patientId: data.patientId,
               psychiatristId: data.psychiatristId,
@@ -61,12 +115,16 @@ const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConve
         }
       });
       conversationData.sort((a, b) => b.recentMessage.createdAt - a.recentMessage.createdAt);
-
       setConversationsList(conversationData);
     });
 
     return () => unsubscribe();
-  }, [user?.uid, read]);
+  };
+
+  fetchConversations();
+}, [user?.uid, read, searchInput]);
+
+  
 
 
   const handleSelectConversation = (conversationId: string) => {

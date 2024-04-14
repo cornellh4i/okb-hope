@@ -10,18 +10,6 @@ import okb_colors from '@/colors';
 
 const psychiatrists: any[] = [];
 
-async function getMessages() {
-  const chats = collection(db, 'Chats');
-  const snapshot = await getDocs(chats);
-  if (snapshot.empty) {
-    console.log('no matching docs');
-    return;
-  }
-  snapshot.forEach(doc => {
-    psychiatrists.push(doc);
-  });
-}
-
 const fuseOptions = {
   keys: ['name', 'specialty', 'location'],
   threshold: 0.3,
@@ -67,7 +55,7 @@ const Sidebar: React.FC = () => {
             <button onClick={toggleUnreadMessagesVisibility}>{showUnreadMessages ? chevron_up : chevron_down}</button>
           </div>
           <div className='overflow-scroll'>
-            {showUnreadMessages && <ConversationList read={false} conversations={searchResults} selectedConversationId={selectedConversationId} onSelectConversation={handleSelectConversation} />}
+            {showUnreadMessages && <ConversationList read={false} searchInput={searchTerm} selectedConversationId={selectedConversationId} onSelectConversation={handleSelectConversation} conversations={[]} />}
           </div>
         </div>
 
@@ -78,7 +66,7 @@ const Sidebar: React.FC = () => {
             <button onClick={toggleAllMessagesVisibility}>{showAllMessages ? chevron_up : chevron_down}</button>
           </div>
           <div className='overflow-scroll'>
-            {showAllMessages && <ConversationList read={true} conversations={searchResults} selectedConversationId={selectedConversationId} onSelectConversation={handleSelectConversation} />}
+            {showAllMessages && <ConversationList read={true} searchInput={searchTerm} selectedConversationId={selectedConversationId} onSelectConversation={handleSelectConversation} conversations={[]} />}
           </div>
         </div>
       </div>

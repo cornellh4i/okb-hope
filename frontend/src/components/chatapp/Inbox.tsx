@@ -1,25 +1,23 @@
-// components/Inbox.tsx
-import React, { useState } from "react";
-import { useAuth } from "../../../contexts/AuthContext";
-import PatientInbox from "./PatientInbox";
-import PsychiatristInbox from "./PsychiatristInbox";
+import React, { useEffect } from 'react';
 
-type InboxProps = {
-  onSearch: string | null; // Prop to receive search input
+type PatientInboxProps = {
+  searchInput: string | ((searchTerm: string) => void); // Accepts either string or function
 };
 
-const Inbox = ({ onSearch }: InboxProps) => {
-  const { user, role } = useAuth();
-
-  if (!user) {
-    return <div>Please log in.</div>;
-  }
+const PatientInbox = ({ searchInput }: PatientInboxProps) => {
+  useEffect(() => {
+    // If searchInput is a function, it means a search was triggered
+    if (typeof searchInput === 'function') {
+      // Execute the search function
+      searchInput('Perform search here'); // Example: Perform search with a placeholder term
+    }
+  }, [searchInput]); // Run this effect whenever searchInput changes
 
   return (
     <div>
-      {role === "psychiatrist" ? <PsychiatristInbox /> : <PatientInbox searchInput={onSearch} />}
+      {/* Render your Patient Inbox UI here */}
     </div>
   );
 };
 
-export default Inbox;
+export default PatientInbox;
