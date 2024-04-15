@@ -5,7 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import * as FileSaver from "file-saver";
-import XLSX from "sheetjs-style";
+import * as XLSX from 'xlsx';
 // import { GoogleSpreadsheet } from 'google-spreadsheet';
 // import { GoogleAuth } from 'google-auth-library';
 
@@ -20,7 +20,7 @@ const Menu: React.FC<MenuProps> = ({questionType, men, women, other}): JSX.Eleme
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<string>("");
   const items = () => {
-    return ["Google Sheets", "Microsoft Excel"];
+    return ["Microsoft Excel"];
   };
 
   /**
@@ -84,8 +84,8 @@ const Menu: React.FC<MenuProps> = ({questionType, men, women, other}): JSX.Eleme
         FileSaver.saveAs(data, fileName + fileExtension);
   }
 
-  const exportToGoogleSheets = async () => {
-  }
+  // const exportToGoogleSheets = async () => {
+  // }
   
   // const exportToGoogleSheets = async () => {
   //   const {GoogleAuth} = require('google-auth-library');
@@ -135,7 +135,6 @@ const Menu: React.FC<MenuProps> = ({questionType, men, women, other}): JSX.Eleme
             toggleDropDown={(): void => toggleDropDown()}
             itemSelection={itemSelection}
             exportToExcel={exportToExcel} 
-            exportToSheets={exportToGoogleSheets}
           />
         )}
       </button>

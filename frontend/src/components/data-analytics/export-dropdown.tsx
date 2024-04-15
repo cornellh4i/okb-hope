@@ -5,14 +5,12 @@ type DropDownProps = {
   toggleDropDown: Function;
   itemSelection: Function;
   exportToExcel: Function;
-  exportToSheets: Function;
 };
 
 const DropDown: React.FC<DropDownProps> = ({
   items,
   itemSelection,
   exportToExcel,
-  exportToSheets,
 }: DropDownProps): JSX.Element => {
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
 
@@ -24,9 +22,7 @@ const DropDown: React.FC<DropDownProps> = ({
    */
   const onClickHandler = (item: string): void => {
     itemSelection(item);
-    if (item === "Google Sheets") {
-      exportToSheets();
-    } else if (item === "Microsoft Excel") {
+    if (item === "Microsoft Excel") {
       exportToExcel();
     } else {
       console.error("Invalid export option");

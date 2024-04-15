@@ -26,7 +26,7 @@ const DataAnalytics = () => {
               setGlobalMen={setGlobalMen} setGlobalWomen={setGlobalWomen} setGlobalOther={setGlobalOther} />
             <StackedBarChart questionType={globalQuestionType} men={globalMen} women={globalWomen} other={globalOther} />
           <Box display="flex" justifyContent="flex-end" marginRight="6%" marginLeft="6%">
-            <Menu questionType={globalQuestionType} men={globalMen.map(String)} women={globalWomen.map(String)} other={globalOther.map(String)} fileName={"Excel Export"}/>
+            <Menu questionType={globalQuestionType} men={globalMen.map(String)} women={globalWomen.map(String)} other={globalOther.map(String)}/>
           </Box>
         </Grid>
         <Grid item xs={12} md={3}>
