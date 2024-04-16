@@ -8,7 +8,6 @@ import router, { useRouter } from 'next/router';
 
 
 const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_SERVICE_ACCOUNT!);
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
@@ -32,9 +31,8 @@ const logInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, new GoogleAuthProvider());
     const user = res.user;
-    const q = query(collection(db, "users"), where("uid", "==", user.uid));
+    const q = query(collection(db, 'users'), where('uid', '==', user.uid));
     const docs = await getDocs(q);
-
     if (docs.docs.length === 0) {
       alert("An account with this email does not yet exist. Please sign up for an account first.");
       logout();
@@ -44,7 +42,7 @@ const logInWithGoogle = async () => {
   }
   catch (err) {
     if (err instanceof Error) {
-      alert("An error occurred while signing in with Google: " + err.message);
+      alert('An error occurred while signing in with Google: ' + err.message);
     }
   }
 };
@@ -68,7 +66,6 @@ const signUpWithGoogle = async (
   lastTherapyTimeframe: string,
   ageRange: string,
   prefLanguages: string[],
-  genderPref: GenderOrUndefined,
   savedPsychiatrists: string[],
 ) => {
   return new Promise<void>(async (resolve, reject) => {
@@ -118,12 +115,12 @@ const signUpWithGoogle = async (
             lastTherapyTimeframe: lastTherapyTimeframe,
             ageRange: ageRange,
             prefLanguages: prefLanguages,
-            genderPref: genderPref,
+            gender: gender,
             savedPsychiatrists: savedPsychiatrists
           });
           console.log("Added patient")
         }
-        console.log("Updated database")
+        console.log("Updated database");
       }
       else {
         throw new Error("user already exists");
@@ -140,26 +137,6 @@ const signUpWithGoogle = async (
   });
 };
 
-// const user = res.user;
-// const q = query(collection(db, "users"), where("uid", "==", user.uid));
-// const signIn = await fetchSignInMethodsForEmail(auth, user.uid)
-
-// if (signIn.length > 0) {
-//   await addDoc(collection(db, "users"), {
-//     uid: user.uid,
-//     name: user.displayName,
-//     authProvider: "google",
-//     email: user.email,
-//   });
-// } else {
-//   throw new Error()
-// }
-// catch (err) {
-//   if (err instanceof Error) {
-//     alert("An error occurred while signing in with Google: " + err.message);
-//   }
-// }
-
 const saveResponses = async (userId: string, responses: any) => {
   const responsesRef = doc(db, "responses", userId);
   await setDoc(responsesRef, { userId, responses });
@@ -172,7 +149,6 @@ const fetchRole = async (uid: string) => {
       where("uid", "==", uid)
     );
     const response = await getDocs(q);
-    console.log(response);
     if (!response.empty) {
       const doc = response.docs[0];
       const docId = doc.id;

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import BookmarkIcon from '@/assets/bookmark.svg'
 import PsychiatristIcon from '@/assets/psychiatrist.svg'
+import PsychiatristPhoto from '@/assets/dummy_photo.jpg';
 import { IPsychiatrist, IUser } from '@/schema';
 import { fetchAllUsers, fetchDocumentId, fetchPatientDetails, fetchProfessionalData } from '../../../firebase/fetchData';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -8,6 +9,8 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase/firebase';
 import { useRouter } from 'next/navigation';
 import router from 'next/router';
+import Image from 'next/image';
+import colors from '@/colors';
 
 const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
   const { user } = useAuth();
@@ -23,15 +26,12 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
     setIsShown(!isShown);
   };
 
-  console.log(psych_uid)
-
   useEffect(() => {
     const fetchProfessional = async () => {
       // Check if both first name and last name are defined
       if (psych_uid) {
         // Fetch professional data based on psychiatrist's uid
         const data = await fetchProfessionalData(psych_uid);
-        console.log(data);
         setProfessional(data);
       }
     };
@@ -41,10 +41,9 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (user) {
+      if (user && user.userType == "patient") {
         const data = await fetchPatientDetails(user.uid);
         setSavedPsychiatrists(data.savedPsychiatrists)
-        console.log(savedPsychiatrists)
       }
     }
     fetchUser();
@@ -59,7 +58,6 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
       if (user) {
         const documentId = await fetchDocumentId("patients", user.uid);
         setDocId(documentId);
-        console.log(documentId)
       }
     }
     fetchDocId();
@@ -73,7 +71,7 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
         if (index !== -1) {
           updatedSavedPsychiatrists.splice(index, 1);
         }
-        
+
         setSavedPsychiatrists(updatedSavedPsychiatrists)
 
         // Update the result to firebase
@@ -92,7 +90,6 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
 
   // Redirects to a professional's profile page and passes their uid as query parameter
   function handleGoToProfProfile(psych_uid: string) {
-    console.log(psych_uid)
     router.push({
       pathname: `/${user?.userType}/${user?.uid}/prof_profile`,
       query: { psych_uid: psych_uid }
@@ -105,10 +102,14 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
   }
 
   return (
-    <div className="card w-11/12 bg-base-100 shadow-xl m-6 border-[3px]">
+    <div className="card w-11/12 bg-base-100 shadow-xl m-3 border-[3px]">
       <div className="card-body items-center p-4">
         {/* image of psychiatrist */}
-        <PsychiatristIcon />
+        {/* <Image src={PsychiatristPhoto} alt="Photo" className={`w-1200 h-600`} /> */}
+        <div style={{ width: 200, height: 200, backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`text-7xl font-normal text-white flex items-center justify-center`}>
+          {professional?.firstName?.charAt(0).toUpperCase()}
+        </div>
+        {/* <PsychiatristIcon /> */}
         <h2 className="card-title">{professional?.firstName} {professional?.lastName}</h2>
         {/* <h2 className="font-[400] italic mb-0">{p_certifications}</h2> */}
         {/* view profile button */}
@@ -124,7 +125,6 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
             <div className="card-body">
               <div className="card-actions justify-end">
                 <button className="btn btn-square btn-sm " onClick={handleClick}>
-
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
               </div>

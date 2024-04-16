@@ -47,7 +47,8 @@ const DiscoverPage: React.FC = () => {
   const [allLanguages, setAllLanguages] = useState(false);
   const [male, setMale] = useState(false);
   const [female, setFemale] = useState(false);
-  const [bothGenders, setBothGenders] = useState(false);
+  const [otherGender, setOtherGender] = useState(false);
+  const [allGenders, setAllGenders] = useState(false);
 
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
   const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
@@ -180,8 +181,8 @@ const DiscoverPage: React.FC = () => {
   const searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
 
   return (
-    <div className={'px-24 pt-9 pb-14'}>
-      <div className='pb-8'>
+    <div className={'flex flex-col px-23 pt-9 pb-14'}>
+      <div className='flex justify-start justify-center pb-8'>
         <SearchBar
           searchTerm={searchTerm} setSearchTerm={setSearchTerm}
           submittedSearchTerm={submittedSearchTerm} setSubmittedSearchTerm={setSubmittedSearchTerm}
@@ -204,10 +205,11 @@ const DiscoverPage: React.FC = () => {
           allLanguages={allLanguages} setAllLanguages={setAllLanguages}
           male={male} setMale={setMale}
           female={female} setFemale={setFemale}
-          bothGenders={bothGenders} setBothGenders={setBothGenders} />
+          otherGender={otherGender} setOtherGender={setOtherGender}
+          allGenders={allGenders} setAllGenders={setAllGenders} />
       </div>
       {searchFilterResults.length > 0 ? (
-        <PsychiatristList results={searchFilterResults} />
+        <PsychiatristList results={searchFilterResults} buttonType={'discover'} />
       ) : (
         <div className="text-center my-10">
           <p className="mb-4">No Psychiatrists found based on your filters.</p>

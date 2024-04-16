@@ -49,6 +49,9 @@ const PatientQuestionnaire = () => {
             case 'female':
                 setGender(Gender.Female);
                 break;
+            case 'other':
+                setGender(Gender.Other);
+                break;
             default:
                 setGender(undefined);
         }
@@ -138,13 +141,11 @@ const PatientQuestionnaire = () => {
                     concerns,
                     prevExp,
                     prevExpTime,
-                    "", //ageRange
-                    [], //prefLanguages
-                    gender, //genderPref
+                    age, //ageRange
+                    languages, //prefLanguages
                     [], //savedPsychiatrists
                 );
-
-                router.push(`/${user?.userType}/${user?.uid}/dashboard`);
+                router.push('/loading?init=true');
             } catch (error) {
                 console.error('Error signing in:', error);
                 logout();

@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import SearchBar from "./SearchBar";
 import ConversationList from "./ConversationList";
-import Fuse from 'fuse.js'; // install fuse.js
-import { db } from '../../../firebase/firebase'
+import Fuse from 'fuse.js';
+import { db } from '../../../firebase/firebase';
 import { collection, getDocs } from "firebase/firestore";
 import chevron_up from '@/assets/chevron_up';
+import chevron_down from '@/assets/chevron_down';
 import okb_colors from '@/colors';
 
 const psychiatrists: any[] = [];
@@ -21,7 +22,6 @@ async function getMessages() {
   });
 }
 
-
 const fuseOptions = {
   keys: ['name', 'specialty', 'location'],
   threshold: 0.3,
@@ -30,10 +30,26 @@ const fuseOptions = {
 const Sidebar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const fuse = useMemo(() => new Fuse(psychiatrists, fuseOptions), []);
+  const [showAllMessages, setShowAllMessages] = useState<boolean>(true);
+  const [showUnreadMessages, setShowUnreadMessages] = useState<boolean>(true);
+  const [selectedConversationId, setSelectedConversationId] = useState<string>(''); // Lifted state
+
+  const handleSelectConversation = (conversationId: string) => {
+    setSelectedConversationId(conversationId); // Update selectedConversationId
+  };
+
+  const toggleAllMessagesVisibility = () => {
+    setShowAllMessages(!showAllMessages);
+  };
+
+  const toggleUnreadMessagesVisibility = () => {
+    setShowUnreadMessages(!showUnreadMessages);
+  };
 
   const handleSearch = (newSearchTerm) => {
     setSearchTerm(newSearchTerm);
   };
+
 
   const searchResults = searchTerm
     ? fuse.search(searchTerm).map(({ item }) => item)
@@ -46,23 +62,23 @@ const Sidebar: React.FC = () => {
       <div className="flex flex-col conversation-list bg-white">
         {/* Unread Messages */}
         <div className='flex flex-col unread-conversation-list'>
-          <div className='inline-flex justify-between align-center bg-okb-blue rounded-full py-2 px-6 items-center text-white mx-5 mb-2'>
+          <div className='inline-flex justify-between align-center bg-okb-blue md:rounded-full py-2 md:px-6 px-2 items-center text-white md:mx-5 mb-2'>
             <p className='text-[16px] font-semibold'>Unread Messages</p>
-            <button>{chevron_up}</button>
+            <button onClick={toggleUnreadMessagesVisibility}>{showUnreadMessages ? chevron_up : chevron_down}</button>
           </div>
-          <div className='overflow-scroll mb-5'>
-            <ConversationList read={false} conversations={searchResults} />
+          <div className='overflow-scroll'>
+            {showUnreadMessages && <ConversationList read={false} conversations={searchResults} selectedConversationId={selectedConversationId} onSelectConversation={handleSelectConversation} />}
           </div>
         </div>
 
         {/* All Messages */}
         <div className='flex flex-col all-conversation-list'>
-          <div className='inline-flex justify-between align-center bg-okb-blue rounded-full py-2 px-6 items-center text-white mx-5 mb-2'>
+          <div className='inline-flex justify-between align-center bg-okb-blue md:rounded-full py-2 md:px-6 px-2 items-center text-white md:mx-5 mb-2'>
             <p className='text-[16px] font-semibold'>All Messages</p>
-            <button>{chevron_up}</button>
+            <button onClick={toggleAllMessagesVisibility}>{showAllMessages ? chevron_up : chevron_down}</button>
           </div>
           <div className='overflow-scroll'>
-            <ConversationList read={true} conversations={searchResults} />
+            {showAllMessages && <ConversationList read={true} conversations={searchResults} selectedConversationId={selectedConversationId} onSelectConversation={handleSelectConversation} />}
           </div>
         </div>
       </div>
@@ -72,3 +88,4 @@ const Sidebar: React.FC = () => {
 };
 
 export default Sidebar;
+

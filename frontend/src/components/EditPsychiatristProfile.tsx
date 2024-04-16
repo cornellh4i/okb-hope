@@ -22,9 +22,9 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
   const [languages, setLanguages] = useState<string[]>([]);
   const [gender, setGender] = useState(0);
 
-  const positions = ["Nurse", "Doctor"]
-  const language = ["English", "Ga", "Twi", "Hausa"]
-  const genders = ["Male", "Female", "Other"]
+  const positions = ["Nurse", "Doctor"];
+  const language = ["English", "Ga", "Twi", "Hausa", "Fante", "Ewe", "Other"];
+  const genderList = ["Male", "Female", "Other"];
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -53,7 +53,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
     setPosition(value);
   }
 
-  const handleDescriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleDescriptionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(event.target.value);
   }
 
@@ -72,9 +72,9 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
     setLanguages(updatedLanguages);
   };
 
-  const handleGenderChange = (gender) => {
-    const newGenderPref = gender === "Female" ? 1 : 0;
-    setGender(newGenderPref);
+  const handleGenderChange = (value) => {
+    const newGender = value === "Male" ? 0 : (value === "Female" ? 1 : 2);
+    setGender(newGender);
   }
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
   }, [docId]);
 
   const handleCancel = () => {
-    router.push(`/${user?.userType}/${uid}/psych_dashboard`);
+    router.push(`/psychiatrist/${uid}/psych_dashboard`);
   }
 
 
@@ -102,12 +102,12 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
       language: languages,
       gender: gender
     })
-    router.push(`/${user?.userType}/${uid}/psych_dashboard`);
+    router.push(`/psychiatrist/${uid}/psych_dashboard`);
   };
 
   return (
     <div className="flex justify-center">
-      <div className="card w-2/3">
+      <div className="card md:w-2/3 w-full">
         <div className="card-body">
           <text className="card-title font-montserrat text-4xl">Edit Profile</text>
           {/* Text input fields */}
@@ -122,7 +122,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
               </div>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
-                <input type="text" value={firstName} placeholder="Type here" className={`input input-bordered w-full border-2 ml-3`} style={{ borderColor: okb_colors.light_blue }} />
+                <input type="text" value={firstName} placeholder="Type here" className={`input input-bordered w-full border-2 ml-3`} style={{ borderColor: okb_colors.light_blue }} onChange={handleFirstNameChange} />
               </div>
             </div>
 
@@ -133,7 +133,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
               </label>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
-                <input type="text" value={lastName} placeholder="Type here" className="input input-bordered w-full border-2 ml-3" style={{ borderColor: okb_colors.light_blue }} />
+                <input type="text" value={lastName} onChange={handleLastNameChange} placeholder="Type here" className="input input-bordered w-full border-2 ml-3" style={{ borderColor: okb_colors.light_blue }} />
               </div>
             </div>
           </div>
@@ -141,7 +141,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
           {/* Profile Image */}
           <div tabIndex={0} className="form-control w-full flex flex-col items-start">
             <label className="label">
-              <span className="text-lg">Profile Image (Required)</span>
+              <span className="text-lg">Profile Image</span>
             </label>
             <div id="Frame542" className="flex items-center justify-center w-full gap-3">
               <svg xmlns="http://www.w3.org/2000/svg" width="4" height="204" viewBox="0 0 4 204" fill="none">
@@ -217,7 +217,8 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
               </svg>
               <div id="Frame412" className="flex flex-col items-center w-full gap-2.5">
                 <div id="Frame407" className="flex w-full justify-center align-center" >
-                  <textarea placeholder="Type here" className="input input-bordered w-full border-2 ml-3 pt-3" style={{ borderColor: okb_colors.light_blue, height: "140px" }}></textarea>
+                  {/* <input type="text" value={description} onChange={handleDescriptionChange} placeholder="Type here" className="input input-bordered w-full border-2 ml-3 pt-3" style={{ borderColor: okb_colors.light_blue, height: "140px" }} /> */}
+                  <textarea placeholder="Type here" value={description} onChange={(e) => handleDescriptionChange(e)} className="input input-bordered w-full border-2 ml-3 pt-3" style={{ borderColor: okb_colors.light_blue, height: "140px" }}></textarea>
                 </div>
               </div>
             </div>
@@ -265,7 +266,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
 
           {/* Gender */}
           <div className="dropdown dropdown-bottom">
-            <div tabIndex={0} className="form-control w-full">
+            <div tabIndex={0} className="form-control w-full cursor-pointer">
               <label className="label">
                 <span className="text-lg">Gender (Required)</span>
               </label>
@@ -273,7 +274,12 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
                 <Vertical_line className=""></Vertical_line>
                 <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
                   <div className="input-container w-full ml-3" >
-                    <input type="text" placeholder="Select" className="input input-bordered w-full border-2 pl-10 bg-white" style={{ backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)" }} value={gender} disabled />
+                    <div
+                      className="input input-bordered w-full border-2 pl-10 bg-white"
+                      style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
+                    >
+                      {gender === 0 ? "Male" : (gender === 1 ? "Female" : "Other")}
+                    </div>
                   </div>
                   <div id="chevron" className="flex flex-col absolute items-center justify-center align-center transform translate-x-8">
                     <Chevron_down ></Chevron_down>
@@ -282,16 +288,18 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
               </div>
             </div>
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
-              {genders.map((gender) => <label key={gender} className="label cursor-pointer">
-                <span className="label-text">{gender}</span>
-                <input
-                  type="radio"
-                  className="radio"
-                  name="gender"
-                  value={gender}
-                  onChange={() => handleGenderChange(gender)}
-                />
-              </label>)}
+              {genderList.map((value) => (
+                <label key={value} className="label cursor-pointer">
+                  <span className="label-text">{value}</span>
+                  <input
+                    type="radio"
+                    className="radio"
+                    name="gender"
+                    checked={gender === 0 ? value === "Male" : (gender === 1 ? value === "Female" : value === "Other")}
+                    onChange={() => handleGenderChange(value)}
+                  />
+                </label>
+              ))}
             </ul>
           </div>
 

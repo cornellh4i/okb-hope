@@ -1,73 +1,128 @@
-import { serverTimestamp } from "firebase/firestore";
-import React, { useState } from "react";
-import { db, auth } from '../../../firebase/firebase'
-import { collection, addDoc } from "firebase/firestore"
-import okb_colors from "@/colors";
+import React, { useState, useEffect } from "react";
+import { db, auth } from '../../../firebase/firebase';
+import { collection, addDoc, query, where, getDocs, serverTimestamp, doc, updateDoc } from "firebase/firestore";
+import { useRouter } from 'next/router';
 
 const MessageComposer: React.FC = () => {
-  const messagesRef = collection(db, "Chats");
+  const router = useRouter();
   const [message, setMessage] = useState("");
+  const [psychiatristId, setPsychiatristId] = useState('');
+  const [patientId, setPatientId] = useState('');
 
-  /** [handleMessageChange] sets the message to what is typed into the text area. */
+  useEffect(() => {
+    const { psych_id } = router.query;
+    if (psych_id) {
+      setPsychiatristId(psych_id as string);
+    }
+  }, [router.query]);
+
+  useEffect(() => {
+    const { patient_id } = router.query;
+    if (patient_id) {
+      setPatientId(patient_id as string);
+    }
+  }, [router.query]);
+
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
   };
 
-  /** [sendMessage] sends message to Firestore */
   const sendMessage = async (e: any) => {
     e.preventDefault();
 
     const uid = auth.currentUser?.uid;
     const photoURL = auth.currentUser?.photoURL;
+    const participants = (uid === patientId)
+      ? [patientId, psychiatristId]
+      : [psychiatristId, patientId];// Now includes the psychiatrist's ID
+    console.log(participants);
+    const messagesRef = collection(db, "Chats");
 
-    // Don't want to send a blank message
-    if (message !== "") {
+    if (message !== "" && psychiatristId && patientId) {
       try {
         const docRef = await addDoc(messagesRef, {
           text: message,
           createdAt: serverTimestamp(),
-          uid,
-          photoURL,
-          recipientId: uid // REPLACE recipientId value, depending on what chat is selected
+          uid: participants[0],
+          recipientId: participants[1],
+          photoURL
         });
         console.log("Document written with ID: ", docRef.id);
       } catch (e) {
         console.error("error adding document: ", e);
       }
+      // Attempt to find an existing conversation
+      const conversationsRef = collection(db, "Conversations");
+      const q = query(conversationsRef, where("patientId", "==", patientId), where("psychiatristId", "==", psychiatristId));
+      const querySnapshot = await getDocs(q);
 
-      // Clear text area after sending
+      if (querySnapshot.empty) {
+        // No existing conversation found, create a new one
+        try {
+          const docRef = await addDoc(conversationsRef, {
+            patientId: patientId,
+            psychiatristId: psychiatristId,
+            messagesUnreadByPatient: uid === patientId ? 0 : 1,
+            messagesUnreadByPsych: uid === patientId ? 1 : 0,
+            recentMessage: {
+              text: message,
+              createdAt: serverTimestamp(),
+              photoURL: auth.currentUser?.photoURL
+            }
+          });
+          console.log("New conversation created with ID: ", docRef.id);
+        } catch (error) {
+          console.error("Error creating new conversation: ", error);
+        }
+      } else {
+        // Existing conversation found, update the recent message
+        const conversationDocRef = doc(db, "Conversations", querySnapshot.docs[0].id);
+        try {
+          const conversationData = querySnapshot.docs[0].data();
+          const unreadByPatient = conversationData.messagesUnreadByPatient + (uid === patientId ? 0 : 1);
+          const unreadByPsych = conversationData.messagesUnreadByPsych + (uid === patientId ? 1 : 0);
+
+          await updateDoc(conversationDocRef, {
+            recentMessage: {
+              text: message,
+              createdAt: serverTimestamp(),
+              photoURL: auth.currentUser?.photoURL
+            },
+            messagesUnreadByPatient: unreadByPatient,
+            messagesUnreadByPsych: unreadByPsych
+          });
+          console.log("Conversation updated with new message");
+        } catch (error) {
+          console.error("Error updating conversation: ", error);
+        }
+      }
+
       setMessage('');
     }
-
   };
 
-  /** [handleKeyDown] sends a message when the Enter key is pressed. */
   const handleKeyDown = (e) => {
-    // Send message if Enter key was pressed but not shift+Enter.
-    if (e.key === "Enter" && e.shiftKey === false) {
+    if (e.key === "Enter" && !e.shiftKey) {
       sendMessage(e);
     }
   };
 
-  const maxRows = 2;
-
   return (
-    <div className="message-composer bg-white py-2 rounded-b-md ">
-      <div className={`flex py-2 pl-6 pr-2 items-center rounded-[46px] border border-solid border-[${okb_colors.dark_gray}] mx-4`}>
-        {/* Input text area */}
+    <div className="message-composer bg-white py-2 rounded-b-md border-solid border-2 border-gray-400">
+      <div className="flex items-center rounded-2xl border-solid border-2 border-gray-400 pl-2 mx-4">
         <textarea
           value={message}
           onChange={handleMessageChange}
           onKeyDown={handleKeyDown}
           placeholder="Send a Message"
-          className={`w-full italic resize-none text-[12px] font-normal text-[${okb_colors.med_gray}]`}
-        />
+          className="w-full h-full overflow-scroll"
+        ></textarea>
 
-        {/* Button to send a message */}
         <button
           type="button"
           onClick={sendMessage}
-          className="flex py-1 px-2 items-start bg-okb-blue rounded-[20px] text-[12px] text-white font-bold">Send</button>
+          className="bg-gray-400 rounded-full text-white italic font-bold px-2 mx-4 my-2"
+        >Send</button>
       </div>
     </div>
   );

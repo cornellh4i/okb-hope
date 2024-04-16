@@ -1,33 +1,43 @@
 import { serverTimestamp } from "firebase/firestore";
-import React, { useState } from "react";
-import { db, auth } from '../../../firebase/firebase'
-import { collection, addDoc } from "firebase/firestore"
+import React, { useState, useEffect } from "react";
+import { db, auth } from '../../../firebase/firebase';
+import { collection, addDoc } from "firebase/firestore";
+import { useRouter } from 'next/router';
 
 const MessageComposer: React.FC = () => {
+  const router = useRouter();
   const messagesRef = collection(db, "conversations");
   const [message, setMessage] = useState("");
+  const [psychiatristId, setPsychiatristId] = useState('');
 
-  /** [handleMessageChange] sets the message to what is typed into the text area. */
+  useEffect(() => {
+    const { psych_id } = router.query;
+    if (psych_id) {
+      // Assuming psych_id is the psychiatrist's ID you want to message
+      setPsychiatristId(psych_id as string);
+      console.log(psych_id);
+    }
+  }, [router.query]);
+
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
   };
 
-  /** [sendMessage] sends message to Firestore */
   const sendMessage = async (e: any) => {
     e.preventDefault();
 
     const uid = auth.currentUser?.uid;
     const photoURL = auth.currentUser?.photoURL;
-    const participants = [uid, uid]
-    // TOOD: change second one to psychiatrist uid
+    const participants = [uid, psychiatristId]; // Now includes the psychiatrist's ID
+    console.log(participants);
 
-    // Don't want to send a blank message
-    if (message !== "") {
+    if (message !== "" && psychiatristId) {
       try {
         const docRef = await addDoc(messagesRef, {
           text: message,
           createdAt: serverTimestamp(),
-          participants,
+          uid: participants[0],
+          recipientId: participants[1],
           photoURL
         });
         console.log("Document written with ID: ", docRef.id);
@@ -35,16 +45,12 @@ const MessageComposer: React.FC = () => {
         console.error("error adding document: ", e);
       }
 
-      // Clear text area after sending
       setMessage('');
     }
-
   };
 
-  /** [handleKeyDown] sends a message when the Enter key is pressed. */
   const handleKeyDown = (e) => {
-    // Send message if Enter key was pressed but not shift+Enter.
-    if (e.key === "Enter" && e.shiftKey === false) {
+    if (e.key === "Enter" && !e.shiftKey) {
       sendMessage(e);
     }
   };
@@ -52,7 +58,6 @@ const MessageComposer: React.FC = () => {
   return (
     <div className="message-composer bg-white py-2 rounded-b-md border-solid border-2 border-gray-400">
       <div className="flex items-center rounded-2xl border-solid border-2 border-gray-400 pl-2 mx-4">
-        {/* Input text area */}
         <textarea
           value={message}
           onChange={handleMessageChange}
@@ -61,7 +66,6 @@ const MessageComposer: React.FC = () => {
           className="w-full h-full overflow-scroll"
         ></textarea>
 
-        {/* Button to send a message */}
         <button
           type="button"
           onClick={sendMessage}

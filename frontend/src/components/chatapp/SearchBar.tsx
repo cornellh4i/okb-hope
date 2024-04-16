@@ -23,7 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
   return (
     <div className={`search-bar bg-[${okb_colors.white}]`}>
-      <div className={`flex py-2 px-4 items-center gap-4 shrink-0 rounded-lg justify-between search-form border-solid border-[1px] border-[${okb_colors.dark_gray}] mx-4 my-5 text-lg font-semibold`}>
+      <div className={`flex py-2 md:px-4 px-2 items-center md:gap-4 gap-2 shrink-0 rounded-lg justify-between search-form border-solid border-[1px] border-[${okb_colors.dark_gray}] md:mx-4 my-5 text-lg font-semibold`}>
         <button onClick={() => onSearch(searchTerm)}>{search_icon}</button>
         <input
           className={`text-[${okb_colors.med_gray}] italic text-xs font-normal outline-none w-full`}

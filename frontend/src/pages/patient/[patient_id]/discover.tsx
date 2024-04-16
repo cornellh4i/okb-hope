@@ -4,7 +4,7 @@ import { IAvailability, IPsychiatrist } from '@/schema';
 import colors from "@/colors";
 import { collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { fetchAllProfessionals, fetchAvailability } from '../../../../firebase/fetchData';
+import { fetchUnreportedProfessionals, fetchAvailability } from '../../../../firebase/fetchData';
 import SearchBar from '@/components/SearchBar';
 import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
 import { useAuth } from '../../../../contexts/AuthContext';
@@ -23,9 +23,7 @@ const DiscoverPage: React.FC = () => {
   const router = useRouter();
   const { user } = useAuth();
   const { userId } = router.query;
-  // console.log(userId)
-  // console.log(user?.uid)
-
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState("");
   const [filters, setFilters] = useState([]);
@@ -47,7 +45,8 @@ const DiscoverPage: React.FC = () => {
   const [allLanguages, setAllLanguages] = useState(false);
   const [male, setMale] = useState(false);
   const [female, setFemale] = useState(false);
-  const [bothGenders, setBothGenders] = useState(false);
+  const [otherGender, setOtherGender] = useState(false);
+  const [allGenders, setAllGenders] = useState(false);
 
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
   const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
@@ -56,14 +55,16 @@ const DiscoverPage: React.FC = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const fetchedPsychiatrists: IPsychiatrist[] = await fetchAllProfessionals();
-        setPsychiatrists(fetchedPsychiatrists);
+        if (user) {
+          const fetchedPsychiatrists: IPsychiatrist[] = await fetchUnreportedProfessionals(user.uid);
+          setPsychiatrists(fetchedPsychiatrists);
+        }
       } catch (err: any) {
         console.error(err.message);
       }
     }
     fetchData();
-  }, []);
+  }, [router]);
 
   // Processes all psychiatrists availabilities to a dictionary mapping each psychiatrist's uid to their availabilities in the form of the days of the week
   useEffect(() => {
@@ -180,8 +181,8 @@ const DiscoverPage: React.FC = () => {
   const searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
 
   return (
-    <div className={'px-24 pt-9 pb-14'}>
-      <div className='pb-8'>
+    <div className={'flex flex-col px-23 pt-9 pb-14'}>
+      <div className='flex justify-start justify-center pb-8'>
         <SearchBar
           searchTerm={searchTerm} setSearchTerm={setSearchTerm}
           submittedSearchTerm={submittedSearchTerm} setSubmittedSearchTerm={setSubmittedSearchTerm}
@@ -204,10 +205,11 @@ const DiscoverPage: React.FC = () => {
           allLanguages={allLanguages} setAllLanguages={setAllLanguages}
           male={male} setMale={setMale}
           female={female} setFemale={setFemale}
-          bothGenders={bothGenders} setBothGenders={setBothGenders} />
+          otherGender={otherGender} setOtherGender={setOtherGender}
+          allGenders={allGenders} setAllGenders={setAllGenders} />
       </div>
       {searchFilterResults.length > 0 ? (
-        <PsychiatristList results={searchFilterResults} />
+        <PsychiatristList results={searchFilterResults} buttonType={'discover'} />
       ) : (
         <div className="text-center my-10">
           <p className="mb-4">No Psychiatrists found based on your filters.</p>

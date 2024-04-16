@@ -3,7 +3,6 @@ import PositionLanguageQuestionnaire from "./PositionLanguageQuestionnaire";
 import SelectionQuestionnaire from "./SelectionQuestionnaire";
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import Link from "next/link";
 import { useRouter } from 'next/router';
 import { Gender, IPatient, IUser } from "@/schema";
 import ProgressBar0 from '../../assets/progressbar0.svg';
@@ -11,7 +10,6 @@ import ProgressBar33 from '../../assets/progressbar33.svg';
 import ProgressBar67 from '../../assets/progressbar67.svg';
 import { db, signUpWithGoogle, logout } from "../../../firebase/firebase";
 import { useAuth } from "../../../contexts/AuthContext";
-import { collection, getDocs, query, where } from "firebase/firestore";
 
 const PsychQuestionnaire = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -29,44 +27,6 @@ const PsychQuestionnaire = () => {
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
     const router = useRouter();
     const { user } = useAuth();
-
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             // Check if user is available and navigate to dashboard if so
-    //             if (user) {
-    //                 router.push(`/${user.userType}/${user.uid}/psych_dashboard`);
-    //                 // const q = query(
-    //                 //     collection(db, "users"),
-    //                 //     where("uid", "==", user?.uid)
-    //                 // );
-    //                 // const response = await getDocs(q);
-    //                 // if (!response.empty) {
-    //                 //     const doc = response.docs[0];
-    //                 //     const docId = doc.id;
-    //                 //     const docData = doc.data();
-    //                 //     const userData = docData as IUser;
-    //                 //     console.log("userData.userType:", userData.userType);
-    //                 //     console.log("userData.uid:", userData.uid);
-    //                 //     router.push(`/${userData.userType}/${userData.uid}/psych_dashboard`);
-    //                 // } else {
-    //                 //     console.error("No document found");
-    //                 // }
-    //             }
-    //         } catch (error) {
-    //             console.error("Error fetching user data:", error);
-    //         }
-    //     };
-
-    //     // Check if user is available before fetching data
-    //     if (user) {
-    //         fetchData();
-    //     }
-    // }, [user]);
-
-
-
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
@@ -200,11 +160,9 @@ const PsychQuestionnaire = () => {
                     "",
                     "",
                     [],
-                    gender,
                     [],
-                );
-                router.push(`/${user?.userType}/${user?.uid}/psych_dashboard`);
-                // setDocumentAdded(true);
+                )
+                router.push('/loading?init=true');
             } catch (error) {
                 console.error('Error signing in:', error);
                 logout();
