@@ -51,7 +51,8 @@
     "sheetjs-style": "^0.15.8",
     "styled-components": "^5.3.9",
     "typescript": "4.9.5",
-    "webpack": "^5.76.3"
+    "webpack": "^5.76.3",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
@@ -61,6 +62,7 @@
     "@types/d3": "^7.4.3",
     "@types/react": "^18.0.28",
     "@types/styled-components": "^5.1.26",
+    "@types/xlsx": "^0.0.36",
     "autoprefixer": "^10.4.14",
     "babel-loader": "^9.1.2",
     "cypress": "^12.8.1",
