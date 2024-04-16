@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 type DropDownProps = {
   items: string[];
   showDropDown: boolean;
-  toggleDropDown: Function;
-  itemSelection: Function;
-  exportToExcel: Function;
+  toggleDropDown;
+  itemSelection;
+  exportToExcel
 };
 
 const DropDown: React.FC<DropDownProps> = ({

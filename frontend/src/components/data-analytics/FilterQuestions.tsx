@@ -5,7 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Vertical_line from "@/assets/vertical_line_data.svg";
 
-const Questions = ({ setGlobalQuestionType }: { setGlobalQuestionType: Function }): JSX.Element => {
+const Questions = ({ setGlobalQuestionType }: { setGlobalQuestionType }): JSX.Element => {
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<string>("");
   const questions = () => {

@@ -7,16 +7,16 @@ interface PatientListProps {
   ageRanges: string[];
   genders: number[];
   languages: string[];
-  setGlobalMen: Function;
-  setGlobalWomen: Function;
-  setGlobalOther: Function;
+  setGlobalMen;
+  setGlobalWomen;
+  setGlobalOther
 }
 
 const PatientList: React.FC<PatientListProps> = ({ questionType, ageRanges, genders, languages, setGlobalMen, setGlobalWomen, setGlobalOther }) => {
   const [patients, setPatients] = useState<IPatient[]>([]);
-  let men: number[] = [];
-  let women: number[] = [];
-  let other: number[] = [];
+  const men: number[] = [];
+  const women: number[] = [];
+  const other: number[] = [];
 
   const allConcerns: string[] = [
     "My Relationships",

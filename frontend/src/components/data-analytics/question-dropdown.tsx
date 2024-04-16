@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 type DropDownProps = {
   items: string[];
   showDropDown: boolean;
-  toggleDropDown: Function;
-  itemSelection: Function;
+  toggleDropDown;
+  itemSelection
 };
 
 const QuestionDropDown: React.FC<DropDownProps> = ({
