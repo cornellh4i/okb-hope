@@ -110,7 +110,7 @@ export const createTest = async () => {
         firstName: "David",
         lastName: "Rodriguez",
         email: "fakeemail@.com",
-        concerns: "everything",
+        concerns: ["everything"],
         previousTherapyExperience: "None",
         lastTherapyTimeframe: "Months",
         ageRange: "18-22", //go on the figma and in the login profile it shows ranges not age
@@ -187,7 +187,7 @@ export const createTest = async () => {
         firstName: "David",
         lastName: "Rodriguez",
         email: "fakeemail@.com",
-        concerns: "everything",
+        concerns: ["everything"],
         previousTherapyExperience: "None",
         lastTherapyTimeframe: "Months",
         ageRange: "18-22",
