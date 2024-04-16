@@ -26,7 +26,7 @@ export interface IPatient {
     firstName: string;
     lastName: string;
     email: string;
-    concerns: string;
+    concerns: string[];
     previousTherapyExperience: string;
     lastTherapyTimeframe: string;
     ageRange: string;
