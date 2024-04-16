@@ -4,6 +4,7 @@ import Dashboard from '@/components/dashboard/Dashboard';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import PsychiatristDashboard from '@/components/psychDashboard/PsychiatristDashboard';
+import FilterUser from '@/components/filter/FilterUser';
 
 const App = () => {
   const { user } = useAuth();
@@ -44,6 +45,7 @@ const App = () => {
       </Head>
       {user && user.userType == "patient" && <Dashboard />}
       {user && user.userType == "psychiatrist" && <PsychiatristDashboard />}
+      {user && user.userType == "admin" && <FilterUser />}
     </>
   );
 };

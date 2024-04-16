@@ -33,8 +33,8 @@ const Navbar = () => {
                   <div className="text-[18px] text-[#195BA5]">My Dashboard</div>
                 </Link>
               </li>
-              : <div></div>
-            : <div></div>}
+              : <></>
+            : <></>}
         </ul>
       </div>
 
@@ -76,12 +76,12 @@ const Navbar = () => {
           {user && user.userType == "admin" ?
             <>
               <li className={`${router.pathname === '/database' ? 'underline-offset-1 custom-active' : ''}`}>
-                <Link href={`/${user?.userType}/${user?.uid}/database`} className="flex w-full justify-end">
+                <Link href={`/admin/${user?.uid}/database`} className="flex w-full justify-end">
                   <div className="text-[18px] text-[#195BA5]">Database</div>
                 </Link>
               </li><li className={`${router.pathname === '/analytics' ? 'underline-offset-1 custom-active' : ''}`}>
                 {/* Update this href to go to the analytics page */}
-                <Link href="https://www.wohohiame.com/" className="flex w-full justify-end">
+                <Link href={`/admin/${user?.uid}/data-analytics`} className="flex w-full justify-end">
                   <div className="text-[18px] text-[#195BA5]">Analytics</div>
                 </Link>
               </li>
