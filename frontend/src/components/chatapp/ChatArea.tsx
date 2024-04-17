@@ -36,9 +36,6 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   const handleDelete = async () => {
     console.log(patientId)
 
-    // Logic to delete the message thread
-    // This logic should be implemented based on your application's requirements
-    // Example:
     try {
       const conversationQuery = query(collection(db, "Conversations"),
         where("patientId", "==", patientId),
@@ -180,7 +177,6 @@ const ChatArea = () => {
           setDisplayName(`${professionalData.firstName} ${professionalData.lastName}`);
         } else {
           setRole('patient');
-          // Fetch patient data here if needed
         }
       } catch (error) {
         console.error('Error fetching data:', error);
