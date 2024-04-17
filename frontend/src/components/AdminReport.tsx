@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs, query, doc, updateDoc} from 'firebase/firestore';
+import { collection, getDocs, query, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import { IReport } from '@/schema';
 import ChevronDown from '@/assets/chevron_down';
@@ -50,26 +50,26 @@ const AdminReport = () => {
   const [spamReports, setSpamReports] = useState<Boolean>(false);
   const [showPopup, setShowPopup] = useState<Boolean>(false);
 
-// Define fetchReports outside of useEffect so it can be used elsewhere
-const fetchReports = async () => {
-  const q = query(collection(db, 'reports'));
-  const querySnapshot = await getDocs(q);
-  const fetchedReports = querySnapshot.docs.map(doc => {
-    const data = doc.data();
-    const submittedAtDate = data.submittedAt.toDate();
-    return {
-      ...data,
-      report_id: doc.id,
-      submittedAt: submittedAtDate
-    } as IReport;
-  });
-  setReports(fetchedReports);
-};
+  // Define fetchReports outside of useEffect so it can be used elsewhere
+  const fetchReports = async () => {
+    const q = query(collection(db, 'reports'));
+    const querySnapshot = await getDocs(q);
+    const fetchedReports = querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      const submittedAtDate = data.submittedAt.toDate();
+      return {
+        ...data,
+        report_id: doc.id,
+        submittedAt: submittedAtDate
+      } as IReport;
+    });
+    setReports(fetchedReports);
+  };
 
-// Call fetchReports inside useEffect
-useEffect(() => {
-  fetchReports();
-}, []);
+  // Call fetchReports inside useEffect
+  useEffect(() => {
+    fetchReports();
+  }, []);
 
 
   const toggleUnreadReports = () => {
@@ -140,13 +140,13 @@ useEffect(() => {
     return (
 
       <div>
-      {bool ? reports.filter(report => report.priority === selectedPriority).map((report, index) => (
-        <div
-          key={report.report_id}
-          className="report-card"
-          style={{ cursor: 'pointer' }}>
-          <ReportCard key={report.report_id} report={report} onReportClick={handleOpenPopup} />
-        </div>
+        {bool ? reports.filter(report => report.priority === selectedPriority).map((report, index) => (
+          <div
+            key={report.report_id}
+            className="report-card"
+            style={{ cursor: 'pointer' }}>
+            <ReportCard key={report.report_id} report={report} onReportClick={handleOpenPopup} />
+          </div>
         )) : null}
       </div>
     )
@@ -178,7 +178,7 @@ useEffect(() => {
       display: 'flex',
       justifyContent: 'flex-end', // Aligns the buttons to the right
       gap: '8px'
-  };
+    };
 
 
 
@@ -197,20 +197,20 @@ useEffect(() => {
             </div>
             <div style={buttonsContainerStyle}>
 
-            <div>
-            <select
-          value={selectedReport?.priority || 'Set Priority'}
-          onChange={(e) => updateReportPriority(e.target.value)}
-        >
-          <option disabled>Set Priority</option>
-          {priorities.map((priority) => (
-            <option key={priority} value={priority}>
-              {priority !== "Spam" ? priority + " Priority" : priority}
-            </option>
-          ))}
-        </select>
+              <div>
+                <select
+                  value={selectedReport?.priority || 'Set Priority'}
+                  onChange={(e) => updateReportPriority(e.target.value)}
+                >
+                  <option disabled>Set Priority</option>
+                  {priorities.map((priority) => (
+                    <option key={priority} value={priority}>
+                      {priority !== "Spam" ? priority + " Priority" : priority}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-      </div>
           </div>
         </div>
       </div>
@@ -218,70 +218,77 @@ useEffect(() => {
   };
 
   return (
-    <div className="admin-reports-container flex flex-col" style={{ padding: '50px' }}>
+    <div className="admin-reports-container flex flex-col text-21 font-bold mb-1">
       {/* Header and column categories bar */}
-      <div style={{ width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 24, display: 'inline-flex' }}>
-        <div style={{ alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', display: 'inline-flex' }}>
-          <div style={{ flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 8, display: 'inline-flex' }}>
-            <div style={{ color: '#9A9A9A', fontSize: 24, fontFamily: 'Montserrat', fontWeight: '600', wordWrap: 'break-word' }}>Clients </div>
-            <div style={{ width: 146, height: 0, border: '4px #9A9A9A solid' }}></div>
-          </div>
-          <div style={{ flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 8, display: 'inline-flex' }}>
-            <div style={{ color: '#195BA5', fontSize: 24, fontFamily: 'Montserrat', fontWeight: '600', wordWrap: 'break-word' }}>Psychiatrists </div>
-            <div style={{ width: 207, height: 0, border: '4px #195BA5 solid' }}></div>
-          </div>
-        </div>
-        <div style={{ alignSelf: 'stretch', height: 70, padding: 10, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 10, display: 'flex' }}>
-          <div style={{ alignSelf: 'stretch', paddingLeft: 48, paddingRight: 48, paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
-            <div style={{ color: 'black', fontSize: 16, fontFamily: 'Montserrat', fontWeight: '700', wordWrap: 'break-word' }}>Title</div>
-            <div style={{ color: 'black', fontSize: 16, fontFamily: 'Montserrat', fontWeight: '700', wordWrap: 'break-word' }}>Subject</div>
-            <div style={{ color: 'black', fontSize: 16, fontFamily: 'Montserrat', fontWeight: '700', wordWrap: 'break-word' }}>Submitted By</div>
-            <div style={{ color: 'black', fontSize: 16, fontFamily: 'Montserrat', fontWeight: '700', wordWrap: 'break-word' }}>Time Submitted</div>
-          </div>
-          <div style={{ alignSelf: 'stretch', height: 0, border: '3px black solid' }}></div>
-        </div>
-      </div>
-      <div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div className="text-black text-2xl font-semibold font-['Montserrat']">Unread Reports</div>
-          <button onClick={toggleUnreadReports}>
-            {unreadReports ? ChevronDown : ChevronUp}
+      <div style={{ width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 5, display: 'inline-flex' }}>
+        <div className="mt-5 mb-5 ml-36">
+          <button style={{ fontWeight: 400 }} className="tab relative text-slate-300 border-b-2 border-slate-300 text-3xl">
+            <span className="relative z-10">Clients</span>
+          </button>
+          <button style={{ fontWeight: 400 }} className="tab tab-bordered relative text-sky-700 border-b-2 border-sky-700 text-3xl">
+            <span className="relative z-10">Psychiatrists</span>
           </button>
         </div>
 
+        <div className='flex items-center mx-36' style={{ alignSelf: 'stretch', height: 70, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 10, display: 'flex' }}>
+          <div className=' flex justify-between items-center w-full' style={{ alignSelf: 'stretch', paddingLeft: 48, paddingRight: 48, paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
+            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Title</div>
+            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Subject</div>
+            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Submitted By</div>
+            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Time Submitted</div>
+          </div>
+          <div style={{ alignSelf: 'stretch', height: 0, border: '1.5px black solid' }}></div>
+        </div>
+      </div>
+
+      <div>
+        <div className='flex items-center mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
+          <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Unread Reports</div>
+          <button onClick={toggleUnreadReports} style={{ marginLeft: '5px' }}>
+            {unreadReports ? ChevronDown : ChevronUp}
+          </button>
+        </div>
 
         {/* Report list container with overflow */}
         {returnReportsByPriority("")}
         {ReportDetailsPopup()}
 
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div className="text-black text-2xl font-semibold font-['Montserrat']">High Priority</div>
-          <button onClick={toggleHighPriorityReports}>
+        <div className='flex items-center mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
+          <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>High Priority</div>
+          <button onClick={toggleHighPriorityReports} style={{ marginLeft: '5px' }}>
             {highPriorityReports ? ChevronDown : ChevronUp}
           </button>
         </div>
+
         {returnReportsByPriority("High")}
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div className="text-black text-2xl font-semibold font-['Montserrat']">Medium Priority</div>
-          <button onClick={toggleMediumPriorityReports}>
+
+        <div className='flex items-center mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
+          <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Medium Priority</div>
+          <button onClick={toggleMediumPriorityReports} style={{ marginLeft: '5px' }}>
             {mediumPrioityReports ? ChevronDown : ChevronUp}
           </button>
         </div>
+
         {returnReportsByPriority("Medium")}
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div className="text-black text-2xl font-semibold font-['Montserrat']">Low Priority</div>
-          <button onClick={toggleLowPriorityReports}>
+
+        <div className='flex items-center mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
+          <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Low Priority</div>
+          <button onClick={toggleLowPriorityReports} style={{ marginLeft: '5px' }}>
             {lowPriorityReports ? ChevronDown : ChevronUp}
           </button>
         </div>
+
         {returnReportsByPriority("Low")}
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div className="text-black text-2xl font-semibold font-['Montserrat']">Spam</div>
-          <button onClick={toggleSpamReports}>
+
+        <div className='flex items-center mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
+          <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Spam</div>
+          <button onClick={toggleSpamReports} style={{ marginLeft: '5px' }}>
             {spamReports ? ChevronDown : ChevronUp}
           </button>
         </div>
+
         {returnReportsByPriority("Spam")}
+
       </div>
     </div>
   );
