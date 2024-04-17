@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs, query } from 'firebase/firestore';
+import { collection, getDocs, query, doc, updateDoc} from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import { IReport } from '@/schema';
 import ChevronDown from '@/assets/chevron_down';
 import ChevronUp from '@/assets/chevron_up';
 import Close from '@/assets/close.svg';
 import ReportPopup from './ReportPopup';
+import Cancel from "@/assets/cancel.svg";
+import Submit from "@/assets/submit.svg";
 
 const ReportCard = ({ report, onReportClick }) => {
   const formattedDate = report.submittedAt?.toDate
@@ -48,24 +50,26 @@ const AdminReport = () => {
   const [spamReports, setSpamReports] = useState<Boolean>(false);
   const [showPopup, setShowPopup] = useState<Boolean>(false);
 
-  useEffect(() => {
-    const fetchReports = async () => {
-      const q = query(collection(db, 'reports'));
-      const querySnapshot = await getDocs(q);
-      const fetchedReports = querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        const submittedAtDate = data.submittedAt.toDate();
-        return {
-          ...data,
-          report_id: doc.id,
-          submittedAt: submittedAtDate
-        } as IReport;
-      });
-      setReports(fetchedReports);
-    };
+// Define fetchReports outside of useEffect so it can be used elsewhere
+const fetchReports = async () => {
+  const q = query(collection(db, 'reports'));
+  const querySnapshot = await getDocs(q);
+  const fetchedReports = querySnapshot.docs.map(doc => {
+    const data = doc.data();
+    const submittedAtDate = data.submittedAt.toDate();
+    return {
+      ...data,
+      report_id: doc.id,
+      submittedAt: submittedAtDate
+    } as IReport;
+  });
+  setReports(fetchedReports);
+};
 
-    fetchReports();
-  }, []);
+// Call fetchReports inside useEffect
+useEffect(() => {
+  fetchReports();
+}, []);
 
 
   const toggleUnreadReports = () => {
@@ -100,10 +104,60 @@ const AdminReport = () => {
     setSelectedReport(null);
   };
 
+  const updateReportPriority = async (newPriority) => {
+    if (selectedReport != null) {
+      const reportRef = doc(db, 'reports', selectedReport.report_id);
+      try {
+        await updateDoc(reportRef, { priority: newPriority });
+        // Update the local state to reflect the change
+        setSelectedReport({ ...selectedReport, priority: newPriority });
+        // Refetch reports to refresh the list
+        await fetchReports();
+      } catch (error) {
+        console.error("Error updating priority: ", error);
+      }
+    }
+  };
+
+  const returnReportsByPriority = (selectedPriority) => {
+    let bool = false;
+    if (selectedPriority == "") {
+      bool = unreadReports.valueOf()
+    }
+    else if (selectedPriority == "High") {
+      bool = highPriorityReports.valueOf()
+    }
+    else if (selectedPriority == "Medium") {
+      bool = mediumPrioityReports.valueOf()
+    }
+    else if (selectedPriority == "Low") {
+      bool = lowPriorityReports.valueOf()
+    }
+    else if (selectedPriority == "Spam") {
+      bool = spamReports.valueOf()
+    }
+
+    return (
+
+      <div>
+      {bool ? reports.filter(report => report.priority === selectedPriority).map((report, index) => (
+        <div
+          key={report.report_id}
+          className="report-card"
+          style={{ cursor: 'pointer' }}>
+          <ReportCard key={report.report_id} report={report} onReportClick={handleOpenPopup} />
+        </div>
+        )) : null}
+      </div>
+    )
+  }
+
   const ReportDetailsPopup = () => {
     if (!showPopup) return null;
 
     const formattedDate = "Unknown Date"
+
+    const priorities = ['High', 'Medium', 'Low', 'Spam'];
 
     const popupStyle: React.CSSProperties = {
       backgroundColor: '#fff',
@@ -120,19 +174,43 @@ const AdminReport = () => {
       top: '20%'
     };
 
+    const buttonsContainerStyle: React.CSSProperties = {
+      display: 'flex',
+      justifyContent: 'flex-end', // Aligns the buttons to the right
+      gap: '8px'
+  };
+
+
+
     return (
       <div>
         <div className="modal modal-open">
           <div className="modal-box" style={{
             position: 'relative', display: 'flex', flexDirection: 'column', height: '50%', gap: 12, padding: 24, alignItems: 'center'
           }}>
-            <Close className="modal-action" onClick={() => handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
+            <Close className="modal-action" onClick={handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
             <div className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 15 }}>Report Information</div>
             <div className="space-y-4" style={{
               width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex'
             }}>
               <ReportPopup key={selectedReport?.report_id} report={selectedReport} />
             </div>
+            <div style={buttonsContainerStyle}>
+
+            <div>
+            <select
+          value={selectedReport?.priority || 'Set Priority'}
+          onChange={(e) => updateReportPriority(e.target.value)}
+        >
+          <option disabled>Set Priority</option>
+          {priorities.map((priority) => (
+            <option key={priority} value={priority}>
+              {priority !== "Spam" ? priority + " Priority" : priority}
+            </option>
+          ))}
+        </select>
+            </div>
+      </div>
           </div>
         </div>
       </div>
@@ -173,14 +251,7 @@ const AdminReport = () => {
 
 
         {/* Report list container with overflow */}
-        {unreadReports ? reports.map((report, index) => (
-          <div
-            key={report.report_id}
-            className="report-card"
-            style={{ cursor: 'pointer' }}>
-            <ReportCard key={report.report_id} report={report} onReportClick={handleOpenPopup} />
-          </div>
-        )) : null}
+        {returnReportsByPriority("")}
         {ReportDetailsPopup()}
 
         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -189,24 +260,28 @@ const AdminReport = () => {
             {highPriorityReports ? ChevronDown : ChevronUp}
           </button>
         </div>
+        {returnReportsByPriority("High")}
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div className="text-black text-2xl font-semibold font-['Montserrat']">Medium Priority</div>
           <button onClick={toggleMediumPriorityReports}>
             {mediumPrioityReports ? ChevronDown : ChevronUp}
           </button>
         </div>
+        {returnReportsByPriority("Medium")}
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div className="text-black text-2xl font-semibold font-['Montserrat']">Low Priority</div>
           <button onClick={toggleLowPriorityReports}>
             {lowPriorityReports ? ChevronDown : ChevronUp}
           </button>
         </div>
+        {returnReportsByPriority("Low")}
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div className="text-black text-2xl font-semibold font-['Montserrat']">Spam</div>
           <button onClick={toggleSpamReports}>
             {spamReports ? ChevronDown : ChevronUp}
           </button>
         </div>
+        {returnReportsByPriority("Spam")}
       </div>
     </div>
   );

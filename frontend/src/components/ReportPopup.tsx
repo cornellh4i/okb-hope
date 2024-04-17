@@ -30,7 +30,7 @@ const ReportPopup = ({ report }) => {
   return (
     <div style={cardStyle} className="card bg-base-100 shadow-xl mb-4">
       <div>
-        <p style={{ fontSize: 14 }}>The following report for Dr. Gloria Shi was submitted on: {formattedDate}</p>
+        <p style={{ fontSize: 14 }}>The following report for {report.psych_name} was submitted on: {formattedDate}</p>
       </div>
       <p style={{ fontSize: 14 }}>Report Log</p>
       <div>

@@ -64,7 +64,9 @@ export interface IReport {
     description: string;
     patient_id: string;
     psych_id: string;
-    report_id: string
+    psych_name: string;
+    report_id: string;
     submittedAt: Timestamp;
+    priority: string;
 }
 

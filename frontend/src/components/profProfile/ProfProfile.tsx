@@ -247,12 +247,14 @@ const ProfProfile = () => {
         // Make sure a user and a professional are defined before submitting
         if (user && professional) {
             try {
-                // Adjusted to match the Firebase collection's key IDs
+               
                 const reportData = {
                     description: reportText,
                     patient_id: user.uid, // changed from patientID to patient_id
                     psych_id: professional.uid, // changed from psychiatristID to psych_id
-                    submittedAt: Timestamp.now() // Firebase automatically generates a unique ID for each document, so 'report_id' is not manually set here
+                    psych_name: professional.firstName + " " + professional.lastName,
+                    submittedAt: Timestamp.now(), // Firebase automatically generates a unique ID for each document, so 'report_id' is not manually set here
+                    priority: ""
                 };
 
                 // Add the report to the "reports" collection in Firestore
