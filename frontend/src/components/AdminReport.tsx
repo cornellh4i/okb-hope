@@ -155,11 +155,9 @@ const AdminReport = () => {
   const ReportDetailsPopup = () => {
     if (!showPopup) return null;
 
-    const formattedDate = "Unknown Date"
-
     const priorities = ['High', 'Medium', 'Low', 'Spam'];
 
-    const popupStyle: React.CSSProperties = {
+    const popupStyle = {
       backgroundColor: '#fff',
       padding: '20px',
       borderRadius: '10px',
@@ -174,20 +172,35 @@ const AdminReport = () => {
       top: '20%'
     };
 
-    const buttonsContainerStyle: React.CSSProperties = {
+    const buttonsContainerStyle = {
       display: 'flex',
-      justifyContent: 'flex-end', // Aligns the buttons to the right
-      gap: '8px'
+      justifyContent: 'center', // Aligns child elements (buttons) in the center
+      gap: '8px',
+      marginTop: '20px' // Adds some space between the buttons and other elements above
     };
 
+    const dropdownStyle = {
+      backgroundColor: '#007BFF',
+      color: 'white',
+      padding: '8px',
+      borderRadius: '4px',
+      border: 'none',
+      cursor: 'pointer',
+    };
 
+    const cancelButtonStyle = {
+      backgroundColor: 'white',
+      color: 'black',
+      padding: '8px',
+      borderRadius: '4px',
+      border: '2px solid #007BFF',
+      cursor: 'pointer',
+    };
 
     return (
       <div>
         <div className="modal modal-open">
-          <div className="modal-box" style={{
-            position: 'relative', display: 'flex', flexDirection: 'column', height: '50%', gap: 12, padding: 24, alignItems: 'center'
-          }}>
+          <div className="modal-box">
             <Close className="modal-action" onClick={handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
             <div className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 15 }}>Report Information</div>
             <div className="space-y-4" style={{
@@ -196,26 +209,33 @@ const AdminReport = () => {
               <ReportPopup key={selectedReport?.report_id} report={selectedReport} />
             </div>
             <div style={buttonsContainerStyle}>
-
-              <div>
-                <select
-                  value={selectedReport?.priority || 'Set Priority'}
-                  onChange={(e) => updateReportPriority(e.target.value)}
-                >
-                  <option disabled>Set Priority</option>
-                  {priorities.map((priority) => (
-                    <option key={priority} value={priority}>
-                      {priority !== "Spam" ? priority + " Priority" : priority}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <button
+                style={cancelButtonStyle}
+                onClick={handleClosePopup}
+              >
+                Cancel
+              </button>
+              <select
+                style={dropdownStyle}
+                value={selectedReport?.priority || 'Assign Priority'}
+                onChange={(e) => updateReportPriority(e.target.value)}
+              >
+                <option disabled>Assign Priority</option>
+                {priorities.map((priority) => (
+                  <option key={priority} value={priority}>
+                    {priority !== "Spam" ? priority + " Priority" : priority}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
       </div>
     );
   };
+
+
+
 
   return (
     <div className="admin-reports-container flex flex-col text-21 font-bold mb-1">
