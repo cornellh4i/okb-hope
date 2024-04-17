@@ -73,32 +73,32 @@ const AgeLanguageQuestionnaire = ({ age, languages, setLanguages, checked, setCh
                     <span className={`text-lg font-semibold font-montserrat`}>What are your preferred languages?</span>
                     <span className={`text-lg text-red-600`}>*</span>
                 </div> 
-                <FormControlLabel control={<Checkbox defaultChecked={checked.English} checked={checked['english']} value={`English`} onChange={handleCheck} />} className={` ml-1 `} label={
+                <FormControlLabel control={<Checkbox defaultChecked={checked.English} checked={checked['English']} value={`English`} onChange={handleCheck} />} className={` ml-1 `} label={
                         <span style={{fontWeight: 300, fontSize: 18 }}>
                         English
                         </span>
                     } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Twi} checked={checked['twi']} value={`Twi`} onChange={handleCheck} />} className={` ml-1 `} label={
+                <FormControlLabel control={<Checkbox defaultChecked={checked.Twi} checked={checked['Twi']} value={`Twi`} onChange={handleCheck} />} className={` ml-1 `} label={
                         <span style={{fontWeight: 300, fontSize: 18 }}>
                         Twi
                         </span>
                     } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Fante} checked={checked['fante']} value={`Fante`} onChange={handleCheck} />} className={` ml-1 `} label={
+                <FormControlLabel control={<Checkbox defaultChecked={checked.Fante} checked={checked['Fante']} value={`Fante`} onChange={handleCheck} />} className={` ml-1 `} label={
                         <span style={{fontWeight: 300, fontSize: 18 }}>
                         Fante
                         </span>
                     } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Ewe} checked={checked['ewe']} value={`Ewe`} onChange={handleCheck} />} className={` ml-1 `} label={
+                <FormControlLabel control={<Checkbox defaultChecked={checked.Ewe} checked={checked['Ewe']} value={`Ewe`} onChange={handleCheck} />} className={` ml-1 `} label={
                         <span style={{fontWeight: 300, fontSize: 18 }}>
                         Ewe
                         </span>
                     } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Ga} checked={checked['ga']} value={`Ga`} onChange={handleCheck} />} className={` ml-1 `} label={
+                <FormControlLabel control={<Checkbox defaultChecked={checked.Ga} checked={checked['Ga']} value={`Ga`} onChange={handleCheck} />} className={` ml-1 `} label={
                         <span style={{fontWeight: 300, fontSize: 18 }}>
                         Ga
                         </span>
                     } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Other} checked={checked['other']} value={`Other`} onChange={handleCheck} />} className={` ml-1 `} label={
+                <FormControlLabel control={<Checkbox defaultChecked={checked.Other} checked={checked['Other']} value={`Other`} onChange={handleCheck} />} className={` ml-1 `} label={
                         <span style={{fontWeight: 300, fontSize: 18 }}>
                         Other
                         </span>
