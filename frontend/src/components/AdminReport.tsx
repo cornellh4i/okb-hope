@@ -28,17 +28,24 @@ const ReportCard = ({ report, onReportClick }) => {
     alignItems: 'center',
   };
 
+  // Adjusted textStyle for report details
+  const textStyle = {
+    width: "150px",
+    fontWeight: '400' // Use '400' for normal text or '300' for lighter text
+  };
+
   return (
     <div className="flex items-center mx-36 my-2" onClick={() => onReportClick(report)}>
       <div className='flex justify-between items-center w-full rounded-lg' style={cardStyle}>
-        <div style={{ width: "150px" }}>{report.title || 'No Title'}</div>
-        <div style={{ width: "150px" }}>{report.description}</div>
-        <div style={{ width: "150px" }}>{report.patient_id}</div>
-        <div style={{ width: "150px" }}>{formattedDate}</div>
+        <div style={textStyle}>{report.title || 'No Title'}</div>
+        <div style={textStyle}>{report.description}</div>
+        <div style={textStyle}>{report.patient_id}</div>
+        <div style={textStyle}>{formattedDate}</div>
       </div>
     </div>
   );
 };
+
 
 const AdminReport = () => {
   const [selectedReport, setSelectedReport] = useState<IReport | null>(null);
@@ -183,7 +190,7 @@ const AdminReport = () => {
       backgroundColor: '#007BFF',
       color: 'white',
       padding: '8px',
-      borderRadius: '4px',
+      borderRadius: '5px',
       border: 'none',
       cursor: 'pointer',
     };
@@ -197,12 +204,30 @@ const AdminReport = () => {
       cursor: 'pointer',
     };
 
+    
+
+    // const dropdownOption: hover = {
+    //   backgroundColor: '#007bff',  /* Blue background on hover */
+    //   color: 'white'
+    // }
+
+    // const optionStyle = {
+    //   backgroundColor: "white",
+    //   color: 'black',
+    //   padding: '200px',
+    //   borderRadius: '5px',
+    //   border: 'none',
+    //   cursor: 'pointer',
+
+    // };
+
+
     return (
       <div>
         <div className="modal modal-open">
           <div className="modal-box">
             <Close className="modal-action" onClick={handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
-            <div className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 15 }}>Report Information</div>
+            <h1 className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 20, paddingBottom: '10px' }}>Report Subject</h1>
             <div className="space-y-4" style={{
               width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex'
             }}>
@@ -218,15 +243,16 @@ const AdminReport = () => {
               <select
                 style={dropdownStyle}
                 value={selectedReport?.priority || 'Assign Priority'}
-                onChange={(e) => updateReportPriority(e.target.value)}
-              >
-                <option disabled>Assign Priority</option>
+                onChange={(e) => updateReportPriority(e.target.value)}>
+                <option disabled style={dropdownStyle}>Assign Priority</option>
                 {priorities.map((priority) => (
-                  <option key={priority} value={priority}>
+                  <option key={priority} value={priority} style={dropdownStyle}>
                     {priority !== "Spam" ? priority + " Priority" : priority}
                   </option>
                 ))}
               </select>
+
+
             </div>
           </div>
         </div>
