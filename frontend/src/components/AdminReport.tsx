@@ -9,6 +9,7 @@ import ReportPopup from './ReportPopup';
 import Cancel from "@/assets/cancel.svg";
 import Submit from "@/assets/submit.svg";
 
+
 const ReportCard = ({ report, onReportClick }) => {
   const getFormattedDate = (date) => {
     if (!date) return 'Unknown date';
@@ -59,16 +60,14 @@ const ReportCard = ({ report, onReportClick }) => {
 
   const timeSubmittedStyle = {
     ...textStyleS, // inherit all the base styles
-    paddingLeft: '50px', // Increase the left padding to move text to the right
+    paddingLeft: '45px', // Increase the left padding to move text to the right
     paddingRight: '0px'
   };
-
-
 
   return (
     <div className="flex items-center mx-36 my-2" onClick={() => onReportClick(report)}>
       <div className='flex justify-between items-center w-full rounded-lg' style={cardStyle}>
-        <div style={textStyleS}>{report.title || 'No Title'}</div>
+        <div style={textStyleS}>{report.title || 'Report Subject'}</div>
         <div style={textStyle}>{truncateText(report.description, 25)}</div>
         <div style={textStyle}>{report.patient_id}</div>
         <div style={timeSubmittedStyle}>{formattedDate}</div>
@@ -76,11 +75,6 @@ const ReportCard = ({ report, onReportClick }) => {
     </div>
   );
 };
-
-
-
-
-
 
 
 const AdminReport = () => {
@@ -219,6 +213,7 @@ const AdminReport = () => {
       display: 'flex',
       justifyContent: 'center', // Aligns child elements (buttons) in the center
       gap: '8px',
+      marginTop: '20px' // Adds some space between the buttons and other elements above
     };
 
     const dropdownStyle = {
@@ -239,12 +234,30 @@ const AdminReport = () => {
       cursor: 'pointer',
     };
 
+    
+
+    // const dropdownOption: hover = {
+    //   backgroundColor: '#007bff',  /* Blue background on hover */
+    //   color: 'white'
+    // }
+
+    // const optionStyle = {
+    //   backgroundColor: "white",
+    //   color: 'black',
+    //   padding: '200px',
+    //   borderRadius: '5px',
+    //   border: 'none',
+    //   cursor: 'pointer',
+
+    // };
+
+
     return (
       <div>
         <div className="modal modal-open">
           <div className="modal-box">
             <Close className="modal-action" onClick={handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
-            <h1 className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 20, paddingLeft: '10px', paddingTop: '15px', paddingBottom: '1px' }}>Report Subject</h1>
+            <h1 className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 20, paddingBottom: '10px' }}>Report Subject</h1>
             <div className="space-y-4" style={{
               width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex'
             }}>
