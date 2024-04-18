@@ -10,11 +10,22 @@ import Cancel from "@/assets/cancel.svg";
 import Submit from "@/assets/submit.svg";
 
 const ReportCard = ({ report, onReportClick }) => {
-  const formattedDate = report.submittedAt?.toDate
-    ? report.submittedAt.toDate().toLocaleString()
-    : typeof report.submittedAt === 'string'
-      ? new Date(report.submittedAt).toLocaleString()
-      : 'Unknown date';
+  const getFormattedDate = (date) => {
+    if (!date) return 'Unknown date';
+    try {
+      const dateObj = date.toDate ? date.toDate() : new Date(date);
+      return dateObj.toLocaleString();
+    } catch {
+      return 'Unknown date';
+    }
+  };
+
+  const truncateText = (text, length) => {
+    return text.length > length ? text.substring(0, length) + '...' : text;
+  };
+
+  const formattedDate = getFormattedDate(report.submittedAt);
+
 
   const cardStyle = {
     backgroundColor: 'transparent',
@@ -22,29 +33,54 @@ const ReportCard = ({ report, onReportClick }) => {
     borderRadius: '0.5rem',
     padding: '1.25rem',
     margin: '0.5rem',
-    width: '100%',
+    width: '100%', // Ensures the card takes the full width of its container
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
   };
 
-  // Adjusted textStyle for report details
+  // Using flex-grow to allow each text area to expand or shrink as needed
   const textStyle = {
-    width: "150px",
-    fontWeight: '400' // Use '400' for normal text or '300' for lighter text
+    color: 'black',
+    fontSize: '16px',
+    fontWeight: '400',
+    padding: '0 10px', // Providing some padding
+    textAlign: 'left',
+    flex: '1 1 30%', // Allow the box to grow and shrink with flexbox
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
   };
+
+  const textStyleS = {
+    ...textStyle,
+    flex: '1 1 20%' // Smaller flex-basis because title and date might not need as much space
+  };
+
+  const timeSubmittedStyle = {
+    ...textStyleS, // inherit all the base styles
+    paddingLeft: '50px', // Increase the left padding to move text to the right
+    paddingRight: '0px'
+  };
+
+
 
   return (
     <div className="flex items-center mx-36 my-2" onClick={() => onReportClick(report)}>
       <div className='flex justify-between items-center w-full rounded-lg' style={cardStyle}>
-        <div style={textStyle}>{report.title || 'No Title'}</div>
-        <div style={textStyle}>{report.description}</div>
+        <div style={textStyleS}>{report.title || 'No Title'}</div>
+        <div style={textStyle}>{truncateText(report.description, 25)}</div>
         <div style={textStyle}>{report.patient_id}</div>
-        <div style={textStyle}>{formattedDate}</div>
+        <div style={timeSubmittedStyle}>{formattedDate}</div>
       </div>
     </div>
   );
 };
+
+
+
+
+
 
 
 const AdminReport = () => {
@@ -183,7 +219,6 @@ const AdminReport = () => {
       display: 'flex',
       justifyContent: 'center', // Aligns child elements (buttons) in the center
       gap: '8px',
-      marginTop: '20px' // Adds some space between the buttons and other elements above
     };
 
     const dropdownStyle = {
@@ -204,30 +239,12 @@ const AdminReport = () => {
       cursor: 'pointer',
     };
 
-    
-
-    // const dropdownOption: hover = {
-    //   backgroundColor: '#007bff',  /* Blue background on hover */
-    //   color: 'white'
-    // }
-
-    // const optionStyle = {
-    //   backgroundColor: "white",
-    //   color: 'black',
-    //   padding: '200px',
-    //   borderRadius: '5px',
-    //   border: 'none',
-    //   cursor: 'pointer',
-
-    // };
-
-
     return (
       <div>
         <div className="modal modal-open">
           <div className="modal-box">
             <Close className="modal-action" onClick={handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
-            <h1 className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 20, paddingBottom: '10px' }}>Report Subject</h1>
+            <h1 className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 20, paddingLeft: '10px', paddingTop: '15px', paddingBottom: '1px' }}>Report Subject</h1>
             <div className="space-y-4" style={{
               width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex'
             }}>

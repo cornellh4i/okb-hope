@@ -18,25 +18,18 @@ const ReportPopup = ({ report }) => {
   const cardStyle: React.CSSProperties = {
     background: 'white',
     borderRadius: '10px',
-    border: '1px solid #519AEB',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-    padding: '12px 24px',
-    margin: '0 0 12px 0',
+    padding: '8px 12px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '12px',
   };
 
   return (
-    <div style={cardStyle} className="card bg-base-100 shadow-xl mb-4">
+    <div style={cardStyle} className="card bg-base-100  mb-4">
       <div>
-        <p style={{ fontSize: 14 }}>The following report for {report.psych_name} was submitted on: {formattedDate}</p>
+        <h2 style={{ marginBottom: '10px'}} className="font-bold">Submitted By: <span className="font-normal">{report.patient_id}</span> </h2>
+        <h2 style={{ marginBottom: '10px' }} className="font-bold">Submitted On: <span className="font-normal">{formattedDate}</span></h2>
+        <p style={{ fontSize: '14px', border: '1px solid #c7c5c5', color: '#000000' , padding: '8px 12px'}} className="font-normal"> {report.description}</p>
       </div>
-      <p style={{ fontSize: 14 }}>Report Log</p>
-      <div>
-        <p style={{ fontSize: 14, border: '1px solid #9A9A9A', color: '#000000', padding: '8px 12px' }}>{report.description}</p>
-      </div>
-      <p style={{ fontSize: 14, textAlign: 'left' }}>Report Status: Verified on {formattedDate}</p>
     </div>
   );
 };
