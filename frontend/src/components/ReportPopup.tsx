@@ -12,7 +12,16 @@ import { fetchPatientReports } from '../../firebase/fetchData';
 
 const ReportPopup = ({ report }) => {
   // const formattedDate = report.submittedAt.toDate().toLocaleString();
-  const formattedDate = report.submittedAt?.toDate ? report.submittedAt.toDate().toLocaleString() : 'Unknown date';
+  const getFormattedDate = (date) => {
+    if (!date) return 'Unknown date';
+    try {
+      const dateObj = date.toDate ? date.toDate() : new Date(date);
+      return dateObj.toLocaleString();
+    } catch {
+      return 'Unknown date';
+    }
+  };
+  const formattedDate = getFormattedDate(report.submittedAt);
 
 
   const cardStyle: React.CSSProperties = {

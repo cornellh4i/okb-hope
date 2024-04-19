@@ -64,7 +64,7 @@ const ReportCard = ({ report, onReportClick }) => {
     paddingLeft: '45px', // Increase the left padding to move text to the right
     paddingRight: '0px'
   };
-  
+
   const reporterSubmittedStyle = {
     ...textStyleS, // inherit all the base styles
     paddingLeft: '5px', // Increase the left padding to move text to the right
@@ -252,7 +252,7 @@ const AdminReport = () => {
             <div className="space-y-4" style={{
               width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex'
             }}>
-              <ReportPopup key={selectedReport?.report_id} report={selectedReport}  />
+              <ReportPopup key={selectedReport?.report_id} report={selectedReport} />
             </div>
             <div style={buttonsContainerStyle}>
               <button
