@@ -65,7 +65,7 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
   }, [uid]);
 
   // calculation of # days remaining until appt
-  const daysTo = Math.floor((start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+  const daysTo = Math.floor((start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) + 1
   const month = start.toLocaleString('default', { month: 'long' });
   const day = start.toLocaleString('default', { weekday: 'long' });
   const [showModal, setShowModal] = React.useState(false);

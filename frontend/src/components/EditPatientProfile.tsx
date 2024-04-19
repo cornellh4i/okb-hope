@@ -26,6 +26,7 @@ const EditPatientProfile = () => {
   const [prefLanguages, setPrefLanguages] = useState<string[]>([]);
   const [gender, setGender] = useState(0);
 
+  const concernsList = ;
   const spokenWithCounselor = ["Yes", "No"];
   const lastTimeSpoke = ["Within the last month", "Within the last 6 months", "Within the last year", "Over a year ago", "I have never spoken with a counselor/therapist before"];
   const ageRanges = ["18-24", "25-34", "35-44", "45-54", "55-64", "65 and over"];
