@@ -38,12 +38,12 @@ const PositionLanguageQuestionnaire = ({ setPosition, position, languages, other
                         <span className={`text-lg font-semibold font-montserrat`}>What is your current position?</span>
                         <span className={`text-lg text-red-600`}>*</span>
                     </div>
-                    <FormControlLabel control={<Radio checked={checked['psychiatrist']} value={`psychiatrist`} onChange={handlePosition}/>} className={` ml-1 `} label={
+                    <FormControlLabel control={<Radio checked={checked['Psychiatrist']} value={`psychiatrist`} onChange={handlePosition}/>} className={` ml-1 `} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Psychiatrist
                         </span>
                     } />
-                    <FormControlLabel control={<Radio checked={checked['nurse']} value={`nurse`} onChange={handlePosition} />} className={` ml-1 `} label={
+                    <FormControlLabel control={<Radio checked={checked['Nurse']} value={`nurse`} onChange={handlePosition} />} className={` ml-1 `} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Nurse
                         </span>
