@@ -68,5 +68,6 @@ export interface IReport {
     report_id: string;
     submittedAt: Timestamp;
     priority: string;
+    reporter_name: string;
 }
 

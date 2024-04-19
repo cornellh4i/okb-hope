@@ -254,7 +254,8 @@ const ProfProfile = () => {
                     psych_id: professional.uid, // changed from psychiatristID to psych_id
                     psych_name: professional.firstName + " " + professional.lastName,
                     submittedAt: Timestamp.now(), // Firebase automatically generates a unique ID for each document, so 'report_id' is not manually set here
-                    priority: ""
+                    priority: "",
+                    reporter_name: user.displayName
                 };
 
                 // Add the report to the "reports" collection in Firestore

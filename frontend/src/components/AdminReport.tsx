@@ -70,7 +70,7 @@ const ReportCard = ({ report, onReportClick }) => {
       <div className='flex justify-between items-center w-full rounded-lg' style={cardStyle}>
         <div style={textStyleS}>{report.title || 'Report Subject'}</div>
         <div style={textStyle}>{truncateText(report.description, 25)}</div>
-        <div style={textStyle}>{report.patient_id}</div>
+        <div style={textStyle}>{report.reporter_name}</div>
         <div style={timeSubmittedStyle}>{formattedDate}</div>
       </div>
     </div>
