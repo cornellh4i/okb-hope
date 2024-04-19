@@ -166,10 +166,11 @@ const PatientQuestionnaire = () => {
                     "", //description
                     "", //website
                     concerns,
-                    age,
+                    prevExp,
                     prevExpTime,
-                    prevExp, //ageRange
+                    "", //ageRange
                     prefLanguages, //prefLanguages
+                    gender, //genderPref
                     [], //savedPsychiatrists
                 );
                 router.push('/loading?init=true');
