@@ -23,7 +23,7 @@ const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, handlePrevExp, h
                 Great! Now let's get a sense of your history with medical professionals.
             </div>
             <FormControl>
-                <span className={`text-lg font-semibold font-montserrat`}>Have you spoken with a counselor/therapist before?</span>
+                <span className={`text-lg font-semibold font-montserrat`}>Have you spoken with a counselor/therapist before?<span className={`text-lg mb-2 text-red-600`}>*</span></span>
 
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
@@ -45,7 +45,7 @@ const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, handlePrevExp, h
                 </RadioGroup>
             </FormControl>
             <FormControl>
-                <span className={`text-lg font-semibold font-montserrat`}>If yes, when was the last time you spoke with one?</span>
+                <span className={`text-lg font-semibold font-montserrat`}>If yes, when was the last time you spoke with one?<span className={`text-lg mb-2 text-red-600`}>*</span></span>
 
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
@@ -84,6 +84,7 @@ const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, handlePrevExp, h
 
             <div>
                 <span className={`text-lg font-semibold font-montserrat`}>Are there any specific concerns you would like to discuss with your conselor?</span>
+                <span className={`text-lg mb-2 text-red-600`}>*</span>
                 <input type="text" value={concerns} onChange={handleConcerns} placeholder="Type here" className={`input input-bordered w-full mr-3 border-2 rounded-2xl`} style={{ borderColor: okb_colors.light_blue }} />
             </div>
 
