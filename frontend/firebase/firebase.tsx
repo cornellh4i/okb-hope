@@ -66,6 +66,7 @@ const signUpWithGoogle = async (
   lastTherapyTimeframe: string,
   ageRange: string,
   prefLanguages: string[],
+  genderPref: GenderOrUndefined,
   savedPsychiatrists: string[],
 ) => {
   return new Promise<void>(async (resolve, reject) => {
@@ -115,7 +116,7 @@ const signUpWithGoogle = async (
             lastTherapyTimeframe: lastTherapyTimeframe,
             ageRange: ageRange,
             prefLanguages: prefLanguages,
-            gender: gender,
+            genderPref: genderPref,
             savedPsychiatrists: savedPsychiatrists
           });
           console.log("Added patient")
