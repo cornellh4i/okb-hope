@@ -64,13 +64,19 @@ const ReportCard = ({ report, onReportClick }) => {
     paddingLeft: '45px', // Increase the left padding to move text to the right
     paddingRight: '0px'
   };
+  
+  const reporterSubmittedStyle = {
+    ...textStyleS, // inherit all the base styles
+    paddingLeft: '5px', // Increase the left padding to move text to the right
+    paddingRight: '0px'
+  };
 
   return (
     <div className="flex items-center mx-36 my-2" onClick={() => onReportClick(report)}>
       <div className='flex justify-between items-center w-full rounded-lg' style={cardStyle}>
         <div style={textStyleS}>{report.title || 'Report Subject'}</div>
         <div style={textStyle}>{truncateText(report.description, 25)}</div>
-        <div style={textStyle}>{report.reporter_name}</div>
+        <div style={reporterSubmittedStyle}>{report.reporter_name}</div>
         <div style={timeSubmittedStyle}>{formattedDate}</div>
       </div>
     </div>
