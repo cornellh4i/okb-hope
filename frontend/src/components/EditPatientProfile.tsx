@@ -26,7 +26,7 @@ const EditPatientProfile = () => {
   const [prefLanguages, setPrefLanguages] = useState<string[]>([]);
   const [gender, setGender] = useState(0);
 
-  const concernsList = ;
+  const concernsList = ["My Relationships", "Addiction", "Suicida Thoughts", "Family Distress", "Substance Abuse", "Academic Distress", "Social Anxiety", "Depression", "Other"];
   const spokenWithCounselor = ["Yes", "No"];
   const lastTimeSpoke = ["Within the last month", "Within the last 6 months", "Within the last year", "Over a year ago", "I have never spoken with a counselor/therapist before"];
   const ageRanges = ["18-24", "25-34", "35-44", "45-54", "55-64", "65 and over"];
@@ -74,6 +74,21 @@ const EditPatientProfile = () => {
   const handleAgeChange = (ageRange) => {
     setAgeRange(ageRange);
   }
+
+  const handleConcernChange = (event) => {
+    const selectedConcerns = event.target.value;
+    const updatedConcerns = [...concernsList];
+
+    if (event.target.checked) {
+      updatedConcerns.push(selectedConcerns);
+    } else {
+      const index = updatedConcerns.indexOf(selectedConcerns);
+      if (index !== -1) {
+        updatedConcerns.splice(index, 1);
+      }
+    }
+    setConcerns(updatedConcerns);
+  };
 
   const handleLanguageChange = (event) => {
     const selectedLanguage = event.target.value;
@@ -183,14 +198,44 @@ const EditPatientProfile = () => {
           </div>
 
           {/* Concerns */}
-          <div tabIndex={0} className="form-control w-full">
-            <label className="label">
-              <span className="text-lg">Are there any specific concerns you would like to discuss with your counselor?</span>
-            </label>
-            <div className="flex items-center">
-              <Vertical_line className=""></Vertical_line>
-              <input type="text" value={concerns} onChange={handleConcernsChange} placeholder="Type here" className="input input-bordered w-full border-2 ml-3" style={{ borderColor: okb_colors.light_blue }} />
+          <div className="dropdown dropdown-bottom">
+            <div tabIndex={0} className="form-control w-full cursor-pointer">
+              <div className="label">
+                <span className="text-lg">Are there any specific concerns you would like to discuss with your counselor?</span>
+              </div>
+              <div className="flex items-center">
+                <Vertical_line></Vertical_line>
+                <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
+                  <div className="input-container w-full ml-3">
+                    <div
+                      className="input input-bordered w-full border-2 pl-10 bg-white"
+                      style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
+                    >
+                      {concerns}
+                    </div>
+                  </div>
+                  <div id="chevron" className="flex flex-col absolute items-center justify-center align-center transform translate-x-8">
+                    <Chevron_down></Chevron_down>
+                  </div>
+                </div>
+              </div>
             </div>
+            <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
+              {concernsList.map((value) => (
+                <label key={value} className="label cursor-pointer">
+                  <span className="label-text" onClick={() => handlePreviousTherapyExperienceChange(value)}>
+                    {value}
+                  </span>
+                  <input
+                    type="radio"
+                    className="radio"
+                    name="spokenWithCounselor"
+                    checked={previousTherapyExperience === value}
+                    onChange={() => handlePreviousTherapyExperienceChange(value)}
+                  />
+                </label>
+              ))}
+            </ul>
           </div>
 
           {/* Previous Therapy Experience */}
