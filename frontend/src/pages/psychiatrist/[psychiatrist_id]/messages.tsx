@@ -11,8 +11,9 @@ const MessagesPage = () => {
   console.log(user)
 
   const router = useRouter();
-  const { userId } = router.query;
-  console.log(userId)
+  const { psychiatrist_id } = router.query; // Fixed this to be psychiatrist_id
+  console.log(router.query)
+  console.log(psychiatrist_id)
 
   useEffect(() => {
     if (!user) {

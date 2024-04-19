@@ -8,18 +8,16 @@ const MessageComposer: React.FC = () => {
   const [message, setMessage] = useState("");
   const [psychiatristId, setPsychiatristId] = useState('');
   const [patientId, setPatientId] = useState('');
+  const uid = auth.currentUser?.uid;
 
   useEffect(() => {
-    const { psych_id } = router.query;
-    if (psych_id) {
+    const { psych_id, psych_name, patient_id, patient_name } = router.query;
+    if (psych_name) {
       setPsychiatristId(psych_id as string);
-    }
-  }, [router.query]);
-
-  useEffect(() => {
-    const { patient_id } = router.query;
-    if (patient_id) {
+      setPatientId(uid as string);
+    } else if (patient_name) {
       setPatientId(patient_id as string);
+      setPsychiatristId(uid as string);
     }
   }, [router.query]);
 

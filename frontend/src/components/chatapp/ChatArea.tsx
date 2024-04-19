@@ -7,17 +7,18 @@ import okb_colors from '@/colors';
 import router, { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
 import { collection, onSnapshot, writeBatch, query, where, doc, getDoc, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
-import { db } from "../../../firebase/firebase";
+import { auth, db } from "../../../firebase/firebase";
 import DeleteModal from './DeleteModal';
 
 interface NameAreaType {
   name: string;
   credentials: string;
-  role: 'patient' | 'psychiatrist';
+  role: string;
 }
 
 const NameArea = ({ name, credentials, role }: NameAreaType) => {
   const router = useRouter();  // Use useRouter hook for routing actions
+  const uid = auth.currentUser?.uid;
   const [psychiatristId, setPsychiatristId] = useState('');
   const [patientId, setPatientId] = useState('');
   const conversationsRef = collection(db, "Conversations");
@@ -90,16 +91,13 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   };
 
   useEffect(() => {
-    const { psych_id } = router.query;
-    if (psych_id) {
+    const { psych_id, psych_name, patient_id, patient_name } = router.query;
+    if (psych_name) {
       setPsychiatristId(psych_id as string);
-    }
-  }, [router.query]);
-
-  useEffect(() => {
-    const { patient_id } = router.query;
-    if (patient_id) {
+      setPatientId(uid as string);
+    } else if (patient_name) {
       setPatientId(patient_id as string);
+      setPsychiatristId(uid as string);
     }
   }, [router.query]);
 
@@ -162,50 +160,36 @@ const ChatArea = () => {
   const { user } = useAuth();
   const router = useRouter();
   const [displayName, setDisplayName] = useState('');
-  const [role, setRole] = useState<'patient' | 'psychiatrist'>('patient');
+  const [role, setRole] = useState<string>('');
 
   useEffect(() => {
     const fetchDataAndDetermineRole = async () => {
+
       const id = user?.uid;
       if (!id) return;
 
-      try {
-        const professionalData = await fetchProfessionalData(id);
-        if (professionalData !== null) {
-          setRole('psychiatrist');
-          setDisplayName(`${professionalData.firstName} ${professionalData.lastName}`);
-        } else {
-          setRole('patient');
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-      console.log(role)
+      setRole(user.userType as string);
     };
 
     fetchDataAndDetermineRole();
   }, [user?.uid]);
 
   useEffect(() => {
-    const fetchPsychiatristName = async () => {
-      const { psych_id, psych_name } = router.query;
+    const fetchDisplayName = async () => {
+
+      const { psych_name, patient_name } = router.query;
 
       if (psych_name) {
+        console.log(decodeURIComponent(psych_name as string))
         setDisplayName(decodeURIComponent(psych_name as string));
-      } else if (psych_id) {
-        try {
-          const psychiatristData = await fetchProfessionalData(psych_id as string);
-          if (psychiatristData) {
-            setDisplayName(`${psychiatristData.firstName} ${psychiatristData.lastName}`);
-          }
-        } catch (error) {
-          console.error('Failed to fetch psychiatrist data:', error);
-        }
+      } else if (patient_name) {
+        console.log(decodeURIComponent(patient_name as string))
+        setDisplayName(decodeURIComponent(patient_name as string));
       }
     };
 
     if (router.isReady) {
-      fetchPsychiatristName();
+      fetchDisplayName();
     }
   }, [router.isReady, router.query]);
 

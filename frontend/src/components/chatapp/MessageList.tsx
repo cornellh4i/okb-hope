@@ -18,41 +18,15 @@ const MessageList: React.FC = () => {
   const [patientId, setPatientId] = useState('');
 
   useEffect(() => {
-    const { psych_id } = router.query;
-    if (psych_id) {
+    const { psych_id, psych_name, patient_id, patient_name } = router.query;
+    if (psych_name) {
       setPsychiatristId(psych_id as string);
-    }
-  }, [router.query]);
-
-  useEffect(() => {
-    const { patient_id } = router.query;
-    if (patient_id) {
+      setPatientId(uid as string);
+    } else if (patient_name) {
       setPatientId(patient_id as string);
+      setPsychiatristId(uid as string);
     }
   }, [router.query]);
-
-  // useEffect(() => {
-  //   if (uid && psychiatristId) {
-  //     const queryDoc = query(
-  //       messagesRef,
-  //       where("uid", "==", uid),
-  //       where("recipientId", "==", (uid === psychiatristId) ? patientId : psychiatristId),
-  //       orderBy('createdAt')
-  //     );
-
-  //     const unsubscribe = onSnapshot(queryDoc, (querySnapshot) => {
-  //       const messageData = querySnapshot.docs.map((doc) => ({
-  //         ...doc.data(),
-  //         id: doc.id,
-  //       }));
-  //       setMessages(messageData);
-  //     }, (error) => { console.error("Error fetching data: ", error); });
-
-  //     return () => {
-  //       unsubscribe();
-  //     };
-  //   }
-  // }, [uid, psychiatristId]);
 
   useEffect(() => {
     if (uid && psychiatristId && patientId) {
@@ -78,8 +52,6 @@ const MessageList: React.FC = () => {
       };
     }
   }, [uid, psychiatristId, patientId]);
-
-
 
 
   useEffect(() => {

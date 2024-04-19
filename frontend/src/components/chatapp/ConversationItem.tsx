@@ -17,6 +17,7 @@ const ConversationItem: React.FC<{ conversation: any, isLast: boolean, onSelect:
   useEffect(() => {
     const fetchNames = async () => {
       if (user?.uid === conversation.patientId) {
+        console.log(conversation.psychiatristId)
         const professionalData = await fetchProfessionalData(conversation.psychiatristId);
         setDisplayName(professionalData.firstName + " " + professionalData.lastName);
       } else {
@@ -40,14 +41,14 @@ const ConversationItem: React.FC<{ conversation: any, isLast: boolean, onSelect:
     onSelect();
     const { patientId, psychiatristId } = conversation;
     localStorage.setItem('selectedConversationId', `${conversation.patientId}-${conversation.psychiatristId}`);
-    // let url;
-    // if (user?.uid === conversation.patientId) {
-    //   url = `/patient/${patientId}/messages?psych_id=${psychiatristId}&psych_name=${encodeURIComponent(displayName)}`;
-    // } else {
-    //   url = `/psychiatrist/${psychiatristId}/messages?patient_id=${patientId}&patient_name=${encodeURIComponent(displayName)}`;
+    let url;
+    if (user?.uid === conversation.patientId) {
+      url = `/patient/${patientId}/messages?psych_id=${psychiatristId}&psych_name=${encodeURIComponent(displayName)}`;
+    } else {
+      url = `/psychiatrist/${psychiatristId}/messages?patient_id=${patientId}&patient_name=${encodeURIComponent(displayName)}`;
 
-    // }
-    const url = `/patient/${patientId}/messages?psych_id=${psychiatristId}&psych_name=${encodeURIComponent(displayName)}`;
+    }
+    // const url = `/patient/${patientId}/messages?psych_id=${psychiatristId}&psych_name=${encodeURIComponent(displayName)}`;
     // const url = `/psychiatrist/${psychiatristId}/messages?patient_id=${patientId}&patient_name=${encodeURIComponent(displayName)}`;
     console.log(url)
     router.push(url);
