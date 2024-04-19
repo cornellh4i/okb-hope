@@ -22,12 +22,14 @@ const PatientQuestionnaire = () => {
     const [age, setAge] = useState<string>("");
     const [checked, setChecked] = useState<{ [key: string]: boolean }>(
         { 'english': false, 'twi': false, 'fante': false, 'ewe': false, 'ga': false, 'other': false });
-    const [languages, setLanguages] = useState<string[]>([]);
+    const [aboutConcerns, setAboutConcerns] = useState<string>("");
+    const [prefLanguages, setPrefLanguages] = useState<string[]>([]);
 
     const [prevExp, setPrevExp] = useState<string>("");
     const [prevExpTime, setPrevExpTime] = useState<string>("");
-    const [concerns, setConcerns] = useState<string>("");
-
+    const [concerns, setConcerns] = useState<string[]>([]);
+    const [check, setCheck] = useState<{ [key: string]: boolean }>(
+        { 'MyRelationships': false, 'Addiction': false, 'SuicidalThoughts': false, 'FamilyDistress': false, 'SubstanceAbuse': false, 'AcademicDistress': false, 'SocialAnxiety': false, 'Depression': false, 'Other': false });
     const router = useRouter();
     const { user } = useAuth();
 
@@ -49,9 +51,6 @@ const PatientQuestionnaire = () => {
             case 'female':
                 setGender(Gender.Female);
                 break;
-            case 'other':
-                setGender(Gender.Other);
-                break;
             default:
                 setGender(undefined);
         }
@@ -70,12 +69,12 @@ const PatientQuestionnaire = () => {
         setChecked(newChecked);
 
         if (newChecked[lang]) {
-            setLanguages([...languages, lang]);
+            setPrefLanguages([...prefLanguages, lang]);
         } else {
-            setLanguages(languages.filter(element => element !== lang));
+            setPrefLanguages(prefLanguages.filter(element => element !== lang));
         }
 
-        console.log(languages);
+        console.log(prefLanguages);
         console.log(newChecked);
     };
 
@@ -85,9 +84,37 @@ const PatientQuestionnaire = () => {
     const handlePrevExpTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
         setPrevExpTime(event.target.value);
     }
-    const handleConcernsChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setConcerns(event.target.value);
-    }
+
+    const handleChecks = (event: ChangeEvent<HTMLInputElement>) => {
+        const concern = event.target.value;
+        const newCheck = { ...check, [concern]: !check[concern] };
+
+        setCheck(newCheck);
+
+        if (newCheck[concern]) {
+            setConcerns([...concerns, concern]);
+        } else {
+            setConcerns(concerns.filter(element => element !== concern));
+        }
+
+        console.log(concerns);
+        console.log(newCheck);
+    };
+
+    const handleAboutConcerns = (event) => {
+        const newAboutConcerns = event.target.value;
+        setAboutConcerns(newAboutConcerns);
+    
+        if (check.Other) {
+            setConcerns(oldConcerns => {
+                const filteredConcerns = oldConcerns.filter(concern => !concern.startsWith("Other"));
+                if (newAboutConcerns.trim() !== "") {
+                    filteredConcerns.push(`Other: ${newAboutConcerns}`);
+                }
+                return filteredConcerns;
+            });
+        }
+    };
 
     const goBack = () => {
         if (currentStep > 1) {
@@ -113,8 +140,8 @@ const PatientQuestionnaire = () => {
             return;
         }
 
-        else if (currentStep === 2 && (languages.length === 0)) {
-            alert("Please select your language(s).");
+        else if (currentStep === 2 && (prefLanguages.length === 0)) {
+            alert("Please select your preferred language(s).");
             return;
         }
 
@@ -134,15 +161,16 @@ const PatientQuestionnaire = () => {
                     [], //availability
                     gender,
                     "", //location
-                    languages,
+                    [],
                     [], //specialty
                     "", //description
                     "", //website
                     concerns,
                     prevExp,
                     prevExpTime,
-                    age, //ageRange
-                    languages, //prefLanguages
+                    "", //ageRange
+                    prefLanguages, //prefLanguages
+                    gender, //genderPref
                     [], //savedPsychiatrists
                 );
                 router.push('/loading?init=true');
@@ -169,8 +197,8 @@ const PatientQuestionnaire = () => {
             {currentStep === 2 &&
                 <AgeLanguageQuestionnaire
                     age={age}
-                    languages={languages}
-                    setLanguages={setLanguages}
+                    prefLanguages={prefLanguages}
+                    setPrefLanguages={setPrefLanguages}
                     checked={checked}
                     setChecked={setChecked}
                     handleAge={handleAgeChange}
@@ -180,9 +208,14 @@ const PatientQuestionnaire = () => {
                 prevExp={prevExp}
                 prevExpTime={prevExpTime}
                 concerns={concerns}
+                check={check}
+                setCheck={setCheck}
+                setConcerns={setConcerns}
+                aboutConcerns={aboutConcerns}
+                handleAboutConcerns={handleAboutConcerns}
                 handlePrevExp={handlePrevExpChange}
                 handlePrevExpTime={handlePrevExpTimeChange}
-                handleConcerns={handleConcernsChange} />}
+                handleChecks={handleChecks} />}
             <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3`}>
                 <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>
                     <div className={`text-zinc-600 font-semibold font-montserrat`}>Go Back</div>
