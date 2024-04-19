@@ -10,6 +10,7 @@ import Cancel from "@/assets/cancel.svg";
 import Submit from "@/assets/submit.svg";
 
 
+
 const ReportCard = ({ report, onReportClick }) => {
   const getFormattedDate = (date) => {
     if (!date) return 'Unknown date';
@@ -79,6 +80,7 @@ const ReportCard = ({ report, onReportClick }) => {
 
 const AdminReport = () => {
   const [selectedReport, setSelectedReport] = useState<IReport | null>(null);
+  // const { user } = useAuth();
   const [reports, setReports] = useState<IReport[]>([]);
   const [unreadReports, setUnreadReports] = useState<Boolean>(false);
   const [highPriorityReports, setHighPriorityReports] = useState<Boolean>(false);
@@ -234,23 +236,6 @@ const AdminReport = () => {
       cursor: 'pointer',
     };
 
-    
-
-    // const dropdownOption: hover = {
-    //   backgroundColor: '#007bff',  /* Blue background on hover */
-    //   color: 'white'
-    // }
-
-    // const optionStyle = {
-    //   backgroundColor: "white",
-    //   color: 'black',
-    //   padding: '200px',
-    //   borderRadius: '5px',
-    //   border: 'none',
-    //   cursor: 'pointer',
-
-    // };
-
 
     return (
       <div>
@@ -261,7 +246,7 @@ const AdminReport = () => {
             <div className="space-y-4" style={{
               width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex'
             }}>
-              <ReportPopup key={selectedReport?.report_id} report={selectedReport} />
+              <ReportPopup key={selectedReport?.report_id} report={selectedReport}  />
             </div>
             <div style={buttonsContainerStyle}>
               <button
