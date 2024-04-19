@@ -34,12 +34,22 @@ const ConversationItem: React.FC<{ conversation: any, isLast: boolean, onSelect:
   }, [user?.uid, conversation.messagesUnreadByPatient, conversation.messagesUnreadByPsych, conversation.patientId]);
 
   const handleClick = () => {
+
     updateUnreadMessages();
 
-    onSelect(); // Call onSelect to update selected state in parent
+    onSelect();
     const { patientId, psychiatristId } = conversation;
     localStorage.setItem('selectedConversationId', `${conversation.patientId}-${conversation.psychiatristId}`);
+    // let url;
+    // if (user?.uid === conversation.patientId) {
+    //   url = `/patient/${patientId}/messages?psych_id=${psychiatristId}&psych_name=${encodeURIComponent(displayName)}`;
+    // } else {
+    //   url = `/psychiatrist/${psychiatristId}/messages?patient_id=${patientId}&patient_name=${encodeURIComponent(displayName)}`;
+
+    // }
     const url = `/patient/${patientId}/messages?psych_id=${psychiatristId}&psych_name=${encodeURIComponent(displayName)}`;
+    // const url = `/psychiatrist/${psychiatristId}/messages?patient_id=${patientId}&patient_name=${encodeURIComponent(displayName)}`;
+    console.log(url)
     router.push(url);
 
   };

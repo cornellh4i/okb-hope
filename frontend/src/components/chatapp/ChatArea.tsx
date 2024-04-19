@@ -10,7 +10,6 @@ import { collection, onSnapshot, writeBatch, query, where, doc, getDoc, getDocs,
 import { db } from "../../../firebase/firebase";
 import DeleteModal from './DeleteModal';
 
-
 interface NameAreaType {
   name: string;
   credentials: string;
