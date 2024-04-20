@@ -87,13 +87,12 @@ const ReportCard = ({ report, onReportClick }) => {
 
 const AdminReport = () => {
   const [selectedReport, setSelectedReport] = useState<IReport | null>(null);
-  // const { user } = useAuth();
   const [reports, setReports] = useState<IReport[]>([]);
-  const [unreadReports, setUnreadReports] = useState<boolean>(false);
-  const [highPriorityReports, setHighPriorityReports] = useState<boolean>(false);
-  const [mediumPrioityReports, setMediumPriorityReports] = useState<boolean>(false);
-  const [lowPriorityReports, setLowPriorityReports] = useState<boolean>(false);
-  const [spamReports, setSpamReports] = useState<boolean>(false);
+  const [unreadReports, setUnreadReports] = useState<boolean>(true); // Set to true
+  const [highPriorityReports, setHighPriorityReports] = useState<boolean>(true); // Set to true
+  const [mediumPrioityReports, setMediumPriorityReports] = useState<boolean>(true); // Set to true
+  const [lowPriorityReports, setLowPriorityReports] = useState<boolean>(true); // Set to true
+  const [spamReports, setSpamReports] = useState<boolean>(true); // Set to true
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
   // Define fetchReports outside of useEffect so it can be used elsewhere
@@ -226,7 +225,7 @@ const AdminReport = () => {
     };
 
     const dropdownStyle = {
-      backgroundColor: '#007BFF',
+      backgroundColor: '#519AEB',
       color: 'white',
       padding: '8px',
       borderRadius: '5px',
@@ -239,7 +238,7 @@ const AdminReport = () => {
       color: 'black',
       padding: '8px',
       borderRadius: '4px',
-      border: '2px solid #007BFF',
+      border: '2px solid #519AEB',
       cursor: 'pointer',
     };
 
