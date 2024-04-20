@@ -4,7 +4,8 @@ import ConversationList from "./ConversationList";
 import Fuse from 'fuse.js'; // install fuse.js
 import { db } from '../../../firebase/firebase'
 import { collection, getDocs } from "firebase/firestore";
-import chevron_up from '@/assets/chevron_up';
+import ChevronUp from '@/assets/chevron_up';
+import okb_colors from '@/colors';
 
 const psychiatrists: any[] = [];
 
@@ -46,7 +47,7 @@ const Sidebar: React.FC = () => {
           <p className='font-bold'>All Messages</p>
           <button
           // onClick={ }
-          >{chevron_up}</button>
+          ><ChevronUp color={okb_colors.white} /></button>
         </div>
         <div className='overflow-scroll h-96'>
           <ConversationList conversations={searchResults} />

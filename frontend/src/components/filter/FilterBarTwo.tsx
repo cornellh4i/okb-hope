@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import chevron_down from "@/assets/chevron_down";
+import ChevronDown from '@/assets/chevron_down';
 import SearchBarAdmin from '../SearchBarAdmin';
 import Trash from '@/assets/trash.svg';
 import { deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../../firebase/firebase';
+import okb_colors from '@/colors';
 
 const FilterBarTwo = ({ onDelete, userList }) => {
     const weeklyAvailability = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -56,7 +57,7 @@ const FilterBarTwo = ({ onDelete, userList }) => {
 
             <div className="h-12 px-6 py-3 bg-white rounded-lg border border-zinc-600 justify-between items-center inline-flex">
                 <div className="dropdown">
-                    <label tabIndex={0} className="text-neutral-400 flex gap-25 m-1 text-base font-normal">Weekly Availability{chevron_down}</label>
+                    <label tabIndex={0} className="text-neutral-400 flex gap-25 m-1 text-base font-normal">Weekly Availability<ChevronDown color={okb_colors.med_gray} /></label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
                         {weeklyAvailability.map((e) => <li key={e}>{e}</li>)}
                     </ul>
@@ -65,7 +66,7 @@ const FilterBarTwo = ({ onDelete, userList }) => {
 
             <div className="h-12 px-6 py-3 bg-white rounded-lg border border-zinc-600 justify-between items-center inline-flex">
                 <div className="dropdown">
-                    <label tabIndex={0} className="text-neutral-400 flex gap-5 m-1 text-base font-normal">Language{chevron_down}</label>
+                    <label tabIndex={0} className="text-neutral-400 flex gap-5 m-1 text-base font-normal">Language<ChevronDown color={okb_colors.med_gray} /></label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
                         {language.map((e) => <li key={e}>{e}</li>)}
                     </ul>
@@ -74,7 +75,7 @@ const FilterBarTwo = ({ onDelete, userList }) => {
 
             <div className="h-12 px-6 py-3 bg-white rounded-lg border border-zinc-600 justify-between items-center inline-flex">
                 <div className="dropdown">
-                    <label tabIndex={0} className="text-neutral-400 flex gap-5 m-1 text-base font-normal">Gender{chevron_down}</label>
+                    <label tabIndex={0} className="text-neutral-400 flex gap-5 m-1 text-base font-normal">Gender<ChevronDown color={okb_colors.med_gray} /></label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
                         {genders.map((e) => <li key={e}>{e}</li>)}
                     </ul>
