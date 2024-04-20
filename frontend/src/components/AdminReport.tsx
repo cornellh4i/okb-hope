@@ -47,7 +47,7 @@ const ReportCard = ({ report, onReportClick }) => {
     fontSize: '16px',
     fontWeight: '400',
     padding: '0 10px', // Providing some padding
-    textAlign: 'left',
+    textAlign: 'left' as const,
     flex: '1 1 30%', // Allow the box to grow and shrink with flexbox
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -72,7 +72,7 @@ const ReportCard = ({ report, onReportClick }) => {
   };
 
   return (
-    <div className="flex items-center mx-36 my-2" onClick={() => onReportClick(report)}>
+    <div className="flex items-center mx-5 lg:mx-36 my-2" onClick={() => onReportClick(report)}>
       <div className='flex justify-between items-center w-full rounded-lg' style={cardStyle}>
         <div style={textStyleS}>{report.title || 'Report Subject'}</div>
         <div style={textStyle}>{truncateText(report.description, 25)}</div>
@@ -246,7 +246,7 @@ const AdminReport = () => {
     return (
       <div>
         <div className="modal modal-open">
-          <div className="modal-box">
+          <div className="modal-box" style={{ maxHeight: '50%' }}>
             <Close className="modal-action" onClick={handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
             <h1 className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 20, paddingBottom: '10px' }}>Report Subject</h1>
             <div className="space-y-4" style={{
@@ -288,7 +288,7 @@ const AdminReport = () => {
     <div className="admin-reports-container flex flex-col text-21 font-bold mb-1">
       {/* Header and column categories bar */}
       <div style={{ width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 5, display: 'inline-flex' }}>
-        <div className="mt-5 mb-5 ml-36">
+        <div className="mt-5 mb-5 ml-5 lg:ml-36">
           <button style={{ fontWeight: 400 }} className="tab relative text-slate-300 border-b-2 border-slate-300 text-3xl">
             <span className="relative z-10">Clients</span>
           </button>
@@ -297,8 +297,8 @@ const AdminReport = () => {
           </button>
         </div>
 
-        <div className='flex items-center mx-36' style={{ alignSelf: 'stretch', height: 70, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 10, display: 'flex' }}>
-          <div className=' flex justify-between items-center w-full' style={{ alignSelf: 'stretch', paddingLeft: 48, paddingRight: 48, paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
+        <div className='flex items-center lg:mx-36' style={{ alignSelf: 'stretch', height: 70, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 10, display: 'flex' }}>
+          <div className=' flex justify-between items-center w-full px-5 md:px-12' style={{ alignSelf: 'stretch', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Title</div>
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Subject</div>
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Submitted By</div>
@@ -309,7 +309,7 @@ const AdminReport = () => {
       </div>
 
       <div>
-        <div className='flex items-center mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
+        <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
           <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Unread Reports</div>
           <button onClick={toggleUnreadReports} style={{ marginLeft: '5px' }}>
             {unreadReports ? ChevronDown : ChevronUp}
@@ -320,7 +320,7 @@ const AdminReport = () => {
         {returnReportsByPriority("")}
         {ReportDetailsPopup()}
 
-        <div className='flex items-center mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
+        <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
           <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>High Priority</div>
           <button onClick={toggleHighPriorityReports} style={{ marginLeft: '5px' }}>
             {highPriorityReports ? ChevronDown : ChevronUp}
@@ -329,7 +329,7 @@ const AdminReport = () => {
 
         {returnReportsByPriority("High")}
 
-        <div className='flex items-center mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
+        <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
           <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Medium Priority</div>
           <button onClick={toggleMediumPriorityReports} style={{ marginLeft: '5px' }}>
             {mediumPrioityReports ? ChevronDown : ChevronUp}
@@ -338,7 +338,7 @@ const AdminReport = () => {
 
         {returnReportsByPriority("Medium")}
 
-        <div className='flex items-center mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
+        <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
           <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Low Priority</div>
           <button onClick={toggleLowPriorityReports} style={{ marginLeft: '5px' }}>
             {lowPriorityReports ? ChevronDown : ChevronUp}
@@ -347,7 +347,7 @@ const AdminReport = () => {
 
         {returnReportsByPriority("Low")}
 
-        <div className='flex items-center mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
+        <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
           <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Spam</div>
           <button onClick={toggleSpamReports} style={{ marginLeft: '5px' }}>
             {spamReports ? ChevronDown : ChevronUp}
