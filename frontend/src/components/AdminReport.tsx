@@ -88,12 +88,12 @@ const AdminReport = () => {
   const [selectedReport, setSelectedReport] = useState<IReport | null>(null);
   // const { user } = useAuth();
   const [reports, setReports] = useState<IReport[]>([]);
-  const [unreadReports, setUnreadReports] = useState<Boolean>(false);
-  const [highPriorityReports, setHighPriorityReports] = useState<Boolean>(false);
-  const [mediumPrioityReports, setMediumPriorityReports] = useState<Boolean>(false);
-  const [lowPriorityReports, setLowPriorityReports] = useState<Boolean>(false);
-  const [spamReports, setSpamReports] = useState<Boolean>(false);
-  const [showPopup, setShowPopup] = useState<Boolean>(false);
+  const [unreadReports, setUnreadReports] = useState<boolean>(false);
+  const [highPriorityReports, setHighPriorityReports] = useState<boolean>(false);
+  const [mediumPrioityReports, setMediumPriorityReports] = useState<boolean>(false);
+  const [lowPriorityReports, setLowPriorityReports] = useState<boolean>(false);
+  const [spamReports, setSpamReports] = useState<boolean>(false);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
 
   // Define fetchReports outside of useEffect so it can be used elsewhere
   const fetchReports = async () => {
