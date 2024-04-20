@@ -106,27 +106,6 @@ const buttonStyle: React.CSSProperties = {
     fontWeight: 'normal', // Resets button text to normal weight
 };
 
-const submitButtonStyle: React.CSSProperties = {
-    ...buttonStyle, // Spread the existing button styles
-    backgroundColor: '#007bff', // Use a blue background
-    color: '#fff', // White text color
-    fontWeight: 'bold', // Make text bold
-    marginLeft: '10px', // Add some left margin
-};
-const continueButtonStyle: React.CSSProperties = {
-    // Add your styling here similar to the submit button
-    backgroundColor: '#007bff', // or any other color you prefer
-    color: '#fff',
-    fontWeight: 'bold',
-    padding: '10px 20px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    border: 'none',
-};
-
-
-
-
 // Originally, { firstName, lastName }: ProfProfileProps was passed in below, 
 // put it is not necessary if we are using useRouter, because we can access 
 // the firstName and lastName from the router's query
@@ -248,12 +227,15 @@ const ProfProfile = () => {
         // Make sure a user and a professional are defined before submitting
         if (user && professional) {
             try {
-                // Adjusted to match the Firebase collection's key IDs
+
                 const reportData = {
                     description: reportText,
                     patient_id: user.uid, // changed from patientID to patient_id
                     psych_id: professional.uid, // changed from psychiatristID to psych_id
-                    submittedAt: Timestamp.now() // Firebase automatically generates a unique ID for each document, so 'report_id' is not manually set here
+                    psych_name: professional.firstName + " " + professional.lastName,
+                    submittedAt: Timestamp.now(), // Firebase automatically generates a unique ID for each document, so 'report_id' is not manually set here
+                    priority: "",
+                    reporter_name: user.displayName
                 };
 
                 // Add the report to the "reports" collection in Firestore
@@ -372,7 +354,7 @@ const ProfProfile = () => {
                                 redirected back to the list of available psychiatrists. If you'd like to access
                                 your reported psychiatrists, check out the report section in your profile.
                             </p>
-                            <Continue onClick={handleContinue} />
+                            <Continue style={{ cursor: 'pointer' }} onClick={handleContinue} />
                         </div>
                     </div>
                 </div>

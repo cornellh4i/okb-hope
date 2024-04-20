@@ -87,7 +87,7 @@ const Navbar = () => {
               </li>
               <li className={`${router.pathname === '/reports' ? 'underline-offset-1 custom-active' : ''}`}>
                 {/* Update this href to go to the reports page */}
-                <Link href="https://www.wohohiame.com/" className="flex w-full justify-end">
+                <Link href={`/admin/${user?.uid}/admin_reports`} className="flex w-full justify-end">
                   <div className="text-[18px] text-[#195BA5]">Reports</div>
                 </Link>
               </li>

@@ -11,7 +11,7 @@ import okb_colors from "@/colors";
 import { fetchPatientReports } from '../../../../firebase/fetchData';
 import colors from '@/colors';
 
-const ReportCard = ({ report }) => {
+const ReportCard = ({ report, psychiatrist }) => {
   // Format the date string
   const formattedDate = report.submittedAt.toDate().toLocaleString();
 
@@ -30,7 +30,7 @@ const ReportCard = ({ report }) => {
   return (
     <div style={cardStyle} className="card bg-base-100 shadow-xl mb-4">
       <div>
-        <p style={{ fontSize: 14 }}>The following report for Dr. Gloria Shi was submitted on: {formattedDate}</p>
+        <p style={{ fontSize: 14 }}>The following report for Dr. {psychiatrist.firstName} {psychiatrist.lastName} was submitted on: {formattedDate}</p>
       </div>
       <p style={{ fontSize: 14 }}>Report Log</p>
       <div>
@@ -40,6 +40,7 @@ const ReportCard = ({ report }) => {
     </div>
   );
 };
+
 
 
 const ReportList: React.FC = () => {
@@ -153,23 +154,23 @@ const ReportList: React.FC = () => {
 
     return (
       <div className="modal modal-open">
-        <div className="modal-box" style={{
-          position: 'relative', display: 'flex', flexDirection: 'column', height: '50%', gap: 12, padding: 24, alignItems: 'center'
+        <div className="modal-box " style={{
+          position: 'relative', display: 'flex', flexDirection: 'column', maxHeight: '50%', gap: 12, padding: 24, alignItems: 'center'
         }}>
-          <Close className="modal-action" onClick={() => setShowReportHistoryPopup(false)} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
+          <Close className="modal-action" onClick={() => setShowReportHistoryPopup(false)} style={{ position: 'absolute', top: 0, right: 12, cursor: 'pointer' }} />
           <div className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 15 }}>Report Information</div>
           <div className="space-y-4" style={{
             width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex'
           }}>
             {selectedPsychiatristReports.map(report => (
-              <ReportCard key={report.report_id} report={report} />
+              <ReportCard key={report.report_id} report={report} psychiatrist={selectedPsychiatrist} />
             ))}
           </div>
         </div>
       </div>
-
     );
   };
+
 
   return (
     <div className={'px-4 lg:px-24 px-32 pt-9 pb-14'}>
