@@ -8,6 +8,7 @@ import Close from '@/assets/close.svg';
 import ReportPopup from './ReportPopup';
 import Cancel from "@/assets/cancel.svg";
 import Submit from "@/assets/submit.svg";
+import okb_colors from '@/colors';
 
 
 
@@ -312,7 +313,7 @@ const AdminReport = () => {
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
           <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Unread Reports</div>
           <button onClick={toggleUnreadReports} style={{ marginLeft: '5px' }}>
-            {unreadReports ? ChevronDown : ChevronUp}
+            {unreadReports ? <ChevronUp color={okb_colors.black} /> : <ChevronDown color={okb_colors.black} />}
           </button>
         </div>
 
@@ -323,7 +324,7 @@ const AdminReport = () => {
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
           <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>High Priority</div>
           <button onClick={toggleHighPriorityReports} style={{ marginLeft: '5px' }}>
-            {highPriorityReports ? ChevronDown : ChevronUp}
+            {highPriorityReports ? <ChevronUp color={okb_colors.black} /> : <ChevronDown color={okb_colors.black} />}
           </button>
         </div>
 
@@ -332,7 +333,7 @@ const AdminReport = () => {
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
           <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Medium Priority</div>
           <button onClick={toggleMediumPriorityReports} style={{ marginLeft: '5px' }}>
-            {mediumPrioityReports ? ChevronDown : ChevronUp}
+            {mediumPrioityReports ? <ChevronUp color={okb_colors.black} /> : <ChevronDown color={okb_colors.black} />}
           </button>
         </div>
 
@@ -341,7 +342,7 @@ const AdminReport = () => {
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
           <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Low Priority</div>
           <button onClick={toggleLowPriorityReports} style={{ marginLeft: '5px' }}>
-            {lowPriorityReports ? ChevronDown : ChevronUp}
+            {lowPriorityReports ? <ChevronUp color={okb_colors.black} /> : <ChevronDown color={okb_colors.black} />}
           </button>
         </div>
 
@@ -350,7 +351,7 @@ const AdminReport = () => {
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
           <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Spam</div>
           <button onClick={toggleSpamReports} style={{ marginLeft: '5px' }}>
-            {spamReports ? ChevronDown : ChevronUp}
+            {spamReports ? <ChevronUp color={okb_colors.black} /> : <ChevronDown color={okb_colors.black} />}
           </button>
         </div>
 
