@@ -21,6 +21,7 @@ import { Timestamp } from "firebase/firestore";
 import Cancel from "@/assets/cancel.svg";
 import Submit from "@/assets/submit.svg";
 import Continue from "@/assets/continue.svg";
+import colors from '@/colors';
 
 
 
@@ -369,7 +370,10 @@ const ProfProfile = () => {
                     <Image src={Photo} alt="Photo" width={1200} height={600} />
                 </figure> */}
                 <div className={`flex justify-center items-center md:justify-start md:items-start lg:shrink`}>
-                    <Image src={Photo} alt="Photo" className={`w-1200 h-600`} />
+                    <div style={{ width: 300, height: 300, backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`text-9xl font-normal text-white flex items-center justify-center`}>
+                        {professional.firstName?.charAt(0).toUpperCase()}
+                    </div>
+                    {/* <Image src={Photo} alt="Photo" className={`w-1200 h-600`} /> */}
                 </div>
                 <div className={`flex flex-col lg:w-2/3 gap-4 justify-center`}>
                     <div className={`flex flex-col md:flex-row gap-4`}>

@@ -51,6 +51,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             else
               router.push(`/patient/${user.uid}/dashboard`);
           }
+          else if (user.userType == "admin") {
+            if (router.pathname == "/database" || router.pathname == `/admin/[admin_id]/database`)
+              router.push(`/admin/${user.uid}/database`);
+            else if (router.pathname == "/data-analytics" || router.pathname == `/admin/[admin_id]/data-analytics`)
+              router.push(`/admin/${user.uid}/data-analytics`);
+          }
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
