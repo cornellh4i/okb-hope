@@ -18,9 +18,6 @@ const FilterUserTable = ({ currentRecords, onDelete, selectedUsers }) => {
     }
   };
 
-
-
-
   return (
     <div className="overflow-x-auto">
       <div className=" flex items-center mx-36">
@@ -38,10 +35,12 @@ const FilterUserTable = ({ currentRecords, onDelete, selectedUsers }) => {
         <div className="grid grid-cols-1 gap-4">
           {currentRecords && currentRecords.map((user, index) => {
             const name = user.name;
+            const id = user.uid;
             const username = user.email;
+            const user2 = user;
             return (
               <div>
-                <FilterCard key={index} name={name} username={username} created={"N/A"} active={"N/A"} isChecked={selectedUserIds.includes(user.id)}
+                <FilterCard key={index} user={user2} name={name} username={username} id={id} created={"N/A"} active={"N/A"} isChecked={selectedUserIds.includes(user.id)}
                   onCheckChange={(isChecked) => handleCheckChange(user.id, isChecked)} />
               </div>
             );

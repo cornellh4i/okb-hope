@@ -136,8 +136,7 @@ const AdminProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
         {/* Book Appointment button, action undefined but should lead to calendly */}
         <button
           className={`bg-okb-blue text-okb-white active:bg-gray-500 font-bold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
-          type="button"
-        >
+          type="button">
           Book Appointment
         </button>
       </div>

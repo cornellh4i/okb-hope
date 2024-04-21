@@ -1,14 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import WarningCircle from "@/assets/warning_circle.svg";
 import Check from "@/assets/green_check.svg";
+import { fetchAllUsers, fetchDocumentId, fetchPatientDetails, fetchProfessionalData } from '../../../firebase/fetchData';
+import { useRouter } from 'next/router';
 
 
-const FilterCard = ({ name, username, created, active, isChecked, onCheckChange }) => {
-
+const FilterCard = ({ user, name, username, id, created, active, isChecked, onCheckChange }) => {
+  const router = useRouter();
+  const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
 
   const handleOnChange = () => {
     onCheckChange(!isChecked);
   };
+
+  // Redirects to a professional's profile page and passes their uid as query parameter
+  function handleGoToProfProfile(psych_uid: string) {
+    router.push({
+      pathname: `/admin/${user.uid}/admin_prof_profile`,
+      query: { psych_uid: psych_uid as string }
+    });
+  }
 
   const cardStyle = {
     backgroundColor: isChecked ? '#D0DBEA' : 'transparent',
@@ -16,8 +27,6 @@ const FilterCard = ({ name, username, created, active, isChecked, onCheckChange 
   };
 
   const Icon = name.toLowerCase() === "brianna liu" ? Check : WarningCircle;
-
-
 
   return (
 
@@ -27,7 +36,7 @@ const FilterCard = ({ name, username, created, active, isChecked, onCheckChange 
           <div style={{ width: "40px", marginLeft: "10px" }}>
             <input type="checkbox" className="checkbox" checked={isChecked} onChange={handleOnChange} />
           </div>
-          <div className="flex items-start w-full">
+          <div className="flex items-start w-full" onClick={() => handleGoToProfProfile(id)}>
             <div className="flex flex-row mr-28" style={{ width: "180px", marginLeft: "20px" }}>
               <div className="basis-4/5">{name}</div>
               <div className="basis-1/5"><Icon /></div>

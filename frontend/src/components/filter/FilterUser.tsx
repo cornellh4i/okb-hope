@@ -75,28 +75,27 @@ const FilterUser = () => {
 
     const handleClick = () => {
         setPatientView((prevPatientView) => !prevPatientView);
-      };
+    };
 
     const handleClientClick = () => {
-    setClientView(true);
-    setPsychiatristView((prev) => !prev); // Toggle the state of the second button
+        setClientView(true);
+        setPsychiatristView((prev) => !prev); // Toggle the state of the second button
     };
 
     const handlePsychiatristClick = () => {
-    setClientView((prev) => !prev); // Toggle the state of the first button
-    setPsychiatristView(true);
-    };  
+        setClientView((prev) => !prev); // Toggle the state of the first button
+        setPsychiatristView(true);
+    };
 
 
     return (
         <div className="flex flex-col gap-8">
             <div className="mt-5 mb-5 ml-36">
-            <button
-                className={`tab relative ${
-                    clientView ? "text-sky-700 border-b-2 border-sky-700" : "text-slate-300 border-b-2 border-slate-300"
-                } text-3xl`}
-                onClick={handleClientClick}
-            >
+                <button
+                    className={`tab relative ${clientView ? "text-sky-700 border-b-2 border-sky-700" : "text-slate-300 border-b-2 border-slate-300"
+                        } text-3xl`}
+                    onClick={handleClientClick}
+                >
                     <span className="relative z-10 ">Clients</span>
                     {/* <span
                         className={`block absolute left-0 bottom-0 w-full h-0.5 ${
@@ -106,9 +105,8 @@ const FilterUser = () => {
                 </button>
 
                 <button
-                    className={`tab tab-bordered relative ${
-                        psychiatristView ? "text-sky-700 border-b-2 border-sky-700" : "text-slate-300 border-b-2 border-slate-300"
-                    } text-3xl`}
+                    className={`tab tab-bordered relative ${psychiatristView ? "text-sky-700 border-b-2 border-sky-700" : "text-slate-300 border-b-2 border-slate-300"
+                        } text-3xl`}
                     onClick={handlePsychiatristClick}
                 >
                     <span className="relative z-10">Psychiatrists</span>
