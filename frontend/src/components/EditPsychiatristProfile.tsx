@@ -18,6 +18,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [position, setPosition] = useState('');
+  const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
   const [languages, setLanguages] = useState<string[]>([]);
   const [gender, setGender] = useState(0);
@@ -33,6 +34,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
         setFirstName(data.firstName);
         setLastName(data.lastName);
         setPosition(data.position);
+        setLocation(data.location)
         setDescription(data.description);
         setLanguages(data.language);
         setGender(data.gender);
@@ -51,6 +53,12 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
 
   const handlePositionChange = (value) => {
     setPosition(value);
+  }
+
+  const handleLocationChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    const capitalized = value.replace(/\b(\w)/g, (s) => s.toUpperCase());
+    setLocation(capitalized);
   }
 
   const handleDescriptionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -98,6 +106,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
       firstName: firstName,
       lastName: lastName,
       position: position,
+      location: location,
       description: description,
       language: languages,
       gender: gender
@@ -204,6 +213,19 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
                 </label>
               ))}
             </ul>
+          </div>
+
+          {/* Location */}
+          <div tabIndex={0} className="form-control w-full">
+            <div className="label-container">
+              <label className="label">
+                <span className="text-lg">Location (Required)</span>
+              </label>
+            </div>
+            <div className="flex items-center">
+              <Vertical_line className=""></Vertical_line>
+              <input type="text" value={location} placeholder="Type here" className={`input input-bordered w-full border-2 ml-3`} style={{ borderColor: okb_colors.light_blue }} onChange={handleLocationChange} />
+            </div>
           </div>
 
           {/* About Me Description */}
