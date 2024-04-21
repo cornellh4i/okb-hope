@@ -58,7 +58,12 @@ const PsychQuestionnaire = () => {
     }
 
     const handleLocationChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-        setLocation(event.target.value);
+        const selectedLocation = (event.target.value);
+        const loc = selectedLocation.split(' ');
+        const fixCase = loc.map(loc => loc.charAt(0).toUpperCase() + loc.slice(1).toLowerCase()
+        );
+        const result = fixCase.join(' ');
+        setLocation(result);
     }
 
 
