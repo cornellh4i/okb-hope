@@ -16,6 +16,14 @@ import { blue } from '@mui/material/colors';
 
 
 const ReportCard = ({ report, onReportClick }) => {
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleReportClick = () => {
+    onReportClick(report);
+    // Close the dropdown when a report is clicked
+    setIsDropdownOpen(false);
+  };
   const getFormattedDate = (date) => {
     if (!date) return 'Unknown date';
     try {
@@ -243,14 +251,6 @@ const AdminReport = () => {
       marginTop: '20px'
     };
 
-    const dropdownStyle = {
-      backgroundColor: '#519AEB',
-      color: 'white',
-      padding: '8px',
-      borderRadius: '5px',
-      border: 'none',
-      cursor: 'pointer',
-    };
 
     const cancelButtonStyle = {
       backgroundColor: 'white',
@@ -265,7 +265,8 @@ const AdminReport = () => {
       backgroundColor: '#519AEB',
       color: 'white',
       padding: '8px',
-      borderRadius: '5px',
+      borderTopLeftRadius: '5px',
+      borderTopRightRadius: '5px',
       border: 'none',
       cursor: 'pointer',
       display: 'flex',
@@ -274,14 +275,16 @@ const AdminReport = () => {
       position: 'relative' // Position the button relatively
     };
 
+
     const dropdownContainerStyle = {
       position: 'absolute', // Position the dropdown absolutely
-      top: 'calc(100% + 5px)', // Position below the button
       left: 0,
       zIndex: 1001, // Ensure the dropdown appears above the popup
-      borderRadius: '5px',
+      // borderRadius: '5px',
       overflow: 'hidden',
     };
+
+
 
     const dropdownListStyle = {
       margin: 0,
@@ -289,18 +292,6 @@ const AdminReport = () => {
       listStyle: 'none',
     };
 
-    // const dropdownItemStyle = {
-    //   padding: '8px 16px',
-    //   color: 'black',
-    //   cursor: 'pointer',
-    //   transition: 'background-color 0.3s ease',
-    //   backgroundColor: '#E5E7EB', // Gray background for dropdown items
-    // };
-
-    // const dropdownItemHoverStyle = {
-    //   backgroundColor: '#519AEB', // Background color when hovered
-    //   color: 'white', // Text color when hovered
-    // };
 
     const toggleDropdown = () => {
       setIsOpen(!isOpen);
@@ -316,22 +307,22 @@ const AdminReport = () => {
       color: 'black',
       cursor: 'pointer',
       transition: 'background-color 0.3s ease',
-      backgroundColor: '#E5E7EB', // Gray background for dropdown items by default
+      backgroundColor: '#E5E7EB',
     };
 
     const dropdownItemHoverStyle = {
-      backgroundColor: '#519AEB', // Blue background when hovered
-      color: 'white', // White text color when hovered
+      backgroundColor: '#E5E7EB',
+      color: 'black',
     };
 
     const handleMouseEnter = (event) => {
-      event.target.style.backgroundColor = '#519AEB'; // Change background color on hover
-      event.target.style.color = 'white'; // Change text color on hover
+      event.target.style.backgroundColor = '#519AEB';
+      event.target.style.color = 'white';
     };
 
     const handleMouseLeave = (event) => {
-      event.target.style.backgroundColor = '#E5E7EB'; // Reset background color when not hovered
-      event.target.style.color = 'black'; // Reset text color when not hovered
+      event.target.style.backgroundColor = '#E5E7EB';
+      event.target.style.color = 'black';
     };
 
 
@@ -461,4 +452,3 @@ const AdminReport = () => {
 };
 
 export default AdminReport;
-
