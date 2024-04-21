@@ -129,7 +129,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   };
 
   return (
-    <div className='name-area flex py-4 px-6 justify-between items-center shrink-0 w-full bg-white border-b-solid border-b-2 border-[#DEDEDE]'>
+    <div className='name-area flex py-2 px-6 justify-between items-center shrink-0 w-full page-background border-b-solid border-b-2 border-[#DEDEDE]'>
       <p className='text-[24px] font-semibold color-black'>{name}</p>
       <div className="dropdown dropdown-click dropdown-bottom dropdown-end">
         <button className={`rounded-full color-[${okb_colors.dark_gray}] hover:bg-gray-200`}>
@@ -193,15 +193,19 @@ const ChatArea = () => {
     }
   }, [router.isReady, router.query]);
 
-  return (
-    <div className="chat-area flex flex-col h-screen">
-      <NameArea name={displayName} credentials="Credentials" role={role} />
-      <div className="flex-grow overflow-scroll">
-        <div className='h-full overflow-scroll'><MessageList /></div>
+  if (displayName !== "") {
+    return (
+      <div className="chat-area flex flex-col h-screen page-background">
+        <NameArea name={displayName} credentials="Credentials" role={role} />
+        <div className="flex-grow overflow-scroll">
+          <div className='h-full overflow-scroll'><MessageList /></div>
+        </div>
+        <MessageComposer />
       </div>
-      <MessageComposer />
-    </div>
-  );
+    );
+  } else {
+    return null
+  }
 };
 
 export default ChatArea;

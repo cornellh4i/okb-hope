@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { db, auth } from '../../../firebase/firebase';
 import { collection, addDoc, query, where, getDocs, serverTimestamp, doc, updateDoc } from "firebase/firestore";
 import { useRouter } from 'next/router';
@@ -8,6 +8,7 @@ const MessageComposer: React.FC = () => {
   const [message, setMessage] = useState("");
   const [psychiatristId, setPsychiatristId] = useState('');
   const [patientId, setPatientId] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const uid = auth.currentUser?.uid;
 
   useEffect(() => {
@@ -23,6 +24,11 @@ const MessageComposer: React.FC = () => {
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
   };
 
   const sendMessage = async (e: any) => {
@@ -103,26 +109,34 @@ const MessageComposer: React.FC = () => {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); 
       sendMessage(e);
     }
   };
+  
 
   return (
-    <div className="message-composer bg-white py-2 rounded-b-md border-solid border-2 border-gray-400">
-      <div className="flex items-center rounded-2xl border-solid border-2 border-gray-400 pl-2 mx-4">
-        <textarea
+    <div className="message-composer page-background py-2">
+      <div className="flex items-center rounded-3xl border-solid border border-black pl-2 mx-4">
+      <textarea
+          ref={textareaRef}
           value={message}
-          onChange={handleMessageChange}
+          onInput={handleMessageChange}
           onKeyDown={handleKeyDown}
           placeholder="Send a Message"
-          className="w-full h-full overflow-scroll"
+          className="page-background w-full max-h-[250px] overflow-auto m-0 p-2"
+          style={{ resize: "none", outline: "none", height: "auto" }}
+          rows={1}
         ></textarea>
 
         <button
           type="button"
           onClick={sendMessage}
-          className="bg-gray-400 rounded-full text-white italic font-bold px-2 mx-4 my-2"
-        >Send</button>
+          className="rounded-full text-white italic font-bold px-2 mx-4 my-2"
+          style={{ backgroundColor: '#195BA5' }}
+        >
+          Send
+        </button>
       </div>
     </div>
   );

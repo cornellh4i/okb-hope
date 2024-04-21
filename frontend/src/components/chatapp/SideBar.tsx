@@ -44,10 +44,14 @@ const Sidebar: React.FC = () => {
     : psychiatrists;
 
   return (
-    <div className="flex flex-col sidebar border-r-2 border-gray-300 bg-white h-full overflow-y-auto">
-      <SearchBar onSearch={handleSearch} />
+    <div className="flex flex-col sidebar border-r-2 border-gray-300 page-background h-full overflow-y-auto">
+       <div>
+      <div className="px-2"> {/* Added width classes here */}
+        <SearchBar onSearch={handleSearch} />
+      </div>
+    </div>
 
-      <div className="flex flex-col conversation-list bg-white">
+      <div className="flex flex-col conversation-list">
         {/* Unread Messages */}
         <div className='flex flex-col unread-conversation-list'>
           <div className='inline-flex justify-between align-center bg-okb-blue md:rounded-full py-2 md:px-6 px-2 items-center text-white md:mx-5 mb-2'>
