@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, query, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
-import { IReport } from '@/schema';
+// import { IReport } from '@/schema';
 import ChevronDown from '@/assets/chevron_down';
 import ChevronUp from '@/assets/chevron_up';
 import Close from '@/assets/close.svg';
@@ -9,6 +9,8 @@ import ReportPopup from './ReportPopup';
 import Cancel from "@/assets/cancel.svg";
 import Submit from "@/assets/submit.svg";
 import okb_colors from '@/colors';
+import { IPsychiatrist, IReport } from '@/schema';
+
 
 
 
@@ -41,44 +43,53 @@ const ReportCard = ({ report, onReportClick }) => {
     justifyContent: 'space-between',
     alignItems: 'center',
   };
-
-  // Using flex-grow to allow each text area to expand or shrink as needed
-  const textStyle = {
+  const subjectStyle = {
     color: 'black',
     fontSize: '16px',
     fontWeight: '400',
-    padding: '0 10px', // Providing some padding
-    textAlign: 'left' as const,
-    flex: '1 1 30%', // Allow the box to grow and shrink with flexbox
+    padding: '0 10px', // Equal padding on left and right
+    textAlign: 'center', // Center text
+    flex: '1 1 30%', // Adjust flex basis for responsiveness
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
   };
 
-  const textStyleS = {
-    ...textStyle,
-    flex: '1 1 20%' // Smaller flex-basis because title and date might not need as much space
+  const col2style = {
+    ...subjectStyle,
+    flex: '1 1 20%', // Adjusted flex basis
+    paddingLeft: '0px', // No left padding for column two
+    paddingRight: '140px' // Equal padding between columns
   };
 
-  const timeSubmittedStyle = {
-    ...textStyleS, // inherit all the base styles
-    paddingLeft: '45px', // Increase the left padding to move text to the right
-    paddingRight: '0px'
+  const col3style = {
+    ...subjectStyle,
+    flex: '1 1 20%', // Adjusted flex basis
+    paddingLeft: '0px', // Equal padding between columns
+    paddingRight: '30px' // Equal padding between columns
   };
 
-  const reporterSubmittedStyle = {
-    ...textStyleS, // inherit all the base styles
-    paddingLeft: '5px', // Increase the left padding to move text to the right
-    paddingRight: '0px'
+  const col4style = {
+    ...subjectStyle,
+    flex: '1 1 20%', // Adjusted flex basis
+    paddingLeft: '90px', // More left padding for column four to move it to the right
+    paddingRight: '0px' // No right padding for column four
+  };
+
+  const col1style = {
+    ...subjectStyle,
+    flex: '1 1 20%', // Adjusted flex basis
+    paddingLeft: '0px', // No left padding for column one
+    paddingRight: '80px' // More right padding for column one to move it further to the left
   };
 
   return (
     <div className="flex items-center mx-5 lg:mx-36 my-2" onClick={() => onReportClick(report)}>
       <div className='flex justify-between items-center w-full rounded-lg' style={cardStyle}>
-        <div style={textStyleS}>{report.title || 'Report Subject'}</div>
-        <div style={textStyle}>{truncateText(report.description, 25)}</div>
-        <div style={reporterSubmittedStyle}>{report.reporter_name}</div>
-        <div style={timeSubmittedStyle}>{formattedDate}</div>
+        <div style={col1style}>{truncateText(report.description, 25)}</div>
+        <div style={col2style}>{report.reporter_name}</div>
+        <div style={col3style}>Dr. {report.psych_name}</div>
+        <div style={col4style}>{formattedDate}</div>
       </div>
     </div>
   );
@@ -109,6 +120,8 @@ const AdminReport = () => {
       } as IReport;
     });
     setReports(fetchedReports);
+
+    console.log(fetchedReports)
   };
 
   // Call fetchReports inside useEffect
@@ -190,7 +203,11 @@ const AdminReport = () => {
             key={report.report_id}
             className="report-card"
             style={{ cursor: 'pointer' }}>
-            <ReportCard key={report.report_id} report={report} onReportClick={handleOpenPopup} />
+            <ReportCard
+              key={report.report_id}
+              report={report}
+              onReportClick={handleOpenPopup}
+            />
           </div>
         )) : null}
       </div>
@@ -248,7 +265,7 @@ const AdminReport = () => {
         <div className="modal modal-open">
           <div className="modal-box" style={{ maxHeight: '50%' }}>
             <Close className="modal-action" onClick={handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
-            <h1 className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 20, paddingBottom: '10px' }}>Report Subject</h1>
+            <h1 className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 20, paddingBottom: '10px' }}>Report Information</h1>
             <div className="space-y-4" style={{
               width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex'
             }}>
@@ -299,9 +316,10 @@ const AdminReport = () => {
 
         <div className='flex items-center lg:mx-36' style={{ alignSelf: 'stretch', height: 70, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 10, display: 'flex' }}>
           <div className=' flex justify-between items-center w-full px-5 md:px-12' style={{ alignSelf: 'stretch', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
-            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Title</div>
+            {/* <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Title</div> */}
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Subject</div>
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Submitted By</div>
+            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Person Reported</div>
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Time Submitted</div>
           </div>
           <div style={{ alignSelf: 'stretch', height: 0, border: '1.5px black solid' }}></div>
