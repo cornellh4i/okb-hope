@@ -31,18 +31,18 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     async function fetchUsers() {
-      const userSnapshot = await getDocs(collection(db, "user"));
-      const psychiatrists: UserType[] = userSnapshot.docs.map((doc) => {
+      const userSnapshot = await getDocs(collection(db, "users"));
+      const users: UserType[] = userSnapshot.docs.map((doc) => {
         const data = doc.data();
         return {
           ...data,
           id: doc.id,
         } as UserType;
       });
-      setUserData(psychiatrists);
+      setUserData(users);
 
       // Calculate the number of pages based on all user records
-      setNumPages(Math.ceil(psychiatrists.length / recordsPerPage));
+      setNumPages(Math.ceil(users.length / recordsPerPage));
     }
     fetchUsers();
   }, [recordsPerPage]);
