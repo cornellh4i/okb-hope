@@ -10,6 +10,7 @@ import Cancel from "@/assets/cancel.svg";
 import Submit from "@/assets/submit.svg";
 import okb_colors from '@/colors';
 import { IPsychiatrist, IReport } from '@/schema';
+import { blue } from '@mui/material/colors';
 
 
 
@@ -215,6 +216,7 @@ const AdminReport = () => {
   }
 
   const ReportDetailsPopup = () => {
+    const [isOpen, setIsOpen] = useState(false);
     if (!showPopup) return null;
 
     const priorities = ['High', 'Medium', 'Low', 'Spam'];
@@ -236,9 +238,9 @@ const AdminReport = () => {
 
     const buttonsContainerStyle = {
       display: 'flex',
-      justifyContent: 'center', // Aligns child elements (buttons) in the center
+      justifyContent: 'center',
       gap: '8px',
-      marginTop: '20px' // Adds some space between the buttons and other elements above
+      marginTop: '20px'
     };
 
     const dropdownStyle = {
@@ -259,6 +261,79 @@ const AdminReport = () => {
       cursor: 'pointer',
     };
 
+    const assignPriorityButtonStyle = {
+      backgroundColor: '#519AEB',
+      color: 'white',
+      padding: '8px',
+      borderRadius: '5px',
+      border: 'none',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '5px',
+      position: 'relative' // Position the button relatively
+    };
+
+    const dropdownContainerStyle = {
+      position: 'absolute', // Position the dropdown absolutely
+      top: 'calc(100% + 5px)', // Position below the button
+      left: 0,
+      zIndex: 1001, // Ensure the dropdown appears above the popup
+      borderRadius: '5px',
+      overflow: 'hidden',
+    };
+
+    const dropdownListStyle = {
+      margin: 0,
+      padding: 0,
+      listStyle: 'none',
+    };
+
+    // const dropdownItemStyle = {
+    //   padding: '8px 16px',
+    //   color: 'black',
+    //   cursor: 'pointer',
+    //   transition: 'background-color 0.3s ease',
+    //   backgroundColor: '#E5E7EB', // Gray background for dropdown items
+    // };
+
+    // const dropdownItemHoverStyle = {
+    //   backgroundColor: '#519AEB', // Background color when hovered
+    //   color: 'white', // Text color when hovered
+    // };
+
+    const toggleDropdown = () => {
+      setIsOpen(!isOpen);
+    };
+
+    const handlePrioritySelection = (selectedPriority) => {
+      updateReportPriority(selectedPriority);
+      toggleDropdown();
+    };
+
+    const dropdownItemStyle = {
+      padding: '8px 16px',
+      color: 'black',
+      cursor: 'pointer',
+      transition: 'background-color 0.3s ease',
+      backgroundColor: '#E5E7EB', // Gray background for dropdown items by default
+    };
+
+    const dropdownItemHoverStyle = {
+      backgroundColor: '#519AEB', // Blue background when hovered
+      color: 'white', // White text color when hovered
+    };
+
+    const handleMouseEnter = (event) => {
+      event.target.style.backgroundColor = '#519AEB'; // Change background color on hover
+      event.target.style.color = 'white'; // Change text color on hover
+    };
+
+    const handleMouseLeave = (event) => {
+      event.target.style.backgroundColor = '#E5E7EB'; // Reset background color when not hovered
+      event.target.style.color = 'black'; // Reset text color when not hovered
+    };
+
 
     return (
       <div>
@@ -266,37 +341,43 @@ const AdminReport = () => {
           <div className="modal-box" style={{ maxHeight: '50%' }}>
             <Close className="modal-action" onClick={handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
             <h1 className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 20, paddingBottom: '10px' }}>Report Information</h1>
-            <div className="space-y-4" style={{
-              width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex'
-            }}>
+            <div className="space-y-4">
               <ReportPopup key={selectedReport?.report_id} report={selectedReport} />
             </div>
             <div style={buttonsContainerStyle}>
               <button
                 style={cancelButtonStyle}
                 onClick={handleClosePopup}
-              >
-                Cancel
-              </button>
-              <select
-                style={dropdownStyle}
-                value={selectedReport?.priority || 'Assign Priority'}
-                onChange={(e) => updateReportPriority(e.target.value)}>
-                <option disabled style={dropdownStyle}>Assign Priority</option>
-                {priorities.map((priority) => (
-                  <option key={priority} value={priority} style={dropdownStyle}>
-                    {priority !== "Spam" ? priority + " Priority" : priority}
-                  </option>
-                ))}
-              </select>
-
-
+              >Cancel</button>
+              <div style={{ position: 'relative' }}>
+                <button onClick={toggleDropdown} style={assignPriorityButtonStyle}>
+                  Assign Priority {isOpen ? <ChevronUp color='white' /> : <ChevronDown color='white' />}
+                </button>
+                {isOpen && (
+                  <div style={dropdownContainerStyle}>
+                    <ul style={dropdownListStyle}>
+                      {priorities.map((priority) => (
+                        <li
+                          key={priority}
+                          onClick={() => handlePrioritySelection(priority)}
+                          style={{ ...dropdownItemStyle, ...(isOpen && dropdownItemHoverStyle) }}
+                          onMouseEnter={handleMouseEnter}
+                          onMouseLeave={handleMouseLeave}
+                        >
+                          {priority !== "Spam" ? priority + " Priority" : priority}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
     );
   };
+
 
 
 
