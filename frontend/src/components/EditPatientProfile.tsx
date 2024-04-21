@@ -58,10 +58,6 @@ const EditPatientProfile = () => {
     setLastName(event.target.value);
   }
 
-  const handleConcernsChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const valuesArray = event.target.value.split(',').map(item => item.trim());
-    setConcerns(valuesArray);
-  };
 
   const handlePreviousTherapyExperienceChange = (value) => {
     setPreviousTherapyExperience(value);
@@ -77,7 +73,7 @@ const EditPatientProfile = () => {
 
   const handleConcernChange = (event) => {
     const selectedConcerns = event.target.value;
-    const updatedConcerns = [...concernsList];
+    const updatedConcerns = [...concerns];
 
     if (event.target.checked) {
       updatedConcerns.push(selectedConcerns);
@@ -200,22 +196,22 @@ const EditPatientProfile = () => {
           {/* Concerns */}
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
-              <div className="label">
-                <span className="text-lg">Are there any specific concerns you would like to discuss with your counselor?</span>
-              </div>
+              <label className="label">
+                <span className="text-lg">Are there any specific concerns you would like to discuss with your counselor? </span>
+              </label>
               <div className="flex items-center">
-                <Vertical_line></Vertical_line>
+                <Vertical_line className=""></Vertical_line>
                 <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
-                  <div className="input-container w-full ml-3">
+                  <div className="input-container w-full ml-3" >
                     <div
                       className="input input-bordered w-full border-2 pl-10 bg-white"
                       style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
                     >
-                      {concerns}
+                      {concerns.join(", ")}
                     </div>
                   </div>
                   <div id="chevron" className="flex flex-col absolute items-center justify-center align-center transform translate-x-8">
-                    <Chevron_down></Chevron_down>
+                    <Chevron_down ></Chevron_down>
                   </div>
                 </div>
               </div>
@@ -223,15 +219,14 @@ const EditPatientProfile = () => {
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
               {concernsList.map((value) => (
                 <label key={value} className="label cursor-pointer">
-                  <span className="label-text" onClick={() => handlePreviousTherapyExperienceChange(value)}>
-                    {value}
-                  </span>
+                  <span className="label-text">{value}</span>
                   <input
-                    type="radio"
-                    className="radio"
-                    name="spokenWithCounselor"
-                    checked={previousTherapyExperience === value}
-                    onChange={() => handlePreviousTherapyExperienceChange(value)}
+                    type="checkbox"
+                    className="checkbox"
+                    name="concerns"
+                    value={value}
+                    checked={concerns.includes(value)}
+                    onChange={handleConcernChange}
                   />
                 </label>
               ))}
