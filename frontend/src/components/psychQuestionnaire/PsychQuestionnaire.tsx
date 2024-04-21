@@ -61,11 +61,11 @@ const PsychQuestionnaire = () => {
     const handlePosition = (event: ChangeEvent<HTMLInputElement>) => {
         const selectedPosition = (event.target.value);
         switch (selectedPosition) {
-            case 'psychiatrist':
-                setPosition("psychiatrist");
+            case 'Psychiatrist':
+                setPosition("Psychiatrist");
                 break;
-            case 'nurse':
-                setPosition("nurse");
+            case 'Nurse':
+                setPosition("Nurse");
                 break;
             default:
                 setPosition("")

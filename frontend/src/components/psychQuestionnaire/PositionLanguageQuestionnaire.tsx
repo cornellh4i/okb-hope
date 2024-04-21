@@ -1,4 +1,3 @@
-// 2nd page of the Questionnaire
 import { ChangeEvent } from 'react';
 import okb_colors from "@/colors";
 
@@ -12,18 +11,20 @@ import FormGroup from '@mui/material/FormGroup';
 
 interface QuestionnaireProps {
     setPosition: string;
+    position: string;
     languages: string[];
     aboutYourself: string;
     handleAboutYourself: (event: ChangeEvent<HTMLTextAreaElement>) => void
     setLanguages: React.Dispatch<React.SetStateAction<string[]>>;
+    otherPosition: string;
+    handleOtherPosition: (event: ChangeEvent<HTMLTextAreaElement>) => void
     checked: { [key: string]: boolean };
     setChecked: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
     handleCheck: (event: ChangeEvent<HTMLInputElement>) => void;
     handlePosition: (event: ChangeEvent<HTMLInputElement>) => void;
 
 }
-//2nd page of questionnaire
-const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, handleAboutYourself, setChecked, handleCheck, handlePosition }: QuestionnaireProps) => {
+const PositionLanguageQuestionnaire = ({ setPosition, position, languages, otherPosition, handleOtherPosition, aboutYourself, setLanguages, checked, handleAboutYourself, setChecked, handleCheck, handlePosition }: QuestionnaireProps) => {
 
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 mb-5`}>
@@ -37,16 +38,33 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
                         <span className={`text-lg font-semibold font-montserrat`}>What is your current position?</span>
                         <span className={`text-lg text-red-600`}>*</span>
                     </div>
-                    <FormControlLabel control={<Radio checked={checked['psychiatrist']} value={`psychiatrist`} />} className={` ml-1 `} label={
+                    <FormControlLabel control={<Radio checked={checked['Psychiatrist']} value={`Psychiatrist`} onChange={handlePosition}/>} className={` ml-1 `} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Psychiatrist
                         </span>
                     } />
-                    <FormControlLabel control={<Radio checked={checked['nurse']} value={`nurse`} />} className={` ml-1 `} label={
+                    <FormControlLabel control={<Radio checked={checked['Nurse']} value={`Nurse`} onChange={handlePosition} />} className={` ml-1 `} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Nurse
                         </span>
                     } />
+                    <FormControlLabel control={<Radio checked={checked['other']} value={`other`} onChange={handlePosition} />} className={` ml-1 `} label={
+                        <span style={{ fontWeight: 300, fontSize: 18 }}>
+                            Other
+                        </span>
+                    } />
+                    {checked && (
+                    <textarea
+                        value={position}
+                        onChange={handleOtherPosition}
+                        placeholder="Type here"
+                        className={`input input-bordered w-full mr-3 border-2 rounded-2xl`}
+                        style={{
+                            borderColor: okb_colors.light_blue,
+                            height: 45,
+                        }}
+                        />
+                      )}
                 </RadioGroup>
             </FormControl>
             <div>
