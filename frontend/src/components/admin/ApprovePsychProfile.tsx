@@ -22,7 +22,8 @@ import Submit from "@/assets/submit.svg";
 import Continue from "@/assets/continue.svg";
 import Availability from '../profProfile/Availability';
 import WarningHover from './WarningHover';
-
+import { ToastContainer, toast, Bounce} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 interface ProfProfileProps {
   firstName: string;
@@ -137,7 +138,7 @@ const ProfProfile = () => {
   const [showReportPopup, setShowReportPopup] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [reportText, setReportText] = useState('');
-
+  const [approval, setApproved] = useState(false);
 
 
   // Set the initial state of professional to null instead of DummyPsychiatrist 
@@ -323,6 +324,27 @@ const ProfProfile = () => {
     onClose();
   };
 
+  const handleApproveYes = () => {
+    setApproved(true);
+    toast.success(user?.displayName + " is now approved.", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      transition: Bounce,
+      });
+  }
+  if (typeof document !== 'undefined') {
+    document.documentElement.style.setProperty('--toastify-color-success', '#bddcae');
+    document.documentElement.style.setProperty('--toastify-icon-color-success', 'green');
+    document.documentElement.style.setProperty('--toastify-toast-width', '50%');
+    document.documentElement.style.setProperty('--toastify-text-color-success', '#000000');
+
+  }
   // Render conditionally based on whether professional data is available
   if (professional === null) {
     return <div>Loading...</div>;
@@ -392,7 +414,7 @@ const ProfProfile = () => {
         <div className={`flex flex-col lg:w-2/3 gap-4 justify-center`}>
           <div className={`flex flex-col md:flex-row gap-4`}>
             <div className='flex gap-x-4 justify-center items-center md:justify-start md:items-start flex-row md:flex-col'>
-              <div className={`text-3xl text-bold`}>
+              <div className={`text-3xl font-bold`}>
                 {professional.firstName + " " + professional.lastName}
               </div>
               <div className={`text-normal text-xl italic text-dark-grey`}>
@@ -402,7 +424,7 @@ const ProfProfile = () => {
             <div className='flex flex-row gap-4 justify-center items-center md:justify-start md:items-start'>
               {/* Report button, action is currently undefined */}
               <div className={`shrink`} >
-                <WarningHover />
+                <WarningHover approved={approval}/>
               </div>
               {/* Download button, action is currently undefined */}
               <div className={`shrink`}>
@@ -448,22 +470,49 @@ const ProfProfile = () => {
                 <span className="ml-2">www.mentalhealthsite.com</span>
               </a>
             </div>
+          </div>
 
+          <div className="bg-[#d0dbe9] mt-12 h-40 w-80 text-center text-lg text-Black font-extrabold py-2 px-4 pt-7 rounded-xl bg-opacity-50 border border-blue-500 ">
+            Would you like to approve this account?
+            <div className="grid grid-cols-2 mt-4 items-center">
+              <button className={`bg-white w-1/2 border-2 border-[#509bea] rounded-lg text-black font-normal justify-end justify-self-end mr-2 shadow hover:shadow-lg outline-none focus:outline-none active:bg-gray-500 ease-linear transition-all duration-150`}
+                type="button"
+                onClick={handleBookAppointment}>
+                No
+              </button>
+              <button className={`bg-[#509bea] border-2 w-1/2 border-[#509bea] text-white rounded-lg font-normal justify-start justify-self-start ml-2 shadow hover:shadow-lg outline-none focus:outline-none active:bg-gray-500 ease-linear transition-all duration-150`}
+                type="button"
+                onClick={handleApproveYes}>
+                Yes
+              </button>
+            </div>
           </div>
         </div>
       </div>
-      <h2 className={`text-center lg:text-start font-extrabold text-2xl mt-10 mb-2`}>Availability</h2>
-      <Availability availability={professional?.availability} />
+      {/* <h2 className={`text-center lg:text-start font-extrabold text-2xl mt-10 mb-2`}>Availability</h2>
+      <Availability availability={professional?.availability} /> */}
 
       <div className={`flex flex-row justify-center content-center`}>
-        {/* Book Appointment button, action undefined but should lead to calendly */}
-        <button
+        {/* <button
           className={`bg-okb-blue text-okb-white active:bg-gray-500 font-bold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
           type="button"
           onClick={handleBookAppointment}
         >
           Book Appointment
-        </button>
+        </button> */}
+         <ToastContainer style={{width:"50%"}}
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+        />
       </div>
     </div>
   );

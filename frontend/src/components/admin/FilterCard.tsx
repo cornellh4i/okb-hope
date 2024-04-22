@@ -15,10 +15,12 @@ const FilterCard = ({ user, name, username, id, created, active, isChecked, onCh
 
   // Redirects to a professional's profile page and passes their uid as query parameter
   function handleGoToProfProfile(psych_uid: string) {
-    router.push({
-      pathname: `/admin/${user.uid}/admin_prof_profile`,
-      query: { psych_uid: psych_uid as string }
-    });
+    if (user.userType === 'psychiatrist') {
+      router.push({
+        pathname: `/admin/${user.uid}/admin_prof_profile`,
+        query: { psych_uid: psych_uid as string }
+      });
+    }
   }
 
   const cardStyle = {
