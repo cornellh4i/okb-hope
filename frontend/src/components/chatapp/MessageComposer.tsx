@@ -31,39 +31,124 @@ const MessageComposer: React.FC = () => {
     }
   };
 
-  const sendMessage = async (e: any) => {
+  // const sendMessage = async (e: any) => {
+  //   e.preventDefault();
+
+  //   const uid = auth.currentUser?.uid;
+  //   const photoURL = auth.currentUser?.photoURL;
+  //   const deletedByPatient = false;
+  //   const deletedByPsych = false;
+  //   const participants = (uid === patientId)
+  //     ? [patientId, psychiatristId]
+  //     : [psychiatristId, patientId];// Now includes the psychiatrist's ID
+  //   console.log(participants);
+  //   const messagesRef = collection(db, "Chats");
+
+  //   if (message !== "" && psychiatristId && patientId) {
+  //     try {
+  //       const docRef = await addDoc(messagesRef, {
+  //         text: message,
+  //         createdAt: serverTimestamp(),
+  //         uid: participants[0],
+  //         recipientId: participants[1],
+  //         photoURL,
+  //         deletedByPatient,
+  //         deletedByPsych
+  //       });
+  //       console.log("Document written with ID: ", docRef.id);
+  //     } catch (e) {
+  //       console.error("error adding document: ", e);
+  //     }
+  //     // Attempt to find an existing conversation
+  //     const conversationsRef = collection(db, "Conversations");
+  //     const q = query(conversationsRef, where("patientId", "==", patientId), where("psychiatristId", "==", psychiatristId));
+  //     const querySnapshot = await getDocs(q);
+
+  //     if (querySnapshot.empty) {
+  //       // No existing conversation found, create a new one
+  //       try {
+  //         const docRef = await addDoc(conversationsRef, {
+  //           deletedByPatient: false,
+  //           deletedByPsych: false,
+  //           patientId: patientId,
+  //           psychiatristId: psychiatristId,
+  //           messagesUnreadByPatient: uid === patientId ? 0 : 1,
+  //           messagesUnreadByPsych: uid === patientId ? 1 : 0,
+  //           recentMessage: {
+  //             text: message,
+  //             createdAt: serverTimestamp(),
+  //             photoURL: auth.currentUser?.photoURL
+  //           }
+  //         });
+  //         console.log("New conversation created with ID: ", docRef.id);
+  //       } catch (error) {
+  //         console.error("Error creating new conversation: ", error);
+  //       }
+  //     } else {
+  //       // Existing conversation found, update the recent message
+  //       const conversationDocRef = doc(db, "Conversations", querySnapshot.docs[0].id);
+  //       try {
+  //         const conversationData = querySnapshot.docs[0].data();
+  //         const unreadByPatient = conversationData.messagesUnreadByPatient + (uid === patientId ? 0 : 1);
+  //         const unreadByPsych = conversationData.messagesUnreadByPsych + (uid === patientId ? 1 : 0);
+
+  //         await updateDoc(conversationDocRef, {
+  //           recentMessage: {
+  //             text: message,
+  //             createdAt: serverTimestamp(),
+  //             photoURL: auth.currentUser?.photoURL
+  //           },
+  //           messagesUnreadByPatient: unreadByPatient,
+  //           messagesUnreadByPsych: unreadByPsych
+  //         });
+  //         console.log("Conversation updated with new message");
+  //       } catch (error) {
+  //         console.error("Error updating conversation: ", error);
+  //       }
+  //     }
+
+  //     setMessage('');
+  //   }
+  // };
+
+  const sendMessage = async (e) => {
     e.preventDefault();
 
     const uid = auth.currentUser?.uid;
-    const photoURL = auth.currentUser?.photoURL;
+
     const participants = (uid === patientId)
       ? [patientId, psychiatristId]
       : [psychiatristId, patientId];// Now includes the psychiatrist's ID
-    console.log(participants);
+
+    const photoURL = auth.currentUser?.photoURL;
     const messagesRef = collection(db, "Chats");
 
     if (message !== "" && psychiatristId && patientId) {
+      // Send the message
       try {
-        const docRef = await addDoc(messagesRef, {
+        await addDoc(messagesRef, {
           text: message,
           createdAt: serverTimestamp(),
           uid: participants[0],
           recipientId: participants[1],
-          photoURL
+          photoURL,
+          deletedByPatient: false, // Assuming message sending resets deletion status
+          deletedByPsych: false
         });
-        console.log("Document written with ID: ", docRef.id);
+        console.log("Message sent");
       } catch (e) {
-        console.error("error adding document: ", e);
+        console.error("Error adding document: ", e);
       }
-      // Attempt to find an existing conversation
+
+      // Handle the conversation
       const conversationsRef = collection(db, "Conversations");
       const q = query(conversationsRef, where("patientId", "==", patientId), where("psychiatristId", "==", psychiatristId));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
-        // No existing conversation found, create a new one
+        // Create a new conversation if not found
         try {
-          const docRef = await addDoc(conversationsRef, {
+          await addDoc(conversationsRef, {
             deletedByPatient: false,
             deletedByPsych: false,
             patientId: patientId,
@@ -73,29 +158,27 @@ const MessageComposer: React.FC = () => {
             recentMessage: {
               text: message,
               createdAt: serverTimestamp(),
-              photoURL: auth.currentUser?.photoURL
+              photoURL
             }
           });
-          console.log("New conversation created with ID: ", docRef.id);
+          console.log("New conversation created");
         } catch (error) {
           console.error("Error creating new conversation: ", error);
         }
       } else {
-        // Existing conversation found, update the recent message
+        // Update existing conversation
         const conversationDocRef = doc(db, "Conversations", querySnapshot.docs[0].id);
         try {
-          const conversationData = querySnapshot.docs[0].data();
-          const unreadByPatient = conversationData.messagesUnreadByPatient + (uid === patientId ? 0 : 1);
-          const unreadByPsych = conversationData.messagesUnreadByPsych + (uid === patientId ? 1 : 0);
-
           await updateDoc(conversationDocRef, {
             recentMessage: {
               text: message,
               createdAt: serverTimestamp(),
-              photoURL: auth.currentUser?.photoURL
+              photoURL
             },
-            messagesUnreadByPatient: unreadByPatient,
-            messagesUnreadByPsych: unreadByPsych
+            messagesUnreadByPatient: uid === patientId ? 0 : 1,
+            messagesUnreadByPsych: uid === psychiatristId ? 0 : 1,
+            deletedByPatient: false,  // Resetting deletion flags on message send
+            deletedByPsych: false
           });
           console.log("Conversation updated with new message");
         } catch (error) {
@@ -107,18 +190,19 @@ const MessageComposer: React.FC = () => {
     }
   };
 
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault(); 
+      e.preventDefault();
       sendMessage(e);
     }
   };
-  
+
 
   return (
     <div className="message-composer page-background py-2">
       <div className="flex items-center rounded-3xl border-solid border border-black pl-2 mx-4">
-      <textarea
+        <textarea
           ref={textareaRef}
           value={message}
           onInput={handleMessageChange}
