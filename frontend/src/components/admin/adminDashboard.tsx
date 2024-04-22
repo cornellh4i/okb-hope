@@ -14,9 +14,10 @@ export interface UserType {
   active: Timestamp;
   created: Timestamp;
   name: string;
-  patient: boolean;
+  psychiatrist: boolean;
   username: string;
   id: string;
+  userType: string
 }
 
 const AdminDashboard = () => {
@@ -39,13 +40,22 @@ const AdminDashboard = () => {
           id: doc.id,
         } as UserType;
       });
-      setUserData(users);
 
-      // Calculate the number of pages based on all user records
-      setNumPages(Math.ceil(users.length / recordsPerPage));
+      // Filter to include only psychiatrists
+      let filteredUsers: UserType[];
+
+      if (clientView) {
+        filteredUsers = users.filter(user => user.userType === 'patient');
+      } else {
+        filteredUsers = users.filter(user => user.userType === 'psychiatrist');
+      }
+      setUserData(filteredUsers);
+
+      // Calculate the number of pages based on filtered user records
+      setNumPages(Math.ceil(filteredUsers.length / recordsPerPage));
     }
     fetchUsers();
-  }, [recordsPerPage]);
+  }, [recordsPerPage, patientView, clientView]);
 
   // Pagination logic to calculate currentRecords based on currentPage
   const indexOfLastRecord = currentPage * recordsPerPage;

@@ -21,7 +21,7 @@ import Cancel from "@/assets/cancel.svg";
 import Submit from "@/assets/submit.svg";
 import Continue from "@/assets/continue.svg";
 import Availability from '../profProfile/Availability';
-
+import WarningHover from './WarningHover';
 
 
 interface ProfProfileProps {
@@ -402,20 +402,12 @@ const ProfProfile = () => {
             <div className='flex flex-row gap-4 justify-center items-center md:justify-start md:items-start'>
               {/* Report button, action is currently undefined */}
               <div className={`shrink`} >
-                <button onClick={handleReport} className={` rounded-s-2xl rounded-[12px] transition cursor-pointer text-okb-white flex flex-row gap-2`}>
-                  <ReportIcon className="object-cover" />
-                </button>
+                <WarningHover />
               </div>
-              {/* Save button, action is currently undefined */}
+              {/* Download button, action is currently undefined */}
               <div className={`shrink`}>
-                <div onClick={(event) => handleSave(event, professional)} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold`}>
-                  <figure className="object-cover">{savedPsychiatrists.includes(professional.uid) ? <SavedBookmark /> : <Bookmark />}</figure>Save
-                </div>
-              </div>
-              {/* Message button, action is currently undefined */}
-              <div className={`shrink`} >
-                <div onClick={handleSendMessage} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2`}>
-                  <figure className="object-cover"><Chat /></figure>Message
+                <div   /*onClick={(event) => handleSave(event, professional)}*/ className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold`}>
+                  Download
                 </div>
               </div>
             </div>
@@ -460,7 +452,7 @@ const ProfProfile = () => {
           </div>
         </div>
       </div>
-      <h2 className={`text-center lg:text-start text-bold text-2xl`}>Availability</h2>
+      <h2 className={`text-center lg:text-start font-extrabold text-2xl mt-10 mb-2`}>Availability</h2>
       <Availability availability={professional?.availability} />
 
       <div className={`flex flex-row justify-center content-center`}>
