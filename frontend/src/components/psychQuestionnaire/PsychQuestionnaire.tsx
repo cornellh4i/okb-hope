@@ -18,9 +18,12 @@ const PsychQuestionnaire = () => {
     const [gender, setGender] = useState<Gender>();
     const [image, setImage] = useState<string>("");
     const [position, setPosition] = useState<string>("");
-    const [checked, setChecked] = useState<{ [key: string]: boolean }>(
+    const [checkedLanguages, setCheckedLanguages] = useState<{ [key: string]: boolean }>(
         { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
     const [languages, setLanguages] = useState<string[]>([]);
+    const [checkedAvailability, setCheckedAvailability] = useState<{ [key: string]: boolean }>(
+        { 'Monday': false, 'Tuesday': false, 'Wednesday': false, 'Thursday': false, 'Friday': false, 'Saturday': false, 'Sunday':false });
+    const [weeklyAvailability, setWeeklyAvailability] = useState<string[]>([]);
     const [aboutYourself, setAboutYourself] = useState<string>("");
     const [location, setLocation] = useState<string>("");
     const [patient, setPatient] = useState<boolean>(false);
@@ -81,22 +84,37 @@ const PsychQuestionnaire = () => {
         }
     }
 
-    const handleCheck = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleLanguages = (event: ChangeEvent<HTMLInputElement>) => {
         const lang = event.target.value;
-        const newChecked = {
-            ...checked,
-            [lang]: !checked[lang]
+        const newCheckedLanguages = {
+            ...checkedLanguages,
+            [lang]: !checkedLanguages[lang]
         };
-        setChecked(newChecked);
+        setCheckedLanguages(newCheckedLanguages);
 
-        if (newChecked[lang]) {
+        if (newCheckedLanguages[lang]) {
             setLanguages([...languages, lang]);
         } else {
             setLanguages(languages.filter(element => element !== lang));
         }
 
         console.log(languages);
-        console.log(newChecked);
+        console.log(newCheckedLanguages);
+    };
+
+    const handleWeeklyAvailability = (event: ChangeEvent<HTMLInputElement>) => {
+        const day = event.target.value;
+        const newChecked = {
+            ...checkedAvailability,
+            [day]: !checkedAvailability[day]
+        };
+        setCheckedAvailability(newChecked);
+
+        if (newChecked[day]) {
+            setWeeklyAvailability([...weeklyAvailability, day]);
+        } else {
+            setWeeklyAvailability(weeklyAvailability.filter(element => element !== day));
+        }
     };
 
     const handleOptionChange = (option: 'patient' | 'psychiatrist') => {
@@ -161,6 +179,7 @@ const PsychQuestionnaire = () => {
                     gender,
                     location,
                     languages,
+                    weeklyAvailability,
                     [],
                     aboutYourself,
                     "",
@@ -203,10 +222,13 @@ const PsychQuestionnaire = () => {
                     languages={languages}
                     aboutYourself={aboutYourself}
                     setLanguages={setLanguages}
-                    checked={checked}
-                    setChecked={setChecked}
+                    checkedLanguages={checkedLanguages}
+                    setCheckedLanguages={setCheckedLanguages}
+                    checkedAvailability={checkedAvailability}
+                    setCheckedAvailability={setCheckedAvailability}
                     handleLocation={handleLocationChange}
-                    handleCheck={handleCheck}
+                    handleLanguages={handleLanguages}
+                    handleWeeklyAvailability={handleWeeklyAvailability}
                     handlePosition={handlePosition}
                     handleAboutYourself={handleAboutYourselfChange}
 

@@ -139,6 +139,7 @@ const PatientQuestionnaire = () => {
                         gender,
                         "", //location
                         languages,
+                        [], //weeklyAvailability
                         [], //specialty
                         "", //description
                         "", //website
@@ -174,8 +175,8 @@ const PatientQuestionnaire = () => {
             {currentStep === 2 &&
                 <AgeLanguageQuestionnaire
                     age={age}
-                    languages={languages}
-                    setLanguages={setLanguages}
+                    prefLanguages={languages}
+                    setPrefLanguages={setLanguages}
                     checked={checked}
                     setChecked={setChecked}
                     handleAge={handleAgeChange}
