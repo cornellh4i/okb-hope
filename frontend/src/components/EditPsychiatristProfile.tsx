@@ -118,6 +118,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
       position: position,
       description: description,
       language: languages,
+      availability: weeklyAvailability,
       gender: gender
     })
     router.push(`/psychiatrist/${uid}/psych_dashboard`);
