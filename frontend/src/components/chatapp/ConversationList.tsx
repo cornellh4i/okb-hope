@@ -6,7 +6,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 
 type RecentMessage = {
   text: string;
-  createdAt: any; // Consider using firebase.firestore.Timestamp or Date depending on your data
+  createdAt: any;
   photoURL: string;
 };
 
@@ -16,26 +16,29 @@ type Conversation = {
   recentMessage: RecentMessage;
   messagesUnreadByPatient: number;
   messagesUnreadByPsych: number;
-  deletedByPatient: boolean,
-  deletedByPsych: boolean
+  deletedByPatient: boolean;
+  deletedByPsych: boolean;
 };
 
 interface ConversationListProps {
   read: boolean;
-  selectedConversationId: string; // Receive selectedConversationId
-  onSelectConversation: (conversationId: string) => void; // Receive onSelectConversation function
+  selectedConversationId: string;
+  onSelectConversation: (conversationId: string) => void;
   conversations: Conversation[];
-  searchInput: string; // New prop for search input
+  searchInput: string;
 }
 
-const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConversationId, onSelectConversation, conversations, searchInput }) => {
+const ConversationList: React.FC<ConversationListProps> = ({
+  read,
+  selectedConversationId,
+  onSelectConversation,
+  conversations,
+  searchInput
+}) => {
   const [conversationList, setConversationsList] = useState<Conversation[]>([]);
-  const psychiatristNames = {};
-
   const { user } = useAuth();
 
   useEffect(() => {
-
     const fetchConversations = async () => {
       if (!user?.uid) return;
 
@@ -45,57 +48,32 @@ const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConve
       const unsubscribe = onSnapshot(conversationsRef, async (querySnapshot) => {
         const conversationData: Conversation[] = [];
 
-        const chatPromises = querySnapshot.docs.map(async (doc) => {
+        for (const doc of querySnapshot.docs) {
           const data = doc.data();
           if (data.patientId === user.uid || data.psychiatristId === user.uid) {
             const isPatient = data.patientId === user.uid;
             const messagesUnread = isPatient ? data.messagesUnreadByPatient : data.messagesUnreadByPsych;
             const shouldInclude = read ? messagesUnread < 1 : messagesUnread >= 1;
 
-            if (shouldInclude) {
-              let isSearched = false;
-              const searchTextLower = searchInput.toLowerCase(); // Convert search input to lowercase
-
-              // Fetch the chat documents for the current conversation
-              const chatQuery = query(
-                chatsRef,
-                where("uid", "in", [data.patientId, data.psychiatristId]),
-                where("recipientId", "in", [data.patientId, data.psychiatristId])
-              );
-              const chatDocs = (await getDocs(chatQuery)).docs.map(chatDoc => chatDoc.data());
-
-              // Check each chat document
-              for (const chatData of chatDocs) {
-                const chatTextLower = chatData.text.toLowerCase(); // Convert chat text to lowercase
-
-                if (chatTextLower.includes(searchTextLower)) {
-                  isSearched = true;
-                  break; // No need to continue searching if one chat matches
-                }
-              }
-              console.log("searched", isSearched)
-
-              if (searchInput === "" || isSearched) {
-                if (isPatient ? !data.deletedByPatient : !data.deletedByPsych) {
-                  const conversation: Conversation = {
-                    patientId: data.patientId,
-                    psychiatristId: data.psychiatristId,
-                    recentMessage: data.recentMessage,
-                    messagesUnreadByPatient: data.messagesUnreadByPatient,
-                    messagesUnreadByPsych: data.messagesUnreadByPsych,
-                    deletedByPatient: false,
-                    deletedByPsych: false
-                  };
-                  conversationData.push(conversation);
-                }
-              }
+            if (shouldInclude && (isPatient ? !data.deletedByPatient : !data.deletedByPsych)) {
+              const conversation: Conversation = {
+                patientId: data.patientId,
+                psychiatristId: data.psychiatristId,
+                recentMessage: data.recentMessage,
+                messagesUnreadByPatient: data.messagesUnreadByPatient,
+                messagesUnreadByPsych: data.messagesUnreadByPsych,
+                deletedByPatient: data.deletedByPatient,
+                deletedByPsych: data.deletedByPsych
+              };
+              conversationData.push(conversation);
             }
           }
-        });
+        }
 
-        await Promise.all(chatPromises);
-
+        // Sort conversationData based on recentMessage.createdAt
         conversationData.sort((a, b) => b.recentMessage.createdAt - a.recentMessage.createdAt);
+
+        // Update the conversationList state to trigger a re-render
         setConversationsList(conversationData);
       });
 
@@ -107,21 +85,17 @@ const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConve
 
   const handleSelectConversation = (conversationId: string) => {
     onSelectConversation(conversationId);
-    // localStorage.setItem('selectedConversationId', conversationId);
-    // setSelectedConversationId(conversationId);
   };
 
   return (
     <div className="conversation-list">
       {conversationList.map((conversation, index) => (
         <ConversationItem
-          // read={read}
           key={`${conversation.patientId}-${conversation.psychiatristId}`} // Unique key based on patientId and psychiatristId
           conversation={conversation}
           isLast={index === conversationList.length - 1}
           onSelect={() => handleSelectConversation(`${conversation.patientId}-${conversation.psychiatristId}`)}
           isSelected={selectedConversationId === `${conversation.patientId}-${conversation.psychiatristId}`}
-
         />
       ))}
       <style jsx>{`

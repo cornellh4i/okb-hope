@@ -17,7 +17,7 @@ const MessageList: React.FC = () => {
   const [psychiatristId, setPsychiatristId] = useState('');
   const [patientId, setPatientId] = useState('');
 
-  var [psychName, setPsychName] = useState(''); 
+  const [psychName, setPsychName] = useState('');
 
   useEffect(() => {
     const { psych_id, psych_name, patient_id, patient_name } = router.query;
@@ -46,6 +46,7 @@ const MessageList: React.FC = () => {
         const messageData = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
+          role: doc.data().uid === uid ? 'patient' : 'psychiatrist' // Determine role based on UID
         }));
         setMessages(messageData);
       }, (error) => { console.error("Error fetching data: ", error); });
@@ -65,24 +66,30 @@ const MessageList: React.FC = () => {
     }
   }, [messages]);
 
-  if (messages.length === 0) {
+
+  // Filter messages based on deletion status and role
+  const filteredMessages = messages.filter(msg => {
+    return (msg.role === 'patient' ? !msg.deletedByPatient : !msg.deletedByPsych);
+  });
+
+  if (filteredMessages.length === 0) {
     return (
       <div className="page-background text-center text-gray-400 pt-4 font-montserrat">Start a conversation with {psychName}</div>
     )
   } else {
     return (
       <div>
-  {messages.map((msg) => (
-    <div key={msg.id} className={`page-background`}>
-          <div className='py-2'></div>
-          <div className={`message-list page-background flex flex-col items-${uid === msg.uid ? 'end' : 'start'}`}>
-            <MessageItem message={msg} />
+        {filteredMessages.map((msg) => (
+          <div key={msg.id} className={`page-background`}>
+            <div className='py-2'></div>
+            <div className={`message-list page-background flex flex-col items-${uid === msg.uid ? 'end' : 'start'}`}>
+              <MessageItem message={msg} />
+            </div>
+            {/* HTML element to scroll to */}
+            <div ref={scrollEnd}></div>
           </div>
-          {/* HTML element to scroll to */}
-          <div ref={scrollEnd}></div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
     );
   }
 };

@@ -33,109 +33,94 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
     setIsDeleteModalOpen(false);
   };
 
-  // const handleDelete = async () => {
-  //   console.log(patientId)
-
-  //   try {
-  //     const conversationQuery = query(collection(db, "Conversations"),
-  //       where("patientId", "==", patientId),
-  //       where("psychiatristId", "==", psychiatristId));
-  //     const querySnapshot = await getDocs(conversationQuery);
-
-  //     const conversationQuery2 = query(collection(db, "Chats"),
-  //       where("patientId", "==", patientId),
-  //       where("psychiatristId", "==", psychiatristId));
-  //     const querySnapshot2 = await getDocs(conversationQuery2);
-
-  //     if (!querySnapshot.empty) {
-  //       querySnapshot.forEach(async (doc) => {
-  //         // Update the conversation document
-  //         if (role === "patient") {
-  //           if (doc.data().deletedByPsych === true) {
-  //             await deleteDoc(doc.ref);
-
-  //             const chatQuery = query(collection(db, "Chats"),
-  //               where("uid", "in", [patientId, psychiatristId]),
-  //               where("recipientId", "in", [patientId, psychiatristId]));
-  //             const chatSnapshot = await getDocs(chatQuery);
-
-  //             chatSnapshot.forEach(async (doc) => {
-  //               await deleteDoc(doc.ref);
-  //             });
-  //           } else {
-  //             await updateDoc(doc.ref, { deletedByPatient: true });
-  //           }
-  //         }
-
-  //         if (role === "psychiatrist") {
-  //           if (doc.data().deletedByPatient === true) {
-  //             await deleteDoc(doc.ref);
-
-  //             const chatQuery = query(collection(db, "Chats"),
-  //               where("uid", "in", [patientId, psychiatristId]),
-  //               where("recipientId", "in", [patientId, psychiatristId]));
-  //             const chatSnapshot = await getDocs(chatQuery);
-
-  //             chatSnapshot.forEach(async (doc) => {
-  //               await deleteDoc(doc.ref);
-  //             });
-
-  //           } else {
-  //             await updateDoc(doc.ref, { deletedByPsych: true });
-  //           }
-  //         }
-
-  //       })
-  //     }
-  //     console.log("Message thread deleted successfully");
-  //   } catch (error) {
-  //     console.error("Error deleting message thread:", error);
-  //   } finally {
-  //     closeDeleteModal();
-  //   }
-  // };
-
   const handleDelete = async () => {
     const batch = writeBatch(db);
 
     try {
-      const conversationQuery = query(collection(db, "Conversations"),
+      console.log(`Starting delete operation for patientId: ${patientId}, psychiatristId: ${psychiatristId}`);
+
+      // Assuming 'patientId' and 'psychiatristId' are defined elsewhere in your component
+      const userRole = role; // 'role' should be 'patient' or 'psychiatrist', as defined in your component's state
+
+      // The field names in your Firestore collection for user IDs
+      const userField = userRole === "patient" ? "uid" : "recipientId";
+      const recipientField = userRole === "patient" ? "recipientId" : "uid";
+
+      // Query to find all conversations between the patient and psychiatrist
+      const conversationQuery = query(
+        collection(db, "Conversations"),
         where("patientId", "==", patientId),
-        where("psychiatristId", "==", psychiatristId));
+        where("psychiatristId", "==", psychiatristId)
+      );
 
+      // Execute the query to fetch conversation documents
       const conversationSnapshot = await getDocs(conversationQuery);
-      const chatsQuery = query(collection(db, "Chats"),
-        where("uid", "in", [patientId, psychiatristId]),
-        where("recipientId", "in", [patientId, psychiatristId]));
 
-      const chatSnapshot = await getDocs(chatsQuery);
+      // If no conversation documents are found, log an error and exit the function
+      if (conversationSnapshot.empty) {
+        console.error("No conversations found for the given IDs");
+        return;
+      }
 
-      conversationSnapshot.forEach((doc) => {
-        if (role === "patient") {
-          if (doc.data().deletedByPsych === true) {
-            batch.delete(doc.ref); // Delete conversation if already marked deleted by the other user
-            chatSnapshot.forEach((chatDoc) => batch.delete(chatDoc.ref)); // Delete all chats
-          } else {
-            batch.update(doc.ref, { deletedByPatient: true }); // Mark as deleted by patient
-          }
-        } else if (role === "psychiatrist") {
-          if (doc.data().deletedByPatient === true) {
-            batch.delete(doc.ref);
-            chatSnapshot.forEach((chatDoc) => batch.delete(chatDoc.ref));
-          } else {
-            batch.update(doc.ref, { deletedByPsych: true });
-          }
+      // Log for debugging
+      console.log(`Found ${conversationSnapshot.docs.length} conversations to mark as deleted`);
+
+      // For each conversation, mark it as deleted by the current user role
+      conversationSnapshot.forEach((conversationDoc) => {
+        const deletionFlag = userRole === "patient" ? 'deletedByPatient' : 'deletedByPsych';
+
+        if (conversationDoc.data()[deletionFlag] !== true) {
+          // If the conversation is not already deleted by the current user, mark it as deleted
+          batch.update(conversationDoc.ref, { [deletionFlag]: true });
+          console.log(`Marking conversation ${conversationDoc.id} as deleted by: ${deletionFlag}`);
+        } else {
+          // If the conversation is already deleted by the current user, delete the conversation document
+          batch.delete(conversationDoc.ref);
+          console.log(`Deleting conversation ${conversationDoc.id} because it was deleted by both parties`);
         }
       });
 
+      // Query to find all chat messages where the user is either the sender or recipient
+      const chatsQuery = query(
+        collection(db, "Chats"),
+        where(userField, "==", patientId),
+        where(recipientField, "==", psychiatristId)
+      );
+
+      // Execute the query to fetch chat messages
+      const chatSnapshot = await getDocs(chatsQuery);
+
+      // Log for debugging
+      console.log(`Found ${chatSnapshot.docs.length} chats to mark as deleted`);
+
+      // For each chat message, mark it as deleted by the current user role
+      chatSnapshot.forEach((chatDoc) => {
+        const deletionFlag = userRole === "patient" ? 'deletedByPatient' : 'deletedByPsych';
+        const oppositeFlag = userRole === "patient" ? 'deletedByPsych' : 'deletedByPatient';
+
+        if (chatDoc.data()[oppositeFlag] !== true) {
+          // If the chat is not already deleted by the other party, mark it as deleted
+          batch.update(chatDoc.ref, { [deletionFlag]: true });
+          console.log(`Marking chat ${chatDoc.id} as deleted by: ${deletionFlag}`);
+        } else {
+          // If the chat is already deleted by the other party, delete the chat document
+          batch.delete(chatDoc.ref);
+          console.log(`Deleting chat ${chatDoc.id} because it was deleted by both parties`);
+        }
+      });
+
+      // Commit the batch operation
       await batch.commit();
-      console.log("Message thread deleted successfully");
+      console.log("Batch commit successful. Conversations and chat messages marked as deleted.");
     } catch (error) {
-      console.error("Error deleting message thread:", error);
+      // Log any errors that occur during the operation
+      console.error("Error during batch commit:", error);
     } finally {
+      // Close the delete modal whether the operation was successful or not
       closeDeleteModal();
     }
   };
+
 
   useEffect(() => {
     const { psych_id, psych_name, patient_id, patient_name } = router.query;
