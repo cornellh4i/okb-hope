@@ -340,11 +340,10 @@ const ProfProfile = () => {
   }
   if (typeof document !== 'undefined') {
     document.documentElement.style.setProperty('--toastify-color-success', '#bddcae');
-    document.documentElement.style.setProperty('--toastify-icon-color-success', 'green');
     document.documentElement.style.setProperty('--toastify-toast-width', '50%');
     document.documentElement.style.setProperty('--toastify-text-color-success', '#000000');
-
   }
+  
   // Render conditionally based on whether professional data is available
   if (professional === null) {
     return <div>Loading...</div>;
@@ -405,19 +404,16 @@ const ProfProfile = () => {
         <figure className={`cursor-pointer`} onClick={handleGoToDatabase}><Arrow /></figure>
       </div>
       <div className={`flex flex-col lg:flex-row gap-10 justify-center`}>
-        {/* <figure className='flex w-1/3 shrink'>
-                    <Image src={Photo} alt="Photo" width={1200} height={600} />
-                </figure> */}
         <div className={`flex justify-center items-center md:justify-start md:items-start lg:shrink`}>
           <Image src={Photo} alt="Photo" className={`w-1200 h-600`} />
         </div>
         <div className={`flex flex-col lg:w-2/3 gap-4 justify-center`}>
           <div className={`flex flex-col md:flex-row gap-4`}>
             <div className='flex gap-x-4 justify-center items-center md:justify-start md:items-start flex-row md:flex-col'>
-              <div className={`text-3xl font-bold`}>
+              <div className={`text-3xl font-montserrat font-bold`}>
                 {professional.firstName + " " + professional.lastName}
               </div>
-              <div className={`text-normal text-xl italic text-dark-grey`}>
+              <div className={`text-normal text-xl italic text-dark-grey font-montserrat`}>
                 {professional.position}
               </div>
             </div>
@@ -428,7 +424,7 @@ const ProfProfile = () => {
               </div>
               {/* Download button, action is currently undefined */}
               <div className={`shrink`}>
-                <div   /*onClick={(event) => handleSave(event, professional)}*/ className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold`}>
+                <div className={`font-montserrat px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold`}>
                   Download
                 </div>
               </div>
@@ -440,21 +436,21 @@ const ProfProfile = () => {
           {/* Speciality/language/location tags */}
           <div className={`flex flex-row justify-center items-center md:justify-start md:items-start gap-2`}>
             {professional.specialty.map((speciality, index) => (
-              <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
+              <div className={`font-montserrat px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
                 {speciality}
               </div>
             ))}
             {professional.language.map((langauge, index) => (
-              <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
+              <div className={`font-montserrat px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
                 {langauge}
               </div>
             ))}
-            <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
+            <div className={`font-montserrat px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
               {professional.location}
             </div>
 
           </div>
-          <div className={`text-normal text-center md:text-start text-base`}>
+          <div className={`font-montserrat font-light text-center md:text-start text-base`}>
             {professional.description}
           </div>
           <div className={`flex flex-row justify-center items-center md:justify-start md:items-start`}>
@@ -467,20 +463,20 @@ const ProfProfile = () => {
                 className="flex items-center"
               >
                 <figure className="object-cover"><Link /></figure>
-                <span className="ml-2">www.mentalhealthsite.com</span>
+                <span className=" font-montserrat ml-2">www.mentalhealthsite.com</span>
               </a>
             </div>
           </div>
 
-          <div className="bg-[#d0dbe9] mt-12 h-40 w-80 text-center text-lg text-Black font-extrabold py-2 px-4 pt-7 rounded-xl bg-opacity-50 border border-blue-500 ">
+          <div className="bg-[#d0dbe9] font-montserrat mt-12 h-40 w-80 text-center text-lg text-Black font-extrabold py-2 px-4 pt-7 rounded-xl bg-opacity-50 border border-blue-500 ">
             Would you like to approve this account?
             <div className="grid grid-cols-2 mt-4 items-center">
-              <button className={`bg-white w-1/2 border-2 border-[#509bea] rounded-lg text-black font-normal justify-end justify-self-end mr-2 shadow hover:shadow-lg outline-none focus:outline-none active:bg-gray-500 ease-linear transition-all duration-150`}
+              <button className={`bg-white w-1/2 font-montserrat border-2 border-[#509bea] rounded-lg text-black font-normal justify-end justify-self-end mr-2 shadow hover:shadow-lg outline-none focus:outline-none active:bg-gray-500 ease-linear transition-all duration-150`}
                 type="button"
                 onClick={handleBookAppointment}>
                 No
               </button>
-              <button className={`bg-[#509bea] border-2 w-1/2 border-[#509bea] text-white rounded-lg font-normal justify-start justify-self-start ml-2 shadow hover:shadow-lg outline-none focus:outline-none active:bg-gray-500 ease-linear transition-all duration-150`}
+              <button className={`bg-[#509bea] font-montserrat border-2 w-1/2 border-[#509bea] text-white rounded-lg font-normal justify-start justify-self-start ml-2 shadow hover:shadow-lg outline-none focus:outline-none active:bg-gray-500 ease-linear transition-all duration-150`}
                 type="button"
                 onClick={handleApproveYes}>
                 Yes
