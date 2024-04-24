@@ -12,9 +12,6 @@ import okb_colors from '@/colors';
 import { IPsychiatrist, IReport } from '@/schema';
 import { blue } from '@mui/material/colors';
 
-
-
-
 const ReportCard = ({ report, onReportClick }) => {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -24,6 +21,7 @@ const ReportCard = ({ report, onReportClick }) => {
     // Close the dropdown when a report is clicked
     setIsDropdownOpen(false);
   };
+
   const getFormattedDate = (date) => {
     if (!date) return 'Unknown date';
     try {
@@ -40,8 +38,8 @@ const ReportCard = ({ report, onReportClick }) => {
 
   const formattedDate = getFormattedDate(report.submittedAt);
 
-
-  const cardStyle = {
+  const cardStyle: React.CSSProperties = {
+    textAlign: 'center',
     backgroundColor: 'transparent',
     border: '2px solid #d1d5db',
     borderRadius: '0.5rem',
@@ -52,7 +50,8 @@ const ReportCard = ({ report, onReportClick }) => {
     justifyContent: 'space-between',
     alignItems: 'center',
   };
-  const subjectStyle = {
+
+  const subjectStyle: React.CSSProperties = {
     color: 'black',
     fontSize: '16px',
     fontWeight: '400',
@@ -103,7 +102,6 @@ const ReportCard = ({ report, onReportClick }) => {
     </div>
   );
 };
-
 
 const AdminReport = () => {
   const [selectedReport, setSelectedReport] = useState<IReport | null>(null);
@@ -205,7 +203,6 @@ const AdminReport = () => {
     }
 
     return (
-
       <div>
         {bool ? reports.filter(report => report.priority === selectedPriority).map((report, index) => (
           <div
@@ -251,23 +248,22 @@ const AdminReport = () => {
       marginTop: '20px'
     };
 
-
     const cancelButtonStyle = {
       backgroundColor: 'white',
       color: 'black',
       padding: '8px',
-      borderRadius: '4px',
+      borderRadius: '5px',
       border: '2px solid #519AEB',
       cursor: 'pointer',
     };
 
-    const assignPriorityButtonStyle = {
+    const assignPriorityButtonStyle: React.CSSProperties = {
       backgroundColor: '#519AEB',
       color: 'white',
       padding: '8px',
-      borderTopLeftRadius: '5px',
-      borderTopRightRadius: '5px',
-      border: 'none',
+      borderRadius: '5px',
+      border: '2px solid #519AEB',
+      // borderTopRightRadius: '5px',
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
@@ -275,8 +271,7 @@ const AdminReport = () => {
       position: 'relative' // Position the button relatively
     };
 
-
-    const dropdownContainerStyle = {
+    const dropdownContainerStyle: React.CSSProperties = {
       position: 'absolute', // Position the dropdown absolutely
       left: 0,
       zIndex: 1001, // Ensure the dropdown appears above the popup
@@ -284,14 +279,11 @@ const AdminReport = () => {
       overflow: 'hidden',
     };
 
-
-
     const dropdownListStyle = {
       margin: 0,
       padding: 0,
       listStyle: 'none',
     };
-
 
     const toggleDropdown = () => {
       setIsOpen(!isOpen);
@@ -308,6 +300,7 @@ const AdminReport = () => {
       cursor: 'pointer',
       transition: 'background-color 0.3s ease',
       backgroundColor: '#E5E7EB',
+      border: '2px solid #E5E7EB',
     };
 
     const dropdownItemHoverStyle = {
@@ -324,7 +317,6 @@ const AdminReport = () => {
       event.target.style.backgroundColor = '#E5E7EB';
       event.target.style.color = 'black';
     };
-
 
     return (
       <div>
@@ -369,10 +361,6 @@ const AdminReport = () => {
     );
   };
 
-
-
-
-
   return (
     <div className="admin-reports-container flex flex-col text-21 font-bold mb-1">
       {/* Header and column categories bar */}
@@ -388,7 +376,6 @@ const AdminReport = () => {
 
         <div className='flex items-center lg:mx-36' style={{ alignSelf: 'stretch', height: 70, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 10, display: 'flex' }}>
           <div className=' flex justify-between items-center w-full px-5 md:px-12' style={{ alignSelf: 'stretch', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
-            {/* <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Title</div> */}
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Subject</div>
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Submitted By</div>
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Person Reported</div>
@@ -406,7 +393,6 @@ const AdminReport = () => {
           </button>
         </div>
 
-        {/* Report list container with overflow */}
         {returnReportsByPriority("")}
         {ReportDetailsPopup()}
 
