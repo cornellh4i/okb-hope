@@ -252,7 +252,7 @@ const AdminReport = () => {
       backgroundColor: 'white',
       color: 'black',
       padding: '8px',
-      borderRadius: '5px',
+      borderRadius: '10px',
       border: '2px solid #519AEB',
       cursor: 'pointer',
     };
@@ -261,7 +261,7 @@ const AdminReport = () => {
       backgroundColor: '#519AEB',
       color: 'white',
       padding: '8px',
-      borderRadius: '5px',
+      borderRadius: '10px',
       border: '2px solid #519AEB',
       // borderTopRightRadius: '5px',
       cursor: 'pointer',
@@ -378,7 +378,7 @@ const AdminReport = () => {
           <div className=' flex justify-between items-center w-full px-5 md:px-12' style={{ alignSelf: 'stretch', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Subject</div>
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Submitted By</div>
-            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Person Reported</div>
+            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Psychiatrist Reported</div>
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Time Submitted</div>
           </div>
           <div style={{ alignSelf: 'stretch', height: 0, border: '1.5px black solid' }}></div>
