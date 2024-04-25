@@ -128,7 +128,7 @@ const MessageComposer: React.FC = () => {
           onInput={handleMessageChange}
           onKeyDown={handleKeyDown}
           placeholder="Send a Message"
-          className="page-background w-full max-h-[250px] overflow-auto m-0 p-2"
+          className="page-background w-full overflow-auto m-0 p-2"
           style={{ resize: "none", outline: "none", height: "auto" }}
           rows={1}
         ></textarea>
