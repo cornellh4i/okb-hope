@@ -39,10 +39,9 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
     try {
       console.log(`Starting delete operation for patientId: ${patientId}, psychiatristId: ${psychiatristId}`);
 
-      // Assuming 'patientId' and 'psychiatristId' are defined elsewhere in your component
-      const userRole = role; // 'role' should be 'patient' or 'psychiatrist', as defined in your component's state
+      const userRole = role; // 'role' should be 'patient' or 'psychiatrist'
 
-      // The field names in your Firestore collection for user IDs
+      // The field names your Firestore collection for user IDs
       const userField = userRole === "patient" ? "uid" : "recipientId";
       const recipientField = userRole === "patient" ? "recipientId" : "uid";
 
