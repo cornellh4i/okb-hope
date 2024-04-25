@@ -33,78 +33,139 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
     setIsDeleteModalOpen(false);
   };
 
+  // const handleDelete = async () => {
+  //   const batch = writeBatch(db);
+
+  //   try {
+  //     console.log(`Starting delete operation for patientId: ${patientId}, psychiatristId: ${psychiatristId}`);
+  //     const userRole = role; // 'role' should be 'patient' or 'psychiatrist'
+
+  //     // The field names your Firestore collection for user IDs
+  //     const userField = userRole === "patient" ? "uid" : "recipientId";
+  //     const recipientField = userRole === "patient" ? "recipientId" : "uid";
+
+  //     // Query to find all conversations between the patient and psychiatrist
+  //     const conversationQuery = query(
+  //       collection(db, "Conversations"),
+  //       where("patientId", "==", patientId),
+  //       where("psychiatristId", "==", psychiatristId)
+  //     );
+
+  //     // Execute the query to fetch conversation documents
+  //     const conversationSnapshot = await getDocs(conversationQuery);
+
+  //     // If no conversation documents are found, log an error and exit the function
+  //     if (conversationSnapshot.empty) {
+  //       console.error("No conversations found for the given IDs");
+  //       return;
+  //     }
+
+  //     // Log for debugging
+  //     console.log(`Found ${conversationSnapshot.docs.length} conversations to mark as deleted`);
+
+  //     // For each conversation, mark it as deleted by the current user role
+  //     conversationSnapshot.forEach((conversationDoc) => {
+  //       const deletionFlag = userRole === "patient" ? 'deletedByPatient' : 'deletedByPsych';
+
+  //       if (conversationDoc.data()[deletionFlag] !== true) {
+  //         // If the conversation is not already deleted by the current user, mark it as deleted
+  //         batch.update(conversationDoc.ref, { [deletionFlag]: true });
+  //         console.log(`Marking conversation ${conversationDoc.id} as deleted by: ${deletionFlag}`);
+  //       } else {
+  //         // If the conversation is already deleted by the current user, delete the conversation document
+  //         batch.delete(conversationDoc.ref);
+  //         console.log(`Deleting conversation ${conversationDoc.id} because it was deleted by both parties`);
+  //       }
+  //     });
+
+  //     //Query to find all chat messages where the user is either the sender or recipient
+  //     const chatsQuery = query(
+  //       collection(db, "Chats"),
+  //       where(userField, "==", patientId),
+  //       where(recipientField, "==", psychiatristId)
+  //     );
+
+
+  //     // Execute the query to fetch chat messages
+  //     const chatSnapshot = await getDocs(chatsQuery);
+
+  //     // Log for debugging
+  //     console.log(`Found ${chatSnapshot.docs.length} chats to mark as deleted`);
+
+  //     // For each chat message, mark it as deleted by the current user role
+  //     chatSnapshot.forEach((chatDoc) => {
+  //       const deletionFlag = userRole === "patient" ? 'deletedByPatient' : 'deletedByPsych';
+  //       const oppositeFlag = userRole === "patient" ? 'deletedByPsych' : 'deletedByPatient';
+
+  //       if (chatDoc.data()[oppositeFlag] !== true) {
+  //         // If the chat is not already deleted by the other party, mark it as deleted
+  //         batch.update(chatDoc.ref, { [deletionFlag]: true });
+  //         console.log(`Marking chat ${chatDoc.id} as deleted by: ${deletionFlag}`);
+  //       } else {
+  //         // If the chat is already deleted by the other party, delete the chat document
+  //         batch.delete(chatDoc.ref);
+  //         console.log(`Deleting chat ${chatDoc.id} because it was deleted by both parties`);
+  //       }
+  //     });
+
+  //     // Commit the batch operation
+  //     await batch.commit();
+  //     console.log("Batch commit successful. Conversations and chat messages marked as deleted.");
+  //   } catch (error) {
+  //     // Log any errors that occur during the operation
+  //     console.error("Error during batch commit:", error);
+  //   } finally {
+  //     // Close the delete modal whether the operation was successful or not
+  //     closeDeleteModal();
+  //   }
+  // };
+
   const handleDelete = async () => {
     const batch = writeBatch(db);
-
     try {
       console.log(`Starting delete operation for patientId: ${patientId}, psychiatristId: ${psychiatristId}`);
-
       const userRole = role; // 'role' should be 'patient' or 'psychiatrist'
 
-      // The field names your Firestore collection for user IDs
-      const userField = userRole === "patient" ? "uid" : "recipientId";
-      const recipientField = userRole === "patient" ? "recipientId" : "uid";
-
-      // Query to find all conversations between the patient and psychiatrist
+      // Conversation Deletion Logic
       const conversationQuery = query(
         collection(db, "Conversations"),
         where("patientId", "==", patientId),
         where("psychiatristId", "==", psychiatristId)
       );
 
-      // Execute the query to fetch conversation documents
       const conversationSnapshot = await getDocs(conversationQuery);
-
-      // If no conversation documents are found, log an error and exit the function
-      if (conversationSnapshot.empty) {
-        console.error("No conversations found for the given IDs");
-        return;
-      }
-
-      // Log for debugging
-      console.log(`Found ${conversationSnapshot.docs.length} conversations to mark as deleted`);
-
-      // For each conversation, mark it as deleted by the current user role
-      conversationSnapshot.forEach((conversationDoc) => {
+      conversationSnapshot.forEach((doc) => {
         const deletionFlag = userRole === "patient" ? 'deletedByPatient' : 'deletedByPsych';
-
-        if (conversationDoc.data()[deletionFlag] !== true) {
-          // If the conversation is not already deleted by the current user, mark it as deleted
-          batch.update(conversationDoc.ref, { [deletionFlag]: true });
-          console.log(`Marking conversation ${conversationDoc.id} as deleted by: ${deletionFlag}`);
+        if (doc.data()[deletionFlag] !== true) {
+          batch.update(doc.ref, { [deletionFlag]: true });
+          console.log(`Marking conversation ${doc.id} as deleted by: ${deletionFlag}`);
         } else {
-          // If the conversation is already deleted by the current user, delete the conversation document
-          batch.delete(conversationDoc.ref);
-          console.log(`Deleting conversation ${conversationDoc.id} because it was deleted by both parties`);
+          batch.delete(doc.ref);
+          console.log(`Deleting conversation ${doc.id} because it was deleted by both parties`);
         }
       });
 
-      // Query to find all chat messages where the user is either the sender or recipient
-      const chatsQuery = query(
+      // Message Deletion Logic
+      const deletionFlag = userRole === "patient" ? 'deletedByPatient' : 'deletedByPsych';
+      const oppositeFlag = userRole === "psychiatrist" ? 'deletedByPatient' : 'deletedByPsych';
+
+      // Properly target all messages between the two parties
+      const messageQuery = query(
         collection(db, "Chats"),
-        where(userField, "==", patientId),
-        where(recipientField, "==", psychiatristId)
+        where("uid", "in", [patientId, psychiatristId]),
+        where("recipientId", "in", [patientId, psychiatristId])
       );
 
-      // Execute the query to fetch chat messages
-      const chatSnapshot = await getDocs(chatsQuery);
+      const messageSnapshot = await getDocs(messageQuery);
+      console.log(`Found ${messageSnapshot.docs.length} chats to process for deletion`);
 
-      // Log for debugging
-      console.log(`Found ${chatSnapshot.docs.length} chats to mark as deleted`);
-
-      // For each chat message, mark it as deleted by the current user role
-      chatSnapshot.forEach((chatDoc) => {
-        const deletionFlag = userRole === "patient" ? 'deletedByPatient' : 'deletedByPsych';
-        const oppositeFlag = userRole === "patient" ? 'deletedByPsych' : 'deletedByPatient';
-
-        if (chatDoc.data()[oppositeFlag] !== true) {
-          // If the chat is not already deleted by the other party, mark it as deleted
-          batch.update(chatDoc.ref, { [deletionFlag]: true });
-          console.log(`Marking chat ${chatDoc.id} as deleted by: ${deletionFlag}`);
+      messageSnapshot.forEach((doc) => {
+        if (doc.data()[oppositeFlag] !== true) {
+          batch.update(doc.ref, { [deletionFlag]: true });
+          console.log(`Marking chat ${doc.id} as deleted by: ${deletionFlag}`);
         } else {
-          // If the chat is already deleted by the other party, delete the chat document
-          batch.delete(chatDoc.ref);
-          console.log(`Deleting chat ${chatDoc.id} because it was deleted by both parties`);
+          batch.delete(doc.ref);
+          console.log(`Deleting chat ${doc.id} because it was deleted by both parties`);
         }
       });
 
@@ -112,10 +173,8 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
       await batch.commit();
       console.log("Batch commit successful. Conversations and chat messages marked as deleted.");
     } catch (error) {
-      // Log any errors that occur during the operation
       console.error("Error during batch commit:", error);
     } finally {
-      // Close the delete modal whether the operation was successful or not
       closeDeleteModal();
     }
   };

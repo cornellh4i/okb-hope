@@ -18,6 +18,8 @@ const MessageList: React.FC = () => {
   const [patientId, setPatientId] = useState('');
 
   const [psychName, setPsychName] = useState('');
+  const [patientName, setPatientName] = useState('');
+
 
   useEffect(() => {
     const { psych_id, psych_name, patient_id, patient_name } = router.query;
@@ -28,6 +30,7 @@ const MessageList: React.FC = () => {
     } else if (patient_name) {
       setPatientId(patient_id as string);
       setPsychiatristId(uid as string);
+      setPatientName(patient_name as string)
     }
   }, [router.query]);
 
@@ -69,13 +72,25 @@ const MessageList: React.FC = () => {
 
   // Filter messages based on deletion status and role
   const filteredMessages = messages.filter(msg => {
-    return (msg.role === 'patient' ? !msg.deletedByPatient : !msg.deletedByPsych);
+    // Check if the current user is the recipient and the message is deleted by the recipient
+    if (uid === patientId && msg.deletedByPatient) {
+      return false; // Exclude the message
+    }
+    // Check if the current user is the recipient and the message is deleted by the recipient
+    if (uid === psychiatristId && msg.deletedByPsych) {
+      return false; // Exclude the message
+    }
+    // For other cases or if the message is not deleted by the recipient, include the message
+    return true;
   });
 
   if (filteredMessages.length === 0) {
+    const conversationPartnerName = uid === psychiatristId ? patientName : psychName;
     return (
-      <div className="page-background text-center text-gray-400 pt-4 font-montserrat">Start a conversation with {psychName}</div>
-    )
+      <div className="page-background text-center text-gray-400 pt-4 font-montserrat">
+        Start a conversation with {conversationPartnerName}
+      </div>
+    );
   } else {
     return (
       <div>
