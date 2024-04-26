@@ -250,7 +250,7 @@ const AdminReport = () => {
 
     const cancelButtonStyle = {
       backgroundColor: 'white',
-      color: 'black',
+      color: okb_colors.dark_gray,
       padding: '8px',
       borderRadius: '10px',
       border: '2px solid #519AEB',
