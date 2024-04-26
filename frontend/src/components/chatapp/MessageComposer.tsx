@@ -66,9 +66,9 @@ const MessageComposer: React.FC = () => {
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
-        // Create a new conversation if not found
+        // No existing conversation found, create a new one
         try {
-          await addDoc(conversationsRef, {
+          const docRef = await addDoc(conversationsRef, {
             deletedByPatient: false,
             deletedByPsych: false,
             patientId: patientId,
@@ -78,27 +78,29 @@ const MessageComposer: React.FC = () => {
             recentMessage: {
               text: message,
               createdAt: serverTimestamp(),
-              photoURL
+              photoURL: auth.currentUser?.photoURL
             }
           });
-          console.log("New conversation created");
+          console.log("New conversation created with ID: ", docRef.id);
         } catch (error) {
           console.error("Error creating new conversation: ", error);
         }
       } else {
-        // Update existing conversation
+        // Existing conversation found, update the recent message
         const conversationDocRef = doc(db, "Conversations", querySnapshot.docs[0].id);
         try {
+          const conversationData = querySnapshot.docs[0].data();
+          const unreadByPatient = conversationData.messagesUnreadByPatient + (uid === patientId ? 0 : 1);
+          const unreadByPsych = conversationData.messagesUnreadByPsych + (uid === patientId ? 1 : 0);
+
           await updateDoc(conversationDocRef, {
             recentMessage: {
               text: message,
               createdAt: serverTimestamp(),
-              photoURL
+              photoURL: auth.currentUser?.photoURL
             },
-            messagesUnreadByPatient: uid === patientId ? 0 : 1,
-            messagesUnreadByPsych: uid === psychiatristId ? 0 : 1,
-            deletedByPatient: false,  // Resetting deletion flags on message send
-            deletedByPsych: false
+            messagesUnreadByPatient: unreadByPatient,
+            messagesUnreadByPsych: unreadByPsych
           });
           console.log("Conversation updated with new message");
         } catch (error) {
@@ -110,14 +112,12 @@ const MessageComposer: React.FC = () => {
     }
   };
 
-
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       sendMessage(e);
     }
   };
-
 
   return (
     <div className="message-composer page-background py-2">
@@ -129,7 +129,7 @@ const MessageComposer: React.FC = () => {
           onKeyDown={handleKeyDown}
           placeholder="Send a Message"
           className="page-background w-full overflow-auto m-0 p-2"
-          style={{ resize: "none", outline: "none", height: "auto" }}
+          style={{ resize: "none", outline: "none", height: "auto", background: "transparent", maxHeight: "200px" }}
           rows={1}
         ></textarea>
 
