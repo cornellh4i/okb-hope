@@ -15,7 +15,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db, logInWithGoogle, signUpWithGoogle } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, getDoc } from 'firebase/firestore';
 import { Timestamp } from "firebase/firestore";
 import Cancel from "@/assets/cancel.svg";
 import Submit from "@/assets/submit.svg";
@@ -124,9 +124,6 @@ const continueButtonStyle: React.CSSProperties = {
   border: 'none',
 };
 
-
-
-
 // Originally, { firstName, lastName }: ProfProfileProps was passed in below, 
 // put it is not necessary if we are using useRouter, because we can access 
 // the firstName and lastName from the router's query
@@ -139,7 +136,6 @@ const ProfProfile = () => {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [reportText, setReportText] = useState('');
   const [approval, setApproved] = useState(false);
-
 
   // Set the initial state of professional to null instead of DummyPsychiatrist 
   // to avoid the initial rendering of the component with DummyPsychiatrist 
@@ -170,19 +166,11 @@ const ProfProfile = () => {
   }, [router.query.psych_uid]);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      if (user) {
-        const data = await fetchPatientDetails(user.uid);
-        setSavedPsychiatrists(data.savedPsychiatrists)
-      }
-    }
-    fetchUser();
-  }, []);
-
-  useEffect(() => {
     const fetchDocId = async () => {
-      if (user) {
-        const documentId = await fetchDocumentId("patients", user.uid);
+      const psych_uid = router.query.psych_uid as string;
+
+      if (psych_uid) {
+        const documentId = await fetchDocumentId("psychiatrists", psych_uid);
         setDocId(documentId);
       }
     }
@@ -324,8 +312,9 @@ const ProfProfile = () => {
     onClose();
   };
 
-  const handleApproveYes = () => {
+  const handleApproveYes = async () => {
     setApproved(true);
+
     toast.success(user?.displayName + " is now approved.", {
       position: "top-center",
       autoClose: 5000,
@@ -337,7 +326,14 @@ const ProfProfile = () => {
       theme: "colored",
       transition: Bounce,
       });
+
+      const userRef = doc(db, "psychiatrists", docId ?? "");
+      await updateDoc(userRef, {
+        firstName: "approved"
+      });
+      // console.log( getDoc(userRef));
   }
+
   if (typeof document !== 'undefined') {
     document.documentElement.style.setProperty('--toastify-color-success', '#bddcae');
     document.documentElement.style.setProperty('--toastify-toast-width', '50%');
@@ -408,23 +404,27 @@ const ProfProfile = () => {
           <Image src={Photo} alt="Photo" className={`w-1200 h-600`} />
         </div>
         <div className={`flex flex-col lg:w-2/3 gap-4 justify-center`}>
-          <div className={`flex flex-col md:flex-row gap-4`}>
+          <div className={`flex flex-col md:flex-row gap-4 justify-between`}>
             <div className='flex gap-x-4 justify-center items-center md:justify-start md:items-start flex-row md:flex-col'>
-              <div className={`text-3xl font-montserrat font-bold`}>
-                {professional.firstName + " " + professional.lastName}
+              <div className = 'flex flex-row justify-between gap-2'>
+                <div className={`text-3xl font-montserrat font-bold`}>
+                  {professional.firstName + " " + professional.lastName}
+                </div>
+                <div className={`shrink`} >
+                  <WarningHover approved={approval}/>
+                </div>
               </div>
+
               <div className={`text-normal text-xl italic text-dark-grey font-montserrat`}>
                 {professional.position}
               </div>
             </div>
             <div className='flex flex-row gap-4 justify-center items-center md:justify-start md:items-start'>
               {/* Report button, action is currently undefined */}
-              <div className={`shrink`} >
-                <WarningHover approved={approval}/>
-              </div>
+              
               {/* Download button, action is currently undefined */}
               <div className={`shrink`}>
-                <div className={`font-montserrat px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold`}>
+                <div className={`font-montserrat px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold flex-end`}>
                   Download
                 </div>
               </div>
@@ -468,7 +468,7 @@ const ProfProfile = () => {
             </div>
           </div>
 
-          <div className="bg-[#d0dbe9] font-montserrat mt-12 h-40 w-80 text-center text-lg text-Black font-extrabold py-2 px-4 pt-7 rounded-xl bg-opacity-50 border border-blue-500 ">
+          <div className="${ bg-[#d0dbe9] font-montserrat mt-12 h-40 w-80 text-center text-lg text-Black font-extrabold py-2 px-4 pt-7 rounded-xl bg-opacity-50 border border-blue-500 ">
             Would you like to approve this account?
             <div className="grid grid-cols-2 mt-4 items-center">
               <button className={`bg-white w-1/2 font-montserrat border-2 border-[#509bea] rounded-lg text-black font-normal justify-end justify-self-end mr-2 shadow hover:shadow-lg outline-none focus:outline-none active:bg-gray-500 ease-linear transition-all duration-150`}

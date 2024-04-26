@@ -22,8 +22,8 @@ export interface UserType {
 
 const AdminDashboard = () => {
   const [patientView, setPatientView] = useState<boolean>(true);
-  const [clientView, setClientView] = useState(true);
-  const [psychiatristView, setPsychiatristView] = useState(false);
+  const [clientView, setClientView] = useState(false);
+  const [psychiatristView, setPsychiatristView] = useState(true);
   const [userData, setUserData] = useState<UserType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(10);
@@ -40,6 +40,7 @@ const AdminDashboard = () => {
           id: doc.id,
         } as UserType;
       });
+      
 
       // Filter to include only psychiatrists
       let filteredUsers: UserType[];
@@ -89,11 +90,11 @@ const AdminDashboard = () => {
 
   const handleClientClick = () => {
     setClientView(true);
-    setPsychiatristView((prev) => !prev); // Toggle the state of the second button
+    setPsychiatristView(false); // Toggle the state of the second button
   };
 
   const handlePsychiatristClick = () => {
-    setClientView((prev) => !prev); // Toggle the state of the first button
+    setClientView(false); // Toggle the state of the first button
     setPsychiatristView(true);
   };
 

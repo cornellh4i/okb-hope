@@ -67,6 +67,7 @@ const signUpWithGoogle = async (
   ageRange: string,
   prefLanguages: string[],
   savedPsychiatrists: string[],
+  status: string,
 ) => {
   return new Promise<void>(async (resolve, reject) => {
     try {
@@ -101,6 +102,7 @@ const signUpWithGoogle = async (
             specialty: specialty,
             description: description,
             website: website,
+            status: status
           });
           console.log("Added psych")
         }

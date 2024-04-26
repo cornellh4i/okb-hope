@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
-import WarningCircle from "@/assets/warning_circle.svg";
-import Check from "@/assets/green_check.svg";
+import CircleWarningHover  from "./CircleWarningHover";
 import { fetchAllUsers, fetchDocumentId, fetchPatientDetails, fetchProfessionalData } from '../../../firebase/fetchData';
 import { useRouter } from 'next/router';
+import { IPsychiatrist } from '../../schema'
 
 
 const FilterCard = ({ user, name, username, id, created, active, isChecked, onCheckChange }) => {
   const router = useRouter();
   const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
+  const [professional, setProfessional] = useState<IPsychiatrist | null>(null);
 
+  
   const handleOnChange = () => {
     onCheckChange(!isChecked);
   };
@@ -23,12 +25,33 @@ const FilterCard = ({ user, name, username, id, created, active, isChecked, onCh
     }
   }
 
+  useEffect(() => {
+    const fetchProfessional = async () => {
+      // Extract the first name and last name from the router query parameters
+      if (user.userType === 'psychiatrist') {
+        const psych_uid = id;
+        // Check if both first name and last name are defined
+      if (psych_uid) {
+        // Fetch professional data based on first name and last name
+        const data = await fetchProfessionalData(psych_uid);
+        setProfessional(data);
+      }
+      }
+    };
+    fetchProfessional();
+  }, [id]);
+
+
+
   const cardStyle = {
     backgroundColor: isChecked ? '#D0DBEA' : 'transparent',
     border: isChecked ? 'sky-700' : 'gray-300'
   };
 
-  const Icon = name.toLowerCase() === "brianna liu" ? Check : WarningCircle;
+  // if approved is true then Icon is check mark, else warning circle
+  // const Icon = true ? true : false;
+  const Icon = professional?.status == "approved" ? true : false;
+  const visibility = (user.userType === 'psychiatrist') ? 'visible' : 'invisible';
 
   return (
 
@@ -41,7 +64,7 @@ const FilterCard = ({ user, name, username, id, created, active, isChecked, onCh
           <div className="flex items-start w-full" onClick={() => handleGoToProfProfile(id)}>
             <div className="flex flex-row mr-28" style={{ width: "180px", marginLeft: "20px" }}>
               <div className="basis-4/5">{name}</div>
-              <div className="basis-1/5"><Icon /></div>
+              <div className={`basis-1/5 ${visibility}`}><CircleWarningHover approved={Icon}/></div>
             </div>
             <div style={{ width: "180px", marginLeft: "0px" }}>{username}</div>
             <div style={{ width: "100px", marginLeft: "110px" }}>{created}</div>
