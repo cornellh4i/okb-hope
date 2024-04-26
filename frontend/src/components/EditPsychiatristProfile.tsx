@@ -26,7 +26,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
   const positions = ["Nurse", "Doctor"];
   const language = ["English", "Ga", "Twi", "Hausa", "Fante", "Ewe", "Other"];
   const genderList = ["Male", "Female", "Other"];
-  const availability = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+  const availability = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
   useEffect(() => {
     const fetchUser = async () => {
