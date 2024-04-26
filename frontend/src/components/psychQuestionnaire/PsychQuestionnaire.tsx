@@ -162,6 +162,16 @@ const PsychQuestionnaire = () => {
             return;
         }
 
+        else if (currentStep === 3 && (location.length === 0)) {
+            alert("Please fill out the 'Location' section.");
+            return;
+        }
+
+        else if (currentStep === 3 && (aboutYourself.length === 0)) {
+            alert("Please fill out the 'About Yourself' section.");
+            return;
+        }
+
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
         }

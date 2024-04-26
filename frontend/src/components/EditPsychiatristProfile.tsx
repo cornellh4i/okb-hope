@@ -23,7 +23,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
   const [weeklyAvailability, setWeeklyAvailability] = useState<string[]>([]);
   const [gender, setGender] = useState(0);
 
-  const positions = ["Nurse", "Doctor"];
+  const positions = ["Nurse", "Psychiatrist"];
   const language = ["English", "Ga", "Twi", "Hausa", "Fante", "Ewe", "Other"];
   const genderList = ["Male", "Female", "Other"];
   const availability = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
