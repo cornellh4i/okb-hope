@@ -33,13 +33,8 @@ const MessageComposer: React.FC = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-
     const uid = auth.currentUser?.uid;
-
-    const participants = (uid === patientId)
-      ? [patientId, psychiatristId]
-      : [psychiatristId, patientId];// Now includes the psychiatrist's ID
-
+    const participants = [patientId, psychiatristId];
     const photoURL = auth.currentUser?.photoURL;
     const messagesRef = collection(db, "Chats");
 
@@ -52,7 +47,7 @@ const MessageComposer: React.FC = () => {
           uid: participants[0],
           recipientId: participants[1],
           photoURL,
-          deletedByPatient: false, // Assuming message sending resets deletion status
+          deletedByPatient: false,
           deletedByPsych: false
         });
         console.log("Message sent");
@@ -66,39 +61,34 @@ const MessageComposer: React.FC = () => {
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
-        // No existing conversation found, create a new one
+        // Create a new conversation if not found
         try {
-          const docRef = await addDoc(conversationsRef, {
+          await addDoc(conversationsRef, {
             patientId: patientId,
             psychiatristId: psychiatristId,
-            messagesUnreadByPatient: uid === patientId ? 0 : 1,
+            messagesUnreadByPatient: uid === psychiatristId ? 1 : 0,
             messagesUnreadByPsych: uid === patientId ? 1 : 0,
             recentMessage: {
               text: message,
               createdAt: serverTimestamp(),
-              photoURL: auth.currentUser?.photoURL
+              photoURL
             }
           });
-          console.log("New conversation created with ID: ", docRef.id);
+          console.log("New conversation created");
         } catch (error) {
           console.error("Error creating new conversation: ", error);
         }
       } else {
-        // Existing conversation found, update the recent message
+        // Update existing conversation
         const conversationDocRef = doc(db, "Conversations", querySnapshot.docs[0].id);
         try {
-          const conversationData = querySnapshot.docs[0].data();
-          const unreadByPatient = conversationData.messagesUnreadByPatient + (uid === patientId ? 0 : 1);
-          const unreadByPsych = conversationData.messagesUnreadByPsych + (uid === patientId ? 1 : 0);
-
           await updateDoc(conversationDocRef, {
             recentMessage: {
               text: message,
               createdAt: serverTimestamp(),
-              photoURL: auth.currentUser?.photoURL
+              photoURL
             },
-            messagesUnreadByPatient: unreadByPatient,
-            messagesUnreadByPsych: unreadByPsych
+            [`messagesUnreadBy${uid === patientId ? 'Psych' : 'Patient'}`]: querySnapshot.docs[0].data()[`messagesUnreadBy${uid === patientId ? 'Psych' : 'Patient'}`] + 1
           });
           console.log("Conversation updated with new message");
         } catch (error) {
@@ -108,7 +98,8 @@ const MessageComposer: React.FC = () => {
 
       setMessage('');
     }
-  }
+  };
+
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -120,7 +111,7 @@ const MessageComposer: React.FC = () => {
 
   return (
     <div className="message-composer page-background py-2">
-      <div className="flex items-center rounded-3xl border-solid border border-black z-10 pl-2 mx-4">
+      <div className="flex items-center rounded-3xl border-solid border border-black pl-2 mx-4">
         <textarea
           ref={textareaRef}
           value={message}
@@ -128,7 +119,7 @@ const MessageComposer: React.FC = () => {
           onKeyDown={handleKeyDown}
           placeholder="Send a Message"
           className="page-background w-full overflow-auto m-0 p-2"
-          style={{ resize: "none", outline: "none", height: "auto", background: "transparent" }}
+          style={{ resize: "none", outline: "none", height: "auto" }}
           rows={1}
         ></textarea>
 
