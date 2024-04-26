@@ -69,6 +69,7 @@ const PositionLanguageQuestionnaire = ({ setPosition, position, languages, other
             </FormControl>
             <div>
                 <span className={`text-lg font-semibold font-montserrat`}>Tell us and your patients about yourself.</span>
+                <span className={`text-lg text-red-600`}>*</span>
                 <textarea
                     value={aboutYourself}
                     onChange={handleAboutYourself}
