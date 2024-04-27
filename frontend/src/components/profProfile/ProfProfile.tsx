@@ -287,12 +287,6 @@ const ProfProfile = () => {
         }
     };
 
-    // Navigate to the user's discover page
-    const handleGoToDashboard = () => {
-        if (user) router.push(`/${user?.userType}/${user?.uid}/discover`);
-        else router.push(`/discover`);
-    };
-
     const logInWithGoogleAndRedirect = async (onClose: () => void) => {
         await logInWithGoogle();
         router.push('/messages'); // Moved this line before the closing of the popup
@@ -361,9 +355,9 @@ const ProfProfile = () => {
             )}
 
 
-            <div className={`flex flex-row pt-5`}>
+            <div className={`flex flex-row pt-5 pl-8`}>
                 {/* Back arrow to return to go back to Discover Professionals */}
-                <figure className={`cursor-pointer`} onClick={handleGoToDashboard}><Arrow /></figure>
+                <figure className={`cursor-pointer`} onClick={router.back}><Arrow /></figure>
             </div>
             <div className={`flex flex-col lg:flex-row gap-10 justify-center`}>
                 {/* <figure className='flex w-1/3 shrink'>
@@ -377,7 +371,7 @@ const ProfProfile = () => {
                 </div>
                 <div className={`flex flex-col lg:w-2/3 gap-4 justify-center`}>
                     <div className={`flex flex-col md:flex-row gap-4`}>
-                        <div className='flex gap-x-4 justify-center items-center md:justify-start md:items-start flex-row md:flex-col'>
+                        <div className='flex gap-x-4 justify-center items-center md:justify-start md:items-start flex-col'>
                             <div className={`text-3xl text-bold font-montserrat font-bold`}>
                                 {professional.firstName + " " + professional.lastName}
                             </div>
