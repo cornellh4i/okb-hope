@@ -37,22 +37,40 @@ const MessageComposer: React.FC = () => {
     const participants = [patientId, psychiatristId];
     const photoURL = auth.currentUser?.photoURL;
     const messagesRef = collection(db, "Chats");
+    console.log(participants)
 
     if (message !== "" && psychiatristId && patientId) {
       // Send the message
-      try {
-        await addDoc(messagesRef, {
-          text: message,
-          createdAt: serverTimestamp(),
-          uid: participants[0],
-          recipientId: participants[1],
-          photoURL,
-          deletedByPatient: false,
-          deletedByPsych: false
-        });
-        console.log("Message sent");
-      } catch (e) {
-        console.error("Error adding document: ", e);
+      if (uid === patientId) {
+        try {
+          await addDoc(messagesRef, {
+            text: message,
+            createdAt: serverTimestamp(),
+            uid: participants[0],
+            recipientId: participants[1],
+            photoURL,
+            deletedByPatient: false,
+            deletedByPsych: false
+          });
+          console.log("Message sent");
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
+      } else if (uid === psychiatristId) {
+        try {
+          await addDoc(messagesRef, {
+            text: message,
+            createdAt: serverTimestamp(),
+            uid: participants[1],
+            recipientId: participants[0],
+            photoURL,
+            deletedByPatient: false,
+            deletedByPsych: false
+          });
+          console.log("Message sent");
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
       }
 
       // Handle the conversation
@@ -66,6 +84,8 @@ const MessageComposer: React.FC = () => {
           await addDoc(conversationsRef, {
             patientId: patientId,
             psychiatristId: psychiatristId,
+            deletedByPatient: false,
+            deletedByPsych: false,
             messagesUnreadByPatient: uid === psychiatristId ? 1 : 0,
             messagesUnreadByPsych: uid === patientId ? 1 : 0,
             recentMessage: {
@@ -83,6 +103,8 @@ const MessageComposer: React.FC = () => {
         const conversationDocRef = doc(db, "Conversations", querySnapshot.docs[0].id);
         try {
           await updateDoc(conversationDocRef, {
+            deletedByPatient: false,
+            deletedByPsych: false,
             recentMessage: {
               text: message,
               createdAt: serverTimestamp(),
