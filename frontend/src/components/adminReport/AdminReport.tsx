@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, query, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebase/firebase';
-import { IReport } from '@/schema';
+import { db } from '../../../firebase/firebase';
 import ChevronDown from '@/assets/chevron_down';
 import ChevronUp from '@/assets/chevron_up';
 import Close from '@/assets/close.svg';
 import ReportPopup from './ReportPopup';
-import Cancel from "@/assets/cancel.svg";
-import Submit from "@/assets/submit.svg";
 import okb_colors from '@/colors';
-
-
+import { IReport } from '@/schema';
 
 const ReportCard = ({ report, onReportClick }) => {
+
   const getFormattedDate = (date) => {
     if (!date) return 'Unknown date';
     try {
@@ -29,8 +26,8 @@ const ReportCard = ({ report, onReportClick }) => {
 
   const formattedDate = getFormattedDate(report.submittedAt);
 
-
-  const cardStyle = {
+  const cardStyle: React.CSSProperties = {
+    textAlign: 'center',
     backgroundColor: 'transparent',
     border: '2px solid #d1d5db',
     borderRadius: '0.5rem',
@@ -42,58 +39,66 @@ const ReportCard = ({ report, onReportClick }) => {
     alignItems: 'center',
   };
 
-  // Using flex-grow to allow each text area to expand or shrink as needed
-  const textStyle = {
+  const subjectStyle: React.CSSProperties = {
     color: 'black',
     fontSize: '16px',
     fontWeight: '400',
-    padding: '0 10px', // Providing some padding
-    textAlign: 'left' as const,
-    flex: '1 1 30%', // Allow the box to grow and shrink with flexbox
+    padding: '0 10px', // Equal padding on left and right
+    textAlign: 'center', // Center text
+    flex: '1 1 30%', // Adjust flex basis for responsiveness
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
   };
 
-  const textStyleS = {
-    ...textStyle,
-    flex: '1 1 20%' // Smaller flex-basis because title and date might not need as much space
+  const col2style = {
+    ...subjectStyle,
+    flex: '1 1 20%', // Adjusted flex basis
+    paddingLeft: '0px', // No left padding for column two
+    paddingRight: '140px' // Equal padding between columns
   };
 
-  const timeSubmittedStyle = {
-    ...textStyleS, // inherit all the base styles
-    paddingLeft: '45px', // Increase the left padding to move text to the right
-    paddingRight: '0px'
+  const col3style = {
+    ...subjectStyle,
+    flex: '1 1 20%', // Adjusted flex basis
+    paddingLeft: '0px', // Equal padding between columns
+    paddingRight: '30px' // Equal padding between columns
   };
 
-  const reporterSubmittedStyle = {
-    ...textStyleS, // inherit all the base styles
-    paddingLeft: '5px', // Increase the left padding to move text to the right
-    paddingRight: '0px'
+  const col4style = {
+    ...subjectStyle,
+    flex: '1 1 20%', // Adjusted flex basis
+    paddingLeft: '90px', // More left padding for column four to move it to the right
+    paddingRight: '0px' // No right padding for column four
+  };
+
+  const col1style = {
+    ...subjectStyle,
+    flex: '1 1 20%', // Adjusted flex basis
+    paddingLeft: '0px', // No left padding for column one
+    paddingRight: '80px' // More right padding for column one to move it further to the left
   };
 
   return (
     <div className="flex items-center mx-5 lg:mx-36 my-2" onClick={() => onReportClick(report)}>
       <div className='flex justify-between items-center w-full rounded-lg' style={cardStyle}>
-        <div style={textStyleS}>{report.title || 'Report Subject'}</div>
-        <div style={textStyle}>{truncateText(report.description, 25)}</div>
-        <div style={reporterSubmittedStyle}>{report.reporter_name}</div>
-        <div style={timeSubmittedStyle}>{formattedDate}</div>
+        <div style={col1style}>{truncateText(report.description, 25)}</div>
+        <div style={col2style}>{report.reporter_name}</div>
+        <div style={col3style}>Dr. {report.psych_name}</div>
+        <div style={col4style}>{formattedDate}</div>
       </div>
     </div>
   );
 };
 
-
 const AdminReport = () => {
   const [selectedReport, setSelectedReport] = useState<IReport | null>(null);
-  // const { user } = useAuth();
   const [reports, setReports] = useState<IReport[]>([]);
-  const [unreadReports, setUnreadReports] = useState<boolean>(false);
-  const [highPriorityReports, setHighPriorityReports] = useState<boolean>(false);
-  const [mediumPrioityReports, setMediumPriorityReports] = useState<boolean>(false);
-  const [lowPriorityReports, setLowPriorityReports] = useState<boolean>(false);
-  const [spamReports, setSpamReports] = useState<boolean>(false);
+  const [unreadReports, setUnreadReports] = useState<boolean>(true); // Set to true
+  const [highPriorityReports, setHighPriorityReports] = useState<boolean>(true); // Set to true
+  const [mediumPrioityReports, setMediumPriorityReports] = useState<boolean>(true); // Set to true
+  const [lowPriorityReports, setLowPriorityReports] = useState<boolean>(true); // Set to true
+  const [spamReports, setSpamReports] = useState<boolean>(true); // Set to true
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
   // Define fetchReports outside of useEffect so it can be used elsewhere
@@ -110,6 +115,8 @@ const AdminReport = () => {
       } as IReport;
     });
     setReports(fetchedReports);
+
+    console.log(fetchedReports)
   };
 
   // Call fetchReports inside useEffect
@@ -184,14 +191,17 @@ const AdminReport = () => {
     }
 
     return (
-
       <div>
         {bool ? reports.filter(report => report.priority === selectedPriority).map((report, index) => (
           <div
             key={report.report_id}
             className="report-card"
             style={{ cursor: 'pointer' }}>
-            <ReportCard key={report.report_id} report={report} onReportClick={handleOpenPopup} />
+            <ReportCard
+              key={report.report_id}
+              report={report}
+              onReportClick={handleOpenPopup}
+            />
           </div>
         )) : null}
       </div>
@@ -199,6 +209,7 @@ const AdminReport = () => {
   }
 
   const ReportDetailsPopup = () => {
+    const [isOpen, setIsOpen] = useState(false);
     if (!showPopup) return null;
 
     const priorities = ['High', 'Medium', 'Low', 'Spam'];
@@ -220,70 +231,121 @@ const AdminReport = () => {
 
     const buttonsContainerStyle = {
       display: 'flex',
-      justifyContent: 'center', // Aligns child elements (buttons) in the center
+      justifyContent: 'center',
       gap: '8px',
-      marginTop: '20px' // Adds some space between the buttons and other elements above
-    };
-
-    const dropdownStyle = {
-      backgroundColor: '#007BFF',
-      color: 'white',
-      padding: '8px',
-      borderRadius: '5px',
-      border: 'none',
-      cursor: 'pointer',
+      marginTop: '20px'
     };
 
     const cancelButtonStyle = {
       backgroundColor: 'white',
-      color: 'black',
+      color: okb_colors.dark_gray,
       padding: '8px',
-      borderRadius: '4px',
-      border: '2px solid #007BFF',
+      borderRadius: '10px',
+      border: '2px solid #519AEB',
       cursor: 'pointer',
     };
 
+    const assignPriorityButtonStyle: React.CSSProperties = {
+      backgroundColor: '#519AEB',
+      color: 'white',
+      padding: '8px',
+      borderRadius: '10px',
+      border: '2px solid #519AEB',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '5px',
+      position: 'relative' // Position the button relatively
+    };
+
+    const dropdownContainerStyle: React.CSSProperties = {
+      position: 'absolute', // Position the dropdown absolutely
+      left: 0,
+      zIndex: 1001, // Ensure the dropdown appears above the popup
+      overflow: 'hidden',
+    };
+
+    const dropdownListStyle = {
+      margin: 0,
+      padding: 0,
+      listStyle: 'none',
+    };
+
+    const toggleDropdown = () => {
+      setIsOpen(!isOpen);
+    };
+
+    const handlePrioritySelection = (selectedPriority) => {
+      updateReportPriority(selectedPriority);
+      toggleDropdown();
+    };
+
+    const dropdownItemStyle = {
+      padding: '8px 16px',
+      color: 'black',
+      cursor: 'pointer',
+      transition: 'background-color 0.3s ease',
+      backgroundColor: '#E5E7EB',
+      border: '2px solid #E5E7EB',
+    };
+
+    const dropdownItemHoverStyle = {
+      backgroundColor: '#E5E7EB',
+      color: 'black',
+    };
+
+    const handleMouseEnter = (event) => {
+      event.target.style.backgroundColor = '#519AEB';
+      event.target.style.color = 'white';
+    };
+
+    const handleMouseLeave = (event) => {
+      event.target.style.backgroundColor = '#E5E7EB';
+      event.target.style.color = 'black';
+    };
 
     return (
       <div>
         <div className="modal modal-open">
           <div className="modal-box" style={{ maxHeight: '50%' }}>
             <Close className="modal-action" onClick={handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
-            <h1 className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 20, paddingBottom: '10px' }}>Report Subject</h1>
-            <div className="space-y-4" style={{
-              width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex'
-            }}>
+            <h1 className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 20, paddingBottom: '10px' }}>Report Information</h1>
+            <div className="space-y-4">
               <ReportPopup key={selectedReport?.report_id} report={selectedReport} />
             </div>
             <div style={buttonsContainerStyle}>
               <button
                 style={cancelButtonStyle}
                 onClick={handleClosePopup}
-              >
-                Cancel
-              </button>
-              <select
-                style={dropdownStyle}
-                value={selectedReport?.priority || 'Assign Priority'}
-                onChange={(e) => updateReportPriority(e.target.value)}>
-                <option disabled style={dropdownStyle}>Assign Priority</option>
-                {priorities.map((priority) => (
-                  <option key={priority} value={priority} style={dropdownStyle}>
-                    {priority !== "Spam" ? priority + " Priority" : priority}
-                  </option>
-                ))}
-              </select>
-
-
+              >Cancel</button>
+              <div style={{ position: 'relative' }}>
+                <button onClick={toggleDropdown} style={assignPriorityButtonStyle}>
+                  Assign Priority {isOpen ? <ChevronUp color='white' /> : <ChevronDown color='white' />}
+                </button>
+                {isOpen && (
+                  <div style={dropdownContainerStyle}>
+                    <ul style={dropdownListStyle}>
+                      {priorities.map((priority) => (
+                        <li
+                          key={priority}
+                          onClick={() => handlePrioritySelection(priority)}
+                          style={{ ...dropdownItemStyle, ...(isOpen && dropdownItemHoverStyle) }}
+                          onMouseEnter={handleMouseEnter}
+                          onMouseLeave={handleMouseLeave}
+                        >
+                          {priority !== "Spam" ? priority + " Priority" : priority}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
     );
   };
-
-
-
 
   return (
     <div className="admin-reports-container flex flex-col text-21 font-bold mb-1">
@@ -300,9 +362,9 @@ const AdminReport = () => {
 
         <div className='flex items-center lg:mx-36' style={{ alignSelf: 'stretch', height: 70, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 10, display: 'flex' }}>
           <div className=' flex justify-between items-center w-full px-5 md:px-12' style={{ alignSelf: 'stretch', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
-            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Title</div>
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Subject</div>
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Submitted By</div>
+            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Psychiatrist Reported</div>
             <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Time Submitted</div>
           </div>
           <div style={{ alignSelf: 'stretch', height: 0, border: '1.5px black solid' }}></div>
@@ -317,7 +379,6 @@ const AdminReport = () => {
           </button>
         </div>
 
-        {/* Report list container with overflow */}
         {returnReportsByPriority("")}
         {ReportDetailsPopup()}
 
@@ -363,4 +424,3 @@ const AdminReport = () => {
 };
 
 export default AdminReport;
-
