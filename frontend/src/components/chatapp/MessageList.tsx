@@ -87,7 +87,7 @@ const MessageList: React.FC = () => {
   if (filteredMessages.length === 0) {
     const conversationPartnerName = uid === psychiatristId ? patientName : psychName;
     return (
-      <div className="page-background text-center text-gray-400 pt-4 font-montserrat">
+      <div className="page-background text-center text-gray-400 pt-4 font-montserrat italic">
         Start a conversation with {conversationPartnerName}
       </div>
     );
