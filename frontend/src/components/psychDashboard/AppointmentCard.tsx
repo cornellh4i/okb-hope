@@ -40,7 +40,7 @@ const AppointmentCard = ({ patientId, startTime, endTime }: { patientId: string,
         {
           "id": "input1",
           "question": "Are there any specific concerns you would like to discuss with your counselor?",
-          "answer": data.concerns
+          "answer": data.concerns.join(', ')
         },
         {
           "id": "input2",

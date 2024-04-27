@@ -26,7 +26,7 @@ export interface IPatient {
     firstName: string;
     lastName: string;
     email: string;
-    concerns: string;
+    concerns: string[];
     previousTherapyExperience: string;
     lastTherapyTimeframe: string;
     ageRange: string;
@@ -64,7 +64,10 @@ export interface IReport {
     description: string;
     patient_id: string;
     psych_id: string;
-    report_id: string
+    psych_name: string;
+    report_id: string;
     submittedAt: Timestamp;
+    priority: string;
+    reporter_name: string;
 }
 

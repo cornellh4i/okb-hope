@@ -19,7 +19,7 @@ const EditPatientProfile = () => {
   const [docId, setDocId] = useState<string | undefined>(undefined);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [concerns, setConcerns] = useState('');
+  const [concerns, setConcerns] = useState<string[]>([]);
   const [previousTherapyExperience, setPreviousTherapyExperience] = useState('');
   const [lastTherapyTimeframe, setLastTherapyTimeframe] = useState('');
   const [ageRange, setAgeRange] = useState('');
@@ -58,8 +58,9 @@ const EditPatientProfile = () => {
   }
 
   const handleConcernsChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setConcerns(event.target.value);
-  }
+    const valuesArray = event.target.value.split(',').map(item => item.trim());
+    setConcerns(valuesArray);
+  };
 
   const handlePreviousTherapyExperienceChange = (value) => {
     setPreviousTherapyExperience(value);

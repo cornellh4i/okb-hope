@@ -26,7 +26,7 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
         {
           "id": "input1",
           "question": "Are there any specific concerns you would like to discuss with your counselor?",
-          "answer": data.concerns
+          "answer": data.concerns.join(', ')
         },
         {
           "id": "input2",

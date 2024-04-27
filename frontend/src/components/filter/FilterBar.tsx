@@ -1,10 +1,11 @@
-import chevron_down from "@/assets/chevron_down";
+import ChevronDown from '@/assets/chevron_down';
 import { useState } from "react";
 import SearchBarAdmin from '../SearchBarAdmin';
 import Trash from '@/assets/trash.svg';
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 import FilterModal from "./FilterModal"
+import okb_colors from '@/colors';
 
 const FilterBar = ({ onDelete, userList }) => {
     const ageGroups = ["Below 19", "20-30", "30-40", "40-50", "Over 50"];
@@ -55,7 +56,7 @@ const FilterBar = ({ onDelete, userList }) => {
 
             <div className="h-12 px-6 py-3 bg-white rounded-lg border border-zinc-600 justify-between items-center inline-flex">
                 <div className="dropdown">
-                    <label tabIndex={0} className="text-neutral-400 flex gap-25 m-1 text-base font-normal">Age Group{chevron_down}</label>
+                    <label tabIndex={0} className="text-neutral-400 flex gap-25 m-1 text-base font-normal">Age Group<ChevronDown color={okb_colors.med_gray} /></label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
                         {ageGroups.map((e) => <li key={e}>{e}</li>)}
                     </ul>
@@ -64,7 +65,7 @@ const FilterBar = ({ onDelete, userList }) => {
 
             <div className="h-12 px-6 py-3 bg-white rounded-lg border border-zinc-600 justify-between items-center inline-flex">
                 <div className="dropdown">
-                    <label tabIndex={0} className="text-neutral-400 flex gap-5 m-1 text-base font-normal">Gender{chevron_down}</label>
+                    <label tabIndex={0} className="text-neutral-400 flex gap-5 m-1 text-base font-normal">Gender<ChevronDown color={okb_colors.med_gray} /></label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
                         {genders.map((e) => <li key={e}>{e}</li>)}
                     </ul>
@@ -73,7 +74,7 @@ const FilterBar = ({ onDelete, userList }) => {
 
             <div className="h-12 px-6 py-3 bg-white rounded-lg border border-zinc-600 justify-between items-center inline-flex">
                 <div className="dropdown">
-                    <label tabIndex={0} className="text-neutral-400 flex gap-5 m-1 text-base font-normal">Conditions{chevron_down}</label>
+                    <label tabIndex={0} className="text-neutral-400 flex gap-5 m-1 text-base font-normal">Conditions<ChevronDown color={okb_colors.med_gray} /></label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
                         {conditions.map((e) => <li key={e}>{e}</li>)}
                     </ul>

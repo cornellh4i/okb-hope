@@ -1,5 +1,6 @@
 import { useState, ChangeEvent, use, useEffect, useRef } from 'react';
-import chevron_down from '@/assets/chevron_down';
+import ChevronDown from '@/assets/chevron_down';
+import ChevronUp from '@/assets/chevron_up';
 import search_icon from '@/assets/search_icon';
 import okb_colors from '../colors';
 
@@ -310,7 +311,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
             <button tabIndex={0}
               ref={dayDropdownRef}
               onClick={handleDayDropdownClick}
-              className=' flex flex-col items-start gap-2.5'>{chevron_down}</button>
+              className=' flex flex-col items-start gap-2.5'>{showDayDropdown ? <ChevronUp color={okb_colors.med_gray} /> : <ChevronDown color={okb_colors.med_gray} />}</button>
             {showDayDropdown &&
               <ul tabIndex={0} className={`dropdown-content menu flex flex-col w-52 p-2 shadow bg-base-100 rounded-lg  border-solid border border-[${okb_colors.dark_gray}] shadow-[0_4px_10px_0px_rgb(0,0,0,0.15)] absolute mt-8 left-0`}>
                 <div
@@ -386,7 +387,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
             <button tabIndex={0}
               ref={languageDropdownRef}
               onClick={handleLanguageDropdownClick}
-              className=' flex flex-col items-start gap-2.5'>{chevron_down}</button>
+              className=' flex flex-col items-start gap-2.5'>{showLanguageDropdown ? <ChevronUp color={okb_colors.med_gray} /> : <ChevronDown color={okb_colors.med_gray} />}</button>
             {showLanguageDropdown &&
               <ul tabIndex={0} className={`dropdown-content menu w-52 p-2 shadow bg-base-100 rounded-lg  border-solid border border-[${okb_colors.dark_gray}] shadow-[0_4px_10px_0px_rgb(0,0,0,0.15)] absolute mt-8 left-0`}>
                 <div
@@ -453,7 +454,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
             <button tabIndex={0}
               ref={genderDropdownRef}
               onClick={handleGenderDropdownClick}
-              className='flex flex-col items-start gap-2.5'>{chevron_down}</button>
+              className='flex flex-col items-start gap-2.5'>{showGenderDropdown ? <ChevronUp color={okb_colors.med_gray} /> : <ChevronDown color={okb_colors.med_gray} />}</button>
             {showGenderDropdown &&
               <ul tabIndex={0} className={`dropdown-content menu w-52 p-2 shadow bg-base-100 rounded  border-solid border border-[${okb_colors.dark_gray}] shadow-[0_4px_10px_0px_rgb(0,0,0,0.15)] absolute mt-8 left-0`}>
                 <div

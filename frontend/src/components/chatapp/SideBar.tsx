@@ -4,8 +4,8 @@ import ConversationList from "./ConversationList";
 import Fuse from 'fuse.js';
 import { db } from '../../../firebase/firebase';
 import { collection, getDocs } from "firebase/firestore";
-import chevron_up from '@/assets/chevron_up';
-import chevron_down from '@/assets/chevron_down';
+import ChevronDown from '@/assets/chevron_down';
+import ChevronUp from '@/assets/chevron_up';
 import okb_colors from '@/colors';
 
 const psychiatrists: any[] = [];
@@ -56,7 +56,7 @@ const Sidebar: React.FC = () => {
         <div className='flex flex-col unread-conversation-list'>
           <div className='inline-flex justify-between align-center bg-okb-blue md:rounded-full py-2 md:px-6 px-2 items-center text-white md:mx-5 mb-2'>
             <p className='text-[16px] font-semibold'>Unread Messages</p>
-            <button onClick={toggleUnreadMessagesVisibility}>{showUnreadMessages ? chevron_up : chevron_down}</button>
+            <button onClick={toggleUnreadMessagesVisibility}>{showUnreadMessages ? <ChevronUp color={okb_colors.white} /> : <ChevronDown color={okb_colors.white} />}</button>
           </div>
           <div className='overflow-scroll'>
             {showUnreadMessages && <ConversationList read={false} searchInput={searchTerm} selectedConversationId={selectedConversationId} onSelectConversation={handleSelectConversation} conversations={[]} />}
@@ -67,7 +67,7 @@ const Sidebar: React.FC = () => {
         <div className='flex flex-col all-conversation-list'>
           <div className='inline-flex justify-between align-center bg-okb-blue md:rounded-full py-2 md:px-6 px-2 items-center text-white md:mx-5 mb-2'>
             <p className='text-[16px] font-semibold'>All Messages</p>
-            <button onClick={toggleAllMessagesVisibility}>{showAllMessages ? chevron_up : chevron_down}</button>
+            <button onClick={toggleAllMessagesVisibility}>{showAllMessages ? <ChevronUp color={okb_colors.white} /> : <ChevronDown color={okb_colors.white} />}</button>
           </div>
           <div className='overflow-scroll'>
             {showAllMessages && <ConversationList read={true} searchInput={searchTerm} selectedConversationId={selectedConversationId} onSelectConversation={handleSelectConversation} conversations={[]} />}

@@ -21,6 +21,7 @@ import { Timestamp } from "firebase/firestore";
 import Cancel from "@/assets/cancel.svg";
 import Submit from "@/assets/submit.svg";
 import Continue from "@/assets/continue.svg";
+import colors from '@/colors';
 
 
 
@@ -104,27 +105,6 @@ const buttonStyle: React.CSSProperties = {
     margin: '0 5px', // Adds margin between buttons
     fontWeight: 'normal', // Resets button text to normal weight
 };
-
-const submitButtonStyle: React.CSSProperties = {
-    ...buttonStyle, // Spread the existing button styles
-    backgroundColor: '#007bff', // Use a blue background
-    color: '#fff', // White text color
-    fontWeight: 'bold', // Make text bold
-    marginLeft: '10px', // Add some left margin
-};
-const continueButtonStyle: React.CSSProperties = {
-    // Add your styling here similar to the submit button
-    backgroundColor: '#007bff', // or any other color you prefer
-    color: '#fff',
-    fontWeight: 'bold',
-    padding: '10px 20px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    border: 'none',
-};
-
-
-
 
 // Originally, { firstName, lastName }: ProfProfileProps was passed in below, 
 // put it is not necessary if we are using useRouter, because we can access 
@@ -247,12 +227,15 @@ const ProfProfile = () => {
         // Make sure a user and a professional are defined before submitting
         if (user && professional) {
             try {
-                // Adjusted to match the Firebase collection's key IDs
+
                 const reportData = {
                     description: reportText,
                     patient_id: user.uid, // changed from patientID to patient_id
                     psych_id: professional.uid, // changed from psychiatristID to psych_id
-                    submittedAt: Timestamp.now() // Firebase automatically generates a unique ID for each document, so 'report_id' is not manually set here
+                    psych_name: professional.firstName + " " + professional.lastName,
+                    submittedAt: Timestamp.now(), // Firebase automatically generates a unique ID for each document, so 'report_id' is not manually set here
+                    priority: "",
+                    reporter_name: user.displayName
                 };
 
                 // Add the report to the "reports" collection in Firestore
@@ -371,7 +354,7 @@ const ProfProfile = () => {
                                 redirected back to the list of available psychiatrists. If you'd like to access
                                 your reported psychiatrists, check out the report section in your profile.
                             </p>
-                            <Continue onClick={handleContinue} />
+                            <Continue style={{ cursor: 'pointer' }} onClick={handleContinue} />
                         </div>
                     </div>
                 </div>
@@ -387,7 +370,10 @@ const ProfProfile = () => {
                     <Image src={Photo} alt="Photo" width={1200} height={600} />
                 </figure> */}
                 <div className={`flex justify-center items-center md:justify-start md:items-start lg:shrink`}>
-                    <Image src={Photo} alt="Photo" className={`w-1200 h-600`} />
+                    <div style={{ width: 300, height: 300, backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`text-9xl font-normal text-white flex items-center justify-center`}>
+                        {professional.firstName?.charAt(0).toUpperCase()}
+                    </div>
+                    {/* <Image src={Photo} alt="Photo" className={`w-1200 h-600`} /> */}
                 </div>
                 <div className={`flex flex-col lg:w-2/3 gap-4 justify-center`}>
                     <div className={`flex flex-col md:flex-row gap-4`}>

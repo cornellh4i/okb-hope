@@ -73,6 +73,7 @@ const fetchUnreportedProfessionals = async (patient_id) => {
 
 
 
+
 const fetchPatientReports = async (patient_id) => {
   try {
     const reportCollectionRef = collection(db, 'reports');
