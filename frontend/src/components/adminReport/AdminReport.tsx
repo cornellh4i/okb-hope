@@ -1,26 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, query, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebase/firebase';
-// import { IReport } from '@/schema';
+import { db } from '../../../firebase/firebase';
 import ChevronDown from '@/assets/chevron_down';
 import ChevronUp from '@/assets/chevron_up';
 import Close from '@/assets/close.svg';
 import ReportPopup from './ReportPopup';
-import Cancel from "@/assets/cancel.svg";
-import Submit from "@/assets/submit.svg";
 import okb_colors from '@/colors';
-import { IPsychiatrist, IReport } from '@/schema';
-import { blue } from '@mui/material/colors';
+import { IReport } from '@/schema';
 
 const ReportCard = ({ report, onReportClick }) => {
-
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const handleReportClick = () => {
-    onReportClick(report);
-    // Close the dropdown when a report is clicked
-    setIsDropdownOpen(false);
-  };
 
   const getFormattedDate = (date) => {
     if (!date) return 'Unknown date';
@@ -263,7 +251,6 @@ const AdminReport = () => {
       padding: '8px',
       borderRadius: '10px',
       border: '2px solid #519AEB',
-      // borderTopRightRadius: '5px',
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
@@ -275,7 +262,6 @@ const AdminReport = () => {
       position: 'absolute', // Position the dropdown absolutely
       left: 0,
       zIndex: 1001, // Ensure the dropdown appears above the popup
-      // borderRadius: '5px',
       overflow: 'hidden',
     };
 

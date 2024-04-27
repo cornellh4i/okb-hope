@@ -1,17 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useRouter } from 'next/router';
-import { db } from '../..//firebase/firebase';
-import Link from 'next/link';
-import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
-import { IPsychiatrist, IReport } from '@/schema';
-import ViewReport from '@/assets/view_reports.svg';
-import Close from '@/assets/close.svg';
-import okb_colors from "@/colors";
-import { fetchPatientReports } from '../../firebase/fetchData';
-
 const ReportPopup = ({ report }) => {
-  // const formattedDate = report.submittedAt.toDate().toLocaleString();
   const getFormattedDate = (date) => {
     if (!date) return 'Unknown date';
     try {

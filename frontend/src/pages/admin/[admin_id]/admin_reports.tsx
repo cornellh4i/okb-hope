@@ -1,9 +1,9 @@
-  import AdminReport from "@/components/AdminReport";
+import AdminReport from "@/components/adminReport/AdminReport";
 
-  export default function Filter() {
-    return (
-      <div>
-        <AdminReport />
-      </div>
-    );
-  }
+export default function Filter() {
+  return (
+    <div>
+      <AdminReport />
+    </div>
+  );
+}
