@@ -392,7 +392,7 @@ const EditPatientProfile = () => {
             </ul>
           </div>
 
-          <div className="card-actions justify-end">
+          <div className="card-actions justify-end pt-10">
             <Cancel onClick={handleCancel} style={{ cursor: 'pointer' }} />
             <SaveChanges onClick={handleSaveChanges} style={{ cursor: 'pointer' }} />
           </div>
