@@ -299,7 +299,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
                   onKeyDown={handleKeyDown}
                   value={searchTerm}
                   // updates the search bar's text as the user types into it
-                  onChange={handleSearchChange} className={`text-[#9A9A9A] italic text-xs font-normal outline-none w-full`} />
+                  onChange={handleSearchChange} className={`text-[#9A9A9A] italic text-xs font-montserrat font-normal outline-none w-full`} />
               </div>
             </div>
           </div>
@@ -307,7 +307,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
           {/* filter dropdowns for availability */}
 
           <div className={`dropdown flex xl:w-52 h-9 py-2 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
-            <p className={`text-[${okb_colors.med_gray}] italic text-xs font-normal`}>Weekly Availability</p>
+            <p className={`text-[${okb_colors.med_gray}] italic text-xs font-montserrat font-normal`}>Weekly Availability</p>
             <button tabIndex={0}
               ref={dayDropdownRef}
               onClick={handleDayDropdownClick}
@@ -322,7 +322,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
                       checked={allDays}
                       onChange={(e) => handleFilterChange(FilterEnum.allDays, allDays, setAllDays, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[#9A9A9A]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Select All</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Select All</span>
                   </label>
                   <hr className={`w-48 h-0.5 bg-[#5F5F5F] place-self-center`}></hr>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pt-3.5">
@@ -330,49 +330,49 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
                       checked={monday}
                       onChange={(e) => handleFilterChange(FilterEnum.monday, monday, setMonday, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Monday</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Monday</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
                       checked={tuesday}
                       onChange={(e) => handleFilterChange(FilterEnum.tuesday, tuesday, setTuesday, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Tuesday</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Tuesday</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
                       checked={wednesday}
                       onChange={(e) => handleFilterChange(FilterEnum.wednesday, wednesday, setWednesday, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Wednesday</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Wednesday</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
                       checked={thursday}
                       onChange={(e) => handleFilterChange(FilterEnum.thursday, thursday, setThursday, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Thursday</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Thursday</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
                       checked={friday}
                       onChange={(e) => handleFilterChange(FilterEnum.friday, friday, setFriday, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Friday</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Friday</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
                       checked={saturday}
                       onChange={(e) => handleFilterChange(FilterEnum.saturday, saturday, setSaturday, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Saturday</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Saturday</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
                       checked={sunday}
                       onChange={(e) => handleFilterChange(FilterEnum.sunday, sunday, setSunday, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Sunday</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Sunday</span>
                   </label>
                 </div>
               </ul>
@@ -383,7 +383,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
         <div className='flex flex-col md:flex-row gap-x-2 md:gap-x-4 gap-y-2 md:gap-y-4'>
           {/* filter dropdowns for language */}
           <div className={`dropdown flex xl:w-52 h-9 py-2 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
-            <p className={`text-[${okb_colors.med_gray}] italic text-xs font-normal`}>Language</p>
+            <p className={`text-[${okb_colors.med_gray}] italic text-xs font-montserrat font-normal`}>Language</p>
             <button tabIndex={0}
               ref={languageDropdownRef}
               onClick={handleLanguageDropdownClick}
@@ -398,7 +398,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
                       checked={allLanguages}
                       onChange={(e) => handleFilterChange(FilterEnum.allLanguages, allLanguages, setAllLanguages, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Select All</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Select All</span>
                   </label>
                   <hr className={`w-48 h-0.5 bg-[${okb_colors.dark_gray}]`}></hr>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pt-3.5">
@@ -406,42 +406,42 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
                       checked={english}
                       onChange={(e) => handleFilterChange(FilterEnum.english, english, setEnglish, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>English</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>English</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
                       checked={twi}
                       onChange={(e) => handleFilterChange(FilterEnum.twi, twi, setTwi, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Twi</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Twi</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
                       checked={fante}
                       onChange={(e) => handleFilterChange(FilterEnum.fante, fante, setFante, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Fante</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Fante</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
                       checked={ewe}
                       onChange={(e) => handleFilterChange(FilterEnum.ewe, ewe, setEwe, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Ewe</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Ewe</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
                       checked={ga}
                       onChange={(e) => handleFilterChange(FilterEnum.ga, ga, setGa, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Ga</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Ga</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
                       checked={hausa}
                       onChange={(e) => handleFilterChange(FilterEnum.hausa, hausa, setHausa, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Hausa</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Hausa</span>
                   </label>
                 </div>
               </ul>
@@ -450,7 +450,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
 
           {/* filter drop downs for gender */}
           <div className={`dropdown flex xl:w-52 h-9 py-2 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
-            <p className={`text-[${okb_colors.med_gray}] italic text-xs font-normal`}>Gender</p>
+            <p className={`text-[${okb_colors.med_gray}] italic text-xs font-montserrat font-normal`}>Gender</p>
             <button tabIndex={0}
               ref={genderDropdownRef}
               onClick={handleGenderDropdownClick}
@@ -465,7 +465,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
                       checked={allGenders}
                       onChange={(e) => handleFilterChange(FilterEnum.allGenders, allGenders, setAllGenders, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Select All</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Select All</span>
                   </label>
                   <hr className={`w-48 h-0.5 bg-[${okb_colors.dark_gray}]`}></hr>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pt-3.5">
@@ -473,21 +473,21 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
                       checked={male}
                       onChange={(e) => handleFilterChange(FilterEnum.male, male, setMale, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Male</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Male</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
                       checked={female}
                       onChange={(e) => handleFilterChange(FilterEnum.female, female, setFemale, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Female</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Female</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
                       checked={otherGender}
                       onChange={(e) => handleFilterChange(FilterEnum.otherGender, otherGender, setOtherGender, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Other</span>
+                    <span className={`label-text flex font-montserrat text-[${okb_colors.dark_gray}]`}>Other</span>
                   </label>
                 </div>
               </ul>
@@ -497,7 +497,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, submittedSearchTe
 
         {/* filter button */}
         <button onClick={handleFilter} className={`filter-button flex lg:w-32 h-9 py-1 px-4 lg:py-2.5 lg:px-11 justify-center items-center gap-2.5 border-solid border rounded-lg border-[#195BA5] bg-[${okb_colors.white}]`}>
-          <div className={`flex text-[${okb_colors.okb_blue}] text-xs font-bold`}>Filter</div>
+          <div className={`flex text-[${okb_colors.okb_blue}] text-xs font-montserrat font-bold`}>Filter</div>
         </button>
       </div>
     </div>

@@ -8,6 +8,7 @@ import { IAppointment } from '@/schema';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
 import { fetchApptDetails } from '../../../firebase/fetchData';
+import okb_colors from '@/colors';
 
 
 const PsychiatristDashboard = () => {
@@ -115,10 +116,10 @@ const PsychiatristDashboard = () => {
 
 
     return (
-        <div className="w-full h-full flex flex-col justify-center items-center content-center">
+        <div className="w-full h-full flex flex-col justify-center items-center content-center pt-8">
             {/* the header part of dashboard, containing week */}
             <div className="flex flex-col justify-center items-center w-full md:w-4/5">
-                <div id="blueheader" className="flex w-full h-[53px] py-3 bg-sky-700 rounded-[10px] justify-center items-center inline-flex">
+                <div id="blueheader" className={`flex w-full h-[53px] py-3 bg-[${okb_colors.okb_blue}] rounded-[10px] justify-center items-center inline-flex`}>
                     <div className="relative">
                         <div className="flex w-[362px] h-[29px] top-0 justify-center items-center gap-4 inline-flex">
                             <div className="text-white text-2xl font-semibold font-montserrat">Week of {dateHeaderString}</div>

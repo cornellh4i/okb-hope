@@ -55,7 +55,7 @@ const Sidebar: React.FC = () => {
         {/* Unread Messages */}
         <div className='flex flex-col unread-conversation-list'>
           <div className='inline-flex justify-between align-center bg-okb-blue md:rounded-full py-2 md:px-6 px-2 items-center text-white md:mx-5 mb-2'>
-            <p className='text-[16px] font-semibold'>Unread Messages</p>
+            <p className='text-[16px] font-montserrat font-semibold'>Unread Messages</p>
             <button onClick={toggleUnreadMessagesVisibility}>{showUnreadMessages ? <ChevronUp color={okb_colors.white} /> : <ChevronDown color={okb_colors.white} />}</button>
           </div>
           <div className='overflow-scroll'>
@@ -66,7 +66,7 @@ const Sidebar: React.FC = () => {
         {/* All Messages */}
         <div className='flex flex-col all-conversation-list'>
           <div className='inline-flex justify-between align-center bg-okb-blue md:rounded-full py-2 md:px-6 px-2 items-center text-white md:mx-5 mb-2'>
-            <p className='text-[16px] font-semibold'>All Messages</p>
+            <p className='text-[16px] font-montserrat font-semibold'>All Messages</p>
             <button onClick={toggleAllMessagesVisibility}>{showAllMessages ? <ChevronUp color={okb_colors.white} /> : <ChevronDown color={okb_colors.white} />}</button>
           </div>
           <div className='overflow-scroll'>

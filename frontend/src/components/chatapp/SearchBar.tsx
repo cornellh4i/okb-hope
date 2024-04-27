@@ -25,7 +25,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
       <div className={`flex py-2 md:px-4 px-2 items-center md:gap-4 gap-2 shrink-0 rounded-lg justify-between search-form border-solid border-[1px] border-[${okb_colors.dark_gray}] md:mx-4 my-5 text-lg font-semibold`}>
         <button onClick={() => onSearch(searchInput)}> {search_icon}</button> {/* This line seems redundant. If you need it for something specific, you can leave it. */}
         <input
-          className={`text-[${okb_colors.med_gray}] page-background italic text-xs font-normal outline-none w-full`}
+          className={`text-[${okb_colors.med_gray}] page-background italic text-xs font-montserrat font-normal outline-none w-full`}
           type="text"
           placeholder="Search Messages"
           value={searchInput}

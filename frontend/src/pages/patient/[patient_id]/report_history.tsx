@@ -174,7 +174,7 @@ const ReportList: React.FC = () => {
 
   return (
     <div className={'px-4 lg:px-24 px-32 pt-9 pb-14'}>
-      <h1 className="text-3xl font-semibold mb-6">Report History</h1> {/* Title added here */}
+      <h1 className="text-3xl font-montserrat font-semibold mb-6">Report History</h1> {/* Title added here */}
       <div className={`psychiatrist-list flex flex-col items-stretch gap-6 w-full`}>
         {psychiatrists.map((psychiatrist) => (
           <div key={psychiatrist.uid} className="psychiatrist w-full" onClick={() => handleGoToProfProfile(psychiatrist.uid)}>
@@ -189,8 +189,8 @@ const ReportList: React.FC = () => {
                 {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}
                 <div className={`flex flex-col lg:flex-row justify-between items-start w-full`}>
                   <div className={`flex flex-col justify-center lg:items-start items-center gap-2 w-full`}>
-                    <h2 className={`card-title col-span-2 text-[${okb_colors.black}] text-[24px] font-semibold not-italic`}>{psychiatrist.firstName} {psychiatrist.lastName}</h2>
-                    <p className={`text-[${okb_colors.black}] text-[16px] font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
+                    <h2 className={`card-title col-span-2 text-[${okb_colors.black}] text-[24px] font-montserrat font-semibold not-italic`}>{psychiatrist.firstName} {psychiatrist.lastName}</h2>
+                    <p className={`text-[${okb_colors.black}] text-[16px] font-montserrat font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
                   </div>
                   <div className={`flex justify-center lg:justify-end items-center gap-4 w-full lg:w-auto mt-4 lg:mt-0`}>
                     <button onClick={(event) => handleViewReport(event, psychiatrist)}>
@@ -200,7 +200,7 @@ const ReportList: React.FC = () => {
                 </div>
                 {/* Additional psychiatrist info */}
                 <div className={`flex w-full justify-center lg:justify-start items-center lg:items-start min-h-[4rem] mt-4 lg:mt-0`}>
-                  <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-normal`}>{psychiatrist.description ? psychiatrist.description : "No description available"}</p>
+                  <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-montserrat font-normal`}>{psychiatrist.description ? psychiatrist.description : "No description available."}</p>
                 </div>
               </div>
             </div>

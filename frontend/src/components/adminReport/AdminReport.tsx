@@ -82,10 +82,10 @@ const ReportCard = ({ report, onReportClick }) => {
   return (
     <div className="flex items-center mx-5 lg:mx-36 my-2" onClick={() => onReportClick(report)}>
       <div className='flex justify-between items-center w-full rounded-lg' style={cardStyle}>
-        <div style={col1style}>{truncateText(report.description, 25)}</div>
-        <div style={col2style}>{report.reporter_name}</div>
-        <div style={col3style}>Dr. {report.psych_name}</div>
-        <div style={col4style}>{formattedDate}</div>
+        <div className="font-montserrat" style={col1style}>{truncateText(report.description, 25)}</div>
+        <div className="font-montserrat" style={col2style}>{report.reporter_name}</div>
+        <div className="font-montserrat" style={col3style}>Dr. {report.psych_name}</div>
+        <div className="font-montserrat" style={col4style}>{formattedDate}</div>
       </div>
     </div>
   );
@@ -241,7 +241,7 @@ const AdminReport = () => {
       color: okb_colors.dark_gray,
       padding: '8px',
       borderRadius: '10px',
-      border: '2px solid #519AEB',
+      border: '3px solid #519AEB',
       cursor: 'pointer',
     };
 
@@ -309,17 +309,18 @@ const AdminReport = () => {
         <div className="modal modal-open">
           <div className="modal-box" style={{ maxHeight: '50%' }}>
             <Close className="modal-action" onClick={handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
-            <h1 className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 20, paddingBottom: '10px' }}>Report Information</h1>
+            <h1 className="text-xl font-semibold font-montserrat" style={{ margin: '0 auto', fontSize: 20, paddingBottom: '10px' }}>Report Information</h1>
             <div className="space-y-4">
               <ReportPopup key={selectedReport?.report_id} report={selectedReport} />
             </div>
             <div style={buttonsContainerStyle}>
               <button
                 style={cancelButtonStyle}
+                className='font-montserrat'
                 onClick={handleClosePopup}
               >Cancel</button>
               <div style={{ position: 'relative' }}>
-                <button onClick={toggleDropdown} style={assignPriorityButtonStyle}>
+                <button onClick={toggleDropdown} style={assignPriorityButtonStyle} className='font-montserrat'>
                   Assign Priority {isOpen ? <ChevronUp color='white' /> : <ChevronDown color='white' />}
                 </button>
                 {isOpen && (
@@ -332,6 +333,7 @@ const AdminReport = () => {
                           style={{ ...dropdownItemStyle, ...(isOpen && dropdownItemHoverStyle) }}
                           onMouseEnter={handleMouseEnter}
                           onMouseLeave={handleMouseLeave}
+                          className='font-montserrat'
                         >
                           {priority !== "Spam" ? priority + " Priority" : priority}
                         </li>
@@ -352,20 +354,20 @@ const AdminReport = () => {
       {/* Header and column categories bar */}
       <div style={{ width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 5, display: 'inline-flex' }}>
         <div className="mt-5 mb-5 ml-5 lg:ml-36">
-          <button style={{ fontWeight: 400 }} className="tab relative text-slate-300 border-b-2 border-slate-300 text-3xl">
-            <span className="relative z-10">Clients</span>
+          <button className="tab relative text-slate-300 border-b-2 border-slate-300 text-3xl">
+            <span className="relative z-10 font-montserrat font-semibold">Clients</span>
           </button>
-          <button style={{ fontWeight: 400 }} className="tab tab-bordered relative text-sky-700 border-b-2 border-sky-700 text-3xl">
-            <span className="relative z-10">Psychiatrists</span>
+          <button className="tab tab-bordered relative text-sky-700 border-b-2 border-sky-700 text-3xl">
+            <span className="relative z-10 font-montserrat font-semibold">Psychiatrists</span>
           </button>
         </div>
 
         <div className='flex items-center lg:mx-36' style={{ alignSelf: 'stretch', height: 70, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 10, display: 'flex' }}>
           <div className=' flex justify-between items-center w-full px-5 md:px-12' style={{ alignSelf: 'stretch', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
-            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Subject</div>
-            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Submitted By</div>
-            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Psychiatrist Reported</div>
-            <div style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Time Submitted</div>
+            <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Subject</div>
+            <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Submitted By</div>
+            <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Psychiatrist Reported</div>
+            <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Time Submitted</div>
           </div>
           <div style={{ alignSelf: 'stretch', height: 0, border: '1.5px black solid' }}></div>
         </div>
@@ -373,7 +375,7 @@ const AdminReport = () => {
 
       <div>
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
-          <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Unread Reports</div>
+          <div className="font-montserrat" style={{ color: 'black', fontSize: 25, fontWeight: '600', wordWrap: 'break-word' }}>Unread Reports</div>
           <button onClick={toggleUnreadReports} style={{ marginLeft: '5px' }}>
             {unreadReports ? <ChevronUp color={okb_colors.black} /> : <ChevronDown color={okb_colors.black} />}
           </button>
@@ -383,7 +385,7 @@ const AdminReport = () => {
         {ReportDetailsPopup()}
 
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
-          <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>High Priority</div>
+          <div className="font-montserrat" style={{ color: 'black', fontSize: 25, fontWeight: '600', wordWrap: 'break-word' }}>High Priority</div>
           <button onClick={toggleHighPriorityReports} style={{ marginLeft: '5px' }}>
             {highPriorityReports ? <ChevronUp color={okb_colors.black} /> : <ChevronDown color={okb_colors.black} />}
           </button>
@@ -392,7 +394,7 @@ const AdminReport = () => {
         {returnReportsByPriority("High")}
 
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
-          <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Medium Priority</div>
+          <div className="font-montserrat" style={{ color: 'black', fontSize: 25, fontWeight: '600', wordWrap: 'break-word' }}>Medium Priority</div>
           <button onClick={toggleMediumPriorityReports} style={{ marginLeft: '5px' }}>
             {mediumPrioityReports ? <ChevronUp color={okb_colors.black} /> : <ChevronDown color={okb_colors.black} />}
           </button>
@@ -401,7 +403,7 @@ const AdminReport = () => {
         {returnReportsByPriority("Medium")}
 
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
-          <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Low Priority</div>
+          <div className="font-montserrat" style={{ color: 'black', fontSize: 25, fontWeight: '600', wordWrap: 'break-word' }}>Low Priority</div>
           <button onClick={toggleLowPriorityReports} style={{ marginLeft: '5px' }}>
             {lowPriorityReports ? <ChevronUp color={okb_colors.black} /> : <ChevronDown color={okb_colors.black} />}
           </button>
@@ -410,7 +412,7 @@ const AdminReport = () => {
         {returnReportsByPriority("Low")}
 
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
-          <div style={{ color: 'black', fontSize: 25, fontWeight: '650', wordWrap: 'break-word' }}>Spam</div>
+          <div className="font-montserrat" style={{ color: 'black', fontSize: 25, fontWeight: '600', wordWrap: 'break-word' }}>Spam</div>
           <button onClick={toggleSpamReports} style={{ marginLeft: '5px' }}>
             {spamReports ? <ChevronUp color={okb_colors.black} /> : <ChevronDown color={okb_colors.black} />}
           </button>

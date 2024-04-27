@@ -76,7 +76,7 @@ const AppointmentList = () => {
     <React.Fragment>
       <div className="card w-full bg-base-100">
         <div className="card-body">
-          <h1 className="card-title pt-1/15 text-[32px] md:items-start items-center md:justify-start justify-center">Appointments</h1>
+          <h1 className="card-title pt-1/15 text-[32px] md:items-start items-center md:justify-start justify-center font-montserrat">Appointments</h1>
           <div className="grid grid-row-4 gap-4 justify-center items-center pt-1/12 w-full">
             {appointmentCards()}
           </div>

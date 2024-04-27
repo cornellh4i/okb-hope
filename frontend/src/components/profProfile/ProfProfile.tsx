@@ -361,7 +361,7 @@ const ProfProfile = () => {
             )}
 
 
-            <div className={`flex flex-row`}>
+            <div className={`flex flex-row pt-5`}>
                 {/* Back arrow to return to go back to Discover Professionals */}
                 <figure className={`cursor-pointer`} onClick={handleGoToDashboard}><Arrow /></figure>
             </div>
@@ -378,10 +378,10 @@ const ProfProfile = () => {
                 <div className={`flex flex-col lg:w-2/3 gap-4 justify-center`}>
                     <div className={`flex flex-col md:flex-row gap-4`}>
                         <div className='flex gap-x-4 justify-center items-center md:justify-start md:items-start flex-row md:flex-col'>
-                            <div className={`text-3xl text-bold`}>
+                            <div className={`text-3xl text-bold font-montserrat font-bold`}>
                                 {professional.firstName + " " + professional.lastName}
                             </div>
-                            <div className={`text-normal text-xl italic text-dark-grey`}>
+                            <div className={`text-normal text-xl italic text-dark-grey font-montserrat`}>
                                 {professional.position}
                             </div>
                         </div>
@@ -394,13 +394,13 @@ const ProfProfile = () => {
                             </div>
                             {/* Save button, action is currently undefined */}
                             <div className={`shrink`}>
-                                <div onClick={(event) => handleSave(event, professional)} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold`}>
+                                <div onClick={(event) => handleSave(event, professional)} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold font-montserrat`}>
                                     <figure className="object-cover">{savedPsychiatrists.includes(professional.uid) ? <SavedBookmark /> : <Bookmark />}</figure>Save
                                 </div>
                             </div>
                             {/* Message button, action is currently undefined */}
                             <div className={`shrink`} >
-                                <div onClick={handleSendMessage} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2`}>
+                                <div onClick={handleSendMessage} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 font-montserrat`}>
                                     <figure className="object-cover"><Chat /></figure>Message
                                 </div>
                             </div>
@@ -410,7 +410,7 @@ const ProfProfile = () => {
                         {professional.position}
                     </div> */}
                     {/* Speciality/language/location tags */}
-                    <div className={`flex flex-row justify-center items-center md:justify-start md:items-start gap-2`}>
+                    <div className={`flex flex-row justify-center items-center md:justify-start md:items-start gap-2 font-montserrat`}>
                         {professional.specialty.map((speciality, index) => (
                             <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
                                 {speciality}
@@ -426,8 +426,8 @@ const ProfProfile = () => {
                         </div>
 
                     </div>
-                    <div className={`text-normal text-center md:text-start text-base`}>
-                        {professional.description}
+                    <div className={`text-normal text-center md:text-start text-base font-montserrat`}>
+                        {professional.description ? professional.description : "No description available."}
                     </div>
                     <div className={`flex flex-row justify-center items-center md:justify-start md:items-start`}>
                         {/* Link tag, currently not in the IPsychiatrist so hard coded with default link */}
@@ -436,7 +436,7 @@ const ProfProfile = () => {
                                 href="https://www.wohohiame.com/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center"
+                                className="flex items-center font-montserrat"
                             >
                                 <figure className="object-cover"><Link /></figure>
                                 <span className="ml-2">www.mentalhealthsite.com</span>
@@ -446,13 +446,13 @@ const ProfProfile = () => {
                     </div>
                 </div>
             </div>
-            <h2 className={`text-center lg:text-start text-bold text-2xl`}>Availability</h2>
+            <h2 className={`text-center lg:text-start text-bold text-2xl font-montserrat font-bold`}>Availability</h2>
             <Availability availability={professional?.availability} />
 
             <div className={`flex flex-row justify-center content-center`}>
                 {/* Book Appointment button, action undefined but should lead to calendly */}
                 <button
-                    className={`bg-okb-blue text-okb-white active:bg-gray-500 font-bold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
+                    className={`bg-okb-blue font-montserrat text-okb-white active:bg-gray-500 font-semibold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
                     type="button"
                     onClick={handleBookAppointment}
                 >

@@ -140,7 +140,7 @@ const MessageComposer: React.FC = () => {
           onInput={handleMessageChange}
           onKeyDown={handleKeyDown}
           placeholder="Send a Message"
-          className="page-background w-full overflow-auto m-0 p-2"
+          className="page-background w-full overflow-auto m-0 px-5 font-montserrat italic text-[12px]"
           style={{ resize: "none", outline: "none", height: "auto" }}
           rows={1}
         ></textarea>
@@ -148,7 +148,7 @@ const MessageComposer: React.FC = () => {
         <button
           type="button"
           onClick={sendMessage}
-          className="rounded-full text-white italic font-bold px-2 mx-4 my-2"
+          className="rounded-full text-white font-bold px-2 mx-4 my-2 font-montserrat"
           style={{ backgroundColor: '#195BA5' }}
         >
           Send

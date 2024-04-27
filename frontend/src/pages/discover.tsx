@@ -23,8 +23,6 @@ const DiscoverPage: React.FC = () => {
   const router = useRouter();
   const { user } = useAuth();
   const { userId } = router.query;
-  // console.log(userId)
-  // console.log(user?.uid)
 
   const [searchTerm, setSearchTerm] = useState("");
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState("");

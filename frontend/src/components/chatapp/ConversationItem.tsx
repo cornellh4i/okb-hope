@@ -74,9 +74,9 @@ const ConversationItem: React.FC<{ conversation: any, isLast: boolean, onSelect:
     >
       <div className='flex flex-row px-3 py-4 gap-4 items-center w-full'>
         <div className='flex-grow flex flex-col items-start justify-center min-w-0'>
-          <button className="font-semibold mb-1 text-black text-[16px] overflow-hidden text-ellipsis whitespace-nowrap max-w-full">{displayName}</button>
+          <button className="font-montserrat font-semibold mb-1 text-black text-[16px] overflow-hidden text-ellipsis whitespace-nowrap max-w-full">{displayName}</button>
           {/* Apply ellipsis to long messages and limit to 3 lines */}
-          <p className="message-preview text-[12px] text-black overflow-hidden overflow-ellipsis whitespace-normal max-w-full" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', lineClamp: 3, MozBoxOrient: 'vertical', textAlign: 'left' }}>{conversation.recentMessage.text || 'No messages'}</p>
+          <p className="message-preview text-[12px] text-black font-montserrat overflow-hidden overflow-ellipsis whitespace-normal max-w-full" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', lineClamp: 3, MozBoxOrient: 'vertical', textAlign: 'left' }}>{conversation.recentMessage.text || 'No messages'}</p>
         </div>
         {unreadMessages > 0 && (
           <div className='flex py-0.5 px-1.5 min-w-[20px] h-[19px] justify-center items-center rounded-[25px] bg-[#519AEB] text-white text-xs font-bold'>

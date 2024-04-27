@@ -74,19 +74,19 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
     <React.Fragment>
       <div className="card w-11/12 bg-base-100 mt-4 shadow-xl border-[3px] border-[#519AEB]">
         <div className="card-body p-4">
-          <p className="text-[12px]">In {daysTo} days</p>
-          <h2 className="card-title text-[16px] font-[600]">Meeting with {p_name}</h2>
+          <p className="text-[12px] font-montserrat">In {daysTo} days</p>
+          <h2 className="card-title text-[16px] font-[600] font-montserrat">Meeting with {p_name}</h2>
           <div className="grid grid-cols-4 grid-rows-2 gap-1 items-center pb-1/12">
             {/* row 1: day, date of appointment */}
             <div className="col-span-1 shrink"><CalendarIcon></CalendarIcon></div>
-            <div className="col-span-3 text-[12px]"><p>{day}, {month} {start.getDate()}</p></div>
+            <div className="col-span-3 text-[12px] font-montserrat"><p>{day}, {month} {start.getDate()}</p></div>
             {/* row 2: time of appointment */}
             <div className="col-span-1 shrink"><ClockIcon></ClockIcon></div>
             {/* calculation of appointment time */}
-            <div className="col-span-3 text-[12px]"><p>{start.getHours()}:{(start.getMinutes() < 10 ? '0' : '') + start.getMinutes()} - {end.getHours()}:{(end.getMinutes() < 10 ? '0' : '') + end.getMinutes()}</p></div>
+            <div className="col-span-3 text-[12px] font-montserrat"><p>{start.getHours()}:{(start.getMinutes() < 10 ? '0' : '') + start.getMinutes()} - {end.getHours()}:{(end.getMinutes() < 10 ? '0' : '') + end.getMinutes()}</p></div>
           </div>
 
-          <button className="btn w-12/12 bg-okb-blue border-transparent font-[400]" onClick={() => setShowModal(true)}> Appointment Details</button>
+          <button className="btn w-12/12 bg-okb-blue border-transparent font-[400] font-montserrat" onClick={() => setShowModal(true)}> Appointment Details</button>
           {showModal ? (
             // appointment details pop-up card
             <>
@@ -95,39 +95,39 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
               >
                 <div className="relative w-auto h-2/3 my-6 mx-auto max-w-3xl">
                   {/*content*/}
-                  <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                  <div className="border-0 rounded-lg p-9 shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                     {/*header*/}
-                    <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                      <h3 className="text-3xl font-bold">
+                    <div className="flex items-start justify-between rounded-t">
+                      <h3 className="text-3xl font-bold font-montserrat">
                         Meeting with {p_name}
                       </h3>
                       <br></br>
+                      <br></br>
                     </div>
                     {/*body*/}
-                    <div className="relative p-6 flex-auto">
-                      <div className="col-span-4"><p>{day}, {month} {start.getDate()} • {start.getHours()}:{(start.getMinutes() < 10 ? '0' : '') + start.getMinutes()} - {end.getHours()}:{(end.getMinutes() < 10 ? '0' : '') + end.getMinutes()}</p></div>
+                    <div className="relative flex-auto">
+                      <div className="col-span-4 text-[#5F5F5F] font-montserrat"><p>{day}, {month} {start.getDate()} • {start.getHours()}:{(start.getMinutes() < 10 ? '0' : '') + start.getMinutes()} - {end.getHours()}:{(end.getMinutes() < 10 ? '0' : '') + end.getMinutes()}</p></div>
                       <br></br>
                       {/* button to start appointment */}
                       <Link href="./video-chat">
                         <button
-                          className="mb-4 bg-[#519AEB] text-[#FFFDFD] active:bg-gray-500 font-bold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full"
+                          className="mb-4 bg-[#519AEB] font-montserrat font-semibold text-[#FFFDFD] active:bg-gray-500 text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full"
                           type="button"
                         >
                           Start Appointment
                         </button>
                       </Link>
-                      {/* reschedule button */}
+                      {/* Reschedule and delete appointment buttons */}
                       <div className="flex space-x-4">
                         <button
-                          className="text-[#5F5F5F] active:bg-gray-500 text-sm rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2"
+                          className="text-[#5F5F5F] font-montserrat font-semibold active:bg-gray-500 text-sm rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2"
                           type="button"
                           style={{ width: '50%', height: '100%', paddingLeft: 30, paddingRight: 30, paddingTop: 12, paddingBottom: 12, borderRadius: 10, border: '3px #519AEB solid', justifyContent: 'center', alignItems: 'center', gap: 10, display: 'inline-flex' }}
                         >
                           Reschedule Appointment
                         </button>
-                        {/* delete appt button */}
                         <button
-                          className="text-[#5F5F5F] active:bg-gray-500 text-sm rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2"
+                          className="text-[#5F5F5F] font-montserrat font-semibold active:bg-gray-500 text-sm rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2"
                           type="button"
                           style={{ width: '50%', height: '100%', paddingLeft: 30, paddingRight: 30, paddingTop: 12, paddingBottom: 12, borderRadius: 10, border: '3px #519AEB solid', justifyContent: 'center', alignItems: 'center', gap: 10, display: 'inline-flex' }}
                         >

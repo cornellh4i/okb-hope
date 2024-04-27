@@ -105,8 +105,6 @@ const ConversationList: React.FC<ConversationListProps> = ({ read, selectedConve
 
   const handleSelectConversation = (conversationId: string) => {
     onSelectConversation(conversationId);
-    // localStorage.setItem('selectedConversationId', conversationId);
-    // setSelectedConversationId(conversationId);
   };
 
   return (
