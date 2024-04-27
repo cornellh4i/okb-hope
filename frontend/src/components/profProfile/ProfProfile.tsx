@@ -355,7 +355,7 @@ const ProfProfile = () => {
             )}
 
 
-            <div className={`flex flex-row pt-5 pl-8`}>
+            <div className={`flex flex-row pt-5`}>
                 {/* Back arrow to return to go back to Discover Professionals */}
                 <figure className={`cursor-pointer`} onClick={router.back}><Arrow /></figure>
             </div>
@@ -369,7 +369,7 @@ const ProfProfile = () => {
                     </div>
                     {/* <Image src={Photo} alt="Photo" className={`w-1200 h-600`} /> */}
                 </div>
-                <div className={`flex flex-col lg:w-2/3 gap-4 justify-center`}>
+                <div className={`flex flex-col lg:w-2/3 gap-4 justify-start`}>
                     <div className={`flex flex-col md:flex-row gap-4`}>
                         <div className='flex gap-x-4 justify-center items-center md:justify-start md:items-start flex-col'>
                             <div className={`text-3xl text-bold font-montserrat font-bold`}>
@@ -379,7 +379,7 @@ const ProfProfile = () => {
                                 {professional.position}
                             </div>
                         </div>
-                        <div className='flex flex-row gap-4 justify-center items-center md:justify-start md:items-start'>
+                        <div className='flex flex-row flex-wrap gap-4 justify-center items-center md:justify-start md:items-start'>
                             {/* Report button, action is currently undefined */}
                             <div className={`shrink`} >
                                 <button onClick={handleReport} className={` rounded-s-2xl rounded-[12px] transition cursor-pointer text-okb-white flex flex-row gap-2`}>
@@ -387,15 +387,17 @@ const ProfProfile = () => {
                                 </button>
                             </div>
                             {/* Save button, action is currently undefined */}
-                            <div className={`shrink`}>
-                                <div onClick={(event) => handleSave(event, professional)} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold font-montserrat`}>
-                                    <figure className="object-cover">{savedPsychiatrists.includes(professional.uid) ? <SavedBookmark /> : <Bookmark />}</figure>Save
+                            <div className='flex flex-row gap-4 justify-center items-center md:justify-start md:items-start'>
+                                <div className={`shrink`}>
+                                    <div onClick={(event) => handleSave(event, professional)} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold font-montserrat`}>
+                                        <figure className="object-cover">{savedPsychiatrists.includes(professional.uid) ? <SavedBookmark /> : <Bookmark />}</figure>Save
+                                    </div>
                                 </div>
-                            </div>
-                            {/* Message button, action is currently undefined */}
-                            <div className={`shrink`} >
-                                <div onClick={handleSendMessage} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 font-montserrat`}>
-                                    <figure className="object-cover"><Chat /></figure>Message
+                                {/* Message button, action is currently undefined */}
+                                <div className={`shrink`} >
+                                    <div onClick={handleSendMessage} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 font-montserrat`}>
+                                        <figure className="object-cover"><Chat /></figure>Message
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -404,15 +406,15 @@ const ProfProfile = () => {
                         {professional.position}
                     </div> */}
                     {/* Speciality/language/location tags */}
-                    <div className={`flex flex-row justify-center items-center md:justify-start md:items-start gap-2 font-montserrat`}>
+                    <div className={`flex flex-row flex-wrap justify-center items-center md:justify-start md:items-start gap-2 font-montserrat`}>
                         {professional.specialty.map((speciality, index) => (
                             <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
                                 {speciality}
                             </div>
                         ))}
-                        {professional.language.map((langauge, index) => (
+                        {professional.language.map((language, index) => (
                             <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
-                                {langauge}
+                                {language}
                             </div>
                         ))}
                         <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
