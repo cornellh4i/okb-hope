@@ -26,7 +26,7 @@ const TitleArea = () => {
 /** The main Chat App. Contains the TitleArea, the SideBar, and the ChatArea. */
 const ChatApp = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(true);
-  const [isChatAreaVisible, setIsChatAreaVisible] = useState(false);
+  const [isChatAreaVisible, setIsChatAreaVisible] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const router = useRouter();
   const [initialized, setInitialized] = useState(false); // Track if initial checks are completed
@@ -53,7 +53,7 @@ const ChatApp = () => {
       } else {
         console.log("true")
         setSidebarVisible(true);
-        setIsChatAreaVisible(false);
+        if (isMobile) setIsChatAreaVisible(false);
       }
       setInitialized(true); // Mark initialization as complete
     }
