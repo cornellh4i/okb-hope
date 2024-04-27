@@ -24,6 +24,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   const conversationsRef = collection(db, "Conversations");
   const q = query(conversationsRef);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(false);
 
   const openDeleteModal = () => {
     setIsDeleteModalOpen(true);
@@ -135,24 +136,26 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
     <div className='name-area flex py-2 px-6 justify-between items-center shrink-0 w-full page-background border-b-solid border-b-2 border-[#DEDEDE]'>
       <p className='text-[24px] font-montserrat font-semibold color-black'>{name}</p>
       <div className="dropdown dropdown-click dropdown-bottom dropdown-end">
-        <button className={`rounded-full color-[${okb_colors.dark_gray}] hover:bg-gray-200`}>
+        <button onClick={() => setOpenDropdown(!openDropdown)} className={`rounded-full color-[${okb_colors.dark_gray}] hover:bg-gray-200`}>
           {ellipsis}
         </button>
-        <ul className='menu dropdown-content inline-flex py-2 px-4 flex-col items-start gap-[14px] font-montserrat rounded-[10px] border-[1px] border-[#C1C1C1] shadow bg-[#FFFDFD] -box w-56'>
-          {role === 'psychiatrist' && (
-            <>
-              <button onClick={markAsUnread}>Mark as Unread</button>
-              <button onClick={openDeleteModal}>Delete Message Thread</button>
-            </>
-          )}
-          {role === 'patient' && (
-            <>
-              <button onClick={markAsUnread}>Mark as Unread</button>
-              <button onClick={handleProfileClick}>View Profile</button>
-              <button onClick={openDeleteModal}>Delete Message Thread</button>
-            </>
-          )}
-        </ul>
+        {openDropdown &&
+          <ul className='menu dropdown-content inline-flex py-2 px-4 flex-col items-start gap-[14px] font-montserrat rounded-[10px] border-[1px] border-[#C1C1C1] shadow bg-[#FFFDFD] -box w-56'>
+            {role === 'psychiatrist' && (
+              <>
+                <button onClick={markAsUnread}>Mark as Unread</button>
+                <button onClick={openDeleteModal}>Delete Message Thread</button>
+              </>
+            )}
+            {role === 'patient' && (
+              <>
+                <button onClick={markAsUnread}>Mark as Unread</button>
+                <button onClick={handleProfileClick}>View Profile</button>
+                <button onClick={openDeleteModal}>Delete Message Thread</button>
+              </>
+            )}
+          </ul>
+        }
       </div>
       <DeleteModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onDelete={handleDelete} />
     </div>
