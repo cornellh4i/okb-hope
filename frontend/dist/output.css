@@ -20,6 +20,8 @@
   /* 2 */
 }
 
+
+
 ::before,
 ::after {
   --tw-content: '';
@@ -203,6 +205,7 @@ textarea {
   /* 2 */
   padding: 0;
   /* 3 */
+  overflow-wrap: normal;
 }
 
 /*

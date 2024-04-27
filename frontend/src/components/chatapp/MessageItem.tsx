@@ -38,7 +38,7 @@ const MessageItem: React.FC<{ message: any }> = ({ message }) => {
     // Style Message Item based on whether the message is 'sent' or 'received'
     <div>
       {messageClass === 'sent' ? (
-        <div className={`message-item ${messageClass} flex-col `}>
+        <div className={`message-item ${messageClass} flex-col page-background`}>
           <div id="text_img" className="inline-flex items-end gap-4 m-2 mr-8">
             <div id="text" className="p-4  gap-[10px] rounded-t-[15px] rounded-bl-[15px] border-[2px] bg-[#519AEB] border-[#519AEB]" style={{ maxWidth: '313px' }}>
               <p className={`text-[16px] text-[#FFFDFD]`}>{text}</p>
@@ -57,7 +57,7 @@ const MessageItem: React.FC<{ message: any }> = ({ message }) => {
         </div>
 
       ) : (
-        <div className={`message-item ${messageClass} flex-col m-4`}>
+        <div className={`message-item ${messageClass} flex-col m-4 page-background`}>
           <div className="inline-flex items-end gap-4 mr-4">
             {/* <img src={photoURL} className="w-[30px] h-[30px] rounded-full " /> */}
             <div style={{ backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`w-[30px] h-[30px] rounded-full text-base font-normal text-white flex items-center justify-center`}>
