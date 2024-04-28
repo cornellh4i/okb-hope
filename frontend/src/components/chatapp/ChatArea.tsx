@@ -133,10 +133,12 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   };
 
   return (
-    <div className='name-area flex py-2 px-6 justify-between items-center shrink-0 w-full page-background border-b-solid border-b-2 border-[#DEDEDE]'>
+    <div className='name-area flex py-4 px-6 justify-between items-center shrink-0 w-full page-background border-b-solid border-b-2 border-[#DEDEDE]'>
       <p className='text-[24px] font-montserrat font-semibold color-black'>{name}</p>
       <div className="dropdown dropdown-click dropdown-bottom dropdown-end">
-        <Ellipsis onClick={() => setOpenDropdown(!openDropdown)} className={`rounded-full color-[${okb_colors.dark_gray}] hover:bg-gray-200`} />
+        <button onClick={() => setOpenDropdown(!openDropdown)} className={`rounded-full color-[${okb_colors.dark_gray}] hover:bg-gray-200`}>
+          <Ellipsis />
+        </button>
         {openDropdown &&
           <ul className='menu dropdown-content inline-flex py-2 px-4 flex-col items-start gap-[14px] font-montserrat rounded-[10px] border-[1px] border-[#C1C1C1] shadow bg-[#FFFDFD] -box w-56'>
             {role === 'psychiatrist' && (
