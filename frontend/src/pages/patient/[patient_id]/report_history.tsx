@@ -30,13 +30,13 @@ const ReportCard = ({ report, psychiatrist }) => {
   return (
     <div style={cardStyle} className="card bg-base-100 shadow-xl mb-4">
       <div>
-        <p style={{ fontSize: 14 }}>The following report for Dr. {psychiatrist.firstName} {psychiatrist.lastName} was submitted on: {formattedDate}</p>
+        <p className="font-montserrat" style={{ fontSize: 14 }}>The following report for Dr. {psychiatrist.firstName} {psychiatrist.lastName} was submitted on: {formattedDate}</p>
       </div>
-      <p style={{ fontSize: 14 }}>Report Log</p>
+      <p className="font-montserrat" style={{ fontSize: 14 }}>Report Log</p>
       <div>
-        <p style={{ fontSize: 14, border: '1px solid #9A9A9A', color: '#000000', padding: '8px 12px' }}>{report.description}</p>
+        <p className="font-montserrat" style={{ fontSize: 14, border: '1px solid #9A9A9A', color: '#000000', padding: '8px 12px' }}>{report.description}</p>
       </div>
-      <p style={{ fontSize: 14, textAlign: 'left' }}>Report Status: Verified on {formattedDate}</p>
+      <p className="font-montserrat" style={{ fontSize: 14, textAlign: 'left' }}>Report Status: Verified on {formattedDate}</p>
     </div>
   );
 };
@@ -158,7 +158,7 @@ const ReportList: React.FC = () => {
           position: 'relative', display: 'flex', flexDirection: 'column', maxHeight: '50%', gap: 12, padding: 24, alignItems: 'center'
         }}>
           <Close className="modal-action" onClick={() => setShowReportHistoryPopup(false)} style={{ position: 'absolute', top: 0, right: 12, cursor: 'pointer' }} />
-          <div className="text-xl font-bold" style={{ margin: '0 auto', fontSize: 15 }}>Report Information</div>
+          <div className="text-xl font-bold font-montserrat" style={{ margin: '0 auto', fontSize: 15 }}>Report Information</div>
           <div className="space-y-4" style={{
             width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex'
           }}>

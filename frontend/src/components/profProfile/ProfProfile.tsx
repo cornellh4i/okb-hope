@@ -315,15 +315,16 @@ const ProfProfile = () => {
                 <div style={overlayStyle}>
                     <div style={popupStyle}>
                         {/* Replace "Dr. Gloria Shi" with the actual doctor's name */}
-                        <h3 style={{ fontWeight: 'bold', marginBottom: '15px' }}>
+                        <h3 className='font-montserrat font-bold' style={{ marginBottom: '15px' }}>
                             Report Dr. {professional.firstName} {professional.lastName}?
                         </h3>
-                        <p style={{ fontSize: 14, marginBottom: '15px' }}>
+                        <p className='font-montserrat' style={{ fontSize: 14, marginBottom: '15px' }}>
                             We are committed to ensuring your right to privacy and safety. If you feel
                             like any of these rights have been violated by a psychiatrist that you are
                             seeing, please fill out the report form below.
                         </p>
                         <textarea
+                            className='font-montserrat'
                             style={textareaStyle}
                             placeholder={"Please provide a detailed description of your situation here."}
                             value={reportText}
@@ -342,8 +343,8 @@ const ProfProfile = () => {
                         {/* Assuming you have the SVG as a React component */}
                         <CheckCircle style={{ top: 20 }} />
                         <div style={{ display: 'inline-flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 14 }}>
-                            <h3 style={{ fontWeight: 'bold', marginBottom: '15px', fontSize: 14 }}>You have successfully reported Dr. {professional.firstName} {professional.lastName}.</h3>
-                            <p style={{ marginBottom: '15px', fontSize: 13 }}>
+                            <h3 className="font-montserrat" style={{ fontWeight: 'bold', marginBottom: '15px', fontSize: 14 }}>You have successfully reported Dr. {professional.firstName} {professional.lastName}.</h3>
+                            <p className="font-montserrat" style={{ marginBottom: '15px', fontSize: 13 }}>
                                 Dr. {professional.firstName} {professional.lastName}'s profile will be removed from your view and you will now be
                                 redirected back to the list of available psychiatrists. If you'd like to access
                                 your reported psychiatrists, check out the report section in your profile.
