@@ -12,8 +12,7 @@ const Navbar = () => {
   const router = useRouter();
 
   return (
-    <div className={`flex flex-row justify-between items-start w-full p-2.5 bg-[${colors.white}] items-end shadow-custom-shadow`}>
-
+    <div className={`flex flex-row justify-between items-start w-full p-2.5 bg-[${colors.white}] items-end shadow-navbar-shadow z-50`}>
       <div className="flex justify-start items-center gap-8 flex ml-2">
         <ul className="menu lg:menu-horizontal px-1 gap-5">
           <Link href="/" className="flex justify-start">

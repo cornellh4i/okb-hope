@@ -96,7 +96,7 @@ const MessageList: React.FC = () => {
       <div>
         {filteredMessages.map((msg) => (
           <div key={msg.id} className={`page-background`}>
-            <div className='py-2'></div>
+            {/* <div className='py-2'></div> */}
             <div className={`message-list page-background flex flex-col items-${uid === msg.uid ? 'end' : 'start'}`}>
               <MessageItem message={msg} />
             </div>

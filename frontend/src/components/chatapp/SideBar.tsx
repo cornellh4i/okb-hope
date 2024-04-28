@@ -45,11 +45,11 @@ const Sidebar: React.FC = () => {
 
   return (
     <div className="flex flex-col sidebar border-r-2 border-gray-300 page-background h-full overflow-y-auto">
-       <div>
-      <div className="px-2"> {/* Added width classes here */}
-        <SearchBar onSearch={handleSearch} />
+      <div className='z-0'>
+        <div className="px-2 z-0"> {/* Added width classes here */}
+          <SearchBar onSearch={handleSearch} />
+        </div>
       </div>
-    </div>
 
       <div className="flex flex-col conversation-list">
         {/* Unread Messages */}
