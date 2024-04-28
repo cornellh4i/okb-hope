@@ -3,33 +3,22 @@ import Link from 'next/link';
 import SideBar from './SideBar';
 import ChatArea from './ChatArea';
 import { useAuth } from '../../../contexts/AuthContext';
-import { LoginPopup } from '../LoginPopup';
-import router, { useRouter } from 'next/router';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { fetchRole } from '../../../firebase/firebase';
+import { useRouter } from 'next/router'; // Add this line
 
-/** TitleArea represents the title at the top of the ChatPage which is
- *  "Messages" and the button to the left "Back to Dashboard" */
-const TitleArea = () => {
-  return (
-    <div className='pt-2 pb-3'>
-      <Link href="/">
-        <button
-          className='rounded-xl bg-gray-100 px-2 py-1 ml-2 absolute hover:bg-gray-200'
-        >
-          Back to Dashboard
-        </button>
-      </Link>
-      <p className='font-semibold text-3xl text-center tracking-wide'>Messages</p>
-    </div>
-  )
-}
+const db = getFirestore();
 
-/** The main Chat App. Contains the TitleArea, the SideBar, and the ChatArea. */
 const ChatApp = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(true);
   const [isChatAreaVisible, setIsChatAreaVisible] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const router = useRouter();
   const [initialized, setInitialized] = useState(false); // Track if initial checks are completed
+  const [noDocsFound, setNoDocsFound] = useState(false);
+  const { user } = useAuth();
+  const [role, setRole] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+  const router = useRouter(); // Initialize router
 
   useEffect(() => {
     function handleResize() {
@@ -45,21 +34,73 @@ const ChatApp = () => {
   useEffect(() => {
     if (router.isReady) {
       // Use router.isReady to ensure router.query is available
-      console.log(router.query)
-      if ((router.query.psych_name || router.query.patient_name) && isMobile) {
-        console.log("false")
+      console.log(router.query);
+      if ((router.query.psych_id || router.query.psych_name) && isMobile) {
+        console.log("true");
         setSidebarVisible(false);
         setIsChatAreaVisible(true);
-      } else {
-        console.log("true")
+      } else if (router.query.psych_id || router.query.psych_name) {
         setSidebarVisible(true);
-        if (isMobile) setIsChatAreaVisible(false);
+        setIsChatAreaVisible(true);
+      } else {
+        console.log(router.query.psych_id)
+        console.log("false");
+        setSidebarVisible(true);
+        setIsChatAreaVisible(false);
       }
       setInitialized(true); // Mark initialization as complete
     }
   }, [router.isReady, router.query, isMobile]);
 
-  if (!initialized) {
+  useEffect(() => {
+    const fetchDataAndDetermineRole = async () => {
+      const id = user?.uid;
+      if (!id) return;
+
+      setLoading(true);
+      try {
+        const userRole = await fetchRole(id);
+        setRole(userRole);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching user role:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchDataAndDetermineRole();
+  }, [user?.uid]);
+
+  useEffect(() => {
+    const uid = user?.uid
+    console.log("role")
+    console.log(role)
+
+    if (uid) {
+      const conversationsQuery = role === "psychiatrist" ? 
+        query(collection(db, 'Conversations'), where('psychiatristId', '==', uid)) : 
+        query(collection(db, 'Conversations'), where('patientId', '==', uid));
+
+      // Execute the query
+      getDocs(conversationsQuery)
+        .then((querySnapshot) => {
+          if (querySnapshot.empty) {
+            setNoDocsFound(true); // Set state variable if no documents found
+            console.log("DOCS NOT FOUND!!!")
+          } else {
+            setNoDocsFound(false); // Reset state variable if documents found
+            console.log("DOCS FOUND!!!")
+          }
+        })
+        .catch((error) => {
+          console.error("Error getting conversations: ", error);
+        });
+    } else {
+      console.error("Invalid URL structure or psychiatristId not found in URL");
+    }
+  }, [db, role, user?.uid]);
+
+  if (!initialized || loading) {
     return null; // Optionally, a loading spinner can be returned here during initialization
   }
 
@@ -76,11 +117,19 @@ const ChatApp = () => {
             <div className={`sticky top-0 ${isSidebarVisible ? 'md:w-2/3' : 'w-full'}`}>
               <ChatArea />
             </div>
-          ) : null}
+          ) : (
+            <div className="page-background text-center text-gray-400 pt-4 px-4 font-montserrat italic">
+              {role === "patient" ? (
+                noDocsFound ? "Explore and chat with medical professionals using the Discover Professionals tab." : "Start chatting by selecting a conversation."
+              ) : (
+                noDocsFound ? "You have not received any messages from patients yet." : "Start chatting by selecting a conversation."
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
-  );
+  );  
 };
 
 export default ChatApp;
