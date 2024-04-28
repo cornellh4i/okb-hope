@@ -81,6 +81,8 @@ const FilterBarTwo = ({ onDelete, userList }) => {
                 </div>
             </div>
 
+            
+
             <button className="px-8 py-3 bg-white rounded-2xl border border-sky-700 justify-center items-center gap-2.5 inline-flex" onClick={filter}>
                 <div className="text-sky-700 text-base font-bold text-center">Filter</div>
             </button>

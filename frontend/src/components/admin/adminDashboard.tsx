@@ -3,8 +3,8 @@ import { collection, getDocs, Timestamp } from "firebase/firestore";
 import chevron_left from "@/assets/chevron_left";
 import chevron_right from "@/assets/chevron_right";
 import FilterBar from "./FilterBar";
-
 import FilterUserTable from "./FilterUserTable";
+import AdminFilterBar from "./adminFilterBar";
 import FilterBarTwo from "./FilterBarTwo";
 import FilterCard from "./FilterCard";
 import { deleteDoc, doc } from "firebase/firestore";
@@ -29,6 +29,7 @@ const AdminDashboard = () => {
   const [recordsPerPage] = useState(10);
   const [numPages, setNumPages] = useState(1);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [filteredPsychiatrist, setFilteredPsychiatrists] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -51,7 +52,6 @@ const AdminDashboard = () => {
         filteredUsers = users.filter(user => user.userType === 'psychiatrist');
       }
       setUserData(filteredUsers);
-
       // Calculate the number of pages based on filtered user records
       setNumPages(Math.ceil(filteredUsers.length / recordsPerPage));
     }
@@ -128,7 +128,8 @@ const AdminDashboard = () => {
                     ></span> */}
         </button>
       </div>
-      {clientView ? <FilterBar onDelete={handleDeleteUser} userList={selectedUsers} /> : <FilterBarTwo onDelete={handleDeleteUser} userList={selectedUsers} />}
+      {clientView ? <FilterBar onDelete={handleDeleteUser} userList={selectedUsers} /> : <AdminFilterBar setFilteredPsychiatrists={setFilteredPsychiatrists}/>}
+      {/* {clientView ? <FilterBar onDelete={handleDeleteUser} userList={selectedUsers} /> : <FilterBarTwo onDelete={handleDeleteUser} userList={selectedUsers} />} */}
       <FilterUserTable currentRecords={currentRecords} onDelete={handleDeleteUser} selectedUsers={(users) => handleSelectedUsers(users)} />
       <div className="pagination flex items-center m-auto">
         <div className="flex mb-5">

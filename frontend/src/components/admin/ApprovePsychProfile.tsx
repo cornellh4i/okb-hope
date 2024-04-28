@@ -159,9 +159,9 @@ const ProfProfile = () => {
         // Fetch professional data based on first name and last name
         const data = await fetchProfessionalData(psych_uid);
         setProfessional(data);
+        setApproved(data.status === "approved");
       }
     };
-
     fetchProfessional();
   }, [router.query.psych_uid]);
 
@@ -329,7 +329,7 @@ const ProfProfile = () => {
 
       const userRef = doc(db, "psychiatrists", docId ?? "");
       await updateDoc(userRef, {
-        firstName: "approved"
+        status: "approved"
       });
       // console.log( getDoc(userRef));
   }
@@ -467,8 +467,7 @@ const ProfProfile = () => {
               </a>
             </div>
           </div>
-
-          <div className="${ bg-[#d0dbe9] font-montserrat mt-12 h-40 w-80 text-center text-lg text-Black font-extrabold py-2 px-4 pt-7 rounded-xl bg-opacity-50 border border-blue-500 ">
+          <div className={`bg-[#d0dbe9] ${approval? "hidden": "visible"} font-montserrat mt-12 h-40 w-80 text-center text-lg text-Black font-extrabold py-2 px-4 pt-7 rounded-xl bg-opacity-50 border border-blue-500 `}>
             Would you like to approve this account?
             <div className="grid grid-cols-2 mt-4 items-center">
               <button className={`bg-white w-1/2 font-montserrat border-2 border-[#509bea] rounded-lg text-black font-normal justify-end justify-self-end mr-2 shadow hover:shadow-lg outline-none focus:outline-none active:bg-gray-500 ease-linear transition-all duration-150`}
@@ -483,11 +482,13 @@ const ProfProfile = () => {
               </button>
             </div>
           </div>
+          
         </div>
       </div>
-      {/* <h2 className={`text-center lg:text-start font-extrabold text-2xl mt-10 mb-2`}>Availability</h2>
-      <Availability availability={professional?.availability} /> */}
-
+      <div className={`${approval? "visible": "hidden"}`}>
+        <h2 className={`text-center lg:text-start font-extrabold text-2xl mt-10 mb-2`}>Availability</h2>
+        <Availability availability={professional?.availability} />
+      </div>
       <div className={`flex flex-row justify-center content-center`}>
         {/* <button
           className={`bg-okb-blue text-okb-white active:bg-gray-500 font-bold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}

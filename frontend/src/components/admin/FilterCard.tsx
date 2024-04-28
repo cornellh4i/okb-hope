@@ -49,7 +49,6 @@ const FilterCard = ({ user, name, username, id, created, active, isChecked, onCh
   };
 
   // if approved is true then Icon is check mark, else warning circle
-  // const Icon = true ? true : false;
   const Icon = professional?.status == "approved" ? true : false;
   const visibility = (user.userType === 'psychiatrist') ? 'visible' : 'invisible';
 
