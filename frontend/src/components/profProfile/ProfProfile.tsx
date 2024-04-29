@@ -24,10 +24,10 @@ import colors from '@/colors';
 import dynamic from "next/dynamic";
 const InlineWidget = dynamic(() => import("react-calendly").then(mod => mod.InlineWidget), { ssr: false });
 
-interface ProfProfileProps {
-    firstName: string;
-    lastName: string;
-}
+// interface ProfProfileProps {
+//     firstName: string;
+//     lastName: string;
+// }
 
 const overlayStyle: React.CSSProperties = {
     position: 'fixed',
@@ -79,7 +79,7 @@ const buttonStyle: React.CSSProperties = {
     fontWeight: 'normal', // Resets button text to normal weight
 };
 
-const ProfProfile: React.FC<ProfProfileProps> = ({ firstName, lastName }) => {
+const ProfProfile = () => {
     const { user } = useAuth(); // Get the user information from the context
     const [docId, setDocId] = useState<string | undefined>(undefined);
     const [showPopup, setShowPopup] = useState(false);
@@ -87,16 +87,9 @@ const ProfProfile: React.FC<ProfProfileProps> = ({ firstName, lastName }) => {
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [showBooking, setShowBooking] = useState(false);
     const [reportText, setReportText] = useState('');
-    const [rootElement, setRootElement] = useState<HTMLElement | null>(null);
     const [professional, setProfessional] = useState<IPsychiatrist | null>(null);
     const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
     const router = useRouter();
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            setRootElement(document.getElementById('root'));
-        }
-    }, []);
 
     useEffect(() => {
         const fetchProfessional = async () => {
