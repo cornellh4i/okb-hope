@@ -209,8 +209,18 @@ const AdminReport = () => {
   }
 
   const ReportDetailsPopup = () => {
+    const [buttonPosition, setButtonPosition] = useState({ top: 0, left: 0 });
     const [isOpen, setIsOpen] = useState(false);
     if (!showPopup) return null;
+
+    const dropdownContainerStyle: React.CSSProperties = {
+      position: 'absolute',
+      top: buttonPosition.top + 35, // Adjusted to position below the button
+      left: buttonPosition.left, // Align the left edge of the dropdown with the button
+      zIndex: 1001,
+      overflow: 'hidden',
+    };
+
 
     const priorities = ['High', 'Medium', 'Low', 'Spam'];
 
@@ -228,6 +238,44 @@ const AdminReport = () => {
       left: '35%',
       top: '20%'
     };
+
+    const calculateDropdownPosition = () => {
+      const buttonElement = document.getElementById('assign-priority-button');
+
+      // Check if buttonElement exists
+      if (buttonElement) {
+        const buttonRect = buttonElement.getBoundingClientRect();
+
+        // Calculate the top and left position for the dropdown
+        const top = buttonRect.bottom;
+        const left = buttonRect.left;
+
+        // Set the dropdown position
+        setButtonPosition({ top, left });
+      }
+    };
+
+    // Effect to recalculate dropdown position when isOpen changes
+    useEffect(() => {
+      if (isOpen) {
+        calculateDropdownPosition();
+      }
+    }, [isOpen]);
+
+    useEffect(() => {
+      const handleResize = () => {
+        if (isOpen) {
+          calculateDropdownPosition();
+        }
+      };
+
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, [isOpen]);
+
 
     const buttonsContainerStyle = {
       display: 'flex',
@@ -249,7 +297,7 @@ const AdminReport = () => {
       backgroundColor: '#519AEB',
       color: 'white',
       padding: '8px',
-      borderRadius: '10px',
+      borderRadius: isOpen ? '10px 10px 0 0' : '10px', // Adjusted border radius based on the toggle state
       border: '2px solid #519AEB',
       cursor: 'pointer',
       display: 'flex',
@@ -258,12 +306,6 @@ const AdminReport = () => {
       position: 'relative' // Position the button relatively
     };
 
-    const dropdownContainerStyle: React.CSSProperties = {
-      position: 'absolute', // Position the dropdown absolutely
-      left: 0,
-      zIndex: 1001, // Ensure the dropdown appears above the popup
-      overflow: 'hidden',
-    };
 
     const dropdownListStyle = {
       margin: 0,
@@ -319,33 +361,36 @@ const AdminReport = () => {
                 className='font-montserrat'
                 onClick={handleClosePopup}
               >Cancel</button>
-              <div style={{ position: 'relative' }}>
-                <button onClick={toggleDropdown} style={assignPriorityButtonStyle} className='font-montserrat'>
-                  Assign Priority {isOpen ? <ChevronUp color='white' /> : <ChevronDown color='white' />}
-                </button>
-                {isOpen && (
-                  <div style={dropdownContainerStyle}>
-                    <ul style={dropdownListStyle}>
-                      {priorities.map((priority) => (
-                        <li
-                          key={priority}
-                          onClick={() => handlePrioritySelection(priority)}
-                          style={{ ...dropdownItemStyle, ...(isOpen && dropdownItemHoverStyle) }}
-                          onMouseEnter={handleMouseEnter}
-                          onMouseLeave={handleMouseLeave}
-                          className='font-montserrat'
-                        >
-                          {priority !== "Spam" ? priority + " Priority" : priority}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+              <button
+                id="assign-priority-button"
+                onClick={toggleDropdown}
+                style={assignPriorityButtonStyle}
+                className='font-montserrat'
+              >
+                Assign Priority {isOpen ? <ChevronUp color='white' /> : <ChevronDown color='white' />}
+              </button>
             </div>
           </div>
+          {isOpen && (
+            <div style={{ ...dropdownContainerStyle, top: buttonPosition.top }}>
+              <ul style={dropdownListStyle}>
+                {priorities.map((priority) => (
+                  <li
+                    key={priority}
+                    onClick={() => handlePrioritySelection(priority)}
+                    style={{ ...dropdownItemStyle, ...(isOpen && dropdownItemHoverStyle) }}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    className='font-montserrat'
+                  >
+                    {priority !== "Spam" ? priority + " Priority" : priority}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
-      </div>
+      </div >
     );
   };
 
@@ -382,7 +427,7 @@ const AdminReport = () => {
         </div>
 
         {returnReportsByPriority("")}
-        {ReportDetailsPopup()}
+        <ReportDetailsPopup />
 
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
           <div className="font-montserrat" style={{ color: 'black', fontSize: 25, fontWeight: '600', wordWrap: 'break-word' }}>High Priority</div>
