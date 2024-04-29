@@ -9,6 +9,7 @@ import Edit from '../../assets/edit.svg';
 import Analytics from '../../assets/analytics.svg';
 import Photo from '../../assets/dummy_photo.jpg';
 import { useRouter } from 'next/router';
+import Bookings from "../Booking";
 
 
 interface ProfProfileProps {
@@ -132,15 +133,16 @@ const AdminProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
       <h2 className={`text-bold text-2xl`}>Availability</h2>
       <Availability availability={professional?.availability} />
 
-      <div className={`flex flex-row justify-center content-center`}>
-        {/* Book Appointment button, action undefined but should lead to calendly */}
-        <button
+      {/* <div className={`flex flex-row justify-center content-center`}> */}
+      {/* Book Appointment button, action undefined but should lead to calendly */}
+      {/* <button
           className={`bg-okb-blue text-okb-white active:bg-gray-500 font-bold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
           type="button"
         >
           Book Appointment
         </button>
-      </div>
+      </div> */}
+      <Bookings url="https://calendly.com/bl583/30min" />
     </div>
   );
 };

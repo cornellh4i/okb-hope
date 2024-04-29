@@ -24,12 +24,14 @@ interface QuestionnaireProps {
     handleCheck: (event: ChangeEvent<HTMLInputElement>) => void;
     handleAboutYourself: (event: ChangeEvent<HTMLInputElement>) => void;
     handleGender: (event: ChangeEvent<HTMLInputElement>) => void;
+    calendlyLink: string;
+    handleCalendly: (event: ChangeEvent<HTMLTextAreaElement>) => void;
 
 
 }
 
 //2nd page of questionnaire
-const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, gender, setLanguages, checked, setChecked, handleGender, handleAge, handleCheck, handleAboutYourself }: QuestionnaireProps) => {
+const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, gender, setLanguages, checked, setChecked, handleGender, handleAge, handleCheck, handleAboutYourself, calendlyLink, handleCalendly }: QuestionnaireProps) => {
 
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 mb-5`}>
@@ -69,6 +71,24 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
                         height: '560px'
                     }}
                 />
+            </div>
+            <div className='flex flex-col gap-y-3'>
+                <span className={`text-lg font-semibold font-montserrat`}>What is your Calendly link?</span>
+                <div className='flex items-center justify-start w-full gap-3'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="50" viewBox="0 0 4 140" fill="none">
+                        <path d="M2 2L2.00001 202" stroke="#519AEB" strokeWidth="9" strokeLinecap="round" />
+                    </svg>
+                    <textarea
+                        value={calendlyLink}
+                        onChange={handleCalendly}
+                        placeholder="Type here"
+                        className={`input input-bordered resize-none w-full md:w-3/4 lg:w-1/2 border-2 rounded-2xl italic py-3 px-6`}
+                        style={{
+                            borderColor: okb_colors.light_blue,
+                            height: 50,
+                        }}
+                    />
+                </div>
             </div>
             <FormGroup>
                 <div className={`flex flex-row gap-1`}>
