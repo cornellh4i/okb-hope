@@ -6,15 +6,19 @@ const Footer = () => {
     <div className="border-solid border-0 border-t border-gray-300 text-xs">
       <div className="max-w-screen-xl mx-auto p-6 sm:py-6">
         <div className="flex flex-col gap-4 text-center sm:flex-row sm:justify-between sm:gap-0 sm:text-start">
-          <div>&copy; 2024 Hack4Impact Cornell</div>
-          <div>
-            <Link className="text-black no-underline hover:underline" href="/">
-              Terms of Service
-            </Link>{" "}
+          <div className="flex flex-row gap-1">
+            <div>&copy; 2024 Hack4Impact Cornell </div>{" "}
             &#x2022;{" "}
-            <Link className="text-black no-underline hover:underline" href="/">
+            <div>All Rights Reserved</div>
+          </div>
+          <div className="flex flex-row gap-1">
+            <div className="text-black">
+              Terms of Service
+            </div>{" "}
+            &#x2022;{" "}
+            <div className="text-black">
               Privacy Policy
-            </Link>{" "}
+            </div>{" "}
             &#x2022;{" "}
             <Link className="text-black no-underline hover:underline" href="https://www.okbfoundation.org/">
               Contact Us
