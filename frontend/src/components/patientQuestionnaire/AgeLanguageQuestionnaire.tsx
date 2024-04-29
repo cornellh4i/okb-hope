@@ -20,89 +20,87 @@ interface QuestionnaireProps {
 
 }
 
-const AgeLanguageQuestionnaire = ({ age, languages, setLanguages, checked, setChecked, handleAge, handleCheck } : QuestionnaireProps) => {
+const AgeLanguageQuestionnaire = ({ age, languages, setLanguages, checked, setChecked, handleAge, handleCheck }: QuestionnaireProps) => {
 
     return (
-        <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 mb-5`}>
-            <FormControl>
+        <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-9 p-8`}>
+            <FormControl className='gap-y-2.5'>
                 <div className={`flex flex-row gap-1`}>
-                    <span className={`text-lg font-semibold font-montserrat`}>What is your age?</span>
-                    <span className={`text-lg text-red-600`}>*</span>
-                </div> 
+                    <span className={`text-lg font-semibold font-montserrat`}>What is your age? <span className={`text-lg text-red-600`}>*</span></span>
+                </div>
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="radio-buttons-group"
                     defaultValue={age}
                     onChange={handleAge}
-                    className={`flex flex-col gap-2`}
+                    className={`flex flex-col gap-y-2.5`}
                 >
                     <FormControlLabel className={` ml-1 `} value="18-24" control={<Radio />} label={
-                        <span style={{fontWeight: 300, fontSize: 18 }}>
-                        18-24
+                        <span style={{ fontWeight: 300, fontSize: 18 }}>
+                            18-24
                         </span>
                     } />
                     <FormControlLabel className={` ml-1 `} value="25-34" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
-                        25-34
+                            25-34
                         </span>
                     } />
                     <FormControlLabel className={` ml-1 `} value="35-44" control={<Radio />} label={
-                        <span style={{ fontWeight: 300, fontSize: 18}}>
-                        35-44
+                        <span style={{ fontWeight: 300, fontSize: 18 }}>
+                            35-44
                         </span>
                     } />
                     <FormControlLabel className={` ml-1 `} value="45-54" control={<Radio />} label={
-                        <span style={{fontWeight: 300, fontSize: 18 }}>
-                        45-54
+                        <span style={{ fontWeight: 300, fontSize: 18 }}>
+                            45-54
                         </span>
                     } />
                     <FormControlLabel className={` ml-1 `} value="55-64" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
-                        55-64
+                            55-64
                         </span>
                     } />
                     <FormControlLabel className={` ml-1 `} value="65 and over" control={<Radio />} label={
-                        <span style={{ fontWeight: 300, fontSize: 18}}>
-                        65 and over
+                        <span style={{ fontWeight: 300, fontSize: 18 }}>
+                            65 and over
                         </span>
                     } />
                 </RadioGroup>
             </FormControl>
-            <FormGroup>
+            <FormGroup className='gap-y-2.5'>
                 <div className={`flex flex-row gap-1`}>
-                    <span className={`text-lg font-semibold font-montserrat`}>What are your preferred languages?</span>
-                    <span className={`text-lg text-red-600`}>*</span>
-                </div> 
-                <FormControlLabel control={<Checkbox defaultChecked={checked.English} checked={checked['english']} value={`English`} onChange={handleCheck} />} className={` ml-1 `} label={
-                        <span style={{fontWeight: 300, fontSize: 18 }}>
+                    <span className={`text-lg font-semibold font-montserrat`}>What are your preferred languages? <span className={`text-lg text-red-600`}>*</span></span>
+                </div>
+                <FormControlLabel control={<Checkbox defaultChecked={checked.English} checked={checked['english']} value={`english`} onChange={handleCheck} />} className={` ml-1 `} label={
+                    <span style={{ fontWeight: 300, fontSize: 18 }}>
                         English
-                        </span>
-                    } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Twi} checked={checked['twi']} value={`Twi`} onChange={handleCheck} />} className={` ml-1 `} label={
-                        <span style={{fontWeight: 300, fontSize: 18 }}>
+                    </span>
+                } />
+                <FormControlLabel control={<Checkbox defaultChecked={checked.Twi} checked={checked['twi']} value={`twi`} onChange={handleCheck} />} className={` ml-1 `} label={
+                    <span style={{ fontWeight: 300, fontSize: 18 }}>
                         Twi
-                        </span>
-                    } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Fante} checked={checked['fante']} value={`Fante`} onChange={handleCheck} />} className={` ml-1 `} label={
-                        <span style={{fontWeight: 300, fontSize: 18 }}>
+                    </span>
+                } />
+                <FormControlLabel control={<Checkbox defaultChecked={checked.Fante} checked={checked['fante']} value={`fante`} onChange={handleCheck} />} className={` ml-1 `} label={
+                    <span style={{ fontWeight: 300, fontSize: 18 }}>
                         Fante
-                        </span>
-                    } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Ewe} checked={checked['ewe']} value={`Ewe`} onChange={handleCheck} />} className={` ml-1 `} label={
-                        <span style={{fontWeight: 300, fontSize: 18 }}>
+                    </span>
+                } />
+                <FormControlLabel control={<Checkbox defaultChecked={checked.Ewe} checked={checked['ewe']} value={`ewe`} onChange={handleCheck} />} className={` ml-1 `} label={
+                    <span style={{ fontWeight: 300, fontSize: 18 }}>
                         Ewe
-                        </span>
-                    } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Ga} checked={checked['ga']} value={`Ga`} onChange={handleCheck} />} className={` ml-1 `} label={
-                        <span style={{fontWeight: 300, fontSize: 18 }}>
+                    </span>
+                } />
+                <FormControlLabel control={<Checkbox defaultChecked={checked.Ga} checked={checked['ga']} value={`ga`} onChange={handleCheck} />} className={` ml-1 `} label={
+                    <span style={{ fontWeight: 300, fontSize: 18 }}>
                         Ga
-                        </span>
-                    } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Other} checked={checked['other']} value={`Other`} onChange={handleCheck} />} className={` ml-1 `} label={
-                        <span style={{fontWeight: 300, fontSize: 18 }}>
+                    </span>
+                } />
+                <FormControlLabel control={<Checkbox defaultChecked={checked.Other} checked={checked['other']} value={`other`} onChange={handleCheck} />} className={` ml-1 `} label={
+                    <span style={{ fontWeight: 300, fontSize: 18 }}>
                         Other
-                        </span>
-                    } />
+                    </span>
+                } />
             </FormGroup>
         </div>
     )

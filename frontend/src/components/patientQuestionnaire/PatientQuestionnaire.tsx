@@ -28,9 +28,18 @@ const PatientQuestionnaire = () => {
     const [prevExpTime, setPrevExpTime] = useState<string>("");
     const [concerns, setConcerns] = useState<string>("");
 
+    const [isMobile, setIsMobile] = useState(false);
     const router = useRouter();
     const { user } = useAuth();
 
+    useEffect(() => {
+        // Set isMobile based on window.innerWidth after component mounts to the DOM
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        handleResize(); // Set the initial state based on current window width
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
@@ -183,17 +192,38 @@ const PatientQuestionnaire = () => {
                 handlePrevExp={handlePrevExpChange}
                 handlePrevExpTime={handlePrevExpTimeChange}
                 handleConcerns={handleConcernsChange} />}
-            <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3`}>
-                <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>
-                    <div className={`text-zinc-600 font-semibold font-montserrat`}>Go Back</div>
-                </div>
-                {currentStep === 1 && <ProgressBar25 />}
-                {currentStep === 2 && <ProgressBar50 />}
-                {currentStep === 3 && <ProgressBar75 />}
-                <div className={`px-4 py-2 bg-blue-400 rounded-[10px] justify-start items-start inline-flex`} onClick={goNext}>
-                    <div className={`text-white text-base font-semibold font-montserrat`}>Next</div>
-                </div>
-            </div>
+            {!isMobile && (
+                <>
+                    <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3 mb-4`}>
+                        <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>
+                            <div className={`text-zinc-600 text-[14px] font-semibold font-montserrat`}>Go Back</div>
+                        </div>
+                        {currentStep === 1 && <ProgressBar25 />}
+                        {currentStep === 2 && <ProgressBar50 />}
+                        {currentStep === 3 && <ProgressBar75 />}
+                        <div className={`px-4 py-2 bg-blue-400 rounded-[10px] justify-start items-start inline-flex`} onClick={goNext}>
+                            <div className={`text-white text-base font-semibold font-montserrat`}>Next</div>
+                        </div>
+                    </div>
+                </>)}
+            {isMobile && (
+                <>
+                    <div className={`flex flex-col w-full content-center justify-center items-center gap-4 pb-3`}>
+                        <div className="flex justify-center">
+                            {currentStep === 1 && <ProgressBar25 />}
+                            {currentStep === 2 && <ProgressBar50 />}
+                            {currentStep === 3 && <ProgressBar75 />}
+                        </div>
+                        <div className="flex gap-x-4 mb-4">
+                            <div className={`px-4 py-1 rounded-[10px] border-2 border-blue-400 items-center inline-flex`} onClick={goBack}>
+                                <div className={`text-zinc-600 text-[10px] md:text-[16px] font-semibold font-montserrat`}>Go Back</div>
+                            </div>
+                            <div className={`px-4 py-2 bg-blue-400 rounded-[10px] items-center inline-flex`} onClick={goNext}>
+                                <div className={`text-white text-[10px] font-semibold font-montserrat`}>Next</div>
+                            </div>
+                        </div>
+                    </div>
+                </>)}
         </div>
     )
 };

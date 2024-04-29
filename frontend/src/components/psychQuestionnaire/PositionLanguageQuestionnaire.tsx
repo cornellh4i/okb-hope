@@ -26,16 +26,16 @@ interface QuestionnaireProps {
 const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, handleAboutYourself, setChecked, handleCheck, handlePosition }: QuestionnaireProps) => {
 
     return (
-        <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 mb-5`}>
+        <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-y-7 py-8 px-9 pb-0`}>
             <FormControl>
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="radio-buttons-group"
                     defaultValue={setPosition = ""}
-                    onChange={handlePosition}>
+                    onChange={handlePosition}
+                    className='p-2.5 gap-2.5'>
                     <div className={`flex flex-row gap-1`}>
-                        <span className={`text-lg font-semibold font-montserrat`}>What is your current position?</span>
-                        <span className={`text-lg text-red-600`}>*</span>
+                        <span className={`text-lg font-semibold font-montserrat`}>What is your current position? <span className={`text-lg text-red-600`}>*</span></span>
                     </div>
                     <FormControlLabel control={<Radio checked={checked['psychiatrist']} value={`psychiatrist`} />} className={` ml-1 `} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
@@ -49,23 +49,27 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
                     } />
                 </RadioGroup>
             </FormControl>
-            <div>
+            <div className='flex flex-col gap-y-3'>
                 <span className={`text-lg font-semibold font-montserrat`}>Tell us and your patients about yourself.</span>
-                <textarea
-                    value={aboutYourself}
-                    onChange={handleAboutYourself}
-                    placeholder="Type here"
-                    className={`input input-bordered resize-none w-full mr-3 border-2 rounded-2xl`}
-                    style={{
-                        borderColor: okb_colors.light_blue,
-                        height: 150,  // Set the desired height for your textarea
-                    }}
-                />
+                <div className='flex items-center justify-start w-full gap-3'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="4" height="140" viewBox="0 0 4 140" fill="none">
+                        <path d="M2 2L2.00001 202" stroke="#519AEB" stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                    <textarea
+                        value={aboutYourself}
+                        onChange={handleAboutYourself}
+                        placeholder="Type here"
+                        className={`input input-bordered resize-none w-full md:w-3/4 lg:w-1/2 border-2 rounded-2xl italic py-3 px-6`}
+                        style={{
+                            borderColor: okb_colors.light_blue,
+                            height: 150,  // Set the desired height for your textarea
+                        }}
+                    />
+                </div>
             </div>
-            <FormGroup>
-                <div className={`flex flex-row gap-1`}>
-                    <span className={`text-lg font-semibold font-montserrat`}>What are your preferred languages?</span>
-                    <span className={`text-lg text-red-600`}>*</span>
+            <FormGroup className='gap-y-3'>
+                <div className={`flex flex-row`}>
+                    <span className={`text-lg font-semibold font-montserrat`}>What languages do you speak? <span className={`text-lg text-red-600`}>*</span></span>
                 </div>
                 <FormControlLabel control={<Checkbox defaultChecked={checked.English} checked={checked['English']} value={`English`} onChange={handleCheck} />} className={` ml-1 `} label={
                     <span style={{ fontWeight: 300, fontSize: 18 }}>

@@ -25,8 +25,18 @@ const PsychQuestionnaire = () => {
 
     const [patient, setPatient] = useState<boolean>(false);
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
+    const [isMobile, setIsMobile] = useState(false);
     const router = useRouter();
     const { user } = useAuth();
+
+    useEffect(() => {
+        // Set isMobile based on window.innerWidth after component mounts to the DOM
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        handleResize(); // Set the initial state based on current window width
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
@@ -171,7 +181,7 @@ const PsychQuestionnaire = () => {
     };
 
     return (
-        <div className={'flex flex-col bg-off-white'}>
+        <div className={'flex flex-col bg-off-white gap-y-6 md:gap-y-9'}>
             {currentStep === 1 && <SelectionQuestionnaire
                 patient={patient}
                 psychiatrist={psychiatrist}
@@ -200,17 +210,39 @@ const PsychQuestionnaire = () => {
                     handleAboutYourself={handleAboutYourselfChange}
 
                 />}
-            <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3`}>
-                <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>
-                    <div className={`text-zinc-600 font-semibold font-montserrat`}>Go Back</div>
-                </div>
-                {currentStep === 1 && <ProgressBar0 />}
-                {currentStep === 2 && <ProgressBar33 />}
-                {currentStep === 3 && <ProgressBar67 />}
-                <div className={`px-4 py-2 bg-blue-400 rounded-[10px] justify-start items-start inline-flex`} onClick={goNext}>
-                    <div className={`text-white text-base font-semibold font-montserrat`}>Next</div>
-                </div>
-            </div>
+            {!isMobile && (
+                <>
+                    <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3 mb-4`}>
+                        <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>
+                            <div className={`text-zinc-600 text-[14px] font-semibold font-montserrat`}>Go Back</div>
+                        </div>
+                        {currentStep === 1 && <ProgressBar0 />}
+                        {currentStep === 2 && <ProgressBar33 />}
+                        {currentStep === 3 && <ProgressBar67 />}
+                        <div className={`px-4 py-2 bg-blue-400 rounded-[10px] justify-start items-start inline-flex`} onClick={goNext}>
+                            <div className={`text-white text-base font-semibold font-montserrat`}>Next</div>
+                        </div>
+                    </div></>
+            )}
+            {isMobile && (
+                <>
+                    <div className={`flex flex-col w-full content-center justify-center items-center gap-4 pb-3`}>
+                        <div className="flex justify-center">
+                            {currentStep === 1 && <ProgressBar0 />}
+                            {currentStep === 2 && <ProgressBar33 />}
+                            {currentStep === 3 && <ProgressBar67 />}
+                        </div>
+                        <div className="flex gap-x-4 mb-4">
+                            <div className={`px-4 py-1 rounded-[10px] border-2 border-blue-400 items-center inline-flex`} onClick={goBack}>
+                                <div className={`text-zinc-600 text-[10px] md:text-[16px] font-semibold font-montserrat`}>Go Back</div>
+                            </div>
+                            <div className={`px-4 py-2 bg-blue-400 rounded-[10px] items-center inline-flex`} onClick={goNext}>
+                                <div className={`text-white text-[10px] font-semibold font-montserrat`}>Next</div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     )
 };
