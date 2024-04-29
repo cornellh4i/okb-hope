@@ -82,7 +82,7 @@ const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, handlePrevExp, h
 
             <div className="flex flex-col gap-y-3">
                 <span className={`text-lg font-semibold font-montserrat`}>Are there any specific concerns you would like to discuss with your conselor?</span>
-                <input type="text" value={concerns} onChange={handleConcerns} placeholder="Type here" className={`input input-bordered w-full md:w-1/2 mr-3 border-2 rounded-2xl`} style={{ borderColor: okb_colors.light_blue }} />
+                <input type="text" value={concerns} onChange={handleConcerns} placeholder="Type here" className={`input input-bordered px-6 font-montserrat placeholder:italic w-3/4 md:w-full border-2 ml-3 rounded-2xl text-[12px] md:text-[12px]`} style={{ borderColor: okb_colors.light_blue }} />
             </div>
 
 

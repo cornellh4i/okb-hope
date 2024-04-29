@@ -59,7 +59,7 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
                         value={aboutYourself}
                         onChange={handleAboutYourself}
                         placeholder="Type here"
-                        className={`input input-bordered resize-none w-full md:w-3/4 lg:w-1/2 border-2 rounded-2xl italic py-3 px-6`}
+                        className={`input input-bordered resize-none w-full md:w-3/4 lg:w-1/2 border-2 rounded-2xl placeholder:italic py-3 px-6`}
                         style={{
                             borderColor: okb_colors.light_blue,
                             height: 150,  // Set the desired height for your textarea

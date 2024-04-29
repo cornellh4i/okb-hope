@@ -38,7 +38,7 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                     </div>
                     <div className={`flex items-center`}>
                         <Vertical_line />
-                        <input type="text" value={firstName} onChange={handleFirstName} placeholder="Type here" className={`input input-bordered italic w-3/4 md:w-full border-2 ml-3 rounded-2xl text-[14px] md:text-[18px]`} style={{ borderColor: okb_colors.light_blue }} />
+                        <input type="text" value={firstName} onChange={handleFirstName} placeholder="Type here" className={`input input-bordered px-6 font-montserrat placeholder:italic w-3/4 md:w-full border-2 ml-3 rounded-2xl text-[12px] md:text-[12px]`} style={{ borderColor: okb_colors.light_blue }} />
                     </div>
                 </div>
                 {/* Last Name */}
@@ -48,7 +48,7 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                     </div>
                     <div className={`flex items-center`}>
                         <Vertical_line />
-                        <input type="text" value={lastName} onChange={handleLastName} placeholder="Type here" className={`input input-bordered italic w-3/4 md:w-full border-2 ml-3 rounded-2xl text-[14px] md:text-[18px]`} style={{ borderColor: okb_colors.light_blue }} />
+                        <input type="text" value={lastName} onChange={handleLastName} placeholder="Type here" className={`input input-bordered px-6 font-montserrat placeholder:italic w-3/4 md:w-full border-2 ml-3 rounded-2xl text-[12px] md:text-[12px]`} style={{ borderColor: okb_colors.light_blue }} />
                     </div>
                 </div>
             </div>
