@@ -371,7 +371,7 @@ const ProfProfile = () => {
                     {/* <Image src={Photo} alt="Photo" className={`w-1200 h-600`} /> */}
                 </div>
                 <div className={`flex flex-col lg:w-2/3 gap-4 justify-start`}>
-                    <div className={`flex flex-col md:flex-row gap-4`}>
+                    <div className={`flex flex-col md:flex-row gap-4 justify-between`}>
                         <div className='flex gap-x-4 justify-center items-center md:justify-start md:items-start flex-col'>
                             <div className={`text-3xl text-bold font-montserrat font-bold`}>
                                 {professional.firstName + " " + professional.lastName}
@@ -380,13 +380,15 @@ const ProfProfile = () => {
                                 {professional.position}
                             </div>
                         </div>
-                        <div className='flex flex-row flex-wrap gap-4 justify-center items-center md:justify-start md:items-start'>
+                        <div className='flex flex-row flex-wrap gap-4 justify-center items-end md:justify-start md:items-start'>
                             {/* Report button, action is currently undefined */}
-                            <div className={`shrink`} >
-                                <button onClick={handleReport} className={` rounded-s-2xl rounded-[12px] transition cursor-pointer text-okb-white flex flex-row gap-2`}>
-                                    <ReportIcon className="object-cover" />
-                                </button>
-                            </div>
+                            {user && user.userType === "patient" &&
+                                <div className={`shrink`} >
+                                    <button onClick={handleReport} className={` rounded-s-2xl rounded-[12px] transition cursor-pointer text-okb-white flex flex-row gap-2`}>
+                                        <ReportIcon className="object-cover" />
+                                    </button>
+                                </div>
+                            }
                             {/* Save button, action is currently undefined */}
                             <div className='flex flex-row gap-4 justify-center items-center md:justify-start md:items-start'>
                                 <div className={`shrink`}>
