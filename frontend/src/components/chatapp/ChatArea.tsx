@@ -9,6 +9,10 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { collection, onSnapshot, writeBatch, query, where, doc, getDoc, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebase/firebase";
 import DeleteModal from './DeleteModal';
+import { getFirestore } from 'firebase/firestore';
+import { fetchRole } from '../../../firebase/firebase';
+
+
 
 interface NameAreaType {
   name: string;
@@ -167,6 +171,7 @@ const ChatArea = () => {
   const router = useRouter();
   const [displayName, setDisplayName] = useState('');
   const [role, setRole] = useState<string>('');
+  const [noDocsFound, setNoDocsFound] = useState(false);
 
   useEffect(() => {
     const fetchDataAndDetermineRole = async () => {
@@ -199,6 +204,65 @@ const ChatArea = () => {
     }
   }, [router.isReady, router.query]);
 
+  useEffect(() => {
+    const fetchDataAndDetermineRole = async () => {
+      const id = user?.uid;
+      if (!id) return;
+
+      try {
+        const userRole = await fetchRole(id);
+        setRole(userRole);
+      } catch (error) {
+        console.error('Error fetching user role:', error);
+      }
+    };
+
+    fetchDataAndDetermineRole();
+  }, [user?.uid]);
+
+  useEffect(() => {
+    const uid = user?.uid
+    console.log("role")
+    console.log(role)
+
+    if (uid) {
+      const conversationsQuery = role === "psychiatrist" ?
+        query(collection(db, 'Conversations'), where('psychiatristId', '==', uid)) :
+        query(collection(db, 'Conversations'), where('patientId', '==', uid));
+
+      // Execute the query
+      getDocs(conversationsQuery)
+        .then((querySnapshot) => {
+          if (querySnapshot.empty) {
+            setNoDocsFound(true); // Set state variable if no documents found
+            console.log("DOCS NOT FOUND!!!")
+          } else {
+            if (role === "patient") {
+              const allDeletedByPatient = querySnapshot.docs.every(doc => {
+                const data = doc.data();
+                return data.deletedByPatient === true;
+              });
+              if (allDeletedByPatient) setNoDocsFound(true);
+              else setNoDocsFound(false); // Reset state variable if documents found
+            } else {
+              const allDeletedByPsych = querySnapshot.docs.every(doc => {
+                const data = doc.data();
+                return data.deletedByPsych === true;
+              });
+              if (allDeletedByPsych) setNoDocsFound(true);
+              else setNoDocsFound(false); // Reset state variable if documents found
+            }
+            console.log("DOCS FOUND!!!")
+          }
+        })
+        .catch((error) => {
+          console.error("Error getting conversations: ", error);
+        });
+    } else {
+      console.error("Invalid URL structure or psychiatristId not found in URL");
+    }
+  }, [db, role, user?.uid]);
+
   if (displayName !== "") {
     return (
       <div className="chat-area flex flex-col h-screen page-background">
@@ -210,7 +274,15 @@ const ChatArea = () => {
       </div>
     );
   } else {
-    return null
+    return (
+      <div className="page-background text-center text-gray-400 pt-4 px-4 font-montserrat italic">
+        {role === "patient" ? (
+          noDocsFound ? "Explore and chat with medical professionals using the Discover Professionals tab." : "Start chatting by selecting a conversation."
+        ) : (
+          noDocsFound ? "You have not received any messages from patients yet." : "Start chatting by selecting a conversation."
+        )}
+      </div>
+    )
   }
 };
 
