@@ -24,14 +24,14 @@ interface QuestionnaireProps {
     handleCheck: (event: ChangeEvent<HTMLInputElement>) => void;
     handleAboutYourself: (event: ChangeEvent<HTMLInputElement>) => void;
     handleGender: (event: ChangeEvent<HTMLInputElement>) => void;
-    calendlyLink: string;
-    handleCalendly: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+    // calendlyLink: string;
+    // handleCalendly: (event: ChangeEvent<HTMLTextAreaElement>) => void;
 
 
 }
 
 //2nd page of questionnaire
-const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, gender, setLanguages, checked, setChecked, handleGender, handleAge, handleCheck, handleAboutYourself, calendlyLink, handleCalendly }: QuestionnaireProps) => {
+const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, gender, setLanguages, checked, setChecked, handleGender, handleAge, handleCheck, handleAboutYourself }: QuestionnaireProps) => {
 
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 mb-5`}>
@@ -72,7 +72,7 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
                     }}
                 />
             </div>
-            <div className='flex flex-col gap-y-3'>
+            {/* <div className='flex flex-col gap-y-3'>
                 <span className={`text-lg font-semibold font-montserrat`}>What is your Calendly link?</span>
                 <div className='flex items-center justify-start w-full gap-3'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="50" viewBox="0 0 4 140" fill="none">
@@ -89,7 +89,7 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
                         }}
                     />
                 </div>
-            </div>
+            </div> */}
             <FormGroup>
                 <div className={`flex flex-row gap-1`}>
                     <span className={`text-lg font-semibold font-montserrat`}>What are your preferred languages?</span>

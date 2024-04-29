@@ -20,12 +20,12 @@ interface QuestionnaireProps {
     setChecked: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
     handleCheck: (event: ChangeEvent<HTMLInputElement>) => void;
     handlePosition: (event: ChangeEvent<HTMLInputElement>) => void;
-    calendlyLink: string;
-    handleCalendly: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+    // calendlyLink: string;
+    // handleCalendly: (event: ChangeEvent<HTMLTextAreaElement>) => void;
 
 }
 //2nd page of questionnaire
-const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, handleAboutYourself, setChecked, handleCheck, handlePosition, calendlyLink, handleCalendly }: QuestionnaireProps) => {
+const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, setLanguages, checked, handleAboutYourself, setChecked, handleCheck, handlePosition }: QuestionnaireProps) => {
 
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-y-7 py-8 px-9 pb-0`}>
@@ -69,7 +69,7 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
                     />
                 </div>
             </div>
-            <div className='flex flex-col gap-y-3'>
+            {/* <div className='flex flex-col gap-y-3'>
                 <span className={`text-lg font-semibold font-montserrat`}>What is your Calendly link?</span>
                 <div className='flex items-center justify-start w-full gap-3'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="50" viewBox="0 0 4 140" fill="none">
@@ -86,7 +86,7 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
                         }}
                     />
                 </div>
-            </div>
+            </div> */}
             <FormGroup className='gap-y-3'>
                 <div className={`flex flex-row`}>
                     <span className={`text-lg font-semibold font-montserrat`}>What languages do you speak? <span className={`text-lg text-red-600`}>*</span></span>
