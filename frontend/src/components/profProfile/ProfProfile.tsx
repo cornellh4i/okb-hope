@@ -22,6 +22,7 @@ import Cancel from "@/assets/cancel.svg";
 import Submit from "@/assets/submit.svg";
 import Continue from "@/assets/continue.svg";
 import colors from '@/colors';
+import Bookings from "../booking";
 
 
 
@@ -450,13 +451,14 @@ const ProfProfile = () => {
 
             <div className={`flex flex-row justify-center content-center`}>
                 {/* Book Appointment button, action undefined but should lead to calendly */}
-                <button
+                {/* <button
                     className={`bg-okb-blue font-montserrat text-okb-white active:bg-gray-500 font-semibold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
                     type="button"
                     onClick={handleBookAppointment}
                 >
                     Book Appointment
-                </button>
+                </button> */}
+                <Bookings url="https://calendly.com/bl583" />
             </div>
         </div>
     );

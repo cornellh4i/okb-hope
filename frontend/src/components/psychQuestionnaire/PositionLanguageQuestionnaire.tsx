@@ -49,6 +49,26 @@ const PositionLanguageQuestionnaire = ({ setPosition, languages, aboutYourself, 
                     } />
                 </RadioGroup>
             </FormControl>
+            {/* Input Calendly Link */}
+            <div className='flex flex-col gap-y-3'>
+                <span className={`text-lg font-semibold font-montserrat`}>What is your calendly link?</span>
+                <div className='flex items-center justify-start w-full gap-3'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="50" viewBox="0 0 4 140" fill="none">
+                        <path d="M2 2L2.00001 202" stroke="#519AEB" stroke-width="9" stroke-linecap="round" />
+                    </svg>
+                    <textarea
+                        value={aboutYourself}
+                        onChange={handleAboutYourself}
+                        placeholder="Type here"
+                        className={`input input-bordered resize-none w-full md:w-3/4 lg:w-1/2 border-2 rounded-2xl italic py-3 px-6`}
+                        style={{
+                            borderColor: okb_colors.light_blue,
+                            height: 50,  // Set the desired height for your textarea
+                        }}
+                    />
+                </div>
+            </div>
+
             <div className='flex flex-col gap-y-3'>
                 <span className={`text-lg font-semibold font-montserrat`}>Tell us and your patients about yourself.</span>
                 <div className='flex items-center justify-start w-full gap-3'>
