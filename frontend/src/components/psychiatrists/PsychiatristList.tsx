@@ -285,7 +285,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
   //break
 
   return (
-    <div className={'px-4 lg:px-24 pt-9 pb-14'}>
+    <div className={'px-4 lg:px-24 pt-9'}>
       <div className='pb-8'>
         <div className={`psychiatrist-list flex flex-col items-stretch gap-6 w-full`}>
           {showPopup && <LoginPopup onClose={() => setShowPopup(false)} logInWithGoogleAndRedirect={logInWithGoogleAndRedirect} signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect} />}

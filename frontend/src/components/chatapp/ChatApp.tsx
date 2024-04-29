@@ -64,7 +64,7 @@ const ChatApp = () => {
   }
 
   return (
-    <div className="chat-app py-1 page-background w-full h-screen max-h-screen shadow-inner">
+    <div className="chat-app pt-1 page-background w-full shadow-inner">
       <div className="flex flex-col h-screen">
         <div className="flex-grow flex">
           {isSidebarVisible ? (

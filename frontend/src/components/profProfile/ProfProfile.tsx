@@ -447,7 +447,7 @@ const ProfProfile = () => {
             <h2 className={`text-center lg:text-start text-bold text-2xl font-montserrat font-bold`}>Availability</h2>
             <Availability availability={professional?.availability} />
 
-            <div className={`flex flex-row justify-center content-center`}>
+            <div className={`flex flex-row justify-center content-center pb-4`}>
                 {/* Book Appointment button, action undefined but should lead to calendly */}
                 <button
                     className={`bg-okb-blue font-montserrat text-okb-white active:bg-gray-500 font-semibold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
