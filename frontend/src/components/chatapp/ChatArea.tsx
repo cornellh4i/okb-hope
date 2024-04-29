@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchProfessionalData, fetchPatientDetails } from '../../../firebase/fetchData';
 import MessageList from './MessageList';
 import MessageComposer from './MessageComposer';
-import Ellipsis from '../../assets/ellipses.svg';
+import Ellipses from '../../assets/ellipses';
 import okb_colors from '@/colors';
 import router, { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -136,15 +136,21 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
     }
   };
 
+  const toggleDropdown = (event) => {
+    event.preventDefault();
+    console.log("Dropdown toggle clicked");
+    setOpenDropdown(prev => !prev);
+  };
+
   return (
     <div className='name-area flex py-4 px-6 justify-between items-center shrink-0 w-full page-background border-b-solid border-b-2 border-[#DEDEDE]'>
       <p className='text-[24px] font-montserrat font-semibold color-black'>{name}</p>
       <div className="dropdown dropdown-click dropdown-bottom dropdown-end">
-        <button onClick={() => setOpenDropdown(!openDropdown)} className={`rounded-full color-[${okb_colors.dark_gray}] hover:bg-gray-200`}>
-          <Ellipsis />
+        <button onClick={toggleDropdown} className={`rounded-full color-[${okb_colors.dark_gray}] hover:bg-gray-200`}>
+          {Ellipses}
         </button>
-        {openDropdown &&
-          <ul className='menu dropdown-content inline-flex py-2 px-4 flex-col items-start gap-[14px] font-montserrat rounded-[10px] border-[1px] border-[#C1C1C1] shadow bg-[#FFFDFD] -box w-56'>
+        {openDropdown && (
+          <ul className='menu absolute top-full right-0 inline-flex py-2 px-4 flex-col items-start gap-[14px] font-montserrat rounded-[10px] border-[1px] border-[#C1C1C1] shadow bg-[#FFFDFD] w-56'>
             {role === 'psychiatrist' && (
               <>
                 <button onClick={markAsUnread}>Mark as Unread</button>
@@ -159,7 +165,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
               </>
             )}
           </ul>
-        }
+        )}
       </div>
       <DeleteModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onDelete={handleDelete} />
     </div>
