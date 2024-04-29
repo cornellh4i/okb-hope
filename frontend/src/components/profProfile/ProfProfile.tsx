@@ -74,7 +74,6 @@ const popupStyle: React.CSSProperties = {
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
     display: 'flex',
     flexDirection: 'column',
-    width: '45%', // adjust the width as needed
     maxWidth: '500px', // maximum width of the popup
     zIndex: 1001,
     alignItems: 'center', // Center items vertically
@@ -313,7 +312,7 @@ const ProfProfile = () => {
 
             {showReportPopup && (
                 <div style={overlayStyle}>
-                    <div style={popupStyle}>
+                    <div className="w-full md:w-1/2" style={popupStyle}>
                         {/* Replace "Dr. Gloria Shi" with the actual doctor's name */}
                         <h3 className='font-montserrat font-bold' style={{ marginBottom: '15px' }}>
                             Report Dr. {professional.firstName} {professional.lastName}?
