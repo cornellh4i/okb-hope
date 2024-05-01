@@ -5,6 +5,7 @@ import chevron_right from "@/assets/chevron_right";
 import FilterBar from "./FilterBar";
 import FilterUserTable from "./FilterUserTable";
 import AdminFilterBar from "./adminFilterBar";
+import { IPsychiatrist } from '@/schema';
 import FilterBarTwo from "./FilterBarTwo";
 import FilterCard from "./FilterCard";
 import { deleteDoc, doc } from "firebase/firestore";
@@ -16,6 +17,7 @@ export interface UserType {
   name: string;
   psychiatrist: boolean;
   username: string;
+  uid: string;
   id: string;
   userType: string
 }
@@ -29,7 +31,7 @@ const AdminDashboard = () => {
   const [recordsPerPage] = useState(10);
   const [numPages, setNumPages] = useState(1);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [filteredPsychiatrist, setFilteredPsychiatrists] = useState<string[]>([]);
+  const [filteredPsychiatrist, setFilteredPsychiatrists] = useState<IPsychiatrist[]>([]);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -41,22 +43,26 @@ const AdminDashboard = () => {
           id: doc.id,
         } as UserType;
       });
-      
-
       // Filter to include only psychiatrists
       let filteredUsers: UserType[];
 
       if (clientView) {
         filteredUsers = users.filter(user => user.userType === 'patient');
       } else {
-        filteredUsers = users.filter(user => user.userType === 'psychiatrist');
+          filteredUsers = users.filter(user => user.userType === 'psychiatrist');
+        if (filteredPsychiatrist.length > 0){
+          const psych_uids = filteredPsychiatrist.map(psych => psych.uid);
+          console.log(psych_uids);
+          filteredUsers = users.filter(user => psych_uids.includes(user.uid));
+        }
       }
       setUserData(filteredUsers);
       // Calculate the number of pages based on filtered user records
       setNumPages(Math.ceil(filteredUsers.length / recordsPerPage));
     }
     fetchUsers();
-  }, [recordsPerPage, patientView, clientView]);
+  }, [recordsPerPage, patientView, clientView, filteredPsychiatrist]);
+
 
   // Pagination logic to calculate currentRecords based on currentPage
   const indexOfLastRecord = currentPage * recordsPerPage;

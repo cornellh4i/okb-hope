@@ -51,6 +51,9 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
   const [female, setFemale] = useState(false);
   const [otherGender, setOtherGender] = useState(false);
   const [allGenders, setAllGenders] = useState(false);
+  const [approved, setApproved] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [allStatus, setAllStatus] = useState(false);
 
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
   const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
@@ -62,7 +65,9 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
         if (user) {
           const fetchedPsychiatrists: IPsychiatrist[] = await fetchUnreportedProfessionals(user.uid);
           setPsychiatrists(fetchedPsychiatrists);
+          console.log(fetchedPsychiatrists);
         }
+        console.log("IF STATEMENT IS FALSE");
       } catch (err: any) {
         console.error(err.message);
       }
@@ -129,6 +134,17 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
     return true
   }
 
+    // Returns true if status is contained in statusArray
+    function containsStatus(status: string, statusArray: string[]): boolean {
+      if (statusArray) {
+        if (statusArray.includes(status) || statusArray.length === 0)
+          return true
+        else
+          return false
+      }
+      return true
+    }
+
   const matchesTerm = (psychiatrist: any, term: string) => {
     return psychiatrist.firstName?.toLowerCase().includes(term.toLowerCase()) ||
       psychiatrist.lastName?.toLowerCase().includes(term.toLowerCase()) ||
@@ -162,14 +178,16 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
       const [firstTerm] = terms;
       results = psychiatrists.filter((psychiatrist) => matchesTerm(psychiatrist, firstTerm));
     }
-
     // Updates results by the selected filters
     const filterResults = results.filter((psychiatrist) => {
       return containsOneOf(psychiatristAvailabilities[psychiatrist.uid], submittedFilters['days']) &&
         containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
-        containsGender(psychiatrist.gender, submittedFilters['genders'])
+        containsGender(psychiatrist.gender, submittedFilters['genders']
+        // containsStatus(psychiatrist.status, submittedFilters['status'])
+        )
     });
-
+    console.log("Process Filter results executed")
+    // console.log(filterResults)
     return filterResults;
   };
 
@@ -180,19 +198,24 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
     setSubmittedFilters({})
   }
 
-  const handleSearchResults = () => {
-    if (searchFilterResults.length > 0){
-        setFilteredPsychiatrists(searchFilterResults);
-    }
-  };
+  var searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
 
-  // If there is a search term or there are filters selected, process the search/filter
-  // Else, return all psychiatrists
-  const searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
+  useEffect(() => {
+    // If there is a search term or there are filters selected, process the search/filter
+    // Else, return all psychiatrists
+    // console.log(submittedSearchTerm);
+    // console.log(submittedFilters);
+    searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
+    if (searchFilterResults.length > 0){
+      setFilteredPsychiatrists(searchFilterResults);
+    }
+    // console.log(searchFilterResults);
+    console.log("IT SEARCHED")
+  }, [submittedFilters, submittedSearchTerm])
 
   return (
-    <div className={'flex flex-col px-23 pt-9 pb-14'}>
-      <div className='flex justify-start justify-center pb-8'>
+    <div className={'flex flex-col mb-20 md:mb-6 lg:mb-0'}>
+      <div className='flex justify-center md:pb-8 lg:pb-8'>
         <AdminSearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}
           submittedSearchTerm={submittedSearchTerm} setSubmittedSearchTerm={setSubmittedSearchTerm}
           filters={filters} setFilters={setFilters}
@@ -215,7 +238,10 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
           male={male} setMale={setMale}
           female={female} setFemale={setFemale}
           otherGender={otherGender} setOtherGender={setOtherGender}
-          allGenders={allGenders} setAllGenders={setAllGenders}/>
+          allGenders={allGenders} setAllGenders={setAllGenders} 
+          approved={approved} setApproved={setApproved}
+          pending={pending} setPending={setPending}
+          allStatus={allStatus} setAllStatus={setAllStatus}/>
       </div>
       
       {/* {searchFilterResults.length > 0 ? (

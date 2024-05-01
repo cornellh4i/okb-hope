@@ -12,7 +12,7 @@ import ReportIcon from '../../assets/report.svg';
 import CheckCircle from '../../assets/check_circle.svg'
 import { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db, logInWithGoogle, signUpWithGoogle } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
 import { addDoc, collection, getDoc } from 'firebase/firestore';
@@ -131,12 +131,13 @@ const continueButtonStyle: React.CSSProperties = {
 const ProfProfile = () => {
   const { user } = useAuth(); // Get the user information from the context
   const [docId, setDocId] = useState<string | undefined>(undefined);
+  const [userDocId, setUserDocId] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [showReportPopup, setShowReportPopup] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [reportText, setReportText] = useState('');
   const [approval, setApproved] = useState(false);
-
+  const [psychId, setPsychId] = useState('');
   // Set the initial state of professional to null instead of DummyPsychiatrist 
   // to avoid the initial rendering of the component with DummyPsychiatrist 
   // before fetching and updating with the real data
@@ -149,8 +150,6 @@ const ProfProfile = () => {
   // This effect runs when the component mounts or when `router.query.psych_uid` change.
   useEffect(() => {
     const fetchProfessional = async () => {
-      const userId = user?.uid; // Get the ID of the currently logged-in user
-
       // Extract the first name and last name from the router query parameters
       const psych_uid = router.query.psych_uid as string;
 
@@ -160,6 +159,7 @@ const ProfProfile = () => {
         const data = await fetchProfessionalData(psych_uid);
         setProfessional(data);
         setApproved(data.status === "approved");
+        setPsychId(psych_uid);
       }
     };
     fetchProfessional();
@@ -171,7 +171,9 @@ const ProfProfile = () => {
 
       if (psych_uid) {
         const documentId = await fetchDocumentId("psychiatrists", psych_uid);
+        const userDocumentId = await fetchDocumentId("users", psych_uid);
         setDocId(documentId);
+        setUserDocId(userDocumentId ?? '');
       }
     }
     fetchDocId();
@@ -270,27 +272,29 @@ const ProfProfile = () => {
     }
   };
 
-  const handleSendMessage = () => {
-    if (!user) {
-      setShowPopup(true);
-    } else if (professional) {
-      router.push({
-        pathname: `/patient/${user.uid}/messages`,
-        query: {
-          psych_id: professional.uid,
-          psych_name: `${professional.firstName} ${professional.lastName}`
-        }
-      });
-    } else {
-      console.error("Professional data is unavailable.");
-    }
-  };
+  // const handleSendMessage = () => {
+  //   if (!user) {
+  //     setShowPopup(true);
+  //   } else if (professional) {
+  //     router.push({
+  //       pathname: `/patient/${user.uid}/messages`,
+  //       query: {
+  //         psych_id: professional.uid,
+  //         psych_name: `${professional.firstName} ${professional.lastName}`
+  //       }
+  //     });
+  //   } else {
+  //     console.error("Professional data is unavailable.");
+  //   }
+  // };
 
-  const handleBookAppointment = (event: React.MouseEvent) => {
-    if (!user) {
-      event.preventDefault();
-      setShowPopup(true);
-    }
+  const handleApproveNo = async () => {
+    try {
+      deleteDoc(doc(db, "psychiatrists", docId ?? ""));
+      deleteDoc(doc(db, "users", userDocId));
+    } catch (error) {
+      console.error("Error deleting users:", error);
+  }
   };
 
   // Navigate to the user's discover page
@@ -472,7 +476,7 @@ const ProfProfile = () => {
             <div className="grid grid-cols-2 mt-4 items-center">
               <button className={`bg-white w-1/2 font-montserrat border-2 border-[#509bea] rounded-lg text-black font-normal justify-end justify-self-end mr-2 shadow hover:shadow-lg outline-none focus:outline-none active:bg-gray-500 ease-linear transition-all duration-150`}
                 type="button"
-                onClick={handleBookAppointment}>
+                onClick={handleApproveNo}>
                 No
               </button>
               <button className={`bg-[#509bea] font-montserrat border-2 w-1/2 border-[#509bea] text-white rounded-lg font-normal justify-start justify-self-start ml-2 shadow hover:shadow-lg outline-none focus:outline-none active:bg-gray-500 ease-linear transition-all duration-150`}

@@ -7,7 +7,8 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
   filters, setFilters, submittedFilters, setSubmittedFilters, monday, setMonday, tuesday, setTuesday, wednesday,
   setWednesday, thursday, setThursday, friday, setFriday, saturday, setSaturday, sunday, setSunday, allDays, setAllDays,
   english, setEnglish, twi, setTwi, fante, setFante, ewe, setEwe, ga, setGa, hausa, setHausa, allLanguages, setAllLanguages,
-  male, setMale, female, setFemale, otherGender, setOtherGender, allGenders, setAllGenders }: any) {
+  male, setMale, female, setFemale, otherGender, setOtherGender, allGenders, setAllGenders, approved, setApproved, pending,
+  setPending, allStatus, setAllStatus}: any) {
 
   const FilterEnum = {
     monday: "Monday",
@@ -28,11 +29,15 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
     male: "male",
     female: "female",
     otherGender: "other",
-    allGenders: "allGenders"
+    allGenders: "allGenders",
+    approved: "approved",
+    pending: "pending",
+    allStatus: "allStatus"
   }
   const days = [FilterEnum.monday, FilterEnum.tuesday, FilterEnum.wednesday, FilterEnum.thursday, FilterEnum.friday, FilterEnum.saturday, FilterEnum.sunday];
   const languages = [FilterEnum.english, FilterEnum.twi, FilterEnum.fante, FilterEnum.ewe, FilterEnum.ga, FilterEnum.hausa]
   const genders = [FilterEnum.male, FilterEnum.female, FilterEnum.otherGender]
+  const status = [FilterEnum.approved, FilterEnum.pending]
 
   const selected: any = [...filters]
   // const [searchTerm, setSearchTerm] = useState('');
@@ -49,6 +54,10 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
   const genderDropdownRef = useRef<HTMLButtonElement | null>(null);
   const genderDropdownMenuRef = useRef<HTMLDivElement | null>(null);
 
+  const [showStatusDropdown, setShowStatusDropdown] = useState(false);
+  const statusDropdownRef = useRef<HTMLButtonElement | null>(null);
+  const statusDropdownMenuRef = useRef<HTMLDivElement | null>(null);
+
   // Opens or closes the dropdown for weekly availability and makes sure the other dropdowns are closed
   const handleDayDropdownClick = (e) => {
     // Prevent the event from propagating to the window click listener
@@ -56,6 +65,7 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
     setShowDayDropdown(!showDayDropdown);
     setShowLanguageDropdown(false);
     setShowGenderDropdown(false);
+    setShowStatusDropdown(false);
   };
 
   // Opens or closes the dropdown for language and makes sure the other dropdowns are closed
@@ -65,6 +75,7 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
     setShowLanguageDropdown(!showLanguageDropdown);
     setShowDayDropdown(false);
     setShowGenderDropdown(false);
+    setShowStatusDropdown(false);
   };
 
   // Opens or closes the dropdown for gender and makes sure the other dropdowns are closed
@@ -74,7 +85,18 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
     setShowGenderDropdown(!showGenderDropdown);
     setShowDayDropdown(false);
     setShowLanguageDropdown(false);
+    setShowStatusDropdown(false);
   };
+
+    // Opens or closes the dropdown for status and makes sure the other dropdowns are closed
+    const handleStatusDropdownClick = (e) => {
+        // Prevent the event from propagating to the window click listener
+        e.stopPropagation();
+        setShowStatusDropdown(!showGenderDropdown);
+        setShowGenderDropdown(false);
+        setShowDayDropdown(false);
+        setShowLanguageDropdown(false);
+      };
 
   // Close dropdown if there is a click anywhere outside of the dropdown refs
   useEffect(() => {
@@ -88,6 +110,9 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
       const isGenderDropdownClick =
         (genderDropdownRef.current && genderDropdownRef.current.contains(e.target)) ||
         (genderDropdownMenuRef.current && genderDropdownMenuRef.current.contains(e.target));
+    const isStatusDropdownClick =
+        (statusDropdownRef.current && statusDropdownRef.current.contains(e.target)) || 
+        (statusDropdownMenuRef.current && statusDropdownMenuRef.current?.contains(e.target));
 
       if (!isDayDropdownClick) {
         setShowDayDropdown(false);
@@ -98,6 +123,9 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
       if (!isGenderDropdownClick) {
         setShowGenderDropdown(false);
       }
+      if (!isStatusDropdownClick) {
+        setShowStatusDropdown(false);
+      }
     };
 
     window.addEventListener('click', clickListener);
@@ -105,7 +133,7 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
     return () => {
       window.removeEventListener('click', clickListener);
     };
-  }, [showDayDropdown, showLanguageDropdown, showGenderDropdown]);
+  }, [showDayDropdown, showLanguageDropdown, showGenderDropdown, showStatusDropdown]);
 
   // Updates searchTerm if the value in the search bar changes
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -153,6 +181,8 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
       handleSelectAll(languages)
     } else if (filter === FilterEnum.allGenders) {
       handleSelectAll(genders)
+    } else if (filter === FilterEnum.allStatus) {
+      handleSelectAll(status)
     } else {
       let index = 0
       index = selectedIndex(filter)
@@ -187,7 +217,9 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
       setMale(false)
       setFemale(false)
       setOtherGender(false)
-
+      setApproved(false)
+      setPending(false)
+      setAllStatus(false)
     }
   }, [submittedFilters])
 
@@ -238,6 +270,12 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
       updateSelected(FilterEnum.male, event.target.checked)
       updateSelected(FilterEnum.female, event.target.checked)
       updateSelected(FilterEnum.otherGender, event.target.checked)
+    } else if (filterName === FilterEnum.allStatus) {
+        setAllStatus(event.target.checked)
+        setApproved(event.target.checked)
+        setPending(event.target.checked)
+        updateSelected(FilterEnum.approved, event.target.checked)
+        updateSelected(FilterEnum.pending, event.target.checked)
     } else {
       if (filterName === FilterEnum.monday || filterName === FilterEnum.tuesday || filterName === FilterEnum.wednesday
         || filterName === FilterEnum.thursday || filterName === FilterEnum.friday || filterName === FilterEnum.saturday
@@ -250,9 +288,14 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
         if (event.target.checked === false) {
           setAllLanguages(false)
         }
-      } else {
+      } else if (filterName === FilterEnum.male || filterName === FilterEnum.female ||
+        filterName === FilterEnum.otherGender) {
         if (event.target.checked === false) {
           setAllGenders(false)
+        }
+      } else {
+        if (event.target.checked === false) {
+          setAllStatus(false)
         }
       }
       setFunction(event.target.checked)
@@ -263,20 +306,26 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
   // Parses the selected filters array into a dictionary that maps filter categories to an array of filters they encompass
   const handleFilter = () => {
     setSubmittedSearchTerm(searchTerm);
-    const filtersCategorized: { days: string[], languages: string[], genders: number[] } = { days: [], languages: [], genders: [] };
+    const filtersCategorized: { days: string[], languages: string[], genders: number[], status: string[]} = { days: [], languages: [], genders: [], status: []};
     for (let i = 0; i < filters.length; i++) {
       const filter = filters[i].filter;
       if (days.includes(filter)) {
         filtersCategorized['days'].push(filter);
       } else if (languages.includes(filter)) {
         filtersCategorized['languages'].push(filter);
-      } else {
+      } else if (genders.includes(filters)){
         if (filter === FilterEnum.male) {
           filtersCategorized['genders'].push(0);
         } else if (filter === FilterEnum.female) {
           filtersCategorized['genders'].push(1);
-        } else {
+        } else if (filter === FilterEnum.otherGender) {
           filtersCategorized['genders'].push(2);
+        }
+      } else {
+        if (filter === FilterEnum.approved) {
+            filtersCategorized['status'].push(filter);
+        } else {
+            filtersCategorized['status'].push(filter);
         }
       }
     }
@@ -285,11 +334,10 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
 
   return (
     <div>
-      <div className="flex flex-row w-full h-9 justify-center items-start gap-x-2 md:gap-x-4 shrink-0 px-2">
-
-        <div className='flex flex-col md:flex-row gap-x-2 md:gap-x-4 gap-y-2 md:gap-y-4'>
+      <div className="flex flex-row w-full h-9 gap-x-2 md:gap-x-2">
+        <div className='flex flex-col md:flex-row gap-x-2 md:gap-x-2 gap-y-2 md:gap-y-4'>
           {/* search bar */}
-          <div className={`flex xl:w-96 h-9 py-2 px-4 items-center gap-4 shrink-0 border-solid border rounded-lg border-[#5F5F5F] bg-[${okb_colors.white}]`}>
+          <div className={`flex xl:w-96 h-12 py-2 px-4 items-center gap-4 shrink-0 border-solid border rounded-lg border-[#5F5F5F] bg-[${okb_colors.white}]`}>
             {search_icon}
             <div className="form-control w-full">
               <div className="input-group w-full">
@@ -298,15 +346,15 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
                   onKeyDown={handleKeyDown}
                   value={searchTerm}
                   // updates the search bar's text as the user types into it
-                  onChange={handleSearchChange} className={`text-[#9A9A9A] italic text-xs font-normal outline-none w-full`} />
+                  onChange={handleSearchChange} className={`text-[#9A9A9A] text-sm font-normal outline-none w-full`} />
               </div>
             </div>
           </div>
 
           {/* filter dropdowns for availability */}
 
-          <div className={`dropdown flex xl:w-52 h-9 py-2 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
-            <p className={`text-[${okb_colors.med_gray}] italic text-xs font-normal`}>Weekly Availability</p>
+          <div className={`dropdown flex xl:w-40 h-12 py-3.5 px-2 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
+            <p className={`text-[${okb_colors.med_gray}] text-sm font-normal`}>Weekly Availability</p>
             <button tabIndex={0}
               ref={dayDropdownRef}
               onClick={handleDayDropdownClick}
@@ -377,12 +425,13 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
               </ul>
             }
           </div>
+
         </div>
 
-        <div className='flex flex-col md:flex-row gap-x-2 md:gap-x-4 gap-y-2 md:gap-y-4'>
+        <div className='flex flex-col md:flex-row gap-x-2 md:gap-x-2 gap-y-2 md:gap-y-4'>
           {/* filter dropdowns for language */}
-          <div className={`dropdown flex xl:w-52 h-9 py-2 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
-            <p className={`text-[${okb_colors.med_gray}] italic text-xs font-normal`}>Language</p>
+          <div className={`dropdown flex xl:w-36 h-12 py-3.5 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
+            <p className={`text-[${okb_colors.med_gray}] text-sm font-normal`}>Language</p>
             <button tabIndex={0}
               ref={languageDropdownRef}
               onClick={handleLanguageDropdownClick}
@@ -446,10 +495,9 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
               </ul>
             }
           </div>
-
           {/* filter drop downs for gender */}
-          <div className={`dropdown flex xl:w-52 h-9 py-2 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
-            <p className={`text-[${okb_colors.med_gray}] italic text-xs font-normal`}>Gender</p>
+          <div className={`dropdown flex xl:w-36 h-12 py-3.5 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
+            <p className={`text-[${okb_colors.med_gray}] text-sm font-normal`}>Gender</p>
             <button tabIndex={0}
               ref={genderDropdownRef}
               onClick={handleGenderDropdownClick}
@@ -494,11 +542,54 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
           </div>
         </div>
 
-        {/* filter button */}
-        <button onClick={handleFilter} className={`filter-button flex lg:w-32 h-9 py-1 px-4 lg:py-2.5 lg:px-11 justify-center items-center gap-2.5 border-solid border rounded-lg border-[#195BA5] bg-[${okb_colors.white}]`}>
-          <div className={`flex text-[${okb_colors.okb_blue}] text-xs font-bold`}>Filter</div>
-        </button>
+        <div className='flex flex-col md:flex-row gap-x-2 md:gap-x-2 gap-y-2 md:gap-y-4'>
+        {/* filter drop downs for status */}
+        <div className={`dropdown flex xl:w-36 h-12 py-3.5 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
+            <p className={`text-[${okb_colors.med_gray}] text-sm font-normal`}>Status</p>
+            <button tabIndex={0}
+              ref={statusDropdownRef}
+              onClick={handleStatusDropdownClick}
+              className='flex flex-col items-start gap-2.5'>{chevron_down}</button>
+            {showStatusDropdown &&
+              <ul tabIndex={0} className={`dropdown-content menu w-52 p-2 shadow bg-base-100 rounded  border-solid border border-[${okb_colors.dark_gray}] shadow-[0_4px_10px_0px_rgb(0,0,0,0.15)] absolute mt-8 left-0`}>
+                <div
+                  ref={statusDropdownMenuRef}
+                  className="form-control flex flex-col justify-center items-start">
+                  <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pb-3.5">
+                    <input type="checkbox"
+                      checked={allStatus}
+                      onChange={(e) => handleFilterChange(FilterEnum.allStatus, allStatus, setAllStatus, e)}
+                      className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Select All</span>
+                  </label>
+                  <hr className={`w-48 h-0.5 bg-[${okb_colors.dark_gray}]`}></hr>
+                  <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pt-3.5">
+                    <input type="checkbox"
+                      checked={approved}
+                      onChange={(e) => handleFilterChange(FilterEnum.approved, approved, setApproved, e)}
+                      className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Approved</span>
+                  </label>
+                  <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
+                    <input type="checkbox"
+                      checked={pending}
+                      onChange={(e) => handleFilterChange(FilterEnum.pending, pending, setPending, e)}
+                      className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Pending</span>
+                  </label>
+                </div>
+              </ul>
+            }
+          </div>
+          {/* filter button */}
+          <div>
+            <button onClick={handleFilter} className={`filter-button flex lg:w-24 h-12 py-1 px-4 lg:py-2.5 lg:px-11 justify-center items-center gap-2.5 border-solid border rounded-lg border-[#195BA5] bg-[${okb_colors.white}]`}>
+              <div className={`flex text-[${okb_colors.okb_blue}] text-sm font-bold`}>Filter</div>
+            </button>
+          </div>
+          </div>
+
+        </div>
       </div>
-    </div>
   );
 }
