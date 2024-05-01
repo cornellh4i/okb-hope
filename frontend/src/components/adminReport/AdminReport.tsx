@@ -378,7 +378,11 @@ const AdminReport = () => {
                   <li
                     key={priority}
                     onClick={() => handlePrioritySelection(priority)}
-                    style={{ ...dropdownItemStyle, ...(isOpen && dropdownItemHoverStyle) }}
+                    style={{
+                      ...dropdownItemStyle,
+                      ...(isOpen && dropdownItemHoverStyle),
+                      ...(priority === "Spam" && { borderRadius: '0 0 10px 10px' }) // Apply borderRadius to "Spam" option only
+                    }}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     className='font-montserrat'
