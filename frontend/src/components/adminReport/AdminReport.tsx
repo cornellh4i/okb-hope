@@ -8,7 +8,7 @@ import ReportPopup from './ReportPopup';
 import okb_colors from '@/colors';
 import { IReport } from '@/schema';
 
-const ReportCard = ({ report, onReportClick }) => {
+const ReportCard = ({ report, onReportClick, windowWidth }) => {
 
   const getFormattedDate = (date) => {
     if (!date) return 'Unknown date';
@@ -50,33 +50,32 @@ const ReportCard = ({ report, onReportClick }) => {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
   };
+  const col1style = {
+    ...subjectStyle,
+    flex: '1 1 1%',
+    padding: '0 5px', // Adjusted padding for smaller screens
+  };
 
   const col2style = {
     ...subjectStyle,
-    flex: '1 1 20%', // Adjusted flex basis
-    paddingLeft: '0px', // No left padding for column two
-    paddingRight: '140px' // Equal padding between columns
+    flex: '1 1 7%',
+    padding: '0 5px', // Adjusted padding for smaller screens
   };
 
   const col3style = {
     ...subjectStyle,
-    flex: '1 1 20%', // Adjusted flex basis
-    paddingLeft: '0px', // Equal padding between columns
-    paddingRight: '30px' // Equal padding between columns
+    flex: '1 1 20%',
+    padding: '0 5px', // Adjusted padding for smaller screens
   };
 
   const col4style = {
     ...subjectStyle,
-    flex: '1 1 20%', // Adjusted flex basis
-    paddingLeft: '90px', // More left padding for column four to move it to the right
-    paddingRight: '0px' // No right padding for column four
+    flex: '1 1 1%',
+    padding: '0 5px', // Adjusted padding for smaller screens
   };
 
-  const col1style = {
-    ...subjectStyle,
-    flex: '1 1 20%', // Adjusted flex basis
-    paddingLeft: '0px', // No left padding for column one
-    paddingRight: '80px' // More right padding for column one to move it further to the left
+  const shouldDisplayTimeSubmitted = () => {
+    return windowWidth >= 768; // Only display if window width is greater than or equal to 768px
   };
 
   return (
@@ -85,13 +84,15 @@ const ReportCard = ({ report, onReportClick }) => {
         <div className="font-montserrat" style={col1style}>{truncateText(report.description, 25)}</div>
         <div className="font-montserrat" style={col2style}>{report.reporter_name}</div>
         <div className="font-montserrat" style={col3style}>Dr. {report.psych_name}</div>
-        <div className="font-montserrat" style={col4style}>{formattedDate}</div>
+        {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={col4style}>{formattedDate}</div>}
       </div>
     </div>
   );
 };
 
 const AdminReport = () => {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
   const [selectedReport, setSelectedReport] = useState<IReport | null>(null);
   const [reports, setReports] = useState<IReport[]>([]);
   const [unreadReports, setUnreadReports] = useState<boolean>(true); // Set to true
@@ -101,7 +102,6 @@ const AdminReport = () => {
   const [spamReports, setSpamReports] = useState<boolean>(true); // Set to true
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
-  // Define fetchReports outside of useEffect so it can be used elsewhere
   const fetchReports = async () => {
     const q = query(collection(db, 'reports'));
     const querySnapshot = await getDocs(q);
@@ -123,6 +123,28 @@ const AdminReport = () => {
   useEffect(() => {
     fetchReports();
   }, []);
+
+  // Update window width state on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // Helper function to determine if "Time Submitted" should be displayed
+  const shouldDisplayTimeSubmitted = () => {
+    // Adjust the threshold as needed based on your design
+    return windowWidth >= 768; // Only display if window width is greater than or equal to 768px
+  };
+
+  // Inside the JSX of the component
+
 
 
   const toggleUnreadReports = () => {
@@ -201,6 +223,7 @@ const AdminReport = () => {
               key={report.report_id}
               report={report}
               onReportClick={handleOpenPopup}
+              windowWidth={windowWidth} // Pass the windowWidth state as a prop
             />
           </div>
         )) : null}
@@ -416,7 +439,7 @@ const AdminReport = () => {
             <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Subject</div>
             <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Submitted By</div>
             <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Psychiatrist Reported</div>
-            <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Time Submitted</div>
+            {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Time Submitted</div>}
           </div>
           <div style={{ alignSelf: 'stretch', height: 0, border: '1.5px black solid' }}></div>
         </div>
