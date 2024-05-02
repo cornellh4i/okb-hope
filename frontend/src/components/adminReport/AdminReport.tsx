@@ -26,19 +26,6 @@ const ReportCard = ({ report, onReportClick, windowWidth }) => {
 
   const formattedDate = getFormattedDate(report.submittedAt);
 
-  const cardStyle: React.CSSProperties = {
-    textAlign: 'center',
-    backgroundColor: 'transparent',
-    border: '2px solid #d1d5db',
-    borderRadius: '0.5rem',
-    padding: '1.25rem',
-    margin: '0.5rem',
-    width: '100%', // Ensures the card takes the full width of its container
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  };
-
   const subjectStyle: React.CSSProperties = {
     color: 'black',
     fontSize: '16px',
@@ -50,29 +37,48 @@ const ReportCard = ({ report, onReportClick, windowWidth }) => {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
   };
+
+
+  // Adjusted styles for each column
   const col1style = {
     ...subjectStyle,
-    flex: '1 1 1%',
+    flex: '1 1 5%', // Adjusted flex basis for responsiveness
     padding: '0 5px', // Adjusted padding for smaller screens
   };
 
   const col2style = {
     ...subjectStyle,
-    flex: '1 1 7%',
+    flex: '1 1 10%', // Adjusted flex basis for responsiveness
     padding: '0 5px', // Adjusted padding for smaller screens
   };
 
   const col3style = {
     ...subjectStyle,
-    flex: '1 1 20%',
+    flex: '1 1 10%', // Adjusted flex basis for responsiveness
     padding: '0 5px', // Adjusted padding for smaller screens
   };
 
   const col4style = {
     ...subjectStyle,
-    flex: '1 1 1%',
+    flex: '1 1 5%', // Adjusted flex basis for responsiveness
     padding: '0 5px', // Adjusted padding for smaller screens
   };
+
+  // Adjusted card style for consistent width
+  const cardStyle: React.CSSProperties = {
+    textAlign: 'center',
+    backgroundColor: 'transparent',
+    border: '2px solid #d1d5db',
+    borderRadius: '0.5rem',
+    padding: '1.25rem',
+    margin: '0.5rem',
+    width: '100%', // Ensures the card takes the full width of its container
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap', // Allow flex items to wrap to next line if needed
+  };
+
 
   const shouldDisplayTimeSubmitted = () => {
     return windowWidth >= 768; // Only display if window width is greater than or equal to 768px
@@ -435,19 +441,23 @@ const AdminReport = () => {
         </div>
 
         <div className='flex items-center lg:mx-36' style={{ alignSelf: 'stretch', height: 70, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 10, display: 'flex' }}>
-          <div className=' flex justify-between items-center w-full px-5 md:px-12' style={{ alignSelf: 'stretch', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
-            <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Subject</div>
-            <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Submitted By</div>
-            <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Psychiatrist Reported</div>
-            {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Time Submitted</div>}
+          <div className='flex justify-between items-center w-full px-5 md:px-12' style={{ alignSelf: 'stretch', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
+            {!shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '5%', paddingRight: '5%' }}>Subject</div>}
+            {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft:'5%' }}>Subject</div>}
+            {!shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '7%', paddingRight: '7%' }}>Submitted By</div>}
+            {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft:'6%' }}>Submitted By</div>}
+            {!shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '5%', paddingRight: '5%' }}>Psychiatrist Reported</div>}
+            {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center' }}>Psychiatrist Reported</div>}
+            {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center' }}>Time Submitted</div>}
           </div>
           <div style={{ alignSelf: 'stretch', height: 0, border: '1.5px black solid' }}></div>
         </div>
+
       </div>
 
       <div>
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
-          <div className="font-montserrat" style={{ color: 'black', fontSize: 25, fontWeight: '600', wordWrap: 'break-word' }}>Unread Reports</div>
+          <div className="font-montserrat" style={{ color: 'black', fontSize: 25, fontWeight: '600', wordWrap: 'break-word', paddingTop: '10px' }}>Unread Reports</div>
           <button onClick={toggleUnreadReports} style={{ marginLeft: '5px' }}>
             {unreadReports ? <ChevronUp color={okb_colors.black} /> : <ChevronDown color={okb_colors.black} />}
           </button>
