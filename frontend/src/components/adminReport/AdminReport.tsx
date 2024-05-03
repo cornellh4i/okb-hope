@@ -97,7 +97,7 @@ const ReportCard = ({ report, onReportClick, windowWidth }) => {
 };
 
 const AdminReport = () => {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  // const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const [selectedReport, setSelectedReport] = useState<IReport | null>(null);
   const [reports, setReports] = useState<IReport[]>([]);
@@ -130,18 +130,25 @@ const AdminReport = () => {
     fetchReports();
   }, []);
 
+  const [windowWidth, setWindowWidth] = useState(0);
+
   // Update window width state on window resize
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
 
-    window.addEventListener('resize', handleResize);
+    // Ensure we're in a browser environment before attaching event listener
+    if (typeof window !== 'undefined') {
+      setWindowWidth(window.innerWidth); // Initialize with current window width
+      window.addEventListener('resize', handleResize);
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
   }, []);
+
 
   // Helper function to determine if "Time Submitted" should be displayed
   const shouldDisplayTimeSubmitted = () => {
