@@ -8,7 +8,7 @@ import ReportPopup from './ReportPopup';
 import okb_colors from '@/colors';
 import { IReport } from '@/schema';
 
-const ReportCard = ({ report, onReportClick }) => {
+const ReportCard = ({ report, onReportClick, windowWidth }) => {
 
   const getFormattedDate = (date) => {
     if (!date) return 'Unknown date';
@@ -26,19 +26,6 @@ const ReportCard = ({ report, onReportClick }) => {
 
   const formattedDate = getFormattedDate(report.submittedAt);
 
-  const cardStyle: React.CSSProperties = {
-    textAlign: 'center',
-    backgroundColor: 'transparent',
-    border: '2px solid #d1d5db',
-    borderRadius: '0.5rem',
-    padding: '1.25rem',
-    margin: '0.5rem',
-    width: '100%', // Ensures the card takes the full width of its container
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  };
-
   const subjectStyle: React.CSSProperties = {
     color: 'black',
     fontSize: '16px',
@@ -51,32 +38,50 @@ const ReportCard = ({ report, onReportClick }) => {
     whiteSpace: 'nowrap'
   };
 
+
+  // Adjusted styles for each column
+  const col1style = {
+    ...subjectStyle,
+    flex: '1 1 5%', // Adjusted flex basis for responsiveness
+    padding: '0 5px', // Adjusted padding for smaller screens
+  };
+
   const col2style = {
     ...subjectStyle,
-    flex: '1 1 20%', // Adjusted flex basis
-    paddingLeft: '0px', // No left padding for column two
-    paddingRight: '140px' // Equal padding between columns
+    flex: '1 1 10%', // Adjusted flex basis for responsiveness
+    padding: '0 5px', // Adjusted padding for smaller screens
   };
 
   const col3style = {
     ...subjectStyle,
-    flex: '1 1 20%', // Adjusted flex basis
-    paddingLeft: '0px', // Equal padding between columns
-    paddingRight: '30px' // Equal padding between columns
+    flex: '1 1 10%', // Adjusted flex basis for responsiveness
+    padding: '0 5px', // Adjusted padding for smaller screens
   };
 
   const col4style = {
     ...subjectStyle,
-    flex: '1 1 20%', // Adjusted flex basis
-    paddingLeft: '90px', // More left padding for column four to move it to the right
-    paddingRight: '0px' // No right padding for column four
+    flex: '1 1 5%', // Adjusted flex basis for responsiveness
+    padding: '0 5px', // Adjusted padding for smaller screens
   };
 
-  const col1style = {
-    ...subjectStyle,
-    flex: '1 1 20%', // Adjusted flex basis
-    paddingLeft: '0px', // No left padding for column one
-    paddingRight: '80px' // More right padding for column one to move it further to the left
+  // Adjusted card style for consistent width
+  const cardStyle: React.CSSProperties = {
+    textAlign: 'center',
+    backgroundColor: 'transparent',
+    border: '2px solid #d1d5db',
+    borderRadius: '0.5rem',
+    padding: '1.25rem',
+    margin: '0.5rem',
+    width: '100%', // Ensures the card takes the full width of its container
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap', // Allow flex items to wrap to next line if needed
+  };
+
+
+  const shouldDisplayTimeSubmitted = () => {
+    return windowWidth >= 768; // Only display if window width is greater than or equal to 768px
   };
 
   return (
@@ -85,13 +90,15 @@ const ReportCard = ({ report, onReportClick }) => {
         <div className="font-montserrat" style={col1style}>{truncateText(report.description, 25)}</div>
         <div className="font-montserrat" style={col2style}>{report.reporter_name}</div>
         <div className="font-montserrat" style={col3style}>Dr. {report.psych_name}</div>
-        <div className="font-montserrat" style={col4style}>{formattedDate}</div>
+        {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={col4style}>{formattedDate}</div>}
       </div>
     </div>
   );
 };
 
 const AdminReport = () => {
+  // const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
   const [selectedReport, setSelectedReport] = useState<IReport | null>(null);
   const [reports, setReports] = useState<IReport[]>([]);
   const [unreadReports, setUnreadReports] = useState<boolean>(true); // Set to true
@@ -101,7 +108,6 @@ const AdminReport = () => {
   const [spamReports, setSpamReports] = useState<boolean>(true); // Set to true
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
-  // Define fetchReports outside of useEffect so it can be used elsewhere
   const fetchReports = async () => {
     const q = query(collection(db, 'reports'));
     const querySnapshot = await getDocs(q);
@@ -123,6 +129,35 @@ const AdminReport = () => {
   useEffect(() => {
     fetchReports();
   }, []);
+
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  // Update window width state on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    // Ensure we're in a browser environment before attaching event listener
+    if (typeof window !== 'undefined') {
+      setWindowWidth(window.innerWidth); // Initialize with current window width
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+  }, []);
+
+
+  // Helper function to determine if "Time Submitted" should be displayed
+  const shouldDisplayTimeSubmitted = () => {
+    // Adjust the threshold as needed based on your design
+    return windowWidth >= 768; // Only display if window width is greater than or equal to 768px
+  };
+
+  // Inside the JSX of the component
+
 
 
   const toggleUnreadReports = () => {
@@ -201,6 +236,7 @@ const AdminReport = () => {
               key={report.report_id}
               report={report}
               onReportClick={handleOpenPopup}
+              windowWidth={windowWidth} // Pass the windowWidth state as a prop
             />
           </div>
         )) : null}
@@ -209,8 +245,18 @@ const AdminReport = () => {
   }
 
   const ReportDetailsPopup = () => {
+    const [buttonPosition, setButtonPosition] = useState({ top: 0, left: 0 });
     const [isOpen, setIsOpen] = useState(false);
     if (!showPopup) return null;
+
+    const dropdownContainerStyle: React.CSSProperties = {
+      position: 'absolute',
+      top: buttonPosition.top + 35, // Adjusted to position below the button
+      left: buttonPosition.left, // Align the left edge of the dropdown with the button
+      zIndex: 1001,
+      overflow: 'hidden',
+    };
+
 
     const priorities = ['High', 'Medium', 'Low', 'Spam'];
 
@@ -228,6 +274,44 @@ const AdminReport = () => {
       left: '35%',
       top: '20%'
     };
+
+    const calculateDropdownPosition = () => {
+      const buttonElement = document.getElementById('assign-priority-button');
+
+      // Check if buttonElement exists
+      if (buttonElement) {
+        const buttonRect = buttonElement.getBoundingClientRect();
+
+        // Calculate the top and left position for the dropdown
+        const top = buttonRect.bottom;
+        const left = buttonRect.left;
+
+        // Set the dropdown position
+        setButtonPosition({ top, left });
+      }
+    };
+
+    // Effect to recalculate dropdown position when isOpen changes
+    useEffect(() => {
+      if (isOpen) {
+        calculateDropdownPosition();
+      }
+    }, [isOpen]);
+
+    useEffect(() => {
+      const handleResize = () => {
+        if (isOpen) {
+          calculateDropdownPosition();
+        }
+      };
+
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, [isOpen]);
+
 
     const buttonsContainerStyle = {
       display: 'flex',
@@ -249,7 +333,7 @@ const AdminReport = () => {
       backgroundColor: '#519AEB',
       color: 'white',
       padding: '8px',
-      borderRadius: '10px',
+      borderRadius: isOpen ? '10px 10px 0 0' : '10px', // Adjusted border radius based on the toggle state
       border: '2px solid #519AEB',
       cursor: 'pointer',
       display: 'flex',
@@ -258,12 +342,6 @@ const AdminReport = () => {
       position: 'relative' // Position the button relatively
     };
 
-    const dropdownContainerStyle: React.CSSProperties = {
-      position: 'absolute', // Position the dropdown absolutely
-      left: 0,
-      zIndex: 1001, // Ensure the dropdown appears above the popup
-      overflow: 'hidden',
-    };
 
     const dropdownListStyle = {
       margin: 0,
@@ -319,33 +397,40 @@ const AdminReport = () => {
                 className='font-montserrat'
                 onClick={handleClosePopup}
               >Cancel</button>
-              <div style={{ position: 'relative' }}>
-                <button onClick={toggleDropdown} style={assignPriorityButtonStyle} className='font-montserrat'>
-                  Assign Priority {isOpen ? <ChevronUp color='white' /> : <ChevronDown color='white' />}
-                </button>
-                {isOpen && (
-                  <div style={dropdownContainerStyle}>
-                    <ul style={dropdownListStyle}>
-                      {priorities.map((priority) => (
-                        <li
-                          key={priority}
-                          onClick={() => handlePrioritySelection(priority)}
-                          style={{ ...dropdownItemStyle, ...(isOpen && dropdownItemHoverStyle) }}
-                          onMouseEnter={handleMouseEnter}
-                          onMouseLeave={handleMouseLeave}
-                          className='font-montserrat'
-                        >
-                          {priority !== "Spam" ? priority + " Priority" : priority}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+              <button
+                id="assign-priority-button"
+                onClick={toggleDropdown}
+                style={assignPriorityButtonStyle}
+                className='font-montserrat'
+              >
+                Assign Priority {isOpen ? <ChevronUp color='white' /> : <ChevronDown color='white' />}
+              </button>
             </div>
           </div>
+          {isOpen && (
+            <div style={{ ...dropdownContainerStyle, top: buttonPosition.top }}>
+              <ul style={dropdownListStyle}>
+                {priorities.map((priority) => (
+                  <li
+                    key={priority}
+                    onClick={() => handlePrioritySelection(priority)}
+                    style={{
+                      ...dropdownItemStyle,
+                      ...(isOpen && dropdownItemHoverStyle),
+                      ...(priority === "Spam" && { borderRadius: '0 0 10px 10px' }) // Apply borderRadius to "Spam" option only
+                    }}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    className='font-montserrat'
+                  >
+                    {priority !== "Spam" ? priority + " Priority" : priority}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
-      </div>
+      </div >
     );
   };
 
@@ -363,26 +448,30 @@ const AdminReport = () => {
         </div>
 
         <div className='flex items-center lg:mx-36' style={{ alignSelf: 'stretch', height: 70, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 10, display: 'flex' }}>
-          <div className=' flex justify-between items-center w-full px-5 md:px-12' style={{ alignSelf: 'stretch', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
-            <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Subject</div>
-            <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Submitted By</div>
-            <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Psychiatrist Reported</div>
-            <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word' }}>Time Submitted</div>
+          <div className='flex justify-between items-center w-full px-5 md:px-12' style={{ alignSelf: 'stretch', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
+            {!shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '5%', paddingRight: '5%' }}>Subject</div>}
+            {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '5%' }}>Subject</div>}
+            {!shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '4%', paddingRight: '4%' }}>Submitted By</div>}
+            {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '6%' }}>Submitted By</div>}
+            {!shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '1%', paddingRight: '1%' }}>Psychiatrist Reported</div>}
+            {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center' }}>Psychiatrist Reported</div>}
+            {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center' }}>Time Submitted</div>}
           </div>
           <div style={{ alignSelf: 'stretch', height: 0, border: '1.5px black solid' }}></div>
         </div>
+
       </div>
 
       <div>
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
-          <div className="font-montserrat" style={{ color: 'black', fontSize: 25, fontWeight: '600', wordWrap: 'break-word' }}>Unread Reports</div>
+          <div className="font-montserrat" style={{ color: 'black', fontSize: 25, fontWeight: '600', wordWrap: 'break-word', paddingTop: '10px' }}>Unread Reports</div>
           <button onClick={toggleUnreadReports} style={{ marginLeft: '5px' }}>
             {unreadReports ? <ChevronUp color={okb_colors.black} /> : <ChevronDown color={okb_colors.black} />}
           </button>
         </div>
 
         {returnReportsByPriority("")}
-        {ReportDetailsPopup()}
+        <ReportDetailsPopup />
 
         <div className='flex items-center mx-5 lg:mx-36' style={{ display: 'flex', alignItems: 'center', marginTop: '10px', marginBottom: '10px' }}>
           <div className="font-montserrat" style={{ color: 'black', fontSize: 25, fontWeight: '600', wordWrap: 'break-word' }}>High Priority</div>
