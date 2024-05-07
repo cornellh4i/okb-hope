@@ -247,7 +247,6 @@ const AdminReport = () => {
   const ReportDetailsPopup = () => {
     const [buttonPosition, setButtonPosition] = useState({ top: 0, left: 0 });
     const [isOpen, setIsOpen] = useState(false);
-    if (!showPopup) return null;
 
     const dropdownContainerStyle: React.CSSProperties = {
       position: 'absolute',
@@ -312,6 +311,7 @@ const AdminReport = () => {
       };
     }, [isOpen]);
 
+    if (!showPopup) return null;
 
     const buttonsContainerStyle = {
       display: 'flex',
