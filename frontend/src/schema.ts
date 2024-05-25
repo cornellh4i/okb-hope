@@ -19,6 +19,7 @@ export interface IPsychiatrist {
     specialty: string[];
     description: string;
     website: string;
+    weeklyAvailability: string[];
     status: string;
 }
 

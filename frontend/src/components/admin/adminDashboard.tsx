@@ -8,6 +8,7 @@ import AdminFilterBar from "./adminFilterBar";
 import { IPsychiatrist } from '@/schema';
 import FilterBarTwo from "./FilterBarTwo";
 import FilterCard from "./FilterCard";
+import { fetchAllProfessionals, fetchAvailability } from '../../../firebase/fetchData';
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 
@@ -50,9 +51,9 @@ const AdminDashboard = () => {
         filteredUsers = users.filter(user => user.userType === 'patient');
       } else {
           filteredUsers = users.filter(user => user.userType === 'psychiatrist');
-        if (filteredPsychiatrist.length > 0){
+        if (filteredPsychiatrist.length >= 0){
           const psych_uids = filteredPsychiatrist.map(psych => psych.uid);
-          console.log(psych_uids);
+          // console.log(psych_uids);
           filteredUsers = users.filter(user => psych_uids.includes(user.uid));
         }
       }

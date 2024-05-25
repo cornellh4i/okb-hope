@@ -313,7 +313,7 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
         filtersCategorized['days'].push(filter);
       } else if (languages.includes(filter)) {
         filtersCategorized['languages'].push(filter);
-      } else if (genders.includes(filters)){
+      } else if (genders.includes(filter)){
         if (filter === FilterEnum.male) {
           filtersCategorized['genders'].push(0);
         } else if (filter === FilterEnum.female) {

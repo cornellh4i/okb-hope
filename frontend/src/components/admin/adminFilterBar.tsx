@@ -4,7 +4,7 @@ import { IAvailability, IPsychiatrist } from '@/schema';
 import colors from "@/colors";
 import { collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { fetchUnreportedProfessionals, fetchAvailability } from '../../../firebase/fetchData';
+import { fetchAllProfessionals, fetchAvailability } from '../../../firebase/fetchData';
 import AdminSearchBar from './adminSearchBar';
 // import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -54,20 +54,22 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
   const [approved, setApproved] = useState(false);
   const [pending, setPending] = useState(false);
   const [allStatus, setAllStatus] = useState(false);
+  const [pageRefresh, setPageRefresh] = useState(false);
 
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
   const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
+
 
   // Get all psychiatrists from the database
   useEffect(() => {
     async function fetchData() {
       try {
         if (user) {
-          const fetchedPsychiatrists: IPsychiatrist[] = await fetchUnreportedProfessionals(user.uid);
+          console.log("HERE")
+          const fetchedPsychiatrists: IPsychiatrist[] = await fetchAllProfessionals();
           setPsychiatrists(fetchedPsychiatrists);
-          console.log(fetchedPsychiatrists);
+          setFilteredPsychiatrists(fetchedPsychiatrists);
         }
-        console.log("IF STATEMENT IS FALSE");
       } catch (err: any) {
         console.error(err.message);
       }
@@ -75,26 +77,64 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
     fetchData();
   }, [router]);
 
+  // useEffect(() => {
+  //   window.addEventListener("beforeunload", setPageRefresh(true));
+  //   return () => {
+  //     window.removeEventListener("beforeunload", setPageRefresh(false));
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       if (user) {
+  //         console.log("HERE")
+  //         const fetchedPsychiatrists: IPsychiatrist[] = await fetchAllProfessionals();
+  //         setPsychiatrists(fetchedPsychiatrists);
+  //         setFilteredPsychiatrists(fetchedPsychiatrists);
+  //       }
+  //     } catch (err: any) {
+  //       console.error(err.message);
+  //     }
+  //   }
+  //   fetchData();
+  // }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        if (user) {
+          console.log("HERE")
+          const fetchedPsychiatrists: IPsychiatrist[] = await fetchAllProfessionals();
+          setPsychiatrists(fetchedPsychiatrists);
+        }
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    }
+    fetchData();
+  }, [submittedFilters, submittedSearchTerm]);
+
   // Processes all psychiatrists availabilities to a dictionary mapping each psychiatrist's uid to their availabilities in the form of the days of the week
   useEffect(() => {
     // Transforms each item in a psychiatrist's availability array from availability ID to its respective day of the week
-    const processAvailabilityToDaysOfWeek = async (psychiatristAvailability: string[]) => {
-      const availabilityToDaysOfWeek: string[] = [];
-      for (let i = 0; i < psychiatristAvailability.length; i++) {
-        const availabilityId = psychiatristAvailability[i];
-        const fetchedAvailability: IAvailability = await fetchAvailability(availabilityId);
-        const day = fetchedAvailability.startTime.toDate().toLocaleString('default', { weekday: 'long' });
-        if (!availabilityToDaysOfWeek.includes(day)) {
-          availabilityToDaysOfWeek.push(day);
-        }
-      }
-      return availabilityToDaysOfWeek;
-    }
+    // const processAvailabilityToDaysOfWeek = async (psychiatristAvailability: string[]) => {
+    //   const availabilityToDaysOfWeek: string[] = [];
+    //   for (let i = 0; i < psychiatristAvailability.length; i++) {
+    //     const availabilityId = psychiatristAvailability[i];
+    //     // console.log(availabilityId);
+    //     if (!availabilityToDaysOfWeek.includes(availabilityId)) {
+    //       availabilityToDaysOfWeek.push(availabilityId);
+    //     }
+    //   }
+    //   // console.log(availabilityToDaysOfWeek);
+    //   return availabilityToDaysOfWeek;
+    // }
 
     const processPsychiatrists = async () => {
       const promises = psychiatrists.map(async (psychiatrist) => {
         const psychiatristId = psychiatrist.uid;
-        const psychiatristAvailabilityToDaysOfWeek = await processAvailabilityToDaysOfWeek(psychiatrist.availability);
+        const psychiatristAvailabilityToDaysOfWeek = psychiatrist.weeklyAvailability;
         setPsychiatristAvailabilities((prev) => ({ ...prev, [psychiatristId]: psychiatristAvailabilityToDaysOfWeek }));
       });
       await Promise.all(promises);
@@ -124,26 +164,14 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
   }
 
   // Returns true if gender is contained in genderArray
-  function containsGender(gender: number, genderArray: number[]): boolean {
-    if (genderArray) {
-      if (genderArray.includes(gender) || genderArray.length === 0)
-        return true
-      else
-        return false
+  function containsGender(arr1: number[], arr2: number[]): boolean {
+    if (arr1 && arr2) {
+      if (arr2.length === 0) { return true }
+      return arr2.some(item => arr1.includes(item))
     }
-    return true
+    else if (!arr2) { return true }
+    else { return false }
   }
-
-    // Returns true if status is contained in statusArray
-    function containsStatus(status: string, statusArray: string[]): boolean {
-      if (statusArray) {
-        if (statusArray.includes(status) || statusArray.length === 0)
-          return true
-        else
-          return false
-      }
-      return true
-    }
 
   const matchesTerm = (psychiatrist: any, term: string) => {
     return psychiatrist.firstName?.toLowerCase().includes(term.toLowerCase()) ||
@@ -180,14 +208,13 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
     }
     // Updates results by the selected filters
     const filterResults = results.filter((psychiatrist) => {
-      return containsOneOf(psychiatristAvailabilities[psychiatrist.uid], submittedFilters['days']) &&
+      return (
+        containsOneOf(psychiatristAvailabilities[psychiatrist.uid], submittedFilters['days']) &&
         containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
-        containsGender(psychiatrist.gender, submittedFilters['genders']
-        // containsStatus(psychiatrist.status, submittedFilters['status'])
-        )
+        containsGender([psychiatrist.gender], submittedFilters['genders']) &&
+        containsOneOf([psychiatrist.status], submittedFilters['status']));
     });
-    console.log("Process Filter results executed")
-    // console.log(filterResults)
+
     return filterResults;
   };
 
@@ -204,13 +231,12 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
     // If there is a search term or there are filters selected, process the search/filter
     // Else, return all psychiatrists
     // console.log(submittedSearchTerm);
-    // console.log(submittedFilters);
+    console.log("SUBMITTED FILTERS")
+    console.log(submittedFilters);
     searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
-    if (searchFilterResults.length > 0){
+    if (searchFilterResults.length >= 0){
       setFilteredPsychiatrists(searchFilterResults);
     }
-    // console.log(searchFilterResults);
-    console.log("IT SEARCHED")
   }, [submittedFilters, submittedSearchTerm])
 
   return (
@@ -243,7 +269,6 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
           pending={pending} setPending={setPending}
           allStatus={allStatus} setAllStatus={setAllStatus}/>
       </div>
-      
       {/* {searchFilterResults.length > 0 ? (
         <PsychiatristList results={searchFilterResults} buttonType={'discover'} />
       ) : (
