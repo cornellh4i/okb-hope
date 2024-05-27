@@ -19,14 +19,14 @@ const SelectionQuestionnaire = ({ patient, psychiatrist, onChange }: SelectionQu
   };
 
   return (
-    <div className="w-full h-full flex flex-wrap flex-col justify-start gap-6 md:gap-9 p-8 pb-0">
+    <div className="w-full h-full flex flex-col justify-start gap-6 md:gap-9 p-8 pb-0">
       <div className="text-[26px] md:text-[32px] font-semibold font-montserrat">
         Welcome to the Wohoiame Patient Portal!
       </div>
       <div className="text-[18px] md:text-2xl font-semibold font-montserrat">
         Are you a patient or a medical professional?
       </div>
-      <div className="grid grid-cols-2">
+      <div className="flex flex-row justify-center">
         <div
           className={`flex items-center justify-end ml-2 mr-7 pb-3`}
           onClick={() => handleOptionClick('patient')}
