@@ -300,8 +300,8 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
                 </div>
                 <div className={`flex flex-col flex-1 gap-4 w-full h-auto`}>
                   {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}
-                  <div className={`flex flex-col lg:flex-row justify-between items-start w-full`}>
-                    <div className={`flex flex-col justify-center lg:items-start items-center gap-2 w-full`}>
+                  <div className={`flex flex-col lg:flex-row justify-between items-start w-full self-stretch`}>
+                    <div className={`flex flex-col justify-center lg:items-start items-center gap-2`}>
                       <h2 className={`card-title col-span-2 text-[${okb_colors.black}] text-[24px] font-montserrat font-semibold not-italic`}>{psychiatrist.firstName} {psychiatrist.lastName}</h2>
                       <p className={`text-[${okb_colors.black}] text-[16px] font-montserrat font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
                     </div>
@@ -311,7 +311,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
                   </div>
                   {/* Additional psychiatrist info */}
                   <div className={`flex w-full justify-center lg:justify-start items-center lg:items-start min-h-[4rem] mt-4 lg:mt-0`}>
-                    <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-montserrat font-normal`}>{psychiatrist.description ? psychiatrist.description : "No description available."}</p>
+                    <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-montserrat font-normal overflow-hidden overflow-ellipsis`} style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', lineClamp: 3, MozBoxOrient: 'vertical', textAlign: 'left' }}>{psychiatrist.description ? psychiatrist.description : "No description available."}</p>
                   </div>
                 </div>
               </div>

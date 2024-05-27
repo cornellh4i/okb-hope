@@ -244,7 +244,7 @@ const ProfProfile = () => {
     };
 
     return (
-        <div className={`w-2/3 h-full flex flex-wrap flex-col justify-center content-center gap-5`}>
+        <div className={`w-2/3 h-full flex flex-wrap flex-col justify-center content-center gap-5 pb-4`}>
             {showBooking && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
                     <div className="absolute inset-0 bg-black bg-opacity-50">
