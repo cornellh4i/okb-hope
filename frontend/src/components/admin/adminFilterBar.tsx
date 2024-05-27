@@ -20,14 +20,15 @@ const fuseOptions = {
 };
 
 interface SearchBarProps {
-    setFilteredPsychiatrists;
+  setFilteredPsychiatrists;
+  setSubmittedFiltersLength
 }
 
-const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) => {
+const AdminFilterBar: React.FC<SearchBarProps> = ({ setFilteredPsychiatrists, setSubmittedFiltersLength }) => {
   const router = useRouter();
   const { user } = useAuth();
   const { userId } = router.query;
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState("");
   const [filters, setFilters] = useState([]);
@@ -59,6 +60,15 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
   const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
 
+  //finds total length of submittedFilters
+  useEffect(() => {
+    // Calculate the total length of arrays in submittedFilters
+    const totalLength = Object.values(submittedFilters)
+      .filter((value): value is any[] => Array.isArray(value)) // Type guard to filter array values
+      .reduce((sum, arr) => sum + arr.length, 0);
+    // Set the total length
+    setSubmittedFiltersLength(totalLength);
+  }, [submittedFilters]);
 
   // Get all psychiatrists from the database
   useEffect(() => {
@@ -234,7 +244,7 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
     console.log("SUBMITTED FILTERS")
     console.log(submittedFilters);
     searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
-    if (searchFilterResults.length >= 0){
+    if (searchFilterResults.length >= 0) {
       setFilteredPsychiatrists(searchFilterResults);
     }
   }, [submittedFilters, submittedSearchTerm])
@@ -264,10 +274,10 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({setFilteredPsychiatrists}) =>
           male={male} setMale={setMale}
           female={female} setFemale={setFemale}
           otherGender={otherGender} setOtherGender={setOtherGender}
-          allGenders={allGenders} setAllGenders={setAllGenders} 
+          allGenders={allGenders} setAllGenders={setAllGenders}
           approved={approved} setApproved={setApproved}
           pending={pending} setPending={setPending}
-          allStatus={allStatus} setAllStatus={setAllStatus}/>
+          allStatus={allStatus} setAllStatus={setAllStatus} />
       </div>
       {/* {searchFilterResults.length > 0 ? (
         <PsychiatristList results={searchFilterResults} buttonType={'discover'} />

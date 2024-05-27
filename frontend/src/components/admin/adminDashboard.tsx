@@ -33,6 +33,7 @@ const AdminDashboard = () => {
   const [numPages, setNumPages] = useState(1);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [filteredPsychiatrist, setFilteredPsychiatrists] = useState<IPsychiatrist[]>([]);
+  const [submittedFiltersLength, setSubmittedFiltersLength] = useState(0);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -50,10 +51,15 @@ const AdminDashboard = () => {
       if (clientView) {
         filteredUsers = users.filter(user => user.userType === 'patient');
       } else {
+        filteredUsers = users.filter(user => user.userType === 'psychiatrist');
+        // console.log("submittedFilters: " + submittedFiltersLength);
+        // console.log("length: " + submittedFiltersLength);
+        if (submittedFiltersLength === 0) {
           filteredUsers = users.filter(user => user.userType === 'psychiatrist');
-        if (filteredPsychiatrist.length >= 0){
+        }
+        else if (filteredPsychiatrist.length >= 0) {
           const psych_uids = filteredPsychiatrist.map(psych => psych.uid);
-          // console.log(psych_uids);
+          console.log(psych_uids);
           filteredUsers = users.filter(user => psych_uids.includes(user.uid));
         }
       }
@@ -135,7 +141,7 @@ const AdminDashboard = () => {
                     ></span> */}
         </button>
       </div>
-      {clientView ? <FilterBar onDelete={handleDeleteUser} userList={selectedUsers} /> : <AdminFilterBar setFilteredPsychiatrists={setFilteredPsychiatrists}/>}
+      {clientView ? <FilterBar onDelete={handleDeleteUser} userList={selectedUsers} /> : <AdminFilterBar setFilteredPsychiatrists={setFilteredPsychiatrists} setSubmittedFiltersLength={setSubmittedFiltersLength} />}
       {/* {clientView ? <FilterBar onDelete={handleDeleteUser} userList={selectedUsers} /> : <FilterBarTwo onDelete={handleDeleteUser} userList={selectedUsers} />} */}
       <FilterUserTable currentRecords={currentRecords} onDelete={handleDeleteUser} selectedUsers={(users) => handleSelectedUsers(users)} />
       <div className="pagination flex items-center m-auto">
