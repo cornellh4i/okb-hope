@@ -21,11 +21,13 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
   const [position, setPosition] = useState('');
   const [description, setDescription] = useState('');
   const [languages, setLanguages] = useState<string[]>([]);
+  const [weeklyAvailability, setWeeklyAvailability] = useState<string[]>([]);
   const [gender, setGender] = useState(0);
 
-  const positions = ["Nurse", "Doctor"];
+  const positions = ["Nurse", "Psychiatrist"];
   const language = ["English", "Ga", "Twi", "Hausa", "Fante", "Ewe", "Other"];
   const genderList = ["Male", "Female", "Other"];
+  const availability = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -36,6 +38,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
         setPosition(data.position);
         setDescription(data.description);
         setLanguages(data.language);
+        setWeeklyAvailability(data.availability);
         setGender(data.gender);
       }
     }
@@ -73,6 +76,21 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
     setLanguages(updatedLanguages);
   };
 
+  const handleAvailabilityChange = (event) => {
+    const selectedAvailability = event.target.value;
+    const updatedAvailability = [...weeklyAvailability];
+
+    if (event.target.checked) {
+      updatedAvailability.push(selectedAvailability);
+    } else {
+      const index = updatedAvailability.indexOf(selectedAvailability);
+      if (index !== -1) {
+        updatedAvailability.splice(index, 1);
+      }
+    }
+    setWeeklyAvailability(updatedAvailability);
+  };
+
   const handleGenderChange = (value) => {
     const newGender = value === "Male" ? 0 : (value === "Female" ? 1 : 2);
     setGender(newGender);
@@ -101,6 +119,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
       position: position,
       description: description,
       language: languages,
+      availability: weeklyAvailability,
       gender: gender
     })
     router.push(`/psychiatrist/${uid}/psych_dashboard`);
@@ -259,6 +278,46 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
                     value={value}
                     checked={languages.includes(value)}
                     onChange={handleLanguageChange}
+                  />
+                </label>
+              ))}
+            </ul>
+          </div>
+
+          {/* Weekly Availability */}
+          <div className="dropdown dropdown-bottom">
+            <div tabIndex={0} className="form-control w-full cursor-pointer">
+              <label className="label">
+                <span className="text-lg">Weekly Availability (Required)</span>
+              </label>
+              <div className="flex items-center">
+                <Vertical_line className=""></Vertical_line>
+                <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
+                  <div className="input-container w-full ml-3" >
+                    <div
+                      className="input input-bordered w-full border-2 pl-10 bg-white"
+                      style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
+                    >
+                      {weeklyAvailability.join(", ")}
+                    </div>
+                  </div>
+                  <div id="chevron" className="flex flex-col absolute items-center justify-center align-center transform translate-x-8">
+                    <Chevron_down ></Chevron_down>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
+              {availability.map((value) => (
+                <label key={value} className="label cursor-pointer">
+                  <span className="label-text">{value}</span>
+                  <input
+                    type="checkbox"
+                    className="checkbox"
+                    name="Weekly Availability"
+                    value={value}
+                    checked={weeklyAvailability.includes(value)}
+                    onChange={handleAvailabilityChange}
                   />
                 </label>
               ))}

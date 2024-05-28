@@ -18,11 +18,14 @@ const PsychQuestionnaire = () => {
     const [gender, setGender] = useState<Gender>();
     const [image, setImage] = useState<string>("");
     const [position, setPosition] = useState<string>("");
-    const [checked, setChecked] = useState<{ [key: string]: boolean }>(
+    const [checkedLanguages, setCheckedLanguages] = useState<{ [key: string]: boolean }>(
         { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
     const [languages, setLanguages] = useState<string[]>([]);
+    const [checkedAvailability, setCheckedAvailability] = useState<{ [key: string]: boolean }>(
+        { 'Monday': false, 'Tuesday': false, 'Wednesday': false, 'Thursday': false, 'Friday': false, 'Saturday': false, 'Sunday':false });
+    const [weeklyAvailability, setWeeklyAvailability] = useState<string[]>([]);
     const [aboutYourself, setAboutYourself] = useState<string>("");
-
+    const [location, setLocation] = useState<string>("");
     const [patient, setPatient] = useState<boolean>(false);
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
     const [isMobile, setIsMobile] = useState(false);
@@ -67,37 +70,61 @@ const PsychQuestionnaire = () => {
         setAboutYourself(event.target.value);
     }
 
+    const handleLocationChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        const selectedLocation = (event.target.value);
+        const loc = selectedLocation.split(' ');
+        const fixCase = loc.map(loc => loc.charAt(0).toUpperCase() + loc.slice(1).toLowerCase()
+        );
+        const result = fixCase.join(' ');
+        setLocation(result);
+    }
+
 
     const handlePosition = (event: ChangeEvent<HTMLInputElement>) => {
         const selectedPosition = (event.target.value);
         switch (selectedPosition) {
-            case 'psychiatrist':
-                setPosition("psychiatrist");
+            case 'Psychiatrist':
+                setPosition("Psychiatrist");
                 break;
-            case 'nurse':
-                setPosition("nurse");
+            case 'Nurse':
+                setPosition("Nurse");
                 break;
             default:
                 setPosition("")
         }
     }
 
-    const handleCheck = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleLanguages = (event: ChangeEvent<HTMLInputElement>) => {
         const lang = event.target.value;
-        const newChecked = {
-            ...checked,
-            [lang]: !checked[lang]
+        const newCheckedLanguages = {
+            ...checkedLanguages,
+            [lang]: !checkedLanguages[lang]
         };
-        setChecked(newChecked);
+        setCheckedLanguages(newCheckedLanguages);
 
-        if (newChecked[lang]) {
+        if (newCheckedLanguages[lang]) {
             setLanguages([...languages, lang]);
         } else {
             setLanguages(languages.filter(element => element !== lang));
         }
 
         console.log(languages);
-        console.log(newChecked);
+        console.log(newCheckedLanguages);
+    };
+
+    const handleWeeklyAvailability = (event: ChangeEvent<HTMLInputElement>) => {
+        const day = event.target.value;
+        const newChecked = {
+            ...checkedAvailability,
+            [day]: !checkedAvailability[day]
+        };
+        setCheckedAvailability(newChecked);
+
+        if (newChecked[day]) {
+            setWeeklyAvailability([...weeklyAvailability, day]);
+        } else {
+            setWeeklyAvailability(weeklyAvailability.filter(element => element !== day));
+        }
     };
 
     const handleOptionChange = (option: 'patient' | 'psychiatrist') => {
@@ -145,6 +172,16 @@ const PsychQuestionnaire = () => {
             return;
         }
 
+        else if (currentStep === 3 && (location.length === 0)) {
+            alert("Please fill out the 'Location' section.");
+            return;
+        }
+
+        else if (currentStep === 3 && (aboutYourself.length === 0)) {
+            alert("Please fill out the 'About Yourself' section.");
+            return;
+        }
+
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
         }
@@ -160,8 +197,9 @@ const PsychQuestionnaire = () => {
                     image,
                     [],
                     gender,
-                    "",
+                    location,
                     languages,
+                    weeklyAvailability,
                     [],
                     aboutYourself,
                     "",
@@ -200,12 +238,17 @@ const PsychQuestionnaire = () => {
             {currentStep === 3 &&
                 <PositionLanguageQuestionnaire
                     setPosition={position}
+                    location={location}
                     languages={languages}
                     aboutYourself={aboutYourself}
                     setLanguages={setLanguages}
-                    checked={checked}
-                    setChecked={setChecked}
-                    handleCheck={handleCheck}
+                    checkedLanguages={checkedLanguages}
+                    setCheckedLanguages={setCheckedLanguages}
+                    checkedAvailability={checkedAvailability}
+                    setCheckedAvailability={setCheckedAvailability}
+                    handleLocation={handleLocationChange}
+                    handleLanguages={handleLanguages}
+                    handleWeeklyAvailability={handleWeeklyAvailability}
                     handlePosition={handlePosition}
                     handleAboutYourself={handleAboutYourselfChange}
 

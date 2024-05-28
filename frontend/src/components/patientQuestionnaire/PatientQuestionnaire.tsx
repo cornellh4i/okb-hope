@@ -126,38 +126,44 @@ const PatientQuestionnaire = () => {
             alert("Please select your language(s).");
             return;
         }
-
+     
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
         }
 
         if (currentStep === 3) {
-            console.log("adding to database");
-            try {
-                await signUpWithGoogle(
-                    "patient",
-                    firstName,
-                    lastName,
-                    "", //position
-                    image,
-                    [], //availability
-                    gender,
-                    "", //location
-                    languages,
-                    [], //specialty
-                    "", //description
-                    "", //website
-                    concerns,
-                    prevExp,
-                    prevExpTime,
-                    age, //ageRange
-                    languages, //prefLanguages
-                    [], //savedPsychiatrists
-                );
-                router.push('/loading?init=true');
-            } catch (error) {
-                console.error('Error signing in:', error);
-                logout();
+            if (prevExp === "" || prevExpTime === "" || concerns === "") {
+                alert("Please fill out the required question(s).")
+            } 
+            else {
+                console.log("adding to database");
+                try {
+                    await signUpWithGoogle(
+                        "patient",
+                        firstName,
+                        lastName,
+                        "", //position
+                        image,
+                        [], //availability
+                        gender,
+                        "", //location
+                        languages,
+                        [], //weeklyAvailability
+                        [], //specialty
+                        "", //description
+                        "", //website
+                        concerns,
+                        age,
+                        prevExpTime,
+                        prevExp, //ageRange
+                        languages, //prefLanguages
+                        [], //savedPsychiatrists
+                    );
+                    router.push('/loading?init=true');
+                } catch (error) {
+                    console.error('Error signing in:', error);
+                    logout();
+                }
             }
         }
     };
@@ -178,8 +184,8 @@ const PatientQuestionnaire = () => {
             {currentStep === 2 &&
                 <AgeLanguageQuestionnaire
                     age={age}
-                    languages={languages}
-                    setLanguages={setLanguages}
+                    prefLanguages={languages}
+                    setPrefLanguages={setLanguages}
                     checked={checked}
                     setChecked={setChecked}
                     handleAge={handleAgeChange}

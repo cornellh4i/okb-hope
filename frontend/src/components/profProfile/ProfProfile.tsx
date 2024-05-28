@@ -349,9 +349,11 @@ const ProfProfile = () => {
                                 {language}
                             </div>
                         ))}
-                        <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
-                            {professional.location}
-                        </div>
+                        {professional.location && (
+                            <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
+                                {professional.location}
+                            </div>)
+                        }
                     </div>
                     <div className={`text-normal text-center md:text-start text-base font-montserrat`}>
                         {professional.description ? professional.description : 'No description available.'}

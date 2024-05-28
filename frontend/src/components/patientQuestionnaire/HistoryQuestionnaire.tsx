@@ -23,7 +23,7 @@ const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, handlePrevExp, h
                 Great! Now let's get a sense of your history with medical professionals.
             </div>
             <FormControl className="gap-y-3">
-                <span className={`text-lg font-semibold font-montserrat`}>Have you spoken with a counselor/therapist before?</span>
+                <span className={`text-lg font-semibold font-montserrat`}>Have you spoken with a counselor/therapist before?<span className={`text-lg mb-2 text-red-600`}>*</span></span>
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="radio-buttons-group"
@@ -31,12 +31,12 @@ const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, handlePrevExp, h
                     onChange={handlePrevExp}
                     className={`flex flex-col gap-y-3`}
                 >
-                    <FormControlLabel className={` ml-1 `} value="18-24" control={<Radio />} label={
+                    <FormControlLabel className={` ml-1 `} value="Yes" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             Yes
                         </span>
                     } />
-                    <FormControlLabel className={` ml-1 `} value="25-34" control={<Radio />} label={
+                    <FormControlLabel className={` ml-1 `} value="No" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
                             No
                         </span>
@@ -44,7 +44,7 @@ const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, handlePrevExp, h
                 </RadioGroup>
             </FormControl>
             <FormControl className="gap-y-3">
-                <span className={`text-lg font-semibold font-montserrat`}>If yes, when was the last time you spoke with one?</span>
+                <span className={`text-lg font-semibold font-montserrat`}>If yes, when was the last time you spoke with one?<span className={`text-lg mb-2 text-red-600`}>*</span></span>
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="radio-buttons-group"
@@ -82,6 +82,7 @@ const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, handlePrevExp, h
 
             <div className="flex flex-col gap-y-3">
                 <span className={`text-lg font-semibold font-montserrat`}>Are there any specific concerns you would like to discuss with your conselor?</span>
+                <span className={`text-lg mb-2 text-red-600`}>*</span>
                 <input type="text" value={concerns} onChange={handleConcerns} placeholder="Type here" className={`input input-bordered px-6 font-montserrat placeholder:italic w-3/4 md:w-full border-2 ml-3 rounded-2xl text-[12px] md:text-[12px]`} style={{ borderColor: okb_colors.light_blue }} />
             </div>
 
