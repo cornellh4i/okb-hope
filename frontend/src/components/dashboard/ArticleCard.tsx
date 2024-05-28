@@ -64,7 +64,7 @@ const ArticleCard = ({ id, title, body, href }: { id, title: string, body: strin
         <div className={`flex justify-center items-center md:justify-start md:items-start lg:shrink`}>
           <Image src={image} alt="Photo" className={`w-1200 h-600`} />
         </div>
-        <h2 className="card-title justify-evenly text-[#fffdfd] font-semibold mt-[8px] mb-[8px]">{title}</h2>
+        <h2 className="card-title justify-evenly text-[#fffdfd] font-semibold mt-[8px] mb-[8px] font-montserrat">{title}</h2>
         <h2 className='text-[#fffdfd] font-montserrat font-[400] font-xs'>{body}</h2>
       </div>
     </Link>

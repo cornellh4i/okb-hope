@@ -44,11 +44,6 @@ const Availability = ({ availability = [] }: AvailabilityProps) => {
         <div className="h-fit flex justify-center">
             <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-8`}>
                 {days.map((day, index) => {
-                    // console.log(index);
-                    // const availField = availability[index] || ''; // Ensure times are available or an empty string
-                    // const timeList = times.split(',').map(time => time.trim());
-                    // const hasTimes = availField.length > 0;
-                    // console.log("state of availabilities " , availabilities);
                     const start = availabilities[index]?.startTime.toDate()
                     const end = availabilities[index]?.endTime.toDate()
                     let times = ''

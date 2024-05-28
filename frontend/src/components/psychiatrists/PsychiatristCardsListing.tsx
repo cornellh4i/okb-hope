@@ -37,7 +37,7 @@ const PsychiatristCardsListing = ({ max_size }: { max_size: number }) => {
   return (
     <div className="card w-full bg-base-100 rounded-[6.5px] shadow-custom-shadow">
       <div className="card-body">
-        <h1 className="card-title pt-1/15 text-[32px]">My Saved Psychiatrists</h1>
+        <h1 className="card-title pt-1/15 text-[32px] font-montserrat">My Saved Psychiatrists</h1>
         <div className={contentsStyle}>
           {content}
         </div>

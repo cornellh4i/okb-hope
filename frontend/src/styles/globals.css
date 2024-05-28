@@ -1,9 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
 .btn {
   text-transform: none;
+}
+
+.truncate-3-lines {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 .custom-active {
@@ -23,4 +31,12 @@
   height: 5px;
   /* Adjust the underline thickness as needed */
   background-color: #195BA5;
+}
+
+.page-background {
+  background-color: #FFFDFD;
+}
+
+div {
+  color: CFCFCF;
 }

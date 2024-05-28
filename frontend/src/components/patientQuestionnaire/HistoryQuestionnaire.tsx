@@ -18,19 +18,18 @@ interface QuestionnaireProps {
 // 3rd page of the Questionnaire
 const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, handlePrevExp, handlePrevExpTime, handleConcerns }: QuestionnaireProps) => {
     return (
-        <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 mb-5`}>
-            <div className={`text-[32px] font-semibold font-montserrat`}>
+        <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-y-9 py-8 px-9`}>
+            <div className={`text-[26px] md:text-[32px] font-semibold font-montserrat`}>
                 Great! Now let's get a sense of your history with medical professionals.
             </div>
-            <FormControl>
+            <FormControl className="gap-y-3">
                 <span className={`text-lg font-semibold font-montserrat`}>Have you spoken with a counselor/therapist before?<span className={`text-lg mb-2 text-red-600`}>*</span></span>
-
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="radio-buttons-group"
                     defaultValue={prevExp}
                     onChange={handlePrevExp}
-                    className={`flex flex-col gap-2`}
+                    className={`flex flex-col gap-y-3`}
                 >
                     <FormControlLabel className={` ml-1 `} value="Yes" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
@@ -44,15 +43,14 @@ const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, handlePrevExp, h
                     } />
                 </RadioGroup>
             </FormControl>
-            <FormControl>
+            <FormControl className="gap-y-3">
                 <span className={`text-lg font-semibold font-montserrat`}>If yes, when was the last time you spoke with one?<span className={`text-lg mb-2 text-red-600`}>*</span></span>
-
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="radio-buttons-group"
                     defaultValue={prevExpTime}
                     onChange={handlePrevExpTime}
-                    className={`flex flex-col gap-2`}
+                    className={`flex flex-col gap-y-3`}
                 >
                     <FormControlLabel className={`ml-1`} value="Within the last month" control={<Radio />} label={
                         <span style={{ fontWeight: 300, fontSize: 18 }}>
@@ -82,10 +80,10 @@ const HistoryQuestionnaire = ({ prevExp, prevExpTime, concerns, handlePrevExp, h
                 </RadioGroup>
             </FormControl>
 
-            <div>
+            <div className="flex flex-col gap-y-3">
                 <span className={`text-lg font-semibold font-montserrat`}>Are there any specific concerns you would like to discuss with your conselor?</span>
                 <span className={`text-lg mb-2 text-red-600`}>*</span>
-                <input type="text" value={concerns} onChange={handleConcerns} placeholder="Type here" className={`input input-bordered w-full mr-3 border-2 rounded-2xl`} style={{ borderColor: okb_colors.light_blue }} />
+                <input type="text" value={concerns} onChange={handleConcerns} placeholder="Type here" className={`input input-bordered px-6 font-montserrat placeholder:italic w-3/4 md:w-full border-2 ml-3 rounded-2xl text-[12px] md:text-[12px]`} style={{ borderColor: okb_colors.light_blue }} />
             </div>
 
 

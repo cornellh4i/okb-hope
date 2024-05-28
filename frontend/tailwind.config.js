@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme");
+
+
 module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
@@ -21,14 +24,19 @@ module.exports = {
       },
       fontFamily: {
         inter: ['inter', 'serif'],
+        montserrat: ['montserrat', ...defaultTheme.fontFamily.sans],
       },
-      
+
       boxShadow: {
-        'custom-shadow': '0px 3px 60px 0px rgba(0, 0, 0, 0.10)',
+        'custom-shadow': '0px 0px 5px 0px rgba(0, 0, 0, 0.15)',
+        'navbar-shadow': '0px 3px 60px 0px rgba(0, 0, 0, 0.10)',
       },
       backgroundColor: {
         'okb-blue': '#195BA5',
       },
+      maxWidth: {
+        '200': '200px',
+      }
     },
   },
   plugins: [

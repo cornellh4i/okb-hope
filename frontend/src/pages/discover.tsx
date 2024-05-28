@@ -23,8 +23,6 @@ const DiscoverPage: React.FC = () => {
   const router = useRouter();
   const { user } = useAuth();
   const { userId } = router.query;
-  // console.log(userId)
-  // console.log(user?.uid)
 
   const [searchTerm, setSearchTerm] = useState("");
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState("");
@@ -181,7 +179,7 @@ const DiscoverPage: React.FC = () => {
   const searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
 
   return (
-    <div className={'flex flex-col px-23 pt-9 pb-14'}>
+    <div className={'flex flex-col px-23 pt-9'}>
       <div className='flex justify-start justify-center pb-8'>
         <SearchBar
           searchTerm={searchTerm} setSearchTerm={setSearchTerm}

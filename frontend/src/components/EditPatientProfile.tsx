@@ -12,6 +12,8 @@ import { IUser } from '@/schema';
 import router from 'next/router';
 import { fetchDocumentId, fetchPatientDetails } from '../../firebase/fetchData';
 import { useAuth } from '../../contexts/AuthContext';
+import Cancel from "@/assets/cancel.svg";
+import SaveChanges from "@/assets/save_changes.svg";
 
 const EditPatientProfile = () => {
   const { user } = useAuth();
@@ -127,30 +129,30 @@ const EditPatientProfile = () => {
     <div className="flex justify-center">
       <div className="card md:w-2/3 w-full">
         <div className="card-body">
-          <text className="card-title text-4xl">Edit Profile</text>
+          <text className="card-title text-4xl font-montserrat">Edit Profile</text>
           {/* Text input fields */}
           <div className="flex flex-row justify-between">
             {/* First Name */}
             <div tabIndex={0} className="flex form-control w-1/2 mr-10">
               <div className="label-container">
                 <label className="label">
-                  <span className="text-lg">First Name (Required)</span>
+                  <span className="text-lg font-montserrat font-semibold">First Name (Required)</span>
                 </label>
               </div>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
-                <input type="text" value={firstName} placeholder="Type here" className={`input input-bordered w-full border-2 ml-3`} style={{ borderColor: okb_colors.light_blue }} onChange={handleFirstNameChange} />
+                <input type="text" value={firstName} placeholder="Type here" className={`input input-bordered w-full border-2 ml-3 font-montserrat`} style={{ borderColor: okb_colors.light_blue }} onChange={handleFirstNameChange} />
               </div>
             </div>
 
             {/* Last Name */}
             <div tabIndex={0} className="form-control w-1/2 pr-0">
               <label className="label">
-                <span className="text-lg">Last Name (Required)</span>
+                <span className="text-lg font-montserrat font-semibold">Last Name (Required)</span>
               </label>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
-                <input type="text" value={lastName} onChange={handleLastNameChange} placeholder="Type here" className="input input-bordered w-full border-2 ml-3" style={{ borderColor: okb_colors.light_blue }} />
+                <input type="text" value={lastName} onChange={handleLastNameChange} placeholder="Type here" className="input input-bordered w-full border-2 ml-3 font-montserrat" style={{ borderColor: okb_colors.light_blue }} />
               </div>
             </div>
           </div>
@@ -158,7 +160,7 @@ const EditPatientProfile = () => {
           {/* Profile Image */}
           <div tabIndex={0} className="form-control w-full flex flex-col items-start">
             <label className="label">
-              <span className="text-lg">Profile Image (Required)</span>
+              <span className="text-lg font-montserrat font-semibold">Profile Image (Required)</span>
             </label>
             <div id="Frame542" className="flex items-center justify-center w-full gap-3">
               <svg xmlns="http://www.w3.org/2000/svg" width="4" height="204" viewBox="0 0 4 204" fill="none">
@@ -169,7 +171,7 @@ const EditPatientProfile = () => {
                   <div id="Frame278" className="flex flex-col absolute items-center justify-center align-center left-1/2 transform translate-x-[-50%] translate-y-[50%]">
                     <Upload ></Upload>
                     <label>
-                      <span className="font-montserrat text-xs " style={{ color: okb_colors.dark_gray }}>Upload Image</span>
+                      <span className="font-montserrat text-xs font-montserrat italic" style={{ color: okb_colors.dark_gray }}>Upload Image</span>
                     </label>
                   </div>
                   <div className="input-container w-full relative" >
@@ -184,11 +186,11 @@ const EditPatientProfile = () => {
           {/* Concerns */}
           <div tabIndex={0} className="form-control w-full">
             <label className="label">
-              <span className="text-lg">Are there any specific concerns you would like to discuss with your counselor? (Required)</span>
+              <span className="text-lg font-montserrat font-semibold">Are there any specific concerns you would like to discuss with your counselor? (Required)</span>
             </label>
             <div className="flex items-center">
               <Vertical_line className=""></Vertical_line>
-              <input type="text" value={concerns} onChange={handleConcernsChange} placeholder="Type here" className="input input-bordered w-full border-2 ml-3" style={{ borderColor: okb_colors.light_blue }} />
+              <input type="text" value={concerns.join(", ")} onChange={handleConcernsChange} placeholder="Type here" className="input input-bordered w-full border-2 ml-3 font-montserrat" style={{ borderColor: okb_colors.light_blue }} />
             </div>
           </div>
 
@@ -196,14 +198,14 @@ const EditPatientProfile = () => {
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <div className="label">
-                <span className="text-lg">Have you spoken with a counselor/therapist before? (Required)</span>
+                <span className="text-lg font-montserrat font-semibold">Have you spoken with a counselor/therapist before? (Required)</span>
               </div>
               <div className="flex items-center">
                 <Vertical_line></Vertical_line>
                 <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
                   <div className="input-container w-full ml-3">
                     <div
-                      className="input input-bordered w-full border-2 pl-10 bg-white"
+                      className="input input-bordered w-full border-2 pl-10 bg-white font-montserrat"
                       style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
                     >
                       {previousTherapyExperience}
@@ -218,7 +220,7 @@ const EditPatientProfile = () => {
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
               {spokenWithCounselor.map((value) => (
                 <label key={value} className="label cursor-pointer">
-                  <span className="label-text" onClick={() => handlePreviousTherapyExperienceChange(value)}>
+                  <span className="label-text font-montserrat" onClick={() => handlePreviousTherapyExperienceChange(value)}>
                     {value}
                   </span>
                   <input
@@ -237,14 +239,14 @@ const EditPatientProfile = () => {
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <label className="label">
-                <span className="text-lg">If yes, when was the last time you spoke with one? (Required)</span>
+                <span className="text-lg font-montserrat font-semibold">If yes, when was the last time you spoke with one? (Required)</span>
               </label>
               <div className="flex items-center">
                 <Vertical_line></Vertical_line>
                 <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
                   <div className="input-container w-full ml-3" >
                     <div
-                      className="input input-bordered w-full border-2 pl-10 bg-white"
+                      className="input input-bordered w-full border-2 pl-10 bg-white font-montserrat"
                       style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
                     >
                       {lastTherapyTimeframe}
@@ -259,7 +261,7 @@ const EditPatientProfile = () => {
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
               {lastTimeSpoke.map((value) => (
                 <label key={value} className="label cursor-pointer">
-                  <span className="label-text">{value}</span>
+                  <span className="label-text font-montserrat">{value}</span>
                   <input
                     type="radio"
                     className="radio"
@@ -276,14 +278,14 @@ const EditPatientProfile = () => {
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <label className="label">
-                <span className="text-lg">What is your age? (Required)</span>
+                <span className="text-lg font-montserrat font-semibold">What is your age? (Required)</span>
               </label>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
                 <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
                   <div className="input-container w-full ml-3" >
                     <div
-                      className="input input-bordered w-full border-2 pl-10 bg-white"
+                      className="input input-bordered w-full border-2 pl-10 bg-white font-montserrat"
                       style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
                     >
                       {ageRange}
@@ -298,7 +300,7 @@ const EditPatientProfile = () => {
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
               {ageRanges.map((value) => (
                 <label key={value} className="label cursor-pointer">
-                  <span className="label-text">{value}</span>
+                  <span className="label-text font-montserrat">{value}</span>
                   <input
                     type="radio"
                     className="radio"
@@ -315,14 +317,14 @@ const EditPatientProfile = () => {
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <label className="label">
-                <span className="text-lg">What are your preferred languages? (Required)</span>
+                <span className="text-lg font-montserrat font-semibold">What are your preferred languages? (Required)</span>
               </label>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
                 <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
                   <div className="input-container w-full ml-3" >
                     <div
-                      className="input input-bordered w-full border-2 pl-10 bg-white"
+                      className="input input-bordered w-full border-2 pl-10 bg-white font-montserrat"
                       style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
                     >
                       {prefLanguages.join(", ")}
@@ -337,7 +339,7 @@ const EditPatientProfile = () => {
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
               {languagesSpoken.map((value) => (
                 <label key={value} className="label cursor-pointer">
-                  <span className="label-text">{value}</span>
+                  <span className="label-text font-montserrat">{value}</span>
                   <input
                     type="checkbox"
                     className="checkbox"
@@ -355,14 +357,14 @@ const EditPatientProfile = () => {
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <label className="label">
-                <span className="text-lg">What is your gender? (Required)</span>
+                <span className="text-lg font-montserrat font-semibold">What is your gender? (Required)</span>
               </label>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
                 <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
                   <div className="input-container w-full ml-3" >
                     <div
-                      className="input input-bordered w-full border-2 pl-10 bg-white"
+                      className="input input-bordered w-full border-2 pl-10 bg-white font-montserrat"
                       style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
                     >
                       {gender === 0 ? "Male" : (gender === 1 ? "Female" : "Other")}
@@ -377,7 +379,7 @@ const EditPatientProfile = () => {
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
               {genderList.map((value) => (
                 <label key={value} className="label cursor-pointer">
-                  <span className="label-text">{value}</span>
+                  <span className="label-text font-montserrat">{value}</span>
                   <input
                     type="radio"
                     className="radio"
@@ -390,9 +392,9 @@ const EditPatientProfile = () => {
             </ul>
           </div>
 
-          <div className="card-actions justify-end">
-            <button onClick={handleCancel} className="btn btn-outline">Cancel</button>
-            <button className="btn" onClick={handleSaveChanges}>Save Changes</button>
+          <div className="card-actions justify-end pt-10">
+            <Cancel onClick={handleCancel} style={{ cursor: 'pointer' }} />
+            <SaveChanges onClick={handleSaveChanges} style={{ cursor: 'pointer' }} />
           </div>
         </div>
       </div>

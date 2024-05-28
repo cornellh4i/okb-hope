@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { ChangeEvent } from 'react';
-import Link from "next/link";
 import Chevron_down from "@/assets/chevron_down.svg";
 import Vertical_line from "@/assets/vertical_line.svg";
 import Upload from "@/assets/upload.svg";
@@ -10,6 +9,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { auth, db } from '../../firebase/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { fetchDocumentId, fetchProfessionalData } from '../../firebase/fetchData';
+import Cancel from "@/assets/cancel.svg";
+import SaveChanges from "@/assets/save_changes.svg";
 
 const EditPsychiatristProfile = ({ psychiatrist }) => {
   const { user } = useAuth();
@@ -136,23 +137,23 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
             <div tabIndex={0} className="flex form-control w-1/2 mr-10">
               <div className="label-container">
                 <label className="label">
-                  <span className="text-lg">First Name (Required)</span>
+                  <span className="text-lg font-montserrat font-semibold">First Name (Required)</span>
                 </label>
               </div>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
-                <input type="text" value={firstName} placeholder="Type here" className={`input input-bordered w-full border-2 ml-3`} style={{ borderColor: okb_colors.light_blue }} onChange={handleFirstNameChange} />
+                <input type="text" value={firstName} placeholder="Type here" className={`input input-bordered w-full border-2 ml-3 font-montserrat`} style={{ borderColor: okb_colors.light_blue }} onChange={handleFirstNameChange} />
               </div>
             </div>
 
             {/* Last Name */}
             <div tabIndex={0} className="form-control w-1/2 pr-0">
               <label className="label">
-                <span className="text-lg">Last Name (Required)</span>
+                <span className="text-lg font-montserrat font-semibold">Last Name (Required)</span>
               </label>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
-                <input type="text" value={lastName} onChange={handleLastNameChange} placeholder="Type here" className="input input-bordered w-full border-2 ml-3" style={{ borderColor: okb_colors.light_blue }} />
+                <input type="text" value={lastName} onChange={handleLastNameChange} placeholder="Type here" className="input input-bordered w-full border-2 ml-3 font-montserrat" style={{ borderColor: okb_colors.light_blue }} />
               </div>
             </div>
           </div>
@@ -160,7 +161,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
           {/* Profile Image */}
           <div tabIndex={0} className="form-control w-full flex flex-col items-start">
             <label className="label">
-              <span className="text-lg">Profile Image</span>
+              <span className="text-lg font-montserrat font-semibold">Profile Image</span>
             </label>
             <div id="Frame542" className="flex items-center justify-center w-full gap-3">
               <svg xmlns="http://www.w3.org/2000/svg" width="4" height="204" viewBox="0 0 4 204" fill="none">
@@ -171,7 +172,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
                   <div id="Frame278" className="flex flex-col absolute items-center justify-center align-center left-1/2 transform translate-x-[-50%] translate-y-[50%]">
                     <Upload ></Upload>
                     <label>
-                      <span className="font-montserrat text-xs " style={{ color: okb_colors.dark_gray }}>Upload Image</span>
+                      <span className="font-montserrat text-xs italic" style={{ color: okb_colors.dark_gray }}>Upload Image</span>
                     </label>
                   </div>
                   <div className="input-container w-full relative" >
@@ -188,14 +189,14 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <div className="label">
-                <span className="text-lg">Current Position (Required)</span>
+                <span className="text-lg font-montserrat font-semibold">Current Position (Required)</span>
               </div>
               <div className="flex items-center">
                 <Vertical_line></Vertical_line>
                 <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
                   <div className="input-container w-full ml-3">
                     <div
-                      className="input input-bordered w-full border-2 pl-10 bg-white"
+                      className="input input-bordered w-full border-2 pl-10 bg-white font-montserrat"
                       style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
                     >
                       {position}
@@ -210,7 +211,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
               {positions.map((value) => (
                 <label key={value} className="label cursor-pointer">
-                  <span className="label-text" onClick={() => handlePositionChange(value)}>
+                  <span className="label-text font-montserrat" onClick={() => handlePositionChange(value)}>
                     {value}
                   </span>
                   <input
@@ -228,7 +229,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
           {/* About Me Description */}
           <div tabIndex={0} className="form-control w-full">
             <label className="label">
-              <span className="text-lg">About Me Description (Required)</span>
+              <span className="text-lg font-montserrat font-semibold">About Me Description (Required)</span>
             </label>
             <div className="flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="4" height="144" viewBox="0 0 4 144" fill="none">
@@ -237,7 +238,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
               <div id="Frame412" className="flex flex-col items-center w-full gap-2.5">
                 <div id="Frame407" className="flex w-full justify-center align-center" >
                   {/* <input type="text" value={description} onChange={handleDescriptionChange} placeholder="Type here" className="input input-bordered w-full border-2 ml-3 pt-3" style={{ borderColor: okb_colors.light_blue, height: "140px" }} /> */}
-                  <textarea placeholder="Type here" value={description} onChange={(e) => handleDescriptionChange(e)} className="input input-bordered w-full border-2 ml-3 pt-3" style={{ borderColor: okb_colors.light_blue, height: "140px" }}></textarea>
+                  <textarea placeholder="Type here" value={description} onChange={(e) => handleDescriptionChange(e)} className="input input-bordered w-full border-2 ml-3 pt-3 font-montserrat" style={{ borderColor: okb_colors.light_blue, height: "140px" }}></textarea>
                 </div>
               </div>
             </div>
@@ -247,14 +248,14 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <label className="label">
-                <span className="text-lg">Languages Spoken (Required)</span>
+                <span className="text-lg font-montserrat font-semibold">Languages Spoken (Required)</span>
               </label>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
                 <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
                   <div className="input-container w-full ml-3" >
                     <div
-                      className="input input-bordered w-full border-2 pl-10 bg-white"
+                      className="input input-bordered w-full border-2 pl-10 bg-white font-montserrat"
                       style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
                     >
                       {languages.join(", ")}
@@ -269,7 +270,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
               {language.map((value) => (
                 <label key={value} className="label cursor-pointer">
-                  <span className="label-text">{value}</span>
+                  <span className="label-text font-montserrat">{value}</span>
                   <input
                     type="checkbox"
                     className="checkbox"
@@ -327,14 +328,14 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} className="form-control w-full cursor-pointer">
               <label className="label">
-                <span className="text-lg">Gender (Required)</span>
+                <span className="text-lg font-montserrat font-semibold">Gender (Required)</span>
               </label>
               <div className="flex items-center">
                 <Vertical_line className=""></Vertical_line>
                 <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
                   <div className="input-container w-full ml-3" >
                     <div
-                      className="input input-bordered w-full border-2 pl-10 bg-white"
+                      className="input input-bordered w-full border-2 pl-10 bg-white font-montserrat"
                       style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
                     >
                       {gender === 0 ? "Male" : (gender === 1 ? "Female" : "Other")}
@@ -349,7 +350,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
             <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-full">
               {genderList.map((value) => (
                 <label key={value} className="label cursor-pointer">
-                  <span className="label-text">{value}</span>
+                  <span className="label-text font-montserrat">{value}</span>
                   <input
                     type="radio"
                     className="radio"
@@ -362,9 +363,9 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
             </ul>
           </div>
 
-          <div className="card-actions justify-end">
-            <button onClick={handleCancel} className="btn btn-outline">Cancel</button>
-            <button className="btn" onClick={handleSaveChanges}>Save Changes</button>
+          <div className="card-actions justify-end pt-10">
+            <Cancel onClick={handleCancel} style={{ cursor: 'pointer' }} />
+            <SaveChanges onClick={handleSaveChanges} style={{ cursor: 'pointer' }} />
           </div>
         </div>
       </div>
