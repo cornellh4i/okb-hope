@@ -136,6 +136,10 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
     }
   };
 
+  const reportPatient = async () => {
+    
+  }
+
   const toggleDropdown = (event) => {
     event.preventDefault();
     console.log("Dropdown toggle clicked");
@@ -154,6 +158,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
             {role === 'psychiatrist' && (
               <>
                 <button onClick={markAsUnread}>Mark as Unread</button>
+                <button onClick={reportPatient}>Report Patient</button>
                 <button onClick={openDeleteModal}>Delete Message Thread</button>
               </>
             )}
