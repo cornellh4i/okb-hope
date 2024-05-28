@@ -17,7 +17,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db, logInWithGoogle, signUpWithGoogle } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
 import { addDoc, collection, Timestamp } from 'firebase/firestore';
-import Cancel from '@/assets/cancel.svg';
+import Cancel from '@/assets/cancel_report.svg';
 import Submit from '@/assets/submit.svg';
 import Continue from '@/assets/continue.svg';
 import colors from '@/colors';
