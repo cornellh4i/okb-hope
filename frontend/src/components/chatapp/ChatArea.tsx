@@ -4,7 +4,7 @@ import MessageList from './MessageList';
 import MessageComposer from './MessageComposer';
 import Ellipses from '../../assets/ellipses';
 import okb_colors from '@/colors';
-import { IPatient } from '../../schema';
+import { IPatient, IReport } from '../../schema';
 
 import router, { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -41,6 +41,37 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   const { user } = useAuth();
   const [patient, setPatient] = useState<IPatient | null>(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [reportExists, setReportExists] = useState(false);
+  const [selectedPatientReports, setSelectedPatientReports] = useState<IReport[]>([]);
+
+  useEffect(() => {
+    const fetchPatient = async () => {
+      const userId = user?.uid;
+      const patient_uid = router.query.uid as string;
+      if (patient_uid) {
+        const data = await fetchPatientDetails(patient_uid);
+        setPatient(data);
+      }
+    };
+    fetchPatient();
+  }, [router.query.patient_uid, user]);
+
+  // Fetch the report status for the patient
+  useEffect(() => {
+    const fetchReportStatus = async () => {
+      const reportsQuery = query(
+        collection(db, 'reports'),
+        where('psychiatrist_id', '==', uid),
+        where('patient_id', '==', patientId)
+      );
+      const reportSnapshot = await getDocs(reportsQuery);
+      setReportExists(!reportSnapshot.empty);
+    };
+
+    if (uid && patientId) {
+      fetchReportStatus();
+    }
+  }, [uid, patientId]);
 
 
   const handleReportTextChange = (event) => {
@@ -158,6 +189,38 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
     setShowReportPopup(true);
   };
 
+  const viewReport = ({ report, patient }) => {
+
+
+    const formattedDate = report.submittedAt.toDate().toLocaleString();
+
+    const cardStyle: React.CSSProperties = {
+      background: 'white',
+      borderRadius: '10px',
+      border: '1px solid #519AEB',
+      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+      padding: '12px 24px',
+      margin: '0 0 12px 0',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '12px',
+    };
+
+    return (
+      <div style={cardStyle} className="card bg-base-100 shadow-xl mb-4">
+        <div>
+          <p className="font-montserrat" style={{ fontSize: 14 }}>The following report for {patient.firstName} {patient.lastName} was submitted on: {formattedDate}</p>
+        </div>
+        <p className="font-montserrat" style={{ fontSize: 14 }}>Report Log</p>
+        <div>
+          <p className="font-montserrat" style={{ fontSize: 14, border: '1px solid #9A9A9A', color: '#000000', padding: '8px 12px' }}>{report.description}</p>
+        </div>
+        <p className="font-montserrat" style={{ fontSize: 14, textAlign: 'left' }}>Report Status: Verified on {formattedDate}</p>
+      </div>
+    );
+
+  };
+
 
   const toggleDropdown = (event) => {
     event.preventDefault();
@@ -213,37 +276,38 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
 
   const handleContinue = () => {
     setShowSuccessPopup(false);
-    router.push(`/patient/${user?.uid}/discover`);
+    // router.push(`/patient/${user?.uid}/discover`);
   };
 
   const handleSubmitReport = async () => {
     if (user && patient) {
-        try {
-            const reportData = {
-                description: reportText,
-                reporter_type: 'psychiatrist',
-                pyschiatrist_id: user.uid,
-                patient_id: patient.uid,
-                patient_name: patient.firstName + ' ' + patient.lastName,
-                submittedAt: Timestamp.now(),
-                priority: '',
-                reporter_name: user.displayName,
-            };
-            const docRef = await addDoc(collection(db, 'reports'), reportData);
-            console.log('Report submitted with ID: ', docRef.id);
-            await updateDoc(doc(db, 'reports', docRef.id), {
-                report_id: docRef.id,
-            });
-            setShowSuccessPopup(true);
-            setShowReportPopup(false);
-            setReportText('');
-        } catch (error) {
-            console.error('Error submitting the report: ', error);
-        }
+      try {
+        const reportData = {
+          description: reportText,
+          reporter_type: 'psychiatrist',
+          pyschiatrist_id: user.uid,
+          patient_id: patient.uid,
+          patient_name: patient.firstName + ' ' + patient.lastName,
+          submittedAt: Timestamp.now(),
+          priority: '',
+          reporter_name: user.displayName,
+        };
+        const docRef = await addDoc(collection(db, 'reports'), reportData);
+        console.log('Report submitted with ID: ', docRef.id);
+        await updateDoc(doc(db, 'reports', docRef.id), {
+          report_id: docRef.id,
+        });
+        setShowSuccessPopup(true);
+        setShowReportPopup(false);
+        setReportText('');
+        setReportExists(true);
+      } catch (error) {
+        console.error('Error submitting the report: ', error);
+      }
     } else {
-        console.error('No user or patient found');
+      console.error('No user or patient found');
     }
-};
+  };
 
 
   return (
@@ -258,7 +322,13 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
             {role === 'psychiatrist' && (
               <>
                 <button onClick={markAsUnread}>Mark as Unread</button>
-                <button onClick={reportPatient}>Report Patient</button>
+
+                {reportExists ? (
+                  <button onClick={() => viewReport({ report: selectedPatientReports[0], patient })}>View Reports</button>
+                ) : (
+                  <button onClick={reportPatient}>Report Patient</button>
+                )}
+
                 <button onClick={openDeleteModal}>Delete Message Thread</button>
               </>
             )}
@@ -303,7 +373,6 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
             <CheckCircle style={{ top: 20 }} />
             <div style={{ display: 'inline-flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 14 }}>
               <h3 className="font-montserrat" style={{ fontWeight: 'bold', marginBottom: '15px', fontSize: 14 }}>You have successfully reported Dr. {name}.</h3>
-
               <Continue style={{ cursor: 'pointer' }} onClick={handleContinue} />
             </div>
           </div>
