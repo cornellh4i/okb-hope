@@ -46,15 +46,15 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
 
   useEffect(() => {
     const fetchPatient = async () => {
-      const userId = user?.uid;
-      const patient_uid = router.query.uid as string;
-      if (patient_uid) {
-        const data = await fetchPatientDetails(patient_uid);
+      if (patientId) {
+        const data = await fetchPatientDetails(patientId);
         setPatient(data);
+        console.log(patientId)
+        console.log("updated patient!")
       }
     };
     fetchPatient();
-  }, [router.query.patient_uid, user]);
+  }, [patientId]);
 
   // Fetch the report status for the patient
   useEffect(() => {
@@ -154,6 +154,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
     } else if (patient_name) {
       setPatientId(patient_id as string);
       setPsychiatristId(uid as string);
+
     }
   }, [router.query]);
 
@@ -280,7 +281,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   };
 
   const handleSubmitReport = async () => {
-    if (user && patient) {
+    if (user?.userType === "psychiatrist" && patient) {
       try {
         const reportData = {
           description: reportText,
@@ -305,6 +306,8 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
         console.error('Error submitting the report: ', error);
       }
     } else {
+      console.log(user)
+      console.log(patient)
       console.error('No user or patient found');
     }
   };
