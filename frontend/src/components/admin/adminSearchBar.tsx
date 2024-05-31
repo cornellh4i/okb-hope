@@ -8,7 +8,7 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
   setWednesday, thursday, setThursday, friday, setFriday, saturday, setSaturday, sunday, setSunday, allDays, setAllDays,
   english, setEnglish, twi, setTwi, fante, setFante, ewe, setEwe, ga, setGa, hausa, setHausa, allLanguages, setAllLanguages,
   male, setMale, female, setFemale, otherGender, setOtherGender, allGenders, setAllGenders, approved, setApproved, pending,
-  setPending, allStatus, setAllStatus}: any) {
+  setPending, allStatus, setAllStatus }: any) {
 
   const FilterEnum = {
     monday: "Monday",
@@ -88,15 +88,15 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
     setShowStatusDropdown(false);
   };
 
-    // Opens or closes the dropdown for status and makes sure the other dropdowns are closed
-    const handleStatusDropdownClick = (e) => {
-        // Prevent the event from propagating to the window click listener
-        e.stopPropagation();
-        setShowStatusDropdown(!showGenderDropdown);
-        setShowGenderDropdown(false);
-        setShowDayDropdown(false);
-        setShowLanguageDropdown(false);
-      };
+  // Opens or closes the dropdown for status and makes sure the other dropdowns are closed
+  const handleStatusDropdownClick = (e) => {
+    // Prevent the event from propagating to the window click listener
+    e.stopPropagation();
+    setShowStatusDropdown(!showGenderDropdown);
+    setShowGenderDropdown(false);
+    setShowDayDropdown(false);
+    setShowLanguageDropdown(false);
+  };
 
   // Close dropdown if there is a click anywhere outside of the dropdown refs
   useEffect(() => {
@@ -110,8 +110,8 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
       const isGenderDropdownClick =
         (genderDropdownRef.current && genderDropdownRef.current.contains(e.target)) ||
         (genderDropdownMenuRef.current && genderDropdownMenuRef.current.contains(e.target));
-    const isStatusDropdownClick =
-        (statusDropdownRef.current && statusDropdownRef.current.contains(e.target)) || 
+      const isStatusDropdownClick =
+        (statusDropdownRef.current && statusDropdownRef.current.contains(e.target)) ||
         (statusDropdownMenuRef.current && statusDropdownMenuRef.current?.contains(e.target));
 
       if (!isDayDropdownClick) {
@@ -271,11 +271,11 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
       updateSelected(FilterEnum.female, event.target.checked)
       updateSelected(FilterEnum.otherGender, event.target.checked)
     } else if (filterName === FilterEnum.allStatus) {
-        setAllStatus(event.target.checked)
-        setApproved(event.target.checked)
-        setPending(event.target.checked)
-        updateSelected(FilterEnum.approved, event.target.checked)
-        updateSelected(FilterEnum.pending, event.target.checked)
+      setAllStatus(event.target.checked)
+      setApproved(event.target.checked)
+      setPending(event.target.checked)
+      updateSelected(FilterEnum.approved, event.target.checked)
+      updateSelected(FilterEnum.pending, event.target.checked)
     } else {
       if (filterName === FilterEnum.monday || filterName === FilterEnum.tuesday || filterName === FilterEnum.wednesday
         || filterName === FilterEnum.thursday || filterName === FilterEnum.friday || filterName === FilterEnum.saturday
@@ -306,14 +306,14 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
   // Parses the selected filters array into a dictionary that maps filter categories to an array of filters they encompass
   const handleFilter = () => {
     setSubmittedSearchTerm(searchTerm);
-    const filtersCategorized: { days: string[], languages: string[], genders: number[], status: string[]} = { days: [], languages: [], genders: [], status: []};
+    const filtersCategorized: { days: string[], languages: string[], genders: number[], status: string[] } = { days: [], languages: [], genders: [], status: [] };
     for (let i = 0; i < filters.length; i++) {
       const filter = filters[i].filter;
       if (days.includes(filter)) {
         filtersCategorized['days'].push(filter);
       } else if (languages.includes(filter)) {
         filtersCategorized['languages'].push(filter);
-      } else if (genders.includes(filter)){
+      } else if (genders.includes(filter)) {
         if (filter === FilterEnum.male) {
           filtersCategorized['genders'].push(0);
         } else if (filter === FilterEnum.female) {
@@ -323,9 +323,9 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
         }
       } else {
         if (filter === FilterEnum.approved) {
-            filtersCategorized['status'].push(filter);
+          filtersCategorized['status'].push(filter);
         } else {
-            filtersCategorized['status'].push(filter);
+          filtersCategorized['status'].push(filter);
         }
       }
     }
@@ -543,8 +543,8 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
         </div>
 
         <div className='flex flex-col md:flex-row gap-x-2 md:gap-x-2 gap-y-2 md:gap-y-4'>
-        {/* filter drop downs for status */}
-        <div className={`dropdown flex xl:w-36 h-12 py-3.5 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
+          {/* filter drop downs for status */}
+          <div className={`dropdown flex xl:w-36 h-12 py-3.5 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
             <p className={`text-[${okb_colors.med_gray}] text-sm font-normal`}>Status</p>
             <button tabIndex={0}
               ref={statusDropdownRef}
@@ -587,9 +587,9 @@ export default function adminSearchBar({ searchTerm, setSearchTerm, submittedSea
               <div className={`flex text-[${okb_colors.okb_blue}] text-sm font-bold`}>Filter</div>
             </button>
           </div>
-          </div>
-
         </div>
+
       </div>
+    </div>
   );
 }

@@ -5,7 +5,8 @@ import chevron_right from "@/assets/chevron_right";
 import FilterBar from "./FilterBar";
 import FilterUserTable from "./FilterUserTable";
 import AdminFilterBar from "./adminFilterBar";
-import { IPsychiatrist } from '@/schema';
+import AdminFilterBarPatients from "./adminFilterBarPatients";
+import { IPatient, IPsychiatrist } from '@/schema';
 import FilterBarTwo from "./FilterBarTwo";
 import FilterCard from "./FilterCard";
 import { fetchAllProfessionals, fetchAvailability } from '../../../firebase/fetchData';
@@ -34,6 +35,7 @@ const AdminDashboard = () => {
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [filteredPsychiatrist, setFilteredPsychiatrists] = useState<IPsychiatrist[]>([]);
   const [submittedFiltersLength, setSubmittedFiltersLength] = useState(0);
+  const [FilteredPatients, setFilteredPatients] = useState<IPatient[]>([]);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -49,7 +51,17 @@ const AdminDashboard = () => {
       let filteredUsers: UserType[];
 
       if (clientView) {
+        console.log("submitted filter length: " + submittedFiltersLength);
         filteredUsers = users.filter(user => user.userType === 'patient');
+        if (submittedFiltersLength === 0) {
+          filteredUsers = users.filter(user => user.userType === 'patient');
+        }
+        else if (FilteredPatients.length >= 0) {
+          console.log("these are the patients: " + FilteredPatients);
+          const patient_uids = FilteredPatients.map(patient => patient.uid);
+          console.log("these are the patient uids: " + patient_uids);
+          filteredUsers = users.filter(user => patient_uids.includes(user.uid));
+        }
       } else {
         filteredUsers = users.filter(user => user.userType === 'psychiatrist');
         // console.log("submittedFilters: " + submittedFiltersLength);
@@ -68,7 +80,7 @@ const AdminDashboard = () => {
       setNumPages(Math.ceil(filteredUsers.length / recordsPerPage));
     }
     fetchUsers();
-  }, [recordsPerPage, patientView, clientView, filteredPsychiatrist]);
+  }, [recordsPerPage, patientView, clientView, filteredPsychiatrist, FilteredPatients]);
 
 
   // Pagination logic to calculate currentRecords based on currentPage
@@ -87,10 +99,21 @@ const AdminDashboard = () => {
     }
   };
 
+  // const handleDeleteUser = (userId) => {
+  //   // Update the user data in the state
+  //   setUserData((prevUserData) => prevUserData.filter((user) => user.id !== userId));
+  //   window.location.reload();
+  // };
+
   const handleDeleteUser = (userId) => {
-    // Update the user data in the state
-    setUserData((prevUserData) => prevUserData.filter((user) => user.id !== userId));
-    window.location.reload();
+    try {
+      deleteDoc(doc(db, "patients", userId ?? ""));
+      deleteDoc(doc(db, "users", userId));
+      setUserData((prevUserData) => prevUserData.filter((user) => user.id !== userId));
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting users:", error);
+    }
   };
 
   const handleSelectedUsers = (users) => {
@@ -141,7 +164,8 @@ const AdminDashboard = () => {
                     ></span> */}
         </button>
       </div>
-      {clientView ? <FilterBar onDelete={handleDeleteUser} userList={selectedUsers} /> : <AdminFilterBar setFilteredPsychiatrists={setFilteredPsychiatrists} setSubmittedFiltersLength={setSubmittedFiltersLength} />}
+      {clientView ? <AdminFilterBarPatients onDelete={handleDeleteUser} userList={selectedUsers} setFilteredPatients={setFilteredPatients} setSubmittedFiltersLength={setSubmittedFiltersLength} />
+        : <AdminFilterBar setFilteredPsychiatrists={setFilteredPsychiatrists} setSubmittedFiltersLength={setSubmittedFiltersLength} />}
       {/* {clientView ? <FilterBar onDelete={handleDeleteUser} userList={selectedUsers} /> : <FilterBarTwo onDelete={handleDeleteUser} userList={selectedUsers} />} */}
       <FilterUserTable currentRecords={currentRecords} onDelete={handleDeleteUser} selectedUsers={(users) => handleSelectedUsers(users)} />
       <div className="pagination flex items-center m-auto">

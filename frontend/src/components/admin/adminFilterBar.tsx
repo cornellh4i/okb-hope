@@ -55,7 +55,6 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({ setFilteredPsychiatrists, se
   const [approved, setApproved] = useState(false);
   const [pending, setPending] = useState(false);
   const [allStatus, setAllStatus] = useState(false);
-  const [pageRefresh, setPageRefresh] = useState(false);
 
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
   const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
@@ -63,9 +62,13 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({ setFilteredPsychiatrists, se
   //finds total length of submittedFilters
   useEffect(() => {
     // Calculate the total length of arrays in submittedFilters
-    const totalLength = Object.values(submittedFilters)
+    let totalLength = Object.values(submittedFilters)
       .filter((value): value is any[] => Array.isArray(value)) // Type guard to filter array values
       .reduce((sum, arr) => sum + arr.length, 0);
+
+    if (searchTerm !== "") {
+      totalLength += 1;
+    }
     // Set the total length
     setSubmittedFiltersLength(totalLength);
   }, [submittedFilters]);
@@ -87,34 +90,11 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({ setFilteredPsychiatrists, se
     fetchData();
   }, [router]);
 
-  // useEffect(() => {
-  //   window.addEventListener("beforeunload", setPageRefresh(true));
-  //   return () => {
-  //     window.removeEventListener("beforeunload", setPageRefresh(false));
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       if (user) {
-  //         console.log("HERE")
-  //         const fetchedPsychiatrists: IPsychiatrist[] = await fetchAllProfessionals();
-  //         setPsychiatrists(fetchedPsychiatrists);
-  //         setFilteredPsychiatrists(fetchedPsychiatrists);
-  //       }
-  //     } catch (err: any) {
-  //       console.error(err.message);
-  //     }
-  //   }
-  //   fetchData();
-  // }, []);
-
   useEffect(() => {
     async function fetchData() {
       try {
         if (user) {
-          console.log("HERE")
+          // console.log("HERE")
           const fetchedPsychiatrists: IPsychiatrist[] = await fetchAllProfessionals();
           setPsychiatrists(fetchedPsychiatrists);
         }
@@ -127,20 +107,6 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({ setFilteredPsychiatrists, se
 
   // Processes all psychiatrists availabilities to a dictionary mapping each psychiatrist's uid to their availabilities in the form of the days of the week
   useEffect(() => {
-    // Transforms each item in a psychiatrist's availability array from availability ID to its respective day of the week
-    // const processAvailabilityToDaysOfWeek = async (psychiatristAvailability: string[]) => {
-    //   const availabilityToDaysOfWeek: string[] = [];
-    //   for (let i = 0; i < psychiatristAvailability.length; i++) {
-    //     const availabilityId = psychiatristAvailability[i];
-    //     // console.log(availabilityId);
-    //     if (!availabilityToDaysOfWeek.includes(availabilityId)) {
-    //       availabilityToDaysOfWeek.push(availabilityId);
-    //     }
-    //   }
-    //   // console.log(availabilityToDaysOfWeek);
-    //   return availabilityToDaysOfWeek;
-    // }
-
     const processPsychiatrists = async () => {
       const promises = psychiatrists.map(async (psychiatrist) => {
         const psychiatristId = psychiatrist.uid;
@@ -194,28 +160,19 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({ setFilteredPsychiatrists, se
 
     const terms = submittedSearchTerm.trim().split(/\s+/);
     let results = psychiatrists;
+    console.log(submittedSearchTerm);
+    console.log(terms);
 
     // Updates result by search term (first names, last names, and/or titles)
     // Handles searches with three terms
-    if (terms.length === 3) {
-      const [firstTerm, secondTerm, thirdTerm] = terms;
+    if (terms.length > 0) {
       results = psychiatrists.filter((psychiatrist) =>
-        matchesTerm(psychiatrist, firstTerm) &&
-        matchesTerm(psychiatrist, secondTerm) &&
-        matchesTerm(psychiatrist, thirdTerm));
-    }
-    // Handles searches with two terms
-    if (terms.length === 2) {
-      const [firstTerm, secondTerm] = terms;
-      results = psychiatrists.filter((psychiatrist) =>
-        matchesTerm(psychiatrist, firstTerm) &&
-        matchesTerm(psychiatrist, secondTerm));
-    }
-    // Handles searches with one term
-    else if (terms.length === 1) {
-      const [firstTerm] = terms;
-      results = psychiatrists.filter((psychiatrist) => matchesTerm(psychiatrist, firstTerm));
-    }
+        terms.some((term) => matchesTerm(psychiatrist, term))
+      );
+    };
+
+    console.log(results);
+
     // Updates results by the selected filters
     const filterResults = results.filter((psychiatrist) => {
       return (
@@ -240,9 +197,6 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({ setFilteredPsychiatrists, se
   useEffect(() => {
     // If there is a search term or there are filters selected, process the search/filter
     // Else, return all psychiatrists
-    // console.log(submittedSearchTerm);
-    console.log("SUBMITTED FILTERS")
-    console.log(submittedFilters);
     searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
     if (searchFilterResults.length >= 0) {
       setFilteredPsychiatrists(searchFilterResults);
@@ -279,19 +233,6 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({ setFilteredPsychiatrists, se
           pending={pending} setPending={setPending}
           allStatus={allStatus} setAllStatus={setAllStatus} />
       </div>
-      {/* {searchFilterResults.length > 0 ? (
-        <PsychiatristList results={searchFilterResults} buttonType={'discover'} />
-      ) : (
-        <div className="text-center my-10">
-          <p className="mb-4">No Psychiatrists found based on your filters.</p>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={resetSearchBar}
-          >
-            See all psychiatrists
-          </button>
-        </div>
-      )} */}
     </div>
   );
 };

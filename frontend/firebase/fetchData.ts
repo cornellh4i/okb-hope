@@ -42,6 +42,18 @@ const fetchAllProfessionals = async () => {
   }
 }
 
+const fetchAllPatients = async () => {
+  try {
+    const patientRef = collection(db, 'patients');
+    const snapshot = await getDocs(patientRef);
+    const fetchedPatients: IPatient[] = snapshot.docs.map((doc) => doc.data() as IPatient);
+    return fetchedPatients;
+  } catch (err: any) {
+    console.error(err.message);
+    throw err;
+  }
+}
+
 const fetchUnreportedProfessionals = async (patient_id) => {
   try {
     const fetchedReports = fetchPatientReports(patient_id);
@@ -193,6 +205,10 @@ const fetchAvailability = async (availId: string) => {
     throw error;
   }
 }
-export { fetchProfessionalData, fetchAllProfessionals, fetchUnreportedProfessionals, fetchPatientDetails, fetchPatientReports, fetchUserChats, fetchDocumentId, fetchApptDetails, fetchAvailability, fetchAllUsers };
+export {
+  fetchProfessionalData, fetchAllProfessionals, fetchUnreportedProfessionals,
+  fetchPatientDetails, fetchPatientReports, fetchUserChats, fetchDocumentId,
+  fetchApptDetails, fetchAvailability, fetchAllUsers, fetchAllPatients
+};
 
 
