@@ -160,8 +160,6 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({ setFilteredPsychiatrists, se
 
     const terms = submittedSearchTerm.trim().split(/\s+/);
     let results = psychiatrists;
-    console.log(submittedSearchTerm);
-    console.log(terms);
 
     // Updates result by search term (first names, last names, and/or titles)
     // Handles searches with three terms
@@ -170,8 +168,6 @@ const AdminFilterBar: React.FC<SearchBarProps> = ({ setFilteredPsychiatrists, se
         terms.some((term) => matchesTerm(psychiatrist, term))
       );
     };
-
-    console.log(results);
 
     // Updates results by the selected filters
     const filterResults = results.filter((psychiatrist) => {
