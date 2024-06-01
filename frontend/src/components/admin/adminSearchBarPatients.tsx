@@ -2,46 +2,50 @@ import { useState, ChangeEvent, use, useEffect, useRef } from 'react';
 import chevron_down from '@/assets/chevron_down';
 import search_icon from '@/assets/search_icon';
 import okb_colors from '../../colors';
+import Trash from '@/assets/trash.svg';
 
 export default function adminSearchBarPatients({ searchTerm, setSearchTerm, submittedSearchTerm,
   setSubmittedSearchTerm, filters, setFilters, submittedFilters, setSubmittedFilters,
-  below19, setBelow19, twentyToThirty, setTwentyToThirty, thirtyToFourty, setThirtyToFourty,
-  fourtyToFifty, setFourtyToFifty, overFifty, setOverFifty, allAgeRanges, setAllAgeRanges,
+  eighteen, setEighteen, twentyfive, setTwentyfive, thirtyfive, setThirtyfive,
+  fourtyfive, setFourtyfive, fiftyfive, setFiftyfive, sixtyfive, setSixtyfive,
+  allAgeRanges, setAllAgeRanges,
   male, setMale, female, setFemale, otherGender, setOtherGender, allGenders, setAllGenders,
   relationship, setRelationship, addiction, setAddiction, suicidal, setSuicidal, family,
   setFamily, substance, setSubstance, academic, setAcademic, social, setSocial, depression,
-  setDepression, other, setOther, allConcerns, setAllConcerns }: any) {
+  setDepression, other, setOther, allConcerns, setAllConcerns, openDeleteModal }: any) {
 
   const FilterEnum = {
-    below19: "below19",
-    twentyToThirty: "twentyToThirty",
-    thirtyToFourty: "thirtyToFourty",
-    fourtyToFifty: "fourtyToFifty",
-    overFifty: "overFifty",
+    eighteen: "18-24",
+    twentyfive: "25-34",
+    thirtyfive: "35-44",
+    fourtyfive: "45-54",
+    fiftyfive: "55-64",
+    sixtyfive: "65 and over",
     allAgeRanges: "allAgeRanges",
     male: "male",
     female: "female",
     otherGender: "other",
     allGenders: "allGenders",
-    relationship: "relationship",
-    addiction: "addiction",
-    suicidal: "suicidal",
-    family: "family",
-    substance: "substance",
-    academic: "academic",
-    social: "social",
-    depression: "depression",
-    other: "other",
+    relationship: "My Relationships",
+    addiction: "Addiction",
+    suicidal: "Suicidal Thoughts",
+    family: "Family Distress",
+    substance: "Substance Abuse",
+    academic: "Academic Distress",
+    social: "Social Anxiety",
+    depression: "Depression",
+    other: "Other",
     allConcerns: "allConcerns"
   }
 
 
   const ageRange = [
-    FilterEnum.below19,
-    FilterEnum.twentyToThirty,
-    FilterEnum.thirtyToFourty,
-    FilterEnum.fourtyToFifty,
-    FilterEnum.overFifty,
+    FilterEnum.eighteen,
+    FilterEnum.twentyfive,
+    FilterEnum.thirtyfive,
+    FilterEnum.fourtyfive,
+    FilterEnum.fiftyfive,
+    FilterEnum.sixtyfive,
     FilterEnum.allAgeRanges
   ];
 
@@ -197,11 +201,12 @@ export default function adminSearchBarPatients({ searchTerm, setSearchTerm, subm
 
   useEffect(() => {
     if (Object.keys(submittedFilters).length === 0) {
-      setBelow19(false);
-      setTwentyToThirty(false);
-      setThirtyToFourty(false);
-      // setFourtyToFifty(false);
-      setOverFifty(false);
+      setEighteen(false);
+      setTwentyfive(false);
+      setThirtyfive(false);
+      setFourtyfive(false);
+      setFiftyfive(false);
+      setSixtyfive(false);
       setAllAgeRanges(false);
       setMale(false);
       setFemale(false);
@@ -231,16 +236,18 @@ export default function adminSearchBarPatients({ searchTerm, setSearchTerm, subm
 
     if (filterName === FilterEnum.allAgeRanges) {
       setAllAgeRanges(event.target.checked);
-      setBelow19(event.target.checked);
-      setTwentyToThirty(event.target.checked);
-      setThirtyToFourty(event.target.checked);
-      setFourtyToFifty(event.target.checked);
-      setOverFifty(event.target.checked);
-      updateSelected(FilterEnum.below19, event.target.checked);
-      updateSelected(FilterEnum.twentyToThirty, event.target.checked);
-      updateSelected(FilterEnum.thirtyToFourty, event.target.checked);
-      updateSelected(FilterEnum.fourtyToFifty, event.target.checked);
-      updateSelected(FilterEnum.overFifty, event.target.checked);
+      setEighteen(event.target.checked);
+      setTwentyfive(event.target.checked);
+      setThirtyfive(event.target.checked);
+      setFourtyfive(event.target.checked);
+      setFiftyfive(event.target.checked);
+      setSixtyfive(event.target.checked);
+      updateSelected(FilterEnum.eighteen, event.target.checked);
+      updateSelected(FilterEnum.twentyfive, event.target.checked);
+      updateSelected(FilterEnum.thirtyfive, event.target.checked);
+      updateSelected(FilterEnum.fourtyfive, event.target.checked);
+      updateSelected(FilterEnum.fiftyfive, event.target.checked);
+      updateSelected(FilterEnum.sixtyfive, event.target.checked);
     } else if (filterName === FilterEnum.allGenders) {
       setAllGenders(event.target.checked);
       setMale(event.target.checked);
@@ -270,8 +277,8 @@ export default function adminSearchBarPatients({ searchTerm, setSearchTerm, subm
       updateSelected(FilterEnum.depression, event.target.checked);
       updateSelected(FilterEnum.other, event.target.checked);
     } else {
-      if (filterName === FilterEnum.below19 || filterName === FilterEnum.twentyToThirty || filterName === FilterEnum.thirtyToFourty
-        || filterName === FilterEnum.fourtyToFifty || filterName === FilterEnum.overFifty) {
+      if (filterName === FilterEnum.eighteen || filterName === FilterEnum.twentyfive || filterName === FilterEnum.thirtyfive
+        || filterName === FilterEnum.fourtyfive || filterName === FilterEnum.fiftyfive || filterName === FilterEnum.sixtyfive) {
         if (event.target.checked === false) {
           setAllAgeRanges(false);
         }
@@ -314,8 +321,8 @@ export default function adminSearchBarPatients({ searchTerm, setSearchTerm, subm
       }
     }
     setSubmittedFilters(filtersCategorized);
-    console.log("submitted filters: " + submittedFilters)
   }
+
 
   return (
     <div>
@@ -335,8 +342,10 @@ export default function adminSearchBarPatients({ searchTerm, setSearchTerm, subm
               </div>
             </div>
           </div>
+        </div>
 
-          {/* filter dropdowns for availability */}
+        <div className='flex flex-col md:flex-row gap-x-2 md:gap-x-2 gap-y-2 md:gap-y-4'>
+          {/* filter dropdowns for ageRange */}
 
           <div className={`dropdown flex xl:w-40 h-12 py-3.5 px-2 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
             <p className={`text-[${okb_colors.med_gray}] text-sm font-normal`}>Age Range</p>
@@ -359,47 +368,51 @@ export default function adminSearchBarPatients({ searchTerm, setSearchTerm, subm
                   <hr className={`w-48 h-0.5 bg-[#5F5F5F] place-self-center`}></hr>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4 pt-3.5">
                     <input type="checkbox"
-                      checked={below19}
-                      onChange={(e) => handleFilterChange(FilterEnum.below19, below19, setBelow19, e)}
+                      checked={eighteen}
+                      onChange={(e) => handleFilterChange(FilterEnum.eighteen, eighteen, setEighteen, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Below 19</span>
+                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>18-24</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
-                      checked={twentyToThirty}
-                      onChange={(e) => handleFilterChange(FilterEnum.twentyToThirty, twentyToThirty, setTwentyToThirty, e)}
+                      checked={twentyfive}
+                      onChange={(e) => handleFilterChange(FilterEnum.twentyfive, twentyfive, setTwentyfive, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>20 to 30</span>
+                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>25-34</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
-                      checked={thirtyToFourty}
-                      onChange={(e) => handleFilterChange(FilterEnum.thirtyToFourty, thirtyToFourty, setThirtyToFourty, e)}
+                      checked={thirtyfive}
+                      onChange={(e) => handleFilterChange(FilterEnum.thirtyfive, thirtyfive, setThirtyfive, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>30 to 40</span>
+                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>35-44</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
-                      checked={fourtyToFifty}
-                      onChange={(e) => handleFilterChange(FilterEnum.fourtyToFifty, fourtyToFifty, setFourtyToFifty, e)}
+                      checked={fourtyfive}
+                      onChange={(e) => handleFilterChange(FilterEnum.fourtyfive, fourtyfive, setFourtyfive, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>40 to 50</span>
+                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>45-54</span>
                   </label>
                   <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
                     <input type="checkbox"
-                      checked={overFifty}
-                      onChange={(e) => handleFilterChange(FilterEnum.overFifty, overFifty, setOverFifty, e)}
+                      checked={fiftyfive}
+                      onChange={(e) => handleFilterChange(FilterEnum.fiftyfive, fiftyfive, setFiftyfive, e)}
                       className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
-                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Over 50</span>
+                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>55-64</span>
+                  </label>
+                  <label className="label cursor-pointer flex py-2 px-3 items-center gap-4">
+                    <input type="checkbox"
+                      checked={sixtyfive}
+                      onChange={(e) => handleFilterChange(FilterEnum.sixtyfive, sixtyfive, setSixtyfive, e)}
+                      className={`checkbox flex flex-col items-start w-4 h-4 rounded-sm border-2 border-[${okb_colors.med_gray}]`} />
+                    <span className={`label-text flex text-[${okb_colors.dark_gray}]`}>Over 65</span>
                   </label>
                 </div>
               </ul>
             }
           </div>
 
-        </div>
-
-        <div className='flex flex-col md:flex-row gap-x-2 md:gap-x-2 gap-y-2 md:gap-y-4'>
           {/* filter drop downs for gender */}
           <div className={`dropdown flex xl:w-36 h-12 py-3.5 px-4 justify-between shrink-0 border-solid border rounded-lg border-[${okb_colors.dark_gray}] bg-[${okb_colors.white}]`}>
             <p className={`text-[${okb_colors.med_gray}] text-sm font-normal`}>Gender</p>
@@ -535,16 +548,22 @@ export default function adminSearchBarPatients({ searchTerm, setSearchTerm, subm
               </ul>
             }
           </div>
-
           {/* filter button */}
-          <div>
-            <button onClick={handleFilter} className={`filter-button flex lg:w-24 h-12 py-1 px-4 lg:py-2.5 lg:px-11 justify-center items-center gap-2.5 border-solid border rounded-lg border-[#195BA5] bg-[${okb_colors.white}]`}>
-              <div className={`flex text-[${okb_colors.okb_blue}] text-sm font-bold`}>Filter</div>
-            </button>
+          <div className='flex flex-col md:flex-row gap-x-2 md:gap-x-2 gap-y-2 md:gap-y-4'>
+            <div>
+              <button onClick={handleFilter} className={`filter-button flex lg:w-24 h-12 py-1 px-4 lg:py-2.5 lg:px-11 justify-center items-center gap-2.5 border-solid border rounded-lg border-[#195BA5] bg-[${okb_colors.white}]`}>
+                <div className={`flex text-[${okb_colors.okb_blue}] text-sm font-bold`}>Filter</div>
+              </button>
+            </div>
+            <div className='flex flex-col pt-2'>
+              <figure className={`cursor-pointer`} onClick={openDeleteModal}>
+                <Trash />
+              </figure>
+            </div>
           </div>
         </div>
 
       </div>
-    </div>
+    </div >
   );
 }

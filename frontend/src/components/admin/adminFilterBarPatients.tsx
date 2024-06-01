@@ -29,12 +29,12 @@ const AdminFilterBarPatients: React.FC<SearchBarPatientProps> = ({ onDelete, use
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState("");
   const [filters, setFilters] = useState([]);
   const [submittedFilters, setSubmittedFilters] = useState({});
-
-  const [below19, setBelow19] = useState(false);
-  const [twentyToThirty, setTwentyToThirty] = useState(false);
-  const [thirtyToFourty, setThirtyToFourty] = useState(false);
-  const [fourtyToFifty, setFourtyToFifty] = useState(false);
-  const [overFifty, setOverFifty] = useState(false);
+  const [eighteen, setEighteen] = useState(false);
+  const [twentyfive, setTwentyfive] = useState(false);
+  const [thirtyfive, setThirtyfive] = useState(false);
+  const [fourtyfive, setFourtyfive] = useState(false);
+  const [fiftyfive, setFiftyfive] = useState(false);
+  const [sixtyfive, setSixtyfive] = useState(false);
   const [allAgeRanges, setAllAgeRanges] = useState(false);
 
   const [male, setMale] = useState(false);
@@ -81,7 +81,6 @@ const AdminFilterBarPatients: React.FC<SearchBarPatientProps> = ({ onDelete, use
     async function fetchData() {
       try {
         if (user) {
-          console.log("HERE")
           const fetchedPatients: IPatient[] = await fetchAllPatients();
           setPatients(fetchedPatients);
           setFilteredPatients(fetchedPatients);
@@ -97,7 +96,6 @@ const AdminFilterBarPatients: React.FC<SearchBarPatientProps> = ({ onDelete, use
     async function fetchData() {
       try {
         if (user) {
-          // console.log("HERE")
           const fetchedPatients: IPatient[] = await fetchAllPatients();
           setPatients(fetchedPatients);
         }
@@ -141,17 +139,13 @@ const AdminFilterBarPatients: React.FC<SearchBarPatientProps> = ({ onDelete, use
 
   const matchesTerm = (patient: any, term: string) => {
     return patient.firstName?.toLowerCase().includes(term.toLowerCase()) ||
-      patient.lastName?.toLowerCase().includes(term.toLowerCase()) ||
-      patient.position?.toLowerCase().includes(term.toLowerCase());
+      patient.lastName?.toLowerCase().includes(term.toLowerCase())
   };
 
   // Filters psychiatrists by search and/or selected filters
   const processSearchFilter = () => {
-    console.log("submitted search: " + submittedSearchTerm);
     const terms = submittedSearchTerm.trim().split(/\s+/);
     let results = patients;
-    console.log(terms);
-
 
     // Updates result by search term (first names, last names, and/or titles)
     // Handles searches with three terms
@@ -161,14 +155,12 @@ const AdminFilterBarPatients: React.FC<SearchBarPatientProps> = ({ onDelete, use
       );
     };
 
-    console.log(results);
-
     // Updates results by the selected filters
     const filterResults = results.filter((patient) => {
       return (
         containsOneOf([patient.ageRange], submittedFilters['ageRange']) &&
         containsGender([patient.gender], submittedFilters['genders']) &&
-        containsOneOf([patient.concerns], submittedFilters['status']));
+        containsOneOf(patient.concerns, submittedFilters['concerns']));
     });
 
     return filterResults;
@@ -224,11 +216,10 @@ const AdminFilterBarPatients: React.FC<SearchBarPatientProps> = ({ onDelete, use
           submittedSearchTerm={submittedSearchTerm} setSubmittedSearchTerm={setSubmittedSearchTerm}
           filters={filters} setFilters={setFilters}
           submittedFilters={submittedFilters} setSubmittedFilters={setSubmittedFilters}
-          below19={below19} setBelow19={setBelow19}
-          twentyToThirty={twentyToThirty} setTwentyToThirty={setTwentyToThirty}
-          thirtyToFourty={thirtyToFourty} setThirtyToFourty={setThirtyToFourty}
-          fourtyToFifty={fourtyToFifty} seFourtyToFifty={setFourtyToFifty}
-          overFifty={overFifty} setOverFifty={setOverFifty}
+          eighteen={eighteen} setEighteen={setEighteen} twentyfive={twentyfive} setTwentyfive={setTwentyfive}
+          thirtyfive={thirtyfive} setThirtyfive={setThirtyfive} fourtyfive={fourtyfive}
+          setFourtyfive={setFourtyfive} fiftyfive={fiftyfive} setFiftyfive={setFiftyfive}
+          sixtyfive={sixtyfive} setSixtyfive={setSixtyfive}
           allAgeRanges={allAgeRanges} setAllAgeRanges={setAllAgeRanges}
           male={male} setMale={setMale}
           female={female} setFemale={setFemale}
@@ -243,12 +234,9 @@ const AdminFilterBarPatients: React.FC<SearchBarPatientProps> = ({ onDelete, use
           social={social} setSocial={setSocial}
           depression={depression} setDepression={setDepression}
           other={other} setOther={setOther}
-          allConcerns={allConcerns} setAllConcerns={setAllConcerns} />
+          allConcerns={allConcerns} setAllConcerns={setAllConcerns}
+          openDeleteModal={openDeleteModal} />
       </div>
-
-      <figure className={`cursor-pointer`} onClick={openDeleteModal}>
-        <Trash />
-      </figure>
 
       {/* Delete Modal */}
       {isDeleteModalOpen && (
