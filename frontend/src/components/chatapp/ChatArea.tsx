@@ -5,6 +5,7 @@ import MessageComposer from './MessageComposer';
 import Ellipses from '../../assets/ellipses';
 import okb_colors from '@/colors';
 import { IPatient, IReport } from '../../schema';
+import Close from '@/assets/close.svg';
 
 import router, { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -19,6 +20,7 @@ import { IPsychiatrist } from '../../schema';
 import CheckCircle from '../../assets/check_circle.svg';
 import Continue from '@/assets/continue.svg';
 import Submit from '@/assets/submit.svg';
+import { Button } from '@mui/material';
 
 
 interface NameAreaType {
@@ -37,12 +39,12 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
   const [showReportPopup, setShowReportPopup] = useState(false);
+  const [showReportCardPopup, setShowReportCardPopup] = useState(false);
   const [reportText, setReportText] = useState('');
   const { user } = useAuth();
   const [patient, setPatient] = useState<IPatient | null>(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [reportExists, setReportExists] = useState(false);
-  const [selectedPatientReports, setSelectedPatientReports] = useState<IReport[]>([]);
 
   useEffect(() => {
     const fetchPatient = async () => {
@@ -190,38 +192,10 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
     setShowReportPopup(true);
   };
 
-  const viewReport = ({ report, patient }) => {
-
-
-    const formattedDate = report.submittedAt.toDate().toLocaleString();
-
-    const cardStyle: React.CSSProperties = {
-      background: 'white',
-      borderRadius: '10px',
-      border: '1px solid #519AEB',
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-      padding: '12px 24px',
-      margin: '0 0 12px 0',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '12px',
-    };
-
-    return (
-      <div style={cardStyle} className="card bg-base-100 shadow-xl mb-4">
-        <div>
-          <p className="font-montserrat" style={{ fontSize: 14 }}>The following report for {patient.firstName} {patient.lastName} was submitted on: {formattedDate}</p>
-        </div>
-        <p className="font-montserrat" style={{ fontSize: 14 }}>Report Log</p>
-        <div>
-          <p className="font-montserrat" style={{ fontSize: 14, border: '1px solid #9A9A9A', color: '#000000', padding: '8px 12px' }}>{report.description}</p>
-        </div>
-        <p className="font-montserrat" style={{ fontSize: 14, textAlign: 'left' }}>Report Status: Verified on {formattedDate}</p>
-      </div>
-    );
-
-  };
-
+  const viewReport = (event) => {
+    event.preventDefault();
+    setShowReportCardPopup(true);
+  }
 
   const toggleDropdown = (event) => {
     event.preventDefault();
@@ -253,7 +227,22 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
     maxWidth: '500px', // maximum width of the popup
     zIndex: 1001,
     alignItems: 'center', // Center items vertically
+
   };
+
+  const cardStyle: React.CSSProperties = {
+    background: 'white',
+    // borderRadius: '10px',
+    // border: '1px solid #519AEB',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    padding: '12px 24px',
+    margin: '0 0 12px 0',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+  };
+
+  // const formattedDate = report.submittedAt.toDate().toLocaleString();
 
   const textareaStyle: React.CSSProperties = {
     width: '100%',
@@ -327,7 +316,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
                 <button onClick={markAsUnread}>Mark as Unread</button>
 
                 {reportExists ? (
-                  <button onClick={() => viewReport({ report: selectedPatientReports[0], patient })}>View Reports</button>
+                  <button onClick={viewReport}>View Reports</button>
                 ) : (
                   <button onClick={reportPatient}>Report Patient</button>
                 )}
@@ -346,6 +335,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
         )}
       </div>
       <DeleteModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onDelete={handleDelete} />
+
       {showReportPopup && (
         <div style={overlayStyle}>
           <div style={popupStyle}>
@@ -365,6 +355,35 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
             <div style={buttonsContainerStyle}>
               <Cancel onClick={handleCloseReport} style={{ cursor: 'pointer' }} />
               <Submit onClick={handleSubmitReport} style={{ cursor: 'pointer' }} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showReportCardPopup && (
+        <div className="modal modal-open" style={overlayStyle}>
+          <div className="modal-box " style={{ position: 'relative', display: 'flex', flexDirection: 'column', maxHeight: '50%', gap: 12, padding: 24, alignItems: 'center' }}>
+            <Close className="modal-action" onClick={() => setShowReportCardPopup(false)} style={{ position: 'absolute', top: 0, right: 12, cursor: 'pointer' }} />
+            <div className="text-xl font-bold font-montserrat" style={{ margin: '0 auto', fontSize: 15 }}>Report Information</div>
+            <div className="space-y-4" style={{ width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex' }}>
+              <div style={{ borderRadius: '10px', border: '1px solid #519AEB', padding: '12px 24px' }}>
+                <div>
+                  <p className="font-montserrat" style={{ fontSize: 14, paddingBottom: 5 }}>
+                    The following report for {name} was submitted on: thisisPLACEHOLDERtext
+                  </p>
+                </div>
+                <p className="font-montserrat" style={{ fontSize: 14, paddingBottom: 7 }}>
+                  Report Log
+                </p>
+                <div>
+                  <p className="font-montserrat" style={{ fontSize: 14, border: '1px solid #9A9A9A', color: '#000000', padding: '8px 20px' }}>
+                    thisisPLACEHOLDERtext
+                  </p>
+                </div>
+                <p className="font-montserrat" style={{ fontSize: 14, textAlign: 'left', paddingTop: 10 }}>
+                  Report Status: Verified on thisisPLACEHOLDERtext
+                </p>
+              </div>
             </div>
           </div>
         </div>
