@@ -90,7 +90,7 @@ const Navbar = () => {
         <ul
           ref={menuRef}
           className={`menu flex-col lg:flex-row lg:flex gap-5 ${menuOpen ? 'flex' : 'hidden h-full'
-            } lg:flex absolute lg:relative ${user ? 'top-[65px]' : 'top-[65px]'} lg:top-0 right-[68px] 
+            } lg:flex absolute lg:relative top-[65px] lg:top-0 right-[68px] 
             lg:right-auto w-[160px] lg:w-auto bg-white lg:bg-transparent shadow lg:shadow-none z-50 items-center`}
         >
           {!user && (
@@ -190,7 +190,7 @@ const Navbar = () => {
                 ref={profileMenuRef}
                 tabIndex={0}
                 className={`${profileMenuOpen ? 'block' : 'hidden'
-                  } absolute top-full right-0 menu p-2 shadow bg-base-100 top-[49px] w-52 mt-2 m1-5 absolute right-0`}
+                  } absolute top-full right-0 menu p-2 shadow bg-base-100 top-[50px] w-52 mt-2 m1-5 absolute right-0`}
               >
                 <div
                   style={{
