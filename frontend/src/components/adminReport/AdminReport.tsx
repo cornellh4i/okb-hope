@@ -386,12 +386,10 @@ const AdminReport = () => {
       event.target.style.color = 'black';
     };
 
-
-
     return (
       <div>
         <div className="modal modal-open">
-          <div className="modal-box" style={{ maxHeight: '50%' }}>
+          <div className="modal-box" style={{ maxHeight: '50%', position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
             <Close className="modal-action" onClick={handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
             <h1 className="text-xl font-semibold font-montserrat" style={{ margin: '0 auto', fontSize: 20, paddingBottom: '10px' }}>Report Information</h1>
             <div className="space-y-4">
