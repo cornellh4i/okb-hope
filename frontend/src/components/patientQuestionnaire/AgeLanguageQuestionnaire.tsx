@@ -16,8 +16,6 @@ interface QuestionnaireProps {
     isOtherLanguageSelected;
     otherLanguage;
     handleOtherLanguage;
-    // checked: { [key: string]: boolean };
-    // setChecked: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
     handleAge: (event: ChangeEvent<HTMLInputElement>) => void;
     handleLanguages: (event: ChangeEvent<HTMLInputElement>) => void;
 }
@@ -30,6 +28,7 @@ const AgeLanguageQuestionnaire = ({ age, checkedLanguages, isOtherLanguageSelect
     
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-9 p-8`}>
+            {/* Age */}
             <FormControl className='gap-y-2.5'>
                 <div className={`flex flex-row gap-1`}>
                     <span className={`text-lg font-semibold font-montserrat`}>What is your age? <span className={`text-lg text-red-600`}>*</span></span>
@@ -73,41 +72,8 @@ const AgeLanguageQuestionnaire = ({ age, checkedLanguages, isOtherLanguageSelect
                     } />
                 </RadioGroup>
             </FormControl>
-            {/* <FormGroup className='gap-y-2.5'>
-                <div className={`flex flex-row gap-1`}>
-                    <span className={`text-[17px] md:text-lg font-semibold font-montserrat`}>What are your preferred languages? <span className={`text-lg text-red-600`}>*</span></span>
-                </div>
-                <FormControlLabel control={<Checkbox defaultChecked={checked.English} checked={checked['english']} value={`english`} onChange={handleCheck} />} className={` ml-1 `} label={
-                    <span style={{ fontWeight: 300, fontSize: 18 }}>
-                        English
-                    </span>
-                } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Twi} checked={checked['twi']} value={`twi`} onChange={handleCheck} />} className={` ml-1 `} label={
-                    <span style={{ fontWeight: 300, fontSize: 18 }}>
-                        Twi
-                    </span>
-                } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Fante} checked={checked['fante']} value={`fante`} onChange={handleCheck} />} className={` ml-1 `} label={
-                    <span style={{ fontWeight: 300, fontSize: 18 }}>
-                        Fante
-                    </span>
-                } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Ewe} checked={checked['ewe']} value={`ewe`} onChange={handleCheck} />} className={` ml-1 `} label={
-                    <span style={{ fontWeight: 300, fontSize: 18 }}>
-                        Ewe
-                    </span>
-                } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Ga} checked={checked['ga']} value={`ga`} onChange={handleCheck} />} className={` ml-1 `} label={
-                    <span style={{ fontWeight: 300, fontSize: 18 }}>
-                        Ga
-                    </span>
-                } />
-                <FormControlLabel control={<Checkbox defaultChecked={checked.Other} checked={checked['other']} value={`other`} onChange={handleCheck} />} className={` ml-1 `} label={
-                    <span style={{ fontWeight: 300, fontSize: 18 }}>
-                        Other
-                    </span>
-                } />
-            </FormGroup> */}
+            
+            {/* Preferred Language(s) */}
             <FormGroup className='gap-y-3'>
                 <div className={`flex flex-row`}>
                     <span className={`text-lg font-semibold font-montserrat`}>What are your preferred language(s)? <span className={`text-lg text-red-600`}>*</span></span>

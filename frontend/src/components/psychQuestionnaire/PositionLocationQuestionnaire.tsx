@@ -21,8 +21,6 @@ interface QuestionnaireProps {
     handleLocation: (event: ChangeEvent<HTMLTextAreaElement>) => void;
     aboutYourself: string;
     handleAboutYourself: (event: ChangeEvent<HTMLTextAreaElement>) => void;
-    languages: string[];
-    setLanguages: React.Dispatch<React.SetStateAction<string[]>>;
     checkedLanguages: { [key: string]: boolean };
     setCheckedLanguages: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
     isOtherLanguageSelected: boolean;
@@ -30,7 +28,6 @@ interface QuestionnaireProps {
     handleOtherLanguage: (event: ChangeEvent<HTMLTextAreaElement>) => void;
     checkedAvailability: { [key: string]: boolean };
     handleWeeklyAvailability;
-    // setCheckedAvailability: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
     workingHours;
     handleWorkingHoursChange;
     handlePosition: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -41,7 +38,7 @@ interface QuestionnaireProps {
 }
 //2nd page of questionnaire
 const PositionLocationQuestionnaire = ({ position, setPosition, isOtherPositionSelected, otherPosition,
-    handleOtherPosition, location, handleLocation, aboutYourself, handleAboutYourself, languages, setLanguages,
+    handleOtherPosition, location, handleLocation, aboutYourself, handleAboutYourself,
     checkedLanguages, setCheckedLanguages, isOtherLanguageSelected, otherLanguage, handleOtherLanguage,
     checkedAvailability, handleWeeklyAvailability, workingHours, handleWorkingHoursChange, handlePosition, handleLanguages }: QuestionnaireProps) => {
 

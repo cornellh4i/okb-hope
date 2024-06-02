@@ -20,9 +20,6 @@ const PatientQuestionnaire = () => {
     const [gender, setGender] = useState<Gender>();
     const [image, setImage] = useState<string>("");
     const [age, setAge] = useState<string>("");
-    // const [checked, setChecked] = useState<{ [key: string]: boolean }>(
-    //     { 'english': false, 'twi': false, 'fante': false, 'ewe': false, 'ga': false, 'other': false });
-    const [aboutConcerns, setAboutConcerns] = useState<string>("");
 
     const [prefLanguages, setPrefLanguages] = useState<string[]>([]);
     const [checkedLanguages, setCheckedLanguages] = useState<{ [key: string]: boolean }>(
@@ -41,7 +38,6 @@ const PatientQuestionnaire = () => {
 
     const [isMobile, setIsMobile] = useState(false);
     const router = useRouter();
-    const { user } = useAuth();
 
     useEffect(() => {
         // Set isMobile based on window.innerWidth after component mounts to the DOM
@@ -129,6 +125,13 @@ const PatientQuestionnaire = () => {
         }
     };
 
+    const handlePrevExpChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setPrevExp(event.target.value);
+    }
+    const handlePrevExpTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setPrevExpTime(event.target.value);
+    }
+
     const handleConcerns = (event: ChangeEvent<HTMLInputElement>) => {
         const concern = event.target.value;
 
@@ -176,49 +179,6 @@ const PatientQuestionnaire = () => {
             });
         }
     };
-
-    useEffect(() => {
-        console.log(prefLanguages)
-    }, [prefLanguages])
-
-    const handlePrevExpChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setPrevExp(event.target.value);
-    }
-    const handlePrevExpTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setPrevExpTime(event.target.value);
-    }
-
-    // const handleChecks = (event: ChangeEvent<HTMLInputElement>) => {
-    //     const concern = event.target.value;
-    //     const newCheck = { ...check, [concern]: !check[concern] };
-
-    //     setCheck(newCheck);
-
-    //     if (newCheck[concern]) {
-    //         setConcerns([...concerns, concern]);
-    //     } else {
-    //         setConcerns(concerns.filter(element => element !== concern));
-    //     }
-    // };
-
-    // const handleAboutConcerns = (event) => {
-    //     const newAboutConcerns = event.target.value;
-    //     setAboutConcerns(newAboutConcerns);
-
-    //     if (check.Other) {
-    //         setConcerns(oldConcerns => {
-    //             const filteredConcerns = oldConcerns.filter(concern => !concern.startsWith("Other"));
-    //             if (newAboutConcerns.trim() !== "") {
-    //                 filteredConcerns.push(`Other: ${newAboutConcerns}`);
-    //             }
-    //             return filteredConcerns;
-    //         });
-    //     }
-    // };
-
-    useEffect(() => {
-        console.log(concerns)
-    }, [concerns])
 
     const goBack = () => {
         if (currentStep > 1) {
@@ -301,7 +261,6 @@ const PatientQuestionnaire = () => {
         }
     };
 
-
     return (
         <div className={'flex flex-col bg-off-white'}>
             {currentStep === 1 &&
@@ -327,13 +286,11 @@ const PatientQuestionnaire = () => {
             {currentStep === 3 && <HistoryQuestionnaire
                 prevExp={prevExp}
                 prevExpTime={prevExpTime}
-                concerns={concerns}
                 checkedConcerns={checkedConcerns}
                 isOtherConcernSelected={isOtherConcernSelected}
                 otherConcern={otherConcern}
                 handleOtherConcern={handleOtherConcern}
                 setConcerns={setConcerns}
-                aboutConcerns={aboutConcerns}
                 handlePrevExp={handlePrevExpChange}
                 handlePrevExpTime={handlePrevExpTimeChange}
                 handleConcerns={handleConcerns}

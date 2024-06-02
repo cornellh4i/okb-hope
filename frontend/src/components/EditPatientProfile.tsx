@@ -427,11 +427,10 @@ const EditPatientProfile = () => {
                 <span className="text-lg font-montserrat font-semibold">When was the last time you spoke with one? (Required)</span>
               </label>
               <div className="flex items-center">
-                <Vertical_line></Vertical_line>
-                <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative">
+                <div className="flex flex-col items-start w-full justify-center align-center gap-2.5 relative border-l-[3px] rounded-sm" style={{ borderColor: okb_colors.light_blue }}>
                   <div className="input-container w-full ml-3">
                     <div
-                      className="input input-bordered w-full rounded-xl border-2 pl-10 bg-white font-montserrat"
+                      className="input input-bordered w-full rounded-xl border-2 pl-10 bg-white font-montserrat h-full p-2"
                       style={{ display: 'flex', alignItems: 'center', backgroundColor: "white", borderColor: okb_colors.light_blue, color: okb_colors.dark_gray, width: "calc(100% - 0.75rem)", cursor: 'pointer', userSelect: 'none' }}
                       onClick={() => setIsLastTherapyTimeframeDropdownOpen(!isLastTherapyTimeframeDropdownOpen)}
                     >

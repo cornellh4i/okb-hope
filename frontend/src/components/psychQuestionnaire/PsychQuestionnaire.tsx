@@ -335,8 +335,6 @@ const PsychQuestionnaire = () => {
                     handleLocation={handleLocationChange}
                     aboutYourself={aboutYourself}
                     handleAboutYourself={handleAboutYourselfChange}
-                    languages={languages}
-                    setLanguages={setLanguages}
                     checkedLanguages={checkedLanguages}
                     setCheckedLanguages={setCheckedLanguages}
                     isOtherLanguageSelected={isOtherLanguageSelected}
