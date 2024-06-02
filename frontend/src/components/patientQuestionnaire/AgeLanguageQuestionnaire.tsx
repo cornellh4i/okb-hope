@@ -1,5 +1,5 @@
 // 2nd page of the Questionnaire
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -22,6 +22,10 @@ interface QuestionnaireProps {
 
 const AgeLanguageQuestionnaire = ({ age, prefLanguages, setPrefLanguages, checked, setChecked, handleAge, handleCheck }: QuestionnaireProps) => {
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+    
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-9 p-8`}>
             <FormControl className='gap-y-2.5'>

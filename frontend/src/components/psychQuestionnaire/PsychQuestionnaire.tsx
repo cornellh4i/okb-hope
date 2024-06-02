@@ -1,5 +1,5 @@
 import NameGenderImageQuestionnaire from "./NameGenderImageQuestionnaire";
-import PositionLanguageQuestionnaire from "./PositionLanguageQuestionnaire";
+import PositionLocationQuestionnaire from "./PositionLocationQuestionnaire";
 import SelectionQuestionnaire from "./SelectionQuestionnaire";
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
@@ -18,19 +18,32 @@ const PsychQuestionnaire = () => {
     const [gender, setGender] = useState<Gender>();
     const [image, setImage] = useState<string>("");
     const [position, setPosition] = useState<string>("");
+    const [isOtherPositionSelected, setIsOtherPositionSelected] = useState(false);
+    const [otherPosition, setOtherPosition] = useState("");
+    const [checkedPosition, setCheckedPosition] = useState({ psychiatrist: false, nurse: false, Other: false, });
     const [checkedLanguages, setCheckedLanguages] = useState<{ [key: string]: boolean }>(
         { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
     const [languages, setLanguages] = useState<string[]>([]);
-    const [checkedAvailability, setCheckedAvailability] = useState<{ [key: string]: boolean }>(
-        { 'Monday': false, 'Tuesday': false, 'Wednesday': false, 'Thursday': false, 'Friday': false, 'Saturday': false, 'Sunday':false });
+    const [isOtherLanguageSelected, setIsOtherLanguageSelected] = useState(false);
+    const [otherLanguage, setOtherLanguage] = useState("");
     const [weeklyAvailability, setWeeklyAvailability] = useState<string[]>([]);
+    const [checkedAvailability, setCheckedAvailability] = useState<{ [key: string]: boolean }>(
+        { 'Monday': false, 'Tuesday': false, 'Wednesday': false, 'Thursday': false, 'Friday': false, 'Saturday': false, 'Sunday': false });
+    const [workingHours, setWorkingHours] = useState({
+        Monday: { start: '', end: '' },
+        Tuesday: { start: '', end: '' },
+        Wednesday: { start: '', end: '' },
+        Thursday: { start: '', end: '' },
+        Friday: { start: '', end: '' },
+        Saturday: { start: '', end: '' },
+        Sunday: { start: '', end: '' },
+    });
     const [aboutYourself, setAboutYourself] = useState<string>("");
     const [location, setLocation] = useState<string>("");
     const [patient, setPatient] = useState<boolean>(false);
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
     const [isMobile, setIsMobile] = useState(false);
     const router = useRouter();
-    const { user } = useAuth();
 
     useEffect(() => {
         // Set isMobile based on window.innerWidth after component mounts to the DOM
@@ -77,54 +90,108 @@ const PsychQuestionnaire = () => {
         );
         const result = fixCase.join(' ');
         setLocation(result);
-    }
+    };
 
 
-    const handlePosition = (event: ChangeEvent<HTMLInputElement>) => {
-        const selectedPosition = (event.target.value);
-        switch (selectedPosition) {
-            case 'Psychiatrist':
-                setPosition("Psychiatrist");
-                break;
-            case 'Nurse':
-                setPosition("Nurse");
-                break;
-            default:
-                setPosition("")
+    const handlePosition = (event) => {
+        const selectedPosition = event.target.value;
+        if (selectedPosition === 'Other') {
+            setIsOtherPositionSelected(true);
+            setPosition(otherPosition);
+        } else {
+            setIsOtherPositionSelected(false);
+            setPosition(selectedPosition);
         }
-    }
+    };
+
+    const handleOtherPosition = (event) => {
+        setOtherPosition(event.target.value);
+        setPosition(event.target.value);
+    };
 
     const handleLanguages = (event: ChangeEvent<HTMLInputElement>) => {
         const lang = event.target.value;
-        const newCheckedLanguages = {
-            ...checkedLanguages,
-            [lang]: !checkedLanguages[lang]
-        };
-        setCheckedLanguages(newCheckedLanguages);
 
-        if (newCheckedLanguages[lang]) {
-            setLanguages([...languages, lang]);
+        if (lang === "Other") {
+            setIsOtherLanguageSelected(!isOtherLanguageSelected);
+            setCheckedLanguages({
+                ...checkedLanguages,
+                Other: !isOtherLanguageSelected,
+            });
+            if (!isOtherLanguageSelected && otherLanguage) {
+                setLanguages(prevLanguages => {
+                    const filteredLanguages = prevLanguages.filter(l => l !== otherLanguage);
+                    return [...filteredLanguages, otherLanguage];
+                });
+            } else {
+                setLanguages(prevLanguages => prevLanguages.filter(l => l !== otherLanguage));
+            }
         } else {
-            setLanguages(languages.filter(element => element !== lang));
-        }
+            const newCheckedLanguages = {
+                ...checkedLanguages,
+                [lang]: !checkedLanguages[lang]
+            };
+            setCheckedLanguages(newCheckedLanguages);
 
-        console.log(languages);
-        console.log(newCheckedLanguages);
+            if (newCheckedLanguages[lang]) {
+                setLanguages(prevLanguages => [...prevLanguages, lang]);
+            } else {
+                setLanguages(prevLanguages => prevLanguages.filter(element => element !== lang));
+            }
+        }
+    };
+
+    const handleOtherLanguage = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        let newLanguage = event.target.value;
+
+        if (newLanguage.length > 0) {
+            newLanguage = newLanguage.charAt(0).toUpperCase() + newLanguage.slice(1);
+        }
+        setOtherLanguage(newLanguage);
+
+        if (isOtherLanguageSelected) {
+            setLanguages(prevLanguages => {
+                const filteredLanguages = prevLanguages.filter(l => l !== otherLanguage);
+                return newLanguage ? [...filteredLanguages, newLanguage] : filteredLanguages;
+            });
+        }
+    };
+
+    const handleWorkingHoursChange = (day: string, type: 'start' | 'end', value: string) => {
+        setWorkingHours(prevState => ({
+            ...prevState,
+            [day]: {
+                ...prevState[day],
+                [type]: value
+            }
+        }));
     };
 
     const handleWeeklyAvailability = (event: ChangeEvent<HTMLInputElement>) => {
-        const day = event.target.value;
-        const newChecked = {
-            ...checkedAvailability,
-            [day]: !checkedAvailability[day]
-        };
-        setCheckedAvailability(newChecked);
+        const { value, checked } = event.target;
 
-        if (newChecked[day]) {
-            setWeeklyAvailability([...weeklyAvailability, day]);
-        } else {
-            setWeeklyAvailability(weeklyAvailability.filter(element => element !== day));
+        // Update checkedAvailability state
+        setCheckedAvailability(prevState => ({
+            ...prevState,
+            [value]: checked
+        }));
+
+        // If the day is unchecked, reset its working hours
+        if (!checked) {
+            setWorkingHours(prevState => ({
+                ...prevState,
+                [value]: { start: '', end: '' }
+            }));
         }
+
+        // Update weeklyAvailability state
+        setWeeklyAvailability(prevState => {
+            if (checked) {
+                return [...prevState, value];
+            } else {
+                return prevState.filter(day => day !== value);
+            }
+        });
     };
 
     const handleOptionChange = (option: 'patient' | 'psychiatrist') => {
@@ -163,7 +230,17 @@ const PsychQuestionnaire = () => {
         }
 
         else if (currentStep === 3 && (position === "")) {
-            alert("Please select your position.");
+            alert("Please select your current position.");
+            return;
+        }
+
+        else if (currentStep === 3 && (location.length === 0)) {
+            alert("Please fill out the 'Where do you work?' section.");
+            return;
+        }
+
+        else if (currentStep === 3 && (aboutYourself.length === 0)) {
+            alert("Please fill out the 'About Yourself' section.");
             return;
         }
 
@@ -172,14 +249,21 @@ const PsychQuestionnaire = () => {
             return;
         }
 
-        else if (currentStep === 3 && (location.length === 0)) {
-            alert("Please fill out the 'Location' section.");
-            return;
-        }
+        else if (currentStep === 3) {
+            const allDaysUnchecked = Object.values(checkedAvailability).every(checked => !checked);
+            const incompleteHours = Object.entries(workingHours).some(
+                ([day, hours]) => checkedAvailability[day] && (hours.start === '' || hours.end === '')
+            );
 
-        else if (currentStep === 3 && (aboutYourself.length === 0)) {
-            alert("Please fill out the 'About Yourself' section.");
-            return;
+            if (allDaysUnchecked) {
+                alert("Please select at least one day for your availability.");
+                return;
+            }
+
+            if (incompleteHours) {
+                alert("Please select your working hour(s) for the selected days.");
+                return;
+            }
         }
 
         if (currentStep < 3) {
@@ -195,20 +279,20 @@ const PsychQuestionnaire = () => {
                     lastName,
                     position,
                     image,
-                    [],
                     gender,
                     location,
-                    languages,
-                    weeklyAvailability,
-                    [],
-                    aboutYourself,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    [],
-                    [],
+                    languages, //language
+                    weeklyAvailability, //weeklyAvailability
+                    workingHours, //workingHours
+                    [], //specialty
+                    aboutYourself, //description
+                    [], //concerns
+                    "", //ageRange
+                    "", //lastTherapyTimeframe
+                    "", //previousTherapyExperience
+                    [], //prefLanguages
+                    gender, //genderPref
+                    [], //savedPsychiatrists
                 )
                 router.push('/loading?init=true');
             } catch (error) {
@@ -236,22 +320,29 @@ const PsychQuestionnaire = () => {
                     handleGender={handleGenderChange}
                 />}
             {currentStep === 3 &&
-                <PositionLanguageQuestionnaire
-                    setPosition={position}
+                <PositionLocationQuestionnaire
+                    position={position}
+                    setPosition={setPosition}
+                    isOtherPositionSelected={isOtherPositionSelected}
+                    otherPosition={otherPosition}
+                    handleOtherPosition={handleOtherPosition}
                     location={location}
-                    languages={languages}
+                    handleLocation={handleLocationChange}
                     aboutYourself={aboutYourself}
+                    handleAboutYourself={handleAboutYourselfChange}
+                    languages={languages}
                     setLanguages={setLanguages}
                     checkedLanguages={checkedLanguages}
                     setCheckedLanguages={setCheckedLanguages}
+                    isOtherLanguageSelected={isOtherLanguageSelected}
+                    otherLanguage={otherLanguage}
+                    handleOtherLanguage={handleOtherLanguage}
                     checkedAvailability={checkedAvailability}
-                    setCheckedAvailability={setCheckedAvailability}
-                    handleLocation={handleLocationChange}
-                    handleLanguages={handleLanguages}
                     handleWeeklyAvailability={handleWeeklyAvailability}
+                    workingHours={workingHours}
+                    handleWorkingHoursChange={handleWorkingHoursChange}
                     handlePosition={handlePosition}
-                    handleAboutYourself={handleAboutYourselfChange}
-
+                    handleLanguages={handleLanguages}
                 />}
             {!isMobile && (
                 <>

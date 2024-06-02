@@ -1,64 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import AvailabilityCard from './AvailabilityCard';
-import { fetchAvailability } from '../../../firebase/fetchData';
-import { IAvailability } from '@/schema';
-
 
 interface AvailabilityProps {
-    availability: string[];
+    weeklyAvailability: string[];
+    workingHours
 }
 
-const Availability = ({ availability = [] }: AvailabilityProps) => {
-    const days = ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
-    const [availabilities, setAvailabilities] = useState<IAvailability[]>([]);
+const dayMapping = {
+    Monday: 'Mon',
+    Tuesday: 'Tues',
+    Wednesday: 'Wed',
+    Thursday: 'Thurs',
+    Friday: 'Fri',
+    Saturday: 'Sat',
+    Sunday: 'Sun',
+};
 
-    // Calculate the maximum number of time slots among all days
-    const maxTimeSlots = availability.reduce((max, times) => {
-        const timeList = times.split(',').map(time => time.trim());
-        return Math.max(max, timeList.length);
-    }, 0);
-
-    // Fetch Data of this Availability based on availId 
-    const fetchAvailabilityInfo = async (availId) => {
-        try {
-            const availData = await fetchAvailability(availId);//dgkPWTpDh87X1q18Pa6E
-            return availData;
-        } catch (error) {
-            console.error("Error fetching data with availId", availId);
-            return undefined;
-        }
-    }
-    useEffect(() => {
-        // Update state of 'availabilites' with Data of this Availability
-        const fetchDataAvailIds = async () => {
-            const results = await Promise.all(availability.map((availId) => fetchAvailabilityInfo(availId)));
-            const validAvailabilities = results.filter(result => result != null) as IAvailability[];
-            // console.log("valid Availabilities" , validAvailabilities);
-            setAvailabilities(validAvailabilities);
-        }
-        fetchDataAvailIds();
-
-    }, [availability]);
+const Availability = ({ weeklyAvailability = [], workingHours }: AvailabilityProps) => {
+    const fullDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     return (
         <div className="h-fit flex justify-center">
             <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-8`}>
-                {days.map((day, index) => {
-                    const start = availabilities[index]?.startTime.toDate()
-                    const end = availabilities[index]?.endTime.toDate()
-                    let times = ''
+                {fullDays.map((day) => {
+                    const dayAvailability = weeklyAvailability.includes(day) ? workingHours[day] : null;
 
-                    // check if this availability exists
-                    if (availabilities[index]) {
-                        times = `${start.getHours()}:${(start.getMinutes() < 10 ? '0' : '') + start.getMinutes()}-${end.getHours()}:${(end.getMinutes() < 10 ? '0' : '') + end.getMinutes()}` || ''
+                    let times = '';
+                    if (dayAvailability) {
+                        times = `${dayAvailability.start}-${dayAvailability.end}`;
                     }
-                    const hasTimes = times.length > 0;
 
                     return (
                         <AvailabilityCard
                             key={day}
-                            day={day}
-                            times={hasTimes ? times : '\u00A0'.repeat(maxTimeSlots)} // Use non-breaking spaces for empty slots
+                            day={dayMapping[day]} // Display the shorthand version of the day
+                            times={times}
                         />
                     );
                 })}
