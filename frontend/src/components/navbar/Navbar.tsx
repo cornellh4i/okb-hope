@@ -190,7 +190,7 @@ const Navbar = () => {
                 ref={profileMenuRef}
                 tabIndex={0}
                 className={`${profileMenuOpen ? 'block' : 'hidden'
-                  } absolute top-full right-0 menu p-2 shadow bg-base-100 top-[50px] w-52 mt-2 m1-5 absolute right-0`}
+                  } absolute right-0 menu p-2 shadow bg-base-100 top-[49px] w-52 mt-2 m1-5 absolute right-0`}
               >
                 <div
                   style={{
