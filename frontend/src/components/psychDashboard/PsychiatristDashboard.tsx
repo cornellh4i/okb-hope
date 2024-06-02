@@ -151,9 +151,21 @@ const PsychiatristDashboard = () => {
                 </div>
             </div>
             <div className="flex flex-col md:flex-row justify-center pt-10 w-4/5">
-                <div className="bg-white h-[330px] rounded-[10px] shadow" >
+                {/* <div className="bg-white h-[330px] rounded-[10px] shadow" >
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DateCalendar value={currentDate} onChange={(newValue: dayjs.Dayjs | null) => { setCurrentDate(newValue ?? dayjs()); }} />
+                    </LocalizationProvider>
+                </div> */}
+                <div className="bg-white h-[330px] rounded-[10px] shadow flex items-center justify-center">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <div className="scale-85 md:scale-md-100">
+                            <DateCalendar
+                                value={currentDate}
+                                onChange={(newValue: dayjs.Dayjs | null) => {
+                                    setCurrentDate(newValue ?? dayjs());
+                                }}
+                            />
+                        </div>
                     </LocalizationProvider>
                 </div>
                 <div className="md:ml-10 mb-10 w-full h-[630px] h-full flex-col justify-center md:justify-start items-center md:items-start gap-9 inline-flex">

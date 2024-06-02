@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { auth } from '../../../firebase/firebase';
 import CalendarIcon from '@/assets/calendar.svg'
 import ClockIcon from '@/assets/clock.svg'
+import ChatIcon from '@/assets/chat_icon.svg'
 import AppointmentQuestion from './AppointmentQuestion'
 import Link from 'next/link';
 import { fetchPatientDetails } from '../../../firebase/fetchData';
@@ -25,33 +26,33 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
       const updatedApptQuestions: ApptQuestion[] = [
         {
           "id": "input1",
-          "question": "Are there any specific concerns you would like to discuss with your counselor?",
-          "answer": data.concerns.join(', ')
+          "question": "What is your gender?",
+          "answer": data.gender === 0 ? "Male" : (data.gender === 1 ? "Female" : "Other")
         },
         {
           "id": "input2",
-          "question": "Have you spoken with a counselor/therapist before?",
-          "answer": data.previousTherapyExperience
-        },
-        {
-          "id": "input3",
-          "question": "If yes, when was the last time you spoke with one?",
-          "answer": data.lastTherapyTimeframe
-        },
-        {
-          "id": "input4",
           "question": "What is your age?",
           "answer": data.ageRange
         },
         {
+          "id": "input3",
+          "question": "What are your preferred language(s)?",
+          "answer": data.prefLanguages.join(', ')
+        },
+        {
+          "id": "input4",
+          "question": "Have you spoken with a counselor/therapist before?",
+          "answer": data.previousTherapyExperience
+        },
+        {
           "id": "input5",
-          "question": "What kind of counselor do you want to speak with?",
-          "answer": data.gender === 0 ? "Male" : (data.gender === 1 ? "Female" : "Other")
+          "question": "When was the last time you spoke with one?",
+          "answer": data.lastTherapyTimeframe
         },
         {
           "id": "input6",
-          "question": "What is your preferred language?",
-          "answer": data.prefLanguages.join(', ')
+          "question": "Are there any specific concerns you would like to discuss with your counselor?",
+          "answer": data.concerns.join(', ')
         }
       ];
       // Set the state with the updated array
@@ -74,7 +75,11 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
     <React.Fragment>
       <div className="card w-11/12 bg-base-100 mt-4 shadow-xl border-[3px] border-[#519AEB]">
         <div className="card-body p-4">
-          <p className="text-[12px] font-montserrat">In {daysTo} days</p>
+          {daysTo > 2 ? (
+            <p className="text-[12px] font-montserrat">In {daysTo} days</p>
+          ) : daysTo == 1 ? (
+            <p className="text-[12px] font-montserrat">Tomorrow</p>
+          ) : <p className="text-[12px] font-montserrat">Today</p>}
           <h2 className="card-title text-[16px] font-[600] font-montserrat">Meeting with {p_name}</h2>
           <div className="grid grid-cols-4 grid-rows-2 gap-1 items-center pb-1/12">
             {/* row 1: day, date of appointment */}
@@ -95,47 +100,54 @@ const AppointmentCard = ({ p_name, start, end }: { p_name: string, start: Date, 
               >
                 <div className="relative w-auto h-2/3 my-6 mx-auto max-w-3xl">
                   {/*content*/}
-                  <div className="border-0 rounded-lg p-9 shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                  <div className="border-0 rounded-lg p-9 shadow-lg relative flex flex-col gap-8 w-full bg-white outline-none focus:outline-none">
                     {/*header*/}
-                    <div className="flex items-start justify-between rounded-t">
-                      <h3 className="text-3xl font-bold font-montserrat">
-                        Meeting with {p_name}
-                      </h3>
-                      <br></br>
-                      <br></br>
-                    </div>
-                    {/*body*/}
-                    <div className="relative flex-auto">
-                      <div className="col-span-4 text-[#5F5F5F] font-montserrat"><p>{day}, {month} {start.getDate()} • {start.getHours()}:{(start.getMinutes() < 10 ? '0' : '') + start.getMinutes()} - {end.getHours()}:{(end.getMinutes() < 10 ? '0' : '') + end.getMinutes()}</p></div>
-                      <br></br>
-                      {/* button to start appointment */}
-                      <Link href="./video-chat">
-                        <button
-                          className="mb-4 bg-[#519AEB] font-montserrat font-semibold text-[#FFFDFD] active:bg-gray-500 text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full"
-                          type="button"
-                        >
-                          Start Appointment
-                        </button>
-                      </Link>
-                      {/* Reschedule and delete appointment buttons */}
-                      <div className="flex space-x-4">
-                        <button
-                          className="text-[#5F5F5F] font-montserrat font-semibold active:bg-gray-500 text-sm rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2"
-                          type="button"
-                          style={{ width: '50%', height: '100%', paddingLeft: 30, paddingRight: 30, paddingTop: 12, paddingBottom: 12, borderRadius: 10, border: '3px #519AEB solid', justifyContent: 'center', alignItems: 'center', gap: 10, display: 'inline-flex' }}
-                        >
-                          Reschedule Appointment
-                        </button>
-                        <button
-                          className="text-[#5F5F5F] font-montserrat font-semibold active:bg-gray-500 text-sm rounded shadow hover:shadow-lg focus: mr-1 mb-1 ease-linear transition-all duration-150 w-1/2"
-                          type="button"
-                          style={{ width: '50%', height: '100%', paddingLeft: 30, paddingRight: 30, paddingTop: 12, paddingBottom: 12, borderRadius: 10, border: '3px #519AEB solid', justifyContent: 'center', alignItems: 'center', gap: 10, display: 'inline-flex' }}
-                        >
-                          Delete Appointment
-                        </button>
+                    <div className='flex flex-col gap-4'>
+                      <div className="flex flex-col gap-2 items-start justify-between rounded-t">
+                        <h3 className="flex flex-wrap gap-4 text-3xl font-semibold font-montserrat">
+                          Meeting with {p_name} <ChatIcon></ChatIcon>
+                        </h3>
+                        <div className="col-span-4 text-[#5F5F5F] font-montserrat">
+                          <p>
+                            {day}, {month} {start.getDate()}
+                            <span style={{ padding: '0 1rem' }}>•</span>
+                            {start.getHours()}:{(start.getMinutes() < 10 ? '0' : '') + start.getMinutes()} - {end.getHours()}:{(end.getMinutes() < 10 ? '0' : '') + end.getMinutes()}
+                          </p>
+                        </div>
                       </div>
-                      <br></br>
-                      {/* questionnaire answers: map each JSON object to each individual Appointment Question */}
+                      {/*body*/}
+                      <div className="flex flex-col gap-2">
+                        {/* button to start appointment */}
+                        <Link href="./video-chat">
+                          <button
+                            className="bg-[#519AEB] font-montserrat font-semibold text-[#FFFDFD] active:bg-gray-500 text-sm px-6 py-3 shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150 w-full"
+                            type="button"
+                            style={{ borderRadius: 10 }}
+                          >
+                            Start Appointment
+                          </button>
+                        </Link>
+                        {/* Reschedule and delete appointment buttons */}
+                        <div className="flex flex-row gap-2">
+                          <button
+                            className="text-[#5F5F5F] font-montserrat font-semibold active:bg-gray-500 text-sm rounded shadow hover:shadow-lg focus: ease-linear transition-all duration-150 w-1/2"
+                            type="button"
+                            style={{ width: '50%', height: '100%', paddingLeft: 30, paddingRight: 30, paddingTop: 12, paddingBottom: 12, borderRadius: 10, border: '3px #519AEB solid', justifyContent: 'center', alignItems: 'center', gap: 10, display: 'inline-flex' }}
+                          >
+                            Reschedule Appointment
+                          </button>
+                          <button
+                            className="text-[#5F5F5F] font-montserrat font-semibold active:bg-gray-500 text-sm rounded shadow hover:shadow-lg focus: ease-linear transition-all duration-150 w-1/2"
+                            type="button"
+                            style={{ width: '50%', height: '100%', paddingLeft: 30, paddingRight: 30, paddingTop: 12, paddingBottom: 12, borderRadius: 10, border: '3px #519AEB solid', justifyContent: 'center', alignItems: 'center', gap: 10, display: 'inline-flex' }}
+                          >
+                            Delete Appointment
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    {/* questionnaire answers: map each JSON object to each individual Appointment Question */}
+                    <div className='flex flex-col gap-y-8'>
                       {apptQuestions.map(input => (
 
                         <div key={input.id.toString()} className="appointment_question">

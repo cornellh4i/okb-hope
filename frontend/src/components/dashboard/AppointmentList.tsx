@@ -56,7 +56,11 @@ const AppointmentList = () => {
 
   const appointmentCards = () => {
     if (appointments.length > 0) {
-      return appointments.map((appointment, index) => (
+      const sortedAppointments = appointments.slice().sort((a, b) => {
+        return a.startTime.toDate().getTime() - b.startTime.toDate().getTime();
+      });
+
+      return sortedAppointments.map((appointment, index) => (
         <div key={appointment.appointId.toString()} className="appointment flex items-center justify-center w-full">
           <AppointmentCard
             p_name={psychiatristNames[index]}
@@ -69,7 +73,6 @@ const AppointmentList = () => {
       return <div>You have no upcoming appointments.</div>;
     }
   };
-
 
   return (
     // renders a card containing all of the AppointmentCards 
