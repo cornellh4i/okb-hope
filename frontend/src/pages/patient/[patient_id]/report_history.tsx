@@ -213,8 +213,9 @@ const ReportList: React.FC = () => {
                   </div>
                 </div>
                 {/* Additional psychiatrist info */}
-                <div className={`flex w-full justify-center lg:justify-start items-center lg:items-start min-h-[4rem] mt-4 lg:mt-0`}>
-                  <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-montserrat font-normal`}>{psychiatrist.description ? psychiatrist.description : "No description available."}</p>
+                <div className={`flex w-full justify-center lg:justify-start items-center lg:items-start mt-4 lg:mt-0`}>
+                  {/* <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-montserrat font-normal`}>{psychiatrist.description ? psychiatrist.description : "No description available."}</p> */}
+                  <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-montserrat font-normal overflow-hidden overflow-ellipsis`} style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', lineClamp: 3, MozBoxOrient: 'vertical', textAlign: 'left' }}>{psychiatrist.description ? psychiatrist.description : "No description available."}</p>
                 </div>
               </div>
             </div>
