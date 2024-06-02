@@ -249,6 +249,11 @@ const PsychQuestionnaire = () => {
             return;
         }
 
+        else if (currentStep === 3 && (isOtherLanguageSelected && otherLanguage === "")) {
+            alert("You selected 'Other' for language(s) you speak. Please type in the other language(s).");
+            return;
+        }
+
         else if (currentStep === 3) {
             const allDaysUnchecked = Object.values(checkedAvailability).every(checked => !checked);
             const incompleteHours = Object.entries(workingHours).some(

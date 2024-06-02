@@ -72,6 +72,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
         setPosition(data.position);
         setLocation(data.location);
         setDescription(data.description);
+
         setWeeklyAvailability(data.weeklyAvailability);
         const initialCheckedAvailability = {
           Monday: data.weeklyAvailability.includes('Monday'),
@@ -83,7 +84,8 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
           Sunday: data.weeklyAvailability.includes('Sunday'),
         };
         setCheckedAvailability(initialCheckedAvailability);
-        setWorkingHours(data.workingHours); // Add this line
+        setWorkingHours(data.workingHours);
+
         const updatedLanguages = { ...languages };
         data.language.forEach(lang => {
           if (predefinedLanguages.includes(lang)) {
@@ -192,11 +194,14 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
 
   const handleSaveChanges = async () => {
     const selectedLanguages = Object.keys(languages).filter(lang => languages[lang]);
-    const userRef = doc(db, "psychiatrists", docId ?? "");
-    if (!isWorkingHoursValid()) {
+    if (languages['Other'] && otherLanguage === "") {
+      alert("You selected 'Other' for language(s) you speak. Please type in the other language(s).");
+      return;
+    } else if (!isWorkingHoursValid()) {
       alert("Please enter both start and end time for selected days.");
       return;
     }
+    const userRef = doc(db, "psychiatrists", docId ?? "");
     await updateDoc(userRef, {
       firstName: firstName,
       lastName: lastName,
@@ -218,9 +223,9 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
           <text className="card-title font-montserrat text-4xl">Edit Profile</text>
           {/* Text input fields */}
 
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-col md:flex-row justify-between">
             {/* First Name */}
-            <div tabIndex={0} className="flex form-control w-1/2 mr-10">
+            <div tabIndex={0} className="flex form-control w-full md:w-1/2 mr-10">
               <div className="label-container">
                 <label className="label">
                   <span className="text-lg font-montserrat font-semibold">First Name (Required)</span>
@@ -233,7 +238,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
             </div>
 
             {/* Last Name */}
-            <div tabIndex={0} className="form-control w-1/2 pr-0">
+            <div tabIndex={0} className="form-control w-full md:w-1/2 pr-0">
               <label className="label">
                 <span className="text-lg font-montserrat font-semibold">Last Name (Required)</span>
               </label>
@@ -408,8 +413,8 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
               <span className="text-lg font-montserrat font-semibold">Language(s) Spoken (Required)</span>
             </label>
             <div className="flex flex-row gap-3">
-              <div className='flex flex-wrap items-center font-montserrat border-l-[3px] rounded-sm' style={{ borderColor: okb_colors.light_blue }}>
-                <div className='flex ml-3'>
+              <div className='flex items-center font-montserrat border-l-[3px] rounded-sm' style={{ borderColor: okb_colors.light_blue }}>
+                <div className='flex flex-wrap ml-3'>
                   {predefinedLanguages.map((lang) => (
                     <FormControlLabel
                       key={lang}

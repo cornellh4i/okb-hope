@@ -20,16 +20,24 @@ const PatientQuestionnaire = () => {
     const [gender, setGender] = useState<Gender>();
     const [image, setImage] = useState<string>("");
     const [age, setAge] = useState<string>("");
-    const [checked, setChecked] = useState<{ [key: string]: boolean }>(
-        { 'english': false, 'twi': false, 'fante': false, 'ewe': false, 'ga': false, 'other': false });
+    // const [checked, setChecked] = useState<{ [key: string]: boolean }>(
+    //     { 'english': false, 'twi': false, 'fante': false, 'ewe': false, 'ga': false, 'other': false });
     const [aboutConcerns, setAboutConcerns] = useState<string>("");
+
     const [prefLanguages, setPrefLanguages] = useState<string[]>([]);
+    const [checkedLanguages, setCheckedLanguages] = useState<{ [key: string]: boolean }>(
+        { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
+    const [isOtherLanguageSelected, setIsOtherLanguageSelected] = useState(false);
+    const [otherLanguage, setOtherLanguage] = useState("");
 
     const [prevExp, setPrevExp] = useState<string>("");
     const [prevExpTime, setPrevExpTime] = useState<string>("");
+
     const [concerns, setConcerns] = useState<string[]>([]);
-    const [check, setCheck] = useState<{ [key: string]: boolean }>(
-        { 'MyRelationships': false, 'Addiction': false, 'SuicidalThoughts': false, 'FamilyDistress': false, 'SubstanceAbuse': false, 'AcademicDistress': false, 'SocialAnxiety': false, 'Depression': false, 'Other': false });
+    const [checkedConcerns, setCheckConcerns] = useState<{ [key: string]: boolean }>(
+        { 'MyRelationships': false, 'Addiction': false, 'SuicidalThoughts': false, 'FamilyDistress': false, 'SubstanceAbuse': false, 'AcademicDistress': false, 'SocialAnxiety': false, 'Depression': false });
+    const [isOtherConcernSelected, setIsOtherConcernSelected] = useState(false);
+    const [otherConcern, setOtherConcern] = useState("");
 
     const [isMobile, setIsMobile] = useState(false);
     const router = useRouter();
@@ -73,20 +81,105 @@ const PatientQuestionnaire = () => {
         setAge(event.target.value);
     }
 
-    const handleCheck = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleLanguages = (event: ChangeEvent<HTMLInputElement>) => {
         const lang = event.target.value;
-        const newChecked = {
-            ...checked,
-            [lang]: !checked[lang]
-        };
-        setChecked(newChecked);
 
-        if (newChecked[lang]) {
-            setPrefLanguages([...prefLanguages, lang]);
+        if (lang === "Other") {
+            setIsOtherLanguageSelected(!isOtherLanguageSelected);
+            setCheckedLanguages({
+                ...checkedLanguages,
+                Other: !isOtherLanguageSelected,
+            });
+            if (!isOtherLanguageSelected && otherLanguage) {
+                setPrefLanguages(prevLanguages => {
+                    const filteredLanguages = prevLanguages.filter(l => l !== otherLanguage);
+                    return [...filteredLanguages, otherLanguage];
+                });
+            } else {
+                setPrefLanguages(prevLanguages => prevLanguages.filter(l => l !== otherLanguage));
+            }
         } else {
-            setPrefLanguages(prefLanguages.filter(element => element !== lang));
+            const newCheckedLanguages = {
+                ...checkedLanguages,
+                [lang]: !checkedLanguages[lang]
+            };
+            setCheckedLanguages(newCheckedLanguages);
+
+            if (newCheckedLanguages[lang]) {
+                setPrefLanguages(prevLanguages => [...prevLanguages, lang]);
+            } else {
+                setPrefLanguages(prevLanguages => prevLanguages.filter(element => element !== lang));
+            }
         }
     };
+
+    const handleOtherLanguage = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        let newLanguage = event.target.value;
+
+        if (newLanguage.length > 0) {
+            newLanguage = newLanguage.charAt(0).toUpperCase() + newLanguage.slice(1);
+        }
+        setOtherLanguage(newLanguage);
+
+        if (isOtherLanguageSelected) {
+            setPrefLanguages(prevLanguages => {
+                const filteredLanguages = prevLanguages.filter(l => l !== otherLanguage);
+                return newLanguage ? [...filteredLanguages, newLanguage] : filteredLanguages;
+            });
+        }
+    };
+
+    const handleConcerns = (event: ChangeEvent<HTMLInputElement>) => {
+        const concern = event.target.value;
+
+        if (concern === "Other") {
+            setIsOtherConcernSelected(!isOtherConcernSelected);
+            setCheckConcerns({
+                ...checkedConcerns,
+                Other: !isOtherConcernSelected,
+            });
+            if (!isOtherConcernSelected && otherConcern) {
+                setConcerns(prevConcerns => {
+                    const filteredConcerns = prevConcerns.filter(c => c !== otherConcern);
+                    return [...filteredConcerns, otherConcern];
+                });
+            } else {
+                setConcerns(prevConcerns => prevConcerns.filter(c => c !== otherConcern));
+            }
+        } else {
+            const newCheckedConcerns = {
+                ...checkedConcerns,
+                [concern]: !checkedConcerns[concern]
+            };
+            setCheckConcerns(newCheckedConcerns);
+
+            if (newCheckedConcerns[concern]) {
+                setConcerns(prevConcerns => [...prevConcerns, concern]);
+            } else {
+                setConcerns(prevConcerns => prevConcerns.filter(element => element !== concern));
+            }
+        }
+    };
+
+    const handleOtherConcern = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        let newConcern = event.target.value;
+
+        if (newConcern.length > 0) {
+            newConcern = newConcern.charAt(0).toUpperCase() + newConcern.slice(1);
+        }
+        setOtherConcern(newConcern);
+
+        if (isOtherConcernSelected) {
+            setConcerns(prevConcerns => {
+                const filteredConcerns = prevConcerns.filter(c => c !== otherConcern);
+                return newConcern ? [...filteredConcerns, newConcern] : filteredConcerns;
+            });
+        }
+    };
+
+    useEffect(() => {
+        console.log(prefLanguages)
+    }, [prefLanguages])
 
     const handlePrevExpChange = (event: ChangeEvent<HTMLInputElement>) => {
         setPrevExp(event.target.value);
@@ -94,33 +187,38 @@ const PatientQuestionnaire = () => {
     const handlePrevExpTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
         setPrevExpTime(event.target.value);
     }
-    const handleChecks = (event: ChangeEvent<HTMLInputElement>) => {
-        const concern = event.target.value;
-        const newCheck = { ...check, [concern]: !check[concern] };
 
-        setCheck(newCheck);
+    // const handleChecks = (event: ChangeEvent<HTMLInputElement>) => {
+    //     const concern = event.target.value;
+    //     const newCheck = { ...check, [concern]: !check[concern] };
 
-        if (newCheck[concern]) {
-            setConcerns([...concerns, concern]);
-        } else {
-            setConcerns(concerns.filter(element => element !== concern));
-        }
-    };
+    //     setCheck(newCheck);
 
-    const handleAboutConcerns = (event) => {
-        const newAboutConcerns = event.target.value;
-        setAboutConcerns(newAboutConcerns);
+    //     if (newCheck[concern]) {
+    //         setConcerns([...concerns, concern]);
+    //     } else {
+    //         setConcerns(concerns.filter(element => element !== concern));
+    //     }
+    // };
 
-        if (check.Other) {
-            setConcerns(oldConcerns => {
-                const filteredConcerns = oldConcerns.filter(concern => !concern.startsWith("Other"));
-                if (newAboutConcerns.trim() !== "") {
-                    filteredConcerns.push(`Other: ${newAboutConcerns}`);
-                }
-                return filteredConcerns;
-            });
-        }
-    };
+    // const handleAboutConcerns = (event) => {
+    //     const newAboutConcerns = event.target.value;
+    //     setAboutConcerns(newAboutConcerns);
+
+    //     if (check.Other) {
+    //         setConcerns(oldConcerns => {
+    //             const filteredConcerns = oldConcerns.filter(concern => !concern.startsWith("Other"));
+    //             if (newAboutConcerns.trim() !== "") {
+    //                 filteredConcerns.push(`Other: ${newAboutConcerns}`);
+    //             }
+    //             return filteredConcerns;
+    //         });
+    //     }
+    // };
+
+    useEffect(() => {
+        console.log(concerns)
+    }, [concerns])
 
     const goBack = () => {
         if (currentStep > 1) {
@@ -150,15 +248,26 @@ const PatientQuestionnaire = () => {
             alert("Please select your preferred language(s).");
             return;
         }
-     
+
+        else if (currentStep === 2 && (isOtherLanguageSelected && otherLanguage === "")) {
+            alert("You selected 'Other' for language(s) you speak. Please type in the other language(s).");
+            return;
+        }
+
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
         }
 
         if (currentStep === 3) {
-            if (prevExp === "" || prevExpTime === "" || concerns.length === 0) {
+            if (prevExp === "" || prevExpTime === "") {
                 alert("Please fill out the required question(s).")
-            } 
+            }
+            else if (concerns.length === 0) {
+                alert("Please select the concern(s) you would like to discuss.")
+            } else if (isOtherConcernSelected && otherConcern === "") {
+                alert("You selected 'Other' for concern(s). Please type in the other concern(s).");
+                return;
+            }
             else {
                 console.log("adding to database");
                 try {
@@ -208,25 +317,27 @@ const PatientQuestionnaire = () => {
             {currentStep === 2 &&
                 <AgeLanguageQuestionnaire
                     age={age}
-                    prefLanguages={prefLanguages}
-                    setPrefLanguages={setPrefLanguages}
-                    checked={checked}
-                    setChecked={setChecked}
+                    checkedLanguages={checkedLanguages}
+                    isOtherLanguageSelected={isOtherLanguageSelected}
+                    otherLanguage={otherLanguage}
+                    handleOtherLanguage={handleOtherLanguage}
                     handleAge={handleAgeChange}
-                    handleCheck={handleCheck}
+                    handleLanguages={handleLanguages}
                 />}
             {currentStep === 3 && <HistoryQuestionnaire
                 prevExp={prevExp}
                 prevExpTime={prevExpTime}
                 concerns={concerns}
-                check={check}
-                setCheck={setCheck}
+                checkedConcerns={checkedConcerns}
+                isOtherConcernSelected={isOtherConcernSelected}
+                otherConcern={otherConcern}
+                handleOtherConcern={handleOtherConcern}
                 setConcerns={setConcerns}
                 aboutConcerns={aboutConcerns}
-                handleAboutConcerns={handleAboutConcerns}
                 handlePrevExp={handlePrevExpChange}
                 handlePrevExpTime={handlePrevExpTimeChange}
-                handleChecks={handleChecks} />}
+                handleConcerns={handleConcerns}
+            />}
             {!isMobile && (
                 <>
                     <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3 mb-4`}>
