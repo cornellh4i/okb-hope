@@ -63,11 +63,13 @@ export interface IUser {
 export interface IReport {
     description: string;
     patient_id: string;
+    patient_name: string;
     psych_id: string;
-    psych_name: string;
+    // psych_name: string;
     report_id: string;
     submittedAt: Timestamp;
     priority: string;
     reporter_name: string;
+    reporter_type: string;
 }
 

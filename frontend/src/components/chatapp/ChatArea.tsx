@@ -45,13 +45,15 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   const [patient, setPatient] = useState<IPatient | null>(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [reportExists, setReportExists] = useState(false);
+  const [fetchedReport, setFetchedReport] = useState<IReport[]>([]);
+  const [reportSubmittedAt, setReportSubmittedAt] = useState("");
+  const [reportDescription, setReportDescription] = useState("");
 
   useEffect(() => {
     const fetchPatient = async () => {
       if (patientId) {
         const data = await fetchPatientDetails(patientId);
         setPatient(data);
-        console.log(patientId)
         console.log("updated patient!")
       }
     };
@@ -61,19 +63,37 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   // Fetch the report status for the patient
   useEffect(() => {
     const fetchReportStatus = async () => {
-      const reportsQuery = query(
-        collection(db, 'reports'),
-        where('psychiatrist_id', '==', uid),
-        where('patient_id', '==', patientId)
-      );
-      const reportSnapshot = await getDocs(reportsQuery);
-      setReportExists(!reportSnapshot.empty);
+      try {
+        const reportsQuery = query(
+          collection(db, 'reports'),
+          where('psych_id', '==', uid),
+          where('patient_id', '==', patientId)
+        );
+        const reportSnapshot = await getDocs(reportsQuery);
+        setReportExists(!reportSnapshot.empty);
+
+        const fetchedReports: IReport[] = reportSnapshot.docs.map(doc => ({
+          ...doc.data() as IReport,
+          id: doc.id
+        }));
+        setFetchedReport(fetchedReports);
+      } catch (error) {
+        console.error("Error fetching reports: ", error);
+      }
     };
 
     if (uid && patientId) {
       fetchReportStatus();
     }
-  }, [uid, patientId]);
+  }, [uid, patientId, reportExists]);
+
+  useEffect(() => {
+    if (reportExists) {
+      const formattedDate = fetchedReport[0].submittedAt.toDate().toLocaleString();
+      setReportSubmittedAt(formattedDate);
+      setReportDescription(fetchedReport[0].description)
+    }
+  }, [fetchedReport])
 
 
   const handleReportTextChange = (event) => {
@@ -199,7 +219,6 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
 
   const toggleDropdown = (event) => {
     event.preventDefault();
-    console.log("Dropdown toggle clicked");
     setOpenDropdown(prev => !prev);
   };
 
@@ -275,7 +294,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
         const reportData = {
           description: reportText,
           reporter_type: 'psychiatrist',
-          pyschiatrist_id: user.uid,
+          psych_id: user.uid,
           patient_id: patient.uid,
           patient_name: patient.firstName + ' ' + patient.lastName,
           submittedAt: Timestamp.now(),
@@ -291,12 +310,11 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
         setShowReportPopup(false);
         setReportText('');
         setReportExists(true);
+        setOpenDropdown(false);
       } catch (error) {
         console.error('Error submitting the report: ', error);
       }
     } else {
-      console.log(user)
-      console.log(patient)
       console.error('No user or patient found');
     }
   };
@@ -369,7 +387,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
               <div style={{ borderRadius: '10px', border: '1px solid #519AEB', padding: '12px 24px' }}>
                 <div>
                   <p className="font-montserrat" style={{ fontSize: 14, paddingBottom: 5 }}>
-                    The following report for {name} was submitted on: thisisPLACEHOLDERtext
+                    The following report for {name} was submitted on: {reportSubmittedAt}
                   </p>
                 </div>
                 <p className="font-montserrat" style={{ fontSize: 14, paddingBottom: 7 }}>
@@ -377,11 +395,11 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
                 </p>
                 <div>
                   <p className="font-montserrat" style={{ fontSize: 14, border: '1px solid #9A9A9A', color: '#000000', padding: '8px 20px' }}>
-                    thisisPLACEHOLDERtext
+                    {reportDescription}
                   </p>
                 </div>
                 <p className="font-montserrat" style={{ fontSize: 14, textAlign: 'left', paddingTop: 10 }}>
-                  Report Status: Verified on thisisPLACEHOLDERtext
+                  Report Status: Verified on {reportSubmittedAt}
                 </p>
               </div>
             </div>
@@ -461,8 +479,6 @@ const ChatArea = () => {
 
   useEffect(() => {
     const uid = user?.uid
-    console.log("role")
-    console.log(role)
 
     if (uid) {
       const conversationsQuery = role === "psychiatrist" ?
