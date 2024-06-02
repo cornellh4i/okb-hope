@@ -120,33 +120,27 @@ const PsychiatristDashboard = () => {
             {/* the header part of dashboard, containing week */}
             <div className="flex flex-col justify-center items-center w-full md:w-4/5">
                 <div id="blueheader" className={`flex w-full h-[53px] py-3 bg-[${okb_colors.okb_blue}] rounded-[10px] justify-center items-center inline-flex`}>
-                    <div className="relative">
-                        <div className="flex w-[362px] h-[29px] top-0 justify-center items-center gap-4 inline-flex">
+                    <div className="flex flex-row gap-4 xs:gap-5 sm:gap-8">
+                        <button onClick={goToPreviousWeek} className='flex items-center'>
+                            <svg width="10" height="20" viewBox="0 0 10 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_2452_9242)">
+                                    <path d="M7.5 18C7.14844 18 6.83594 17.8828 6.60156 17.6484L0.351562 11.3984C-0.15625 10.9297 -0.15625 10.1094 0.351562 9.64062L6.60156 3.39062C7.07031 2.88281 7.89062 2.88281 8.35938 3.39062C8.86719 3.85938 8.86719 4.67969 8.35938 5.14844L3.00781 10.5L8.35938 15.8906C8.86719 16.3594 8.86719 17.1797 8.35938 17.6484C8.125 17.8828 7.8125 18 7.5 18Z" fill="#FFFDFD" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_2452_9242">
+                                        <rect width="10" height="20" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </button>
+                        <div className="flex h-[29px] top-0 justify-center items-center">
                             <div className="text-white text-2xl font-semibold font-montserrat">Week of {dateHeaderString}</div>
                         </div>
-                        <div className="w-2.5 h-5 left-0 top-[4px] absolute flex-col justify-start items-start gap-2.5 inline-flex">
-
-                            <button onClick={goToPreviousWeek}>
-                                <svg width="10" height="20" viewBox="0 0 10 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <g clip-path="url(#clip0_2452_9242)">
-                                        <path d="M7.5 18C7.14844 18 6.83594 17.8828 6.60156 17.6484L0.351562 11.3984C-0.15625 10.9297 -0.15625 10.1094 0.351562 9.64062L6.60156 3.39062C7.07031 2.88281 7.89062 2.88281 8.35938 3.39062C8.86719 3.85938 8.86719 4.67969 8.35938 5.14844L3.00781 10.5L8.35938 15.8906C8.86719 16.3594 8.86719 17.1797 8.35938 17.6484C8.125 17.8828 7.8125 18 7.5 18Z" fill="#FFFDFD" />
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_2452_9242">
-                                            <rect width="10" height="20" fill="white" />
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                            </button>
-
-                        </div>
-                        <div className="w-2.5 h-5 left-[352px] top-[4px] absolute flex-col justify-start items-start gap-2.5 inline-flex">
-                            <button onClick={goToNextWeek}>
-                                <svg width="11" height="20" viewBox="0 0 11 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M2.5 18C2.14844 18 1.83594 17.8828 1.60156 17.6484C1.09375 17.1797 1.09375 16.3594 1.60156 15.8906L6.95312 10.5L1.60156 5.14844C1.09375 4.67969 1.09375 3.85938 1.60156 3.39062C2.07031 2.88281 2.89062 2.88281 3.35938 3.39062L9.60938 9.64062C10.1172 10.1094 10.1172 10.9297 9.60938 11.3984L3.35938 17.6484C3.125 17.8828 2.8125 18 2.5 18Z" fill="#FFFDFD" />
-                                </svg>
-                            </button>
-                        </div>
+                        <button onClick={goToNextWeek} className="flex items-center">
+                            <svg width="11" height="20" viewBox="0 0 11 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.5 18C2.14844 18 1.83594 17.8828 1.60156 17.6484C1.09375 17.1797 1.09375 16.3594 1.60156 15.8906L6.95312 10.5L1.60156 5.14844C1.09375 4.67969 1.09375 3.85938 1.60156 3.39062C2.07031 2.88281 2.89062 2.88281 3.35938 3.39062L9.60938 9.64062C10.1172 10.1094 10.1172 10.9297 9.60938 11.3984L3.35938 17.6484C3.125 17.8828 2.8125 18 2.5 18Z" fill="#FFFDFD" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
