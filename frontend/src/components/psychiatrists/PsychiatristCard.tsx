@@ -130,10 +130,10 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
         }
         {/* <Image src={photo} alt="Photo" className={`w-1200 h-600`} /> */}
         {/* <PsychiatristIcon /> */}
-        <h2 className="card-title">{professional?.firstName} {professional?.lastName}</h2>
+        <h2 className="card-title font-montserrat font-semibold">{professional?.firstName} {professional?.lastName}</h2>
         {/* <h2 className="font-[400] italic mb-0">{p_certifications}</h2> */}
         {/* view profile button */}
-        <div className="card-actions flex w-full mt-2 justify-left">
+        <div className="card-actions flex w-full mt-2 justify-left font-inter font-normal text-xs">
           <button onClick={() => handleGoToProfProfile(psych_uid)} className="btn w-9/12 bg-okb-blue border-transparent">View Profile</button>
 
           <button className="btn w-2/12 p-0 glass object-cover bg-contain" onClick={(event) => handleUnsave(event, professional)}>

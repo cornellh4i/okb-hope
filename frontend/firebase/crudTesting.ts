@@ -81,13 +81,13 @@ export const createTest = async () => {
         lastName: "Paul",
         position: "idk",
         profile_pic: null,
-        availability: ["newAvailability"],
+        weeklyAvailability: ["Monday"],
+        workingHours: {},
         gender: 0,
         location: "chicago",
         language: ["english"],
         specialty: [],
-        description: "fake psych",
-        website: "nonexistent"
+        description: "fake psych"
     }
 
     const newPsych2: IPsychiatrist = {
@@ -96,13 +96,13 @@ export const createTest = async () => {
         lastName: "Noel",
         position: "idk",
         profile_pic: null,
-        availability: ["newAvailability"],
+        weeklyAvailability: ["Monday"],
+        workingHours: {},
         gender: 1,
         location: "Jersey",
         language: ["english"],
         specialty: [],
-        description: "fake psych",
-        website: "nonexistent"
+        description: "fake psych"
     }
 
     const newPatient: IPatient = {
@@ -110,7 +110,7 @@ export const createTest = async () => {
         firstName: "David",
         lastName: "Rodriguez",
         email: "fakeemail@.com",
-        concerns: "everything",
+        concerns: ["everything"],
         previousTherapyExperience: "None",
         lastTherapyTimeframe: "Months",
         ageRange: "18-22", //go on the figma and in the login profile it shows ranges not age
@@ -138,11 +138,6 @@ export const createTest = async () => {
     const retrievedPsych = await fetchAllPsychiatrist([where("firstName", "==", "John")]);
     const retrievedAllPsych = await fetchAllPsychiatrist([]);
     const retrievedPatient = await fetchPatient([where("uid", "==", "1")])
-
-    // console.log("Retrieved availabilities")
-    // console.log(retrievedAvailabilities)
-    // console.log("Retrived appointments")
-    // console.log(retrievedAppointments)
 
     console.log("Retrieved psych")
     console.log(retrievedPsych)
@@ -173,13 +168,13 @@ export const createTest = async () => {
         lastName: "Paul",
         position: "idk",
         profile_pic: null,
-        availability: ["docref"],
+        weeklyAvailability: ["Monday"],
+        workingHours: {},
         gender: 0,
         location: "Paris",
         language: ["english"],
         specialty: [],
         description: "fake psych",
-        website: "nonexistent"
     }
 
     const updatedPatient: IPatient = {
@@ -187,7 +182,7 @@ export const createTest = async () => {
         firstName: "David",
         lastName: "Rodriguez",
         email: "fakeemail@.com",
-        concerns: "everything",
+        concerns: ["everything"],
         previousTherapyExperience: "None",
         lastTherapyTimeframe: "Months",
         ageRange: "18-22",

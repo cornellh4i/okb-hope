@@ -56,7 +56,11 @@ const AppointmentList = () => {
 
   const appointmentCards = () => {
     if (appointments.length > 0) {
-      return appointments.map((appointment, index) => (
+      const sortedAppointments = appointments.slice().sort((a, b) => {
+        return a.startTime.toDate().getTime() - b.startTime.toDate().getTime();
+      });
+
+      return sortedAppointments.map((appointment, index) => (
         <div key={appointment.appointId.toString()} className="appointment flex items-center justify-center w-full">
           <AppointmentCard
             p_name={psychiatristNames[index]}
@@ -70,13 +74,12 @@ const AppointmentList = () => {
     }
   };
 
-
   return (
     // renders a card containing all of the AppointmentCards 
     <React.Fragment>
       <div className="card w-full bg-base-100">
         <div className="card-body">
-          <h1 className="card-title pt-1/15 text-[32px] md:items-start items-center md:justify-start justify-center">Appointments</h1>
+          <h1 className="card-title pt-1/15 text-[32px] md:items-start items-center md:justify-start justify-center font-montserrat">Appointments</h1>
           <div className="grid grid-row-4 gap-4 justify-center items-center pt-1/12 w-full">
             {appointmentCards()}
           </div>

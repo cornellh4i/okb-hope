@@ -15,16 +15,17 @@ const MessagesPage = () => {
     }
   }, [user]);
 
-  const logInWithGoogleAndRedirect = async (onClose) => {
+  const signUpWithGoogleAndRedirect = async (onClose: () => void) => {
+    router.push('/questionnaire');
+    setShowPopup(false);
+    onClose();
+  };
+
+  const logInWithGoogleAndRedirect = async (onClose: () => void) => {
     await login();
     onClose();
   };
 
-  const signUpWithGoogleAndRedirect = async (onClose: () => void) => {
-    router.push('/questionnaire'); // Moved this line before the closing of the popup
-    setShowPopup(false);
-    onClose();
-  };
   return (
     <>
       <Head>
@@ -39,11 +40,11 @@ const MessagesPage = () => {
         <>
           {showPopup && (
             <LoginPopup
-            onClose={() => setShowPopup(false)}
-            logInWithGoogleAndRedirect={logInWithGoogleAndRedirect}
-            signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect}
+              onClose={() => setShowPopup(false)}
+              logInWithGoogleAndRedirect={logInWithGoogleAndRedirect}
+              signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect}
 
-          />
+            />
           )}
         </>
       )}

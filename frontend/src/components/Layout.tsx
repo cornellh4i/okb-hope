@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import Navbar from '@/components/navbar/Navbar';
+import Footer from './Footer';
 
 type LayoutProps = {
   children: ReactNode;
@@ -9,8 +10,13 @@ type LayoutProps = {
 const Layout = ({ children, showNavbar = true }: LayoutProps) => {
   return (
     <>
-      {showNavbar && <Navbar />}
-      <div>{children}</div>
+      <div className='h-screen flex flex-col'>
+        {showNavbar && <Navbar />}
+        <div className='flex-grow'>
+          <div className='z-0 items-start'>{children}</div>
+        </div>
+        <Footer />
+      </div>
     </>
   );
 };

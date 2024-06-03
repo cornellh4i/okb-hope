@@ -1,5 +1,5 @@
 import NameGenderImageQuestionnaire from "./NameGenderImageQuestionnaire";
-import PositionLanguageQuestionnaire from "./PositionLanguageQuestionnaire";
+import PositionLocationQuestionnaire from "./PositionLocationQuestionnaire";
 import SelectionQuestionnaire from "./SelectionQuestionnaire";
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
@@ -18,17 +18,45 @@ const PsychQuestionnaire = () => {
     const [gender, setGender] = useState<Gender>();
     const [photo, setPhoto] = useState(null);
     const [position, setPosition] = useState<string>("");
-    const [checked, setChecked] = useState<{ [key: string]: boolean }>(
+    const [isOtherPositionSelected, setIsOtherPositionSelected] = useState(false);
+    const [otherPosition, setOtherPosition] = useState("");
+    const [checkedPosition, setCheckedPosition] = useState({ psychiatrist: false, nurse: false, Other: false, });
+    const [checkedLanguages, setCheckedLanguages] = useState<{ [key: string]: boolean }>(
         { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
     const [languages, setLanguages] = useState<string[]>([]);
+    const [isOtherLanguageSelected, setIsOtherLanguageSelected] = useState(false);
+    const [otherLanguage, setOtherLanguage] = useState("");
+    const [weeklyAvailability, setWeeklyAvailability] = useState<string[]>([]);
+    const [checkedAvailability, setCheckedAvailability] = useState<{ [key: string]: boolean }>(
+        { 'Monday': false, 'Tuesday': false, 'Wednesday': false, 'Thursday': false, 'Friday': false, 'Saturday': false, 'Sunday': false });
+    const [workingHours, setWorkingHours] = useState({
+        Monday: { start: '', end: '' },
+        Tuesday: { start: '', end: '' },
+        Wednesday: { start: '', end: '' },
+        Thursday: { start: '', end: '' },
+        Friday: { start: '', end: '' },
+        Saturday: { start: '', end: '' },
+        Sunday: { start: '', end: '' },
+    });
     const [aboutYourself, setAboutYourself] = useState<string>("");
+  
     const [uploadedNewPicture, setUploadedNewPicture] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    const [location, setLocation] = useState<string>("");
     const [patient, setPatient] = useState<boolean>(false);
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
+    const [isMobile, setIsMobile] = useState(false);
     const router = useRouter();
-    const { user } = useAuth();
+
+    useEffect(() => {
+        // Set isMobile based on window.innerWidth after component mounts to the DOM
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        handleResize(); // Set the initial state based on current window width
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
@@ -66,37 +94,115 @@ const PsychQuestionnaire = () => {
         setAboutYourself(event.target.value);
     }
 
+    const handleLocationChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        const selectedLocation = (event.target.value);
+        const loc = selectedLocation.split(' ');
+        const fixCase = loc.map(loc => loc.charAt(0).toUpperCase() + loc.slice(1).toLowerCase()
+        );
+        const result = fixCase.join(' ');
+        setLocation(result);
+    };
 
-    const handlePosition = (event: ChangeEvent<HTMLInputElement>) => {
-        const selectedPosition = (event.target.value);
-        switch (selectedPosition) {
-            case 'psychiatrist':
-                setPosition("psychiatrist");
-                break;
-            case 'nurse':
-                setPosition("nurse");
-                break;
-            default:
-                setPosition("")
-        }
-    }
 
-    const handleCheck = (event: ChangeEvent<HTMLInputElement>) => {
-        const lang = event.target.value;
-        const newChecked = {
-            ...checked,
-            [lang]: !checked[lang]
-        };
-        setChecked(newChecked);
-
-        if (newChecked[lang]) {
-            setLanguages([...languages, lang]);
+    const handlePosition = (event) => {
+        const selectedPosition = event.target.value;
+        if (selectedPosition === 'Other') {
+            setIsOtherPositionSelected(true);
+            setPosition(otherPosition);
         } else {
-            setLanguages(languages.filter(element => element !== lang));
+            setIsOtherPositionSelected(false);
+            setPosition(selectedPosition);
+        }
+    };
+
+    const handleOtherPosition = (event) => {
+        setOtherPosition(event.target.value);
+        setPosition(event.target.value);
+    };
+
+    const handleLanguages = (event: ChangeEvent<HTMLInputElement>) => {
+        const lang = event.target.value;
+
+        if (lang === "Other") {
+            setIsOtherLanguageSelected(!isOtherLanguageSelected);
+            setCheckedLanguages({
+                ...checkedLanguages,
+                Other: !isOtherLanguageSelected,
+            });
+            if (!isOtherLanguageSelected && otherLanguage) {
+                setLanguages(prevLanguages => {
+                    const filteredLanguages = prevLanguages.filter(l => l !== otherLanguage);
+                    return [...filteredLanguages, otherLanguage];
+                });
+            } else {
+                setLanguages(prevLanguages => prevLanguages.filter(l => l !== otherLanguage));
+            }
+        } else {
+            const newCheckedLanguages = {
+                ...checkedLanguages,
+                [lang]: !checkedLanguages[lang]
+            };
+            setCheckedLanguages(newCheckedLanguages);
+
+            if (newCheckedLanguages[lang]) {
+                setLanguages(prevLanguages => [...prevLanguages, lang]);
+            } else {
+                setLanguages(prevLanguages => prevLanguages.filter(element => element !== lang));
+            }
+        }
+    };
+
+    const handleOtherLanguage = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        let newLanguage = event.target.value;
+
+        if (newLanguage.length > 0) {
+            newLanguage = newLanguage.charAt(0).toUpperCase() + newLanguage.slice(1);
+        }
+        setOtherLanguage(newLanguage);
+
+        if (isOtherLanguageSelected) {
+            setLanguages(prevLanguages => {
+                const filteredLanguages = prevLanguages.filter(l => l !== otherLanguage);
+                return newLanguage ? [...filteredLanguages, newLanguage] : filteredLanguages;
+            });
+        }
+    };
+
+    const handleWorkingHoursChange = (day: string, type: 'start' | 'end', value: string) => {
+        setWorkingHours(prevState => ({
+            ...prevState,
+            [day]: {
+                ...prevState[day],
+                [type]: value
+            }
+        }));
+    };
+
+    const handleWeeklyAvailability = (event: ChangeEvent<HTMLInputElement>) => {
+        const { value, checked } = event.target;
+
+        // Update checkedAvailability state
+        setCheckedAvailability(prevState => ({
+            ...prevState,
+            [value]: checked
+        }));
+
+        // If the day is unchecked, reset its working hours
+        if (!checked) {
+            setWorkingHours(prevState => ({
+                ...prevState,
+                [value]: { start: '', end: '' }
+            }));
         }
 
-        console.log(languages);
-        console.log(newChecked);
+        // Update weeklyAvailability state
+        setWeeklyAvailability(prevState => {
+            if (checked) {
+                return [...prevState, value];
+            } else {
+                return prevState.filter(day => day !== value);
+            }
+        });
     };
 
     const handleOptionChange = (option: 'patient' | 'psychiatrist') => {
@@ -135,13 +241,45 @@ const PsychQuestionnaire = () => {
         }
 
         else if (currentStep === 3 && (position === "")) {
-            alert("Please select your position.");
+            alert("Please select your current position.");
+            return;
+        }
+
+        else if (currentStep === 3 && (location.length === 0)) {
+            alert("Please fill out the 'Where do you work?' section.");
+            return;
+        }
+
+        else if (currentStep === 3 && (aboutYourself.length === 0)) {
+            alert("Please fill out the 'About Yourself' section.");
             return;
         }
 
         else if (currentStep === 3 && (languages.length === 0)) {
             alert("Please select your language(s).");
             return;
+        }
+
+        else if (currentStep === 3 && (isOtherLanguageSelected && otherLanguage === "")) {
+            alert("You selected 'Other' for language(s) you speak. Please type in the other language(s).");
+            return;
+        }
+
+        else if (currentStep === 3) {
+            const allDaysUnchecked = Object.values(checkedAvailability).every(checked => !checked);
+            const incompleteHours = Object.entries(workingHours).some(
+                ([day, hours]) => checkedAvailability[day] && (hours.start === '' || hours.end === '')
+            );
+
+            if (allDaysUnchecked) {
+                alert("Please select at least one day for your availability.");
+                return;
+            }
+
+            if (incompleteHours) {
+                alert("Please select your working hour(s) for the selected days.");
+                return;
+            }
         }
 
         if (currentStep < 3) {
@@ -157,18 +295,21 @@ const PsychQuestionnaire = () => {
                     lastName,
                     position,
                     [],
+<!--                     image, -->
                     gender,
-                    "",
-                    languages,
-                    [],
-                    aboutYourself,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    [],
-                    [],
+                    location,
+                    languages, //language
+                    weeklyAvailability, //weeklyAvailability
+                    workingHours, //workingHours
+                    [], //specialty
+                    aboutYourself, //description
+                    [], //concerns
+                    "", //ageRange
+                    "", //lastTherapyTimeframe
+                    "", //previousTherapyExperience
+                    [], //prefLanguages
+                    gender, //genderPref
+                    [], //savedPsychiatrists
                 )
                 if (uploadedNewPicture) {
                     uploadPicture(photo, user?.uid, setLoading);
@@ -182,7 +323,7 @@ const PsychQuestionnaire = () => {
     };
 
     return (
-        <div className={'flex flex-col bg-off-white'}>
+        <div className={'flex flex-col bg-off-white gap-y-6 md:gap-y-9'}>
             {currentStep === 1 && <SelectionQuestionnaire
                 patient={patient}
                 psychiatrist={psychiatrist}
@@ -200,29 +341,61 @@ const PsychQuestionnaire = () => {
                     handleProfilePictureChange={handleProfilePictureChange}
                 />}
             {currentStep === 3 &&
-                <PositionLanguageQuestionnaire
-                    setPosition={position}
-                    languages={languages}
+                <PositionLocationQuestionnaire
+                    position={position}
+                    setPosition={setPosition}
+                    isOtherPositionSelected={isOtherPositionSelected}
+                    otherPosition={otherPosition}
+                    handleOtherPosition={handleOtherPosition}
+                    location={location}
+                    handleLocation={handleLocationChange}
                     aboutYourself={aboutYourself}
-                    setLanguages={setLanguages}
-                    checked={checked}
-                    setChecked={setChecked}
-                    handleCheck={handleCheck}
-                    handlePosition={handlePosition}
                     handleAboutYourself={handleAboutYourselfChange}
-
+                    checkedLanguages={checkedLanguages}
+                    setCheckedLanguages={setCheckedLanguages}
+                    isOtherLanguageSelected={isOtherLanguageSelected}
+                    otherLanguage={otherLanguage}
+                    handleOtherLanguage={handleOtherLanguage}
+                    checkedAvailability={checkedAvailability}
+                    handleWeeklyAvailability={handleWeeklyAvailability}
+                    workingHours={workingHours}
+                    handleWorkingHoursChange={handleWorkingHoursChange}
+                    handlePosition={handlePosition}
+                    handleLanguages={handleLanguages}
                 />}
-            <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3`}>
-                <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>
-                    <div className={`text-zinc-600 font-semibold font-montserrat`}>Go Back</div>
-                </div>
-                {currentStep === 1 && <ProgressBar0 />}
-                {currentStep === 2 && <ProgressBar33 />}
-                {currentStep === 3 && <ProgressBar67 />}
-                <div className={`px-4 py-2 bg-blue-400 rounded-[10px] justify-start items-start inline-flex`} onClick={goNext}>
-                    <div className={`text-white text-base font-semibold font-montserrat`}>Next</div>
-                </div>
-            </div>
+            {!isMobile && (
+                <>
+                    <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3 mb-4`}>
+                        <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>
+                            <div className={`text-zinc-600 text-[14px] font-semibold font-montserrat`}>Go Back</div>
+                        </div>
+                        {currentStep === 1 && <ProgressBar0 />}
+                        {currentStep === 2 && <ProgressBar33 />}
+                        {currentStep === 3 && <ProgressBar67 />}
+                        <div className={`px-4 py-2 bg-blue-400 rounded-[10px] justify-start items-start inline-flex`} onClick={goNext}>
+                            <div className={`text-white text-base font-semibold font-montserrat`}>Next</div>
+                        </div>
+                    </div></>
+            )}
+            {isMobile && (
+                <>
+                    <div className={`flex flex-col w-full content-center justify-center items-center gap-4 pb-3`}>
+                        <div className="flex justify-center">
+                            {currentStep === 1 && <ProgressBar0 />}
+                            {currentStep === 2 && <ProgressBar33 />}
+                            {currentStep === 3 && <ProgressBar67 />}
+                        </div>
+                        <div className="flex gap-x-4 mb-4">
+                            <div className={`px-4 py-1 rounded-[10px] border-2 border-blue-400 items-center inline-flex`} onClick={goBack}>
+                                <div className={`text-zinc-600 text-[10px] md:text-[16px] font-semibold font-montserrat`}>Go Back</div>
+                            </div>
+                            <div className={`px-4 py-2 bg-blue-400 rounded-[10px] items-center inline-flex`} onClick={goNext}>
+                                <div className={`text-white text-[10px] font-semibold font-montserrat`}>Next</div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     )
 };

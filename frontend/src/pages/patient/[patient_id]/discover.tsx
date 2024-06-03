@@ -23,7 +23,7 @@ const DiscoverPage: React.FC = () => {
   const router = useRouter();
   const { user } = useAuth();
   const { userId } = router.query;
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState("");
   const [filters, setFilters] = useState([]);
@@ -65,33 +65,6 @@ const DiscoverPage: React.FC = () => {
     }
     fetchData();
   }, [router]);
-
-  // Processes all psychiatrists availabilities to a dictionary mapping each psychiatrist's uid to their availabilities in the form of the days of the week
-  useEffect(() => {
-    // Transforms each item in a psychiatrist's availability array from availability ID to its respective day of the week
-    const processAvailabilityToDaysOfWeek = async (psychiatristAvailability: string[]) => {
-      const availabilityToDaysOfWeek: string[] = [];
-      for (let i = 0; i < psychiatristAvailability.length; i++) {
-        const availabilityId = psychiatristAvailability[i];
-        const fetchedAvailability: IAvailability = await fetchAvailability(availabilityId);
-        const day = fetchedAvailability.startTime.toDate().toLocaleString('default', { weekday: 'long' });
-        if (!availabilityToDaysOfWeek.includes(day)) {
-          availabilityToDaysOfWeek.push(day);
-        }
-      }
-      return availabilityToDaysOfWeek;
-    }
-
-    const processPsychiatrists = async () => {
-      const promises = psychiatrists.map(async (psychiatrist) => {
-        const psychiatristId = psychiatrist.uid;
-        const psychiatristAvailabilityToDaysOfWeek = await processAvailabilityToDaysOfWeek(psychiatrist.availability);
-        setPsychiatristAvailabilities((prev) => ({ ...prev, [psychiatristId]: psychiatristAvailabilityToDaysOfWeek }));
-      });
-      await Promise.all(promises);
-    };
-    processPsychiatrists();
-  }, [psychiatrists]);
 
   const fuse = useMemo(() => new Fuse(psychiatrists, fuseOptions), []);
 
@@ -161,7 +134,7 @@ const DiscoverPage: React.FC = () => {
 
     // Updates results by the selected filters
     const filterResults = results.filter((psychiatrist) => {
-      return containsOneOf(psychiatristAvailabilities[psychiatrist.uid], submittedFilters['days']) &&
+      return containsOneOf(psychiatrist.weeklyAvailability, submittedFilters['days']) &&
         containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
         containsGender(psychiatrist.gender, submittedFilters['genders'])
     });

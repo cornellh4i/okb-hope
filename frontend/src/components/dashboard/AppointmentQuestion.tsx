@@ -3,11 +3,10 @@ import React from "react";
 const AppointmentQuestion = ({ name, question, value = "" }: { name: string, question: string, value: string }) => {
   return (
     <React.Fragment>
-      <p className="font-bold text-black text-lg">
+      <p className="font-montserrat font-semibold text-black text-lg">
         {question}
       </p>
-      <input className="outline-1 w-full" value={value} name={name} placeholder=''></input>
-      <br></br><br></br>
+      <input className="outline-1 w-full font-montserrat italic text-[#5F5F5F]" value={value} name={name} placeholder=''></input>
     </React.Fragment>
   );
 };

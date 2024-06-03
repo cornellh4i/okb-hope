@@ -1,37 +1,36 @@
+import React, { useState } from 'react';
 import search_icon from '@/assets/search_icon';
 import okb_colors from '@/colors';
-import React, { useState } from 'react';
-import magnifyglass from '../../assets/magnifyglass'
 
 type SearchBarProps = {
-  onSearch: (searchTerm: string) => void;
+  onSearch: (searchTerm: string) => void; // Function prop to handle search
 };
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const [searchTerm, setSearchTerm] = useState("");
+const SearchBar = ({ onSearch }: SearchBarProps) => {
+  const [searchInput, setSearchInput] = useState('');
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-    onSearch(event.target.value);
+  const handleChange = (e) => {
+    setSearchInput(e.target.value);
   };
 
-  const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === "Enter") {
-      onSearch(searchTerm);
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+        onSearch(searchInput.trim()); // Pass search input value to parent component
+        console.log(searchInput)
     }
-  }
+  };
 
   return (
-    <div className={`search-bar bg-[${okb_colors.white}]`}>
+    <div className={`search-bar`}>
       <div className={`flex py-2 md:px-4 px-2 items-center md:gap-4 gap-2 shrink-0 rounded-lg justify-between search-form border-solid border-[1px] border-[${okb_colors.dark_gray}] md:mx-4 my-5 text-lg font-semibold`}>
-        <button onClick={() => onSearch(searchTerm)}>{search_icon}</button>
+        <button onClick={() => onSearch(searchInput)}> {search_icon}</button> {/* This line seems redundant. If you need it for something specific, you can leave it. */}
         <input
-          className={`text-[${okb_colors.med_gray}] italic text-xs font-normal outline-none w-full`}
+          className={`text-[${okb_colors.med_gray}] page-background italic text-xs font-montserrat font-normal outline-none w-full`}
           type="text"
           placeholder="Search Messages"
-          value={searchTerm}
+          value={searchInput}
           onChange={handleChange}
-          onKeyDown={handleKey}
+          onKeyDown={handleKeyPress}
         />
       </div>
     </div>

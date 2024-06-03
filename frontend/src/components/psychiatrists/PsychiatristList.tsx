@@ -291,14 +291,14 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
         <>
           <button className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-[${okb_colors.white}] text-[16px] flex`} onClick={(event) => handleSave(event, psychiatrist)}>
             {savedPsychiatrists.includes(psychiatrist.uid) ? <SavedBookmark /> : <Bookmark />}
-            <div>Save</div>
+            <div className='font-montserrat font-semibold'>Save</div>
           </button>
           <button
             className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[${okb_colors.okb_blue}] text-[${okb_colors.white}] text-[16px] flex`}
             onClick={(event) => handleSendMessage(event, psychiatrist)}
           >
             <Message />
-            <div>Message</div>
+            <div className='font-montserrat font-semibold'>Message</div>
           </button>
         </>
       );
@@ -309,7 +309,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
   //break
 
   return (
-    <div className={'px-4 lg:px-24 pt-9 pb-14'}>
+    <div className={'px-4 lg:px-24 pt-9'}>
       <div className='pb-8'>
         <div className={`psychiatrist-list flex flex-col items-stretch gap-6 w-full`}>
           {showPopup && <LoginPopup onClose={() => setShowPopup(false)} logInWithGoogleAndRedirect={logInWithGoogleAndRedirect} signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect} />}
@@ -330,10 +330,10 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
                 </div>
                 <div className={`flex flex-col flex-1 gap-4 w-full h-auto`}>
                   {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}
-                  <div className={`flex flex-col lg:flex-row justify-between items-start w-full`}>
-                    <div className={`flex flex-col justify-center lg:items-start items-center gap-2 w-full`}>
-                      <h2 className={`card-title col-span-2 text-[${okb_colors.black}] text-[24px] font-semibold not-italic`}>{psychiatrist.firstName} {psychiatrist.lastName}</h2>
-                      <p className={`text-[${okb_colors.black}] text-[16px] font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
+                  <div className={`flex flex-col lg:flex-row justify-between items-center w-full self-stretch`}>
+                    <div className={`flex flex-col justify-center lg:items-start items-center gap-2`}>
+                      <h2 className={`card-title col-span-2 text-[${okb_colors.black}] text-[24px] font-montserrat font-semibold not-italic`}>{psychiatrist.firstName} {psychiatrist.lastName}</h2>
+                      <p className={`text-[${okb_colors.black}] text-[16px] text-center font-montserrat font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
                     </div>
                     <div className={`flex justify-center lg:justify-end items-center gap-4 w-full lg:w-auto mt-4 lg:mt-0`}>
                       {renderButtons(psychiatrist)}
@@ -341,7 +341,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
                   </div>
                   {/* Additional psychiatrist info */}
                   <div className={`flex w-full justify-center lg:justify-start items-center lg:items-start min-h-[4rem] mt-4 lg:mt-0`}>
-                    <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-normal`}>{psychiatrist.description ? psychiatrist.description : "No description available"}</p>
+                    <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-montserrat font-normal overflow-hidden overflow-ellipsis`} style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', lineClamp: 3, MozBoxOrient: 'vertical', textAlign: 'left' }}>{psychiatrist.description ? psychiatrist.description : "No description available."}</p>
                   </div>
                 </div>
               </div>

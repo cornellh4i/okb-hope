@@ -5,7 +5,6 @@ import { fetchProfessionalData, fetchPatientDetails } from '../../../firebase/fe
 import { useAuth } from '../../../contexts/AuthContext';
 import { useRouter } from 'next/router';
 
-// Updated props type to include onSelect and isSelected
 const ConversationItem: React.FC<{ conversation: any, isLast: boolean, onSelect: () => void, isSelected: boolean }> = ({ conversation, isLast, onSelect, isSelected }) => {
   const { user } = useAuth();
   const [displayName, setDisplayName] = useState('');
@@ -29,19 +28,23 @@ const ConversationItem: React.FC<{ conversation: any, isLast: boolean, onSelect:
   }, [user?.uid, conversation.patientId, conversation.psychiatristId]);
 
   useEffect(() => {
-    // Update unread messages count
     setUnreadMessages(user?.uid === conversation.patientId ? conversation.messagesUnreadByPatient : conversation.messagesUnreadByPsych);
   }, [user?.uid, conversation.messagesUnreadByPatient, conversation.messagesUnreadByPsych, conversation.patientId]);
 
   const handleClick = () => {
     updateUnreadMessages();
 
-    onSelect(); // Call onSelect to update selected state in parent
+    onSelect();
     const { patientId, psychiatristId } = conversation;
     localStorage.setItem('selectedConversationId', `${conversation.patientId}-${conversation.psychiatristId}`);
-    const url = `/patient/${patientId}/messages?psych_id=${psychiatristId}&psych_name=${encodeURIComponent(displayName)}`;
+    let url;
+    if (user?.uid === conversation.patientId) {
+      url = `/patient/${patientId}/messages?psych_id=${psychiatristId}&psych_name=${encodeURIComponent(displayName)}`;
+    } else {
+      url = `/psychiatrist/${psychiatristId}/messages?patient_id=${patientId}&patient_name=${encodeURIComponent(displayName)}`;
+    }
+    console.log(url)
     router.push(url);
-
   };
 
   const updateUnreadMessages = async () => {
@@ -65,23 +68,23 @@ const ConversationItem: React.FC<{ conversation: any, isLast: boolean, onSelect:
   return (
     <button
       onClick={handleClick}
-      className={`conversation-item group ${!isLast ? 'border-b-[1px]' : ''} ${isSelected ? 'bg-[#D0DBEA]' : 'bg-white'} hover:bg-[#D0DBEA]`}
+      className={`px-6 conversation-item group ${!isLast ? 'border-b-[1px]' : ''} ${isSelected ? 'bg-[#D0DBEA]' : 'page-background'} hover:bg-[#D0DBEA]`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className='flex flex-row px-3 py-4 gap-4 items-center w-full'>
-        <div className='flex-grow flex flex-col items-start rounded-[10px]'>
-          <button className="font-semibold mb-1 text-black text-[16px]">{displayName}</button>
-          <p className="text-[12px] text-black">{conversation.recentMessage.text || 'No messages'}</p>
+        <div className='flex-grow flex flex-col items-start justify-center min-w-0'>
+          <button className="font-montserrat font-semibold mb-1 text-black text-[16px] overflow-hidden text-ellipsis whitespace-nowrap max-w-full">{displayName}</button>
+          {/* Apply ellipsis to long messages and limit to 3 lines */}
+          <p className="message-preview text-[12px] text-black font-montserrat overflow-hidden overflow-ellipsis whitespace-normal max-w-full" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', lineClamp: 3, MozBoxOrient: 'vertical', textAlign: 'left' }}>{conversation.recentMessage.text || 'No messages'}</p>
         </div>
-        {unreadMessages > 0 ? (
-          <div className='flex py-0.5 px-1.5 min-w-[20px] h-[19px] justify-center items-center rounded-[25px] bg-[#519AEB] text-white text-xs font-bold mr-auto'>
+        {unreadMessages > 0 && (
+          <div className='flex py-0.5 px-1.5 min-w-[20px] h-[19px] justify-center items-center rounded-[25px] bg-[#519AEB] text-white text-xs font-bold'>
             {unreadMessages}
           </div>
-        ) : ""}
+        )}
       </div>
     </button>
-
   );
 };
 
