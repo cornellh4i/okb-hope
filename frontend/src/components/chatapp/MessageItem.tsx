@@ -2,12 +2,13 @@
 import okb_colors from "@/colors";
 import React, { useEffect, useState } from "react";
 import { auth, db } from '../../../firebase/firebase'
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import colors from "@/colors";
 import { collection, getDocs, query, where } from "firebase/firestore";
 
 const MessageItem: React.FC<{ message: any }> = ({ message }) => {
   // Extract necessary props
-  const { text, uid, photoURL, createdAt } = message;
+  const { text, uid, createdAt } = message;
   const createdAtDate = createdAt?.toDate(); //TODO this is causing issues when sending messages
   const month = createdAtDate?.toLocaleString('default', { month: 'long' })
   const day = createdAtDate?.getDate()
@@ -16,6 +17,8 @@ const MessageItem: React.FC<{ message: any }> = ({ message }) => {
   // console.log(`${month} ${day}, ${hour}:${minutes}`)
   // Check to see if the message is a message the user sent or an incoming message.
   const messageClass = uid === auth.currentUser?.uid ? 'sent' : 'received';
+
+  const [photo, setPhoto] = useState<string | undefined>(undefined);
   const [firstName, setFirstName] = useState("");
 
   useEffect(() => {
@@ -34,6 +37,20 @@ const MessageItem: React.FC<{ message: any }> = ({ message }) => {
     fetchName();
   }, [uid])
 
+  // useEffect(() => {
+  //   async function fetchImage() {
+  //     try {
+  //       const storage = getStorage();
+  //       const storageRef = ref(storage, 'profile_pictures/' + uid + '.png');
+  //       const photoURL = await getDownloadURL(storageRef);
+  //       setPhoto(photoURL)
+  //     } catch (err: any) {
+  //       console.error(err.message);
+  //     }
+  //   }
+  //   fetchImage();
+  // }, []);
+
   return (
     // Style Message Item based on whether the message is 'sent' or 'received'
     <div>
@@ -47,13 +64,17 @@ const MessageItem: React.FC<{ message: any }> = ({ message }) => {
             <div style={{ backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`w-[30px] h-[30px] rounded-full text-base font-normal text-white flex items-center justify-center`}>
               {firstName.charAt(0).toUpperCase()}
             </div>
+            {/* {photo ?
+              <img src={photo} className="w-[30px] h-[30px] rounded-full object-cover" /> :
+              <div style={{ backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`w-[30px] h-[30px] rounded-full text-xl font-normal text-white flex items-center justify-center`}>
+                {firstName.charAt(0).toUpperCase()}
+              </div>
+            } */}
           </div>
 
           <div id="timestamp" className="font-montserrat text-[12px] italic font-normal text-right md:ml-[-460px]" style={{ color: okb_colors.med_gray }}>
             <p className="pr-[62px] md:pr-[78px] font-montserrat">{createdAtDate && `${month} ${day}, ${1900 + createdAtDate.getYear()}, ${hour}:${minutes}`}</p>
           </div>
-
-
         </div>
 
       ) : (

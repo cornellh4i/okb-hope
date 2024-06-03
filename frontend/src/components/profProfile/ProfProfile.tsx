@@ -16,6 +16,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db, logInWithGoogle, signUpWithGoogle } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
+import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import Cancel from '@/assets/cancel_report.svg';
 import Submit from '@/assets/submit.svg';
@@ -23,11 +24,6 @@ import Continue from '@/assets/continue.svg';
 import colors from '@/colors';
 import dynamic from "next/dynamic";
 const InlineWidget = dynamic(() => import("react-calendly").then(mod => mod.InlineWidget), { ssr: false });
-
-// interface ProfProfileProps {
-//     firstName: string;
-//     lastName: string;
-// }
 
 const overlayStyle: React.CSSProperties = {
     position: 'fixed',
@@ -87,6 +83,9 @@ const ProfProfile = () => {
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [showBooking, setShowBooking] = useState(false);
     const [reportText, setReportText] = useState('');
+  
+    const [photo, setPhoto] = useState<string | undefined>(undefined);
+
     const [professional, setProfessional] = useState<IPsychiatrist | null>(null);
     const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
     const router = useRouter();
@@ -122,6 +121,21 @@ const ProfProfile = () => {
         };
         fetchDocId();
     }, [user]);
+
+    // useEffect(() => {
+    //     async function fetchImage() {
+    //         try {
+    //             const psych_uid = router.query.psych_uid as string;
+    //             const storage = getStorage();
+    //             const storageRef = ref(storage, 'profile_pictures/' + psych_uid + '.png');
+    //             const photoURL = await getDownloadURL(storageRef);
+    //             setPhoto(photoURL)
+    //         } catch (err: any) {
+    //             console.error(err.message);
+    //         }
+    //     }
+    //     fetchImage();
+    // }, []);
 
     const handleSave = async (event: React.MouseEvent, psychiatrist) => {
         if (!user) {
@@ -302,9 +316,15 @@ const ProfProfile = () => {
             </div>
             <div className={`flex flex-col lg:flex-row gap-10 justify-center`}>
                 <div className={`flex justify-center items-center md:justify-start md:items-start lg:shrink`}>
-                    <div style={{ width: 300, height: 300, backgroundColor: colors.okb_blue, objectFit: 'cover' }} className={`text-9xl font-normal text-white flex items-center justify-center`}>
+                    {photo ?
+                        <img src={photo} alt="profile_picture" style={{ width: 300, height: 300, objectFit: "cover" }} /> :
+                        <div style={{ width: 300, height: 300, backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`text-9xl font-normal text-white flex items-center justify-center`}>
+                            {professional.firstName?.charAt(0).toUpperCase()}
+                        </div>
+                    }
+<!--                     <div style={{ width: 300, height: 300, backgroundColor: colors.okb_blue, objectFit: 'cover' }} className={`text-9xl font-normal text-white flex items-center justify-center`}>
                         {professional.firstName?.charAt(0).toUpperCase()}
-                    </div>
+                    </div> -->
                 </div>
                 <div className={`flex flex-col lg:w-2/3 gap-4 justify-start`}>
                     <div className={`flex flex-col md:flex-row gap-4 justify-between`}>

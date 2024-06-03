@@ -14,14 +14,15 @@ interface QuestionnaireProps {
     firstName: string;
     lastName: string;
     gender: Gender | undefined;
-    image: string;
+    photo: null;
     handleFirstName: (event: ChangeEvent<HTMLInputElement>) => void;
     handleLastName: (event: ChangeEvent<HTMLInputElement>) => void;
     handleGender: (event: ChangeEvent<HTMLInputElement>) => void;
+    handleProfilePictureChange
 }
 
 // 1st page of the Questionnaire
-const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, handleFirstName, handleLastName, handleGender }: QuestionnaireProps) => {
+const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, photo, handleFirstName, handleLastName, handleGender, handleProfilePictureChange }: QuestionnaireProps) => {
     
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -100,7 +101,7 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                             </div>
                             <div className={`input-container w-full relative z-0`}>
                                 <span className={`absolute top-0 left-0 right-0 bottom-0 border-2 rounded-lg flex items-center justify-center bg-[${okb_colors.white}]`} style={{ borderColor: okb_colors.light_blue, height: 200 }}></span>
-                                <input type="file" placeholder="image/" className={`input input-bordered border-2 opacity-0`} style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }} />
+                                <input type="file" placeholder="image/" onChange={handleProfilePictureChange} className={`input input-bordered border-2 opacity-0`} style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }} />
                             </div>
                         </div>
                     </div>

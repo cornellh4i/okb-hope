@@ -186,6 +186,17 @@ const Navbar = () => {
               >
                 {user.displayName?.charAt(0)}
               </button>
+              {/* {
+                  user.photoURL ? (
+                    <button className="btn btn-circle overflow-hidden">
+                      <img src={user.photoURL} alt="profile picture" className="w-full h-full object-cover" />
+                    </button>
+                  ) : (
+                    <button className={`btn btn-circle bg-${colors.okb_blue} text-2xl font-normal text-white flex items-center justify-center`} style={{ aspectRatio: '1' }}>
+                      {user.displayName?.charAt(0).toUpperCase()}
+                    </button>
+                  )
+                } */}
               <ul
                 ref={profileMenuRef}
                 tabIndex={0}
