@@ -300,10 +300,10 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
                 </div>
                 <div className={`flex flex-col flex-1 gap-4 w-full h-auto`}>
                   {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}
-                  <div className={`flex flex-col lg:flex-row justify-between items-start w-full self-stretch`}>
+                  <div className={`flex flex-col lg:flex-row justify-between items-center w-full self-stretch`}>
                     <div className={`flex flex-col justify-center lg:items-start items-center gap-2`}>
                       <h2 className={`card-title col-span-2 text-[${okb_colors.black}] text-[24px] font-montserrat font-semibold not-italic`}>{psychiatrist.firstName} {psychiatrist.lastName}</h2>
-                      <p className={`text-[${okb_colors.black}] text-[16px] font-montserrat font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
+                      <p className={`text-[${okb_colors.black}] text-[16px] text-center font-montserrat font-semibold`}>{psychiatrist.position} at {psychiatrist.location}</p>
                     </div>
                     <div className={`flex justify-center lg:justify-end items-center gap-4 w-full lg:w-auto mt-4 lg:mt-0`}>
                       {renderButtons(psychiatrist)}

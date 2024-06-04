@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import Vertical_line from "@/assets/vertical_line.svg";
 import { Gender } from "@/schema";
 import okb_colors from "@/colors";
@@ -22,6 +22,11 @@ interface QuestionnaireProps {
 
 // 1st page of the Questionnaire
 const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, handleFirstName, handleLastName, handleGender }: QuestionnaireProps) => {
+    
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 pb-0`}>
             <div className={`flex text-[26px] md:text-[32px] font-semibold font-montserrat w-full`}>
@@ -38,7 +43,7 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                     </div>
                     <div className={`flex items-center`}>
                         <Vertical_line />
-                        <input type="text" value={firstName} onChange={handleFirstName} placeholder="Type here" className={`input input-bordered px-6 font-montserrat placeholder:italic w-3/4 md:w-full border-2 ml-3 rounded-2xl text-[12px] md:text-[12px]`} style={{ borderColor: okb_colors.light_blue }} />
+                        <input type="text" value={firstName} onChange={handleFirstName} placeholder="Type here" className={`input input-bordered px-6 font-montserrat placeholder:italic w-3/4 md:w-full border-2 ml-3 rounded-2xl text-[13px]`} style={{ borderColor: okb_colors.light_blue }} />
                     </div>
                 </div>
                 {/* Last Name */}
@@ -48,7 +53,7 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                     </div>
                     <div className={`flex items-center`}>
                         <Vertical_line />
-                        <input type="text" value={lastName} onChange={handleLastName} placeholder="Type here" className={`input input-bordered px-6 font-montserrat placeholder:italic w-3/4 md:w-full border-2 ml-3 rounded-2xl text-[12px] md:text-[12px]`} style={{ borderColor: okb_colors.light_blue }} />
+                        <input type="text" value={lastName} onChange={handleLastName} placeholder="Type here" className={`input input-bordered px-6 font-montserrat placeholder:italic w-3/4 md:w-full border-2 ml-3 rounded-2xl text-[13px]`} style={{ borderColor: okb_colors.light_blue }} />
                     </div>
                 </div>
             </div>

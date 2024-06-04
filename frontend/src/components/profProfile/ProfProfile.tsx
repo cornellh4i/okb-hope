@@ -17,7 +17,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db, logInWithGoogle, signUpWithGoogle } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
 import { addDoc, collection, Timestamp } from 'firebase/firestore';
-import Cancel from '@/assets/cancel.svg';
+import Cancel from '@/assets/cancel_report.svg';
 import Submit from '@/assets/submit.svg';
 import Continue from '@/assets/continue.svg';
 import colors from '@/colors';
@@ -350,14 +350,17 @@ const ProfProfile = () => {
                                 {language}
                             </div>
                         ))}
-                        <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
-                            {professional.location}
-                        </div>
+                        {professional.location && (
+                            <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
+                                {professional.location}
+                            </div>)
+                        }
                     </div>
                     <div className={`text-normal text-center md:text-start text-base font-montserrat`}>
                         {professional.description ? professional.description : 'No description available.'}
                     </div>
-                    <div className={`flex flex-row justify-center items-center md:justify-start md:items-start`}>
+                    {/* Website (Removed for now) */}
+                    {/* <div className={`flex flex-row justify-center items-center md:justify-start md:items-start`}>
                         <div className="px-4 py-2 border-2 rounded-s-2xl rounded-[20px] border-light-blue bg-lightest-blue hover:shadow-xl transition cursor-pointer flex flex-row gap-2">
                             <a
                                 href="https://www.wohohiame.com/"
@@ -369,11 +372,14 @@ const ProfProfile = () => {
                                 <span className="ml-2">www.mentalhealthsite.com</span>
                             </a>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
-            <h2 className={`text-center lg:text-start text-bold text-2xl font-montserrat font-bold`}>Availability</h2>
-            <Availability availability={professional?.availability} />
+            <h2 className={`text-center lg:text-start text-bold text-2xl font-montserrat font-bold`}>Working Hours</h2>
+            <Availability
+                weeklyAvailability={professional?.weeklyAvailability || []}
+                workingHours={professional?.workingHours}
+            />
             <div className={`flex flex-row justify-center content-center`}>
                 <button
                     className={`bg-okb-blue font-montserrat text-okb-white active:bg-gray-500 font-semibold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}

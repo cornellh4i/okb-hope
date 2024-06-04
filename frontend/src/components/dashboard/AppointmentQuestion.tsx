@@ -7,7 +7,6 @@ const AppointmentQuestion = ({ name, question, value = "" }: { name: string, que
         {question}
       </p>
       <input className="outline-1 w-full font-montserrat italic text-[#5F5F5F]" value={value} name={name} placeholder=''></input>
-      <br></br><br></br>
     </React.Fragment>
   );
 };

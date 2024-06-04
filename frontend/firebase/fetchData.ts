@@ -42,34 +42,26 @@ const fetchAllProfessionals = async () => {
   }
 }
 
-const fetchUnreportedProfessionals = async (patient_id) => {
+const fetchUnreportedProfessionals = async (patient_id: string): Promise<IPsychiatrist[]> => {
   try {
-    const fetchedReports = fetchPatientReports(patient_id);
-    console.log(fetchedReports)
-    const reportedPsychIds = [
-      ...new Set((await fetchedReports).map(report => report.psych_id))
-    ];
-    console.log(reportedPsychIds)
-
-    const psychRef = collection(db, 'psychiatrists');
-
-    let snapshot;
-    if (reportedPsychIds.length > 0) {
-      const q = query(psychRef, where('uid', 'not-in', reportedPsychIds));
-      snapshot = await getDocs(q);
-    } else {
-      snapshot = await getDocs(psychRef);  // Get all documents if no IDs to exclude
-    }
-
-    const fetchedPsychiatrists: IPsychiatrist[] = snapshot.docs.map((doc) => doc.data() as IPsychiatrist);
-
-    console.log(fetchedPsychiatrists)
-    return fetchedPsychiatrists;
+    const fetchedReports = await fetchPatientReports(patient_id);
+    const reportedPsychIds = new Set(
+      fetchedReports.map((report) => report.psych_id)
+    );
+    const psychRef = collection(db, "psychiatrists");
+    const snapshot = await getDocs(psychRef);
+    const fetchedPsychiatrists: IPsychiatrist[] = snapshot.docs.map(
+      (doc) => doc.data() as IPsychiatrist
+    );
+    const unreportedPsychiatrists = fetchedPsychiatrists.filter(
+      (psychiatrist) => !reportedPsychIds.has(psychiatrist.uid)
+    );
+    return unreportedPsychiatrists;
   } catch (err: any) {
     console.error(err.message);
     throw err;
   }
-}
+};
 
 
 

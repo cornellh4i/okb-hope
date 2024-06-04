@@ -10,6 +10,7 @@ import Analytics from '../../assets/analytics.svg';
 import Photo from '../../assets/dummy_photo.jpg';
 import { useRouter } from 'next/router';
 import Bookings from "../Booking";
+import { workerData } from 'worker_threads';
 
 
 interface ProfProfileProps {
@@ -23,13 +24,8 @@ const DummyPsychiatrist: IPsychiatrist = {
   lastName: "Shi",
   position: "Psychiatrist at Wohohiame Hospital",
   profile_pic: null,
-  availability: ["9:00-10:00, 13:00-16:30",
-    "16:00-17:00",
-    "19:45-21:30, 23:00-23:30",
-    "8:00-9:00, 15:00-18:00",
-    "9:00-10:00, 13:00-15:30",
-    "8:00-9:00, 16:00-18:00, 20:00-21:30",
-    ""],
+  weeklyAvailability: ["Monday", "Tuesday"],
+  workingHours: {},
   gender: 1,
   location: "Accra, Ghana",
   language: ["English"],
@@ -39,7 +35,6 @@ const DummyPsychiatrist: IPsychiatrist = {
     her psychiatry residency training at the Korle Bu Teaching Hospital in Accra. 
     Dr. Gloria Shi is passionate about providing quality mental health care to her 
     patients and has a specialization in the treatment of anxiety and mood disorders.`,
-  website: "www.mentalhealth.com"
 }
 
 const AdminProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
@@ -131,7 +126,7 @@ const AdminProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
         </div>
       </div>
       <h2 className={`text-bold text-2xl`}>Availability</h2>
-      <Availability availability={professional?.availability} />
+      <Availability weeklyAvailability={professional?.weeklyAvailability} workingHours={professional?.workingHours}/>
 
       {/* <div className={`flex flex-row justify-center content-center`}> */}
       {/* Book Appointment button, action undefined but should lead to calendly */}

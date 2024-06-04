@@ -40,3 +40,13 @@
 div {
   color: CFCFCF;
 }
+
+.scale-85 {
+  transform: scale(0.85);
+}
+
+@media (min-width: 768px) {
+  .scale-md-100 {
+    transform: scale(1);
+  }
+}

@@ -95,21 +95,35 @@ const ReportList: React.FC = () => {
   // Fetch psychiatrist information based on the reports
   useEffect(() => {
     async function fetchPsychiatrists() {
-      const uniquePsychIds = new Set(reports.map(report => report.psych_id));
-      const psychIdsArray = Array.from(uniquePsychIds);
+      try {
+        const uniquePsychIds = new Set(reports.map(report => report.psych_id));
+        const psychIdsArray = Array.from(uniquePsychIds).filter(id => id); // Filter out undefined values
 
-      const psychRef = collection(db, 'psychiatrists');
-      const q = query(psychRef, where('uid', 'in', psychIdsArray));
-      const snapshot = await getDocs(q);
-      const fetchedPsychiatrists: IPsychiatrist[] = snapshot.docs.map((doc) => doc.data() as IPsychiatrist);
+        const psychRef = collection(db, 'psychiatrists');
+        const batchSize = 10;
 
-      setPsychiatrists(fetchedPsychiatrists);
+        const fetchedPsychiatrists: IPsychiatrist[] = [];
+
+        // Perform batched queries
+        for (let i = 0; i < psychIdsArray.length; i += batchSize) {
+          const batch = psychIdsArray.slice(i, i + batchSize);
+          const q = query(psychRef, where('uid', 'in', batch));
+          const snapshot = await getDocs(q);
+          const batchPsychiatrists: IPsychiatrist[] = snapshot.docs.map(doc => doc.data() as IPsychiatrist);
+          fetchedPsychiatrists.push(...batchPsychiatrists);
+        }
+
+        setPsychiatrists(fetchedPsychiatrists);
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     if (reports.length > 0) {
       fetchPsychiatrists();
     }
   }, [reports]);
+
 
 
   // Function to handle when a report is clicked
@@ -199,8 +213,9 @@ const ReportList: React.FC = () => {
                   </div>
                 </div>
                 {/* Additional psychiatrist info */}
-                <div className={`flex w-full justify-center lg:justify-start items-center lg:items-start min-h-[4rem] mt-4 lg:mt-0`}>
-                  <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-montserrat font-normal`}>{psychiatrist.description ? psychiatrist.description : "No description available."}</p>
+                <div className={`flex w-full justify-center lg:justify-start items-center lg:items-start mt-4 lg:mt-0`}>
+                  {/* <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-montserrat font-normal`}>{psychiatrist.description ? psychiatrist.description : "No description available."}</p> */}
+                  <p className={`text-[${okb_colors.dark_gray}] text-[12px] font-montserrat font-normal overflow-hidden overflow-ellipsis`} style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', lineClamp: 3, MozBoxOrient: 'vertical', textAlign: 'left' }}>{psychiatrist.description ? psychiatrist.description : "No description available."}</p>
                 </div>
               </div>
             </div>

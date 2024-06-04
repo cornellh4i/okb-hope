@@ -10,15 +10,15 @@ export interface IPsychiatrist {
     uid: string;
     firstName: string;
     lastName: string;
-    position: string;
-    profile_pic: null;
-    availability: string[]; //changed to string so it just stores the availability doc id
     gender: Gender;
+    position: string;
     location: string;
-    language: string[];
-    specialty: string[];
+    profile_pic: null;
     description: string;
-    website: string;
+    language: string[];
+    weeklyAvailability: string[];
+    workingHours: object;
+    specialty: string[];
 }
 
 export interface IPatient {

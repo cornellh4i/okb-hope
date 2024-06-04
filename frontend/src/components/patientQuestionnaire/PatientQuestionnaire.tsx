@@ -20,17 +20,24 @@ const PatientQuestionnaire = () => {
     const [gender, setGender] = useState<Gender>();
     const [image, setImage] = useState<string>("");
     const [age, setAge] = useState<string>("");
-    const [checked, setChecked] = useState<{ [key: string]: boolean }>(
-        { 'english': false, 'twi': false, 'fante': false, 'ewe': false, 'ga': false, 'other': false });
-    const [languages, setLanguages] = useState<string[]>([]);
+
+    const [prefLanguages, setPrefLanguages] = useState<string[]>([]);
+    const [checkedLanguages, setCheckedLanguages] = useState<{ [key: string]: boolean }>(
+        { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
+    const [isOtherLanguageSelected, setIsOtherLanguageSelected] = useState(false);
+    const [otherLanguage, setOtherLanguage] = useState("");
 
     const [prevExp, setPrevExp] = useState<string>("");
     const [prevExpTime, setPrevExpTime] = useState<string>("");
-    const [concerns, setConcerns] = useState<string>("");
+
+    const [concerns, setConcerns] = useState<string[]>([]);
+    const [checkedConcerns, setCheckConcerns] = useState<{ [key: string]: boolean }>(
+        { 'MyRelationships': false, 'Addiction': false, 'SuicidalThoughts': false, 'FamilyDistress': false, 'SubstanceAbuse': false, 'AcademicDistress': false, 'SocialAnxiety': false, 'Depression': false });
+    const [isOtherConcernSelected, setIsOtherConcernSelected] = useState(false);
+    const [otherConcern, setOtherConcern] = useState("");
 
     const [isMobile, setIsMobile] = useState(false);
     const router = useRouter();
-    const { user } = useAuth();
 
     useEffect(() => {
         // Set isMobile based on window.innerWidth after component mounts to the DOM
@@ -70,22 +77,52 @@ const PatientQuestionnaire = () => {
         setAge(event.target.value);
     }
 
-    const handleCheck = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleLanguages = (event: ChangeEvent<HTMLInputElement>) => {
         const lang = event.target.value;
-        const newChecked = {
-            ...checked,
-            [lang]: !checked[lang]
-        };
-        setChecked(newChecked);
 
-        if (newChecked[lang]) {
-            setLanguages([...languages, lang]);
+        if (lang === "Other") {
+            setIsOtherLanguageSelected(!isOtherLanguageSelected);
+            setCheckedLanguages({
+                ...checkedLanguages,
+                Other: !isOtherLanguageSelected,
+            });
+            if (!isOtherLanguageSelected && otherLanguage) {
+                setPrefLanguages(prevLanguages => {
+                    const filteredLanguages = prevLanguages.filter(l => l !== otherLanguage);
+                    return [...filteredLanguages, otherLanguage];
+                });
+            } else {
+                setPrefLanguages(prevLanguages => prevLanguages.filter(l => l !== otherLanguage));
+            }
         } else {
-            setLanguages(languages.filter(element => element !== lang));
-        }
+            const newCheckedLanguages = {
+                ...checkedLanguages,
+                [lang]: !checkedLanguages[lang]
+            };
+            setCheckedLanguages(newCheckedLanguages);
 
-        console.log(languages);
-        console.log(newChecked);
+            if (newCheckedLanguages[lang]) {
+                setPrefLanguages(prevLanguages => [...prevLanguages, lang]);
+            } else {
+                setPrefLanguages(prevLanguages => prevLanguages.filter(element => element !== lang));
+            }
+        }
+    };
+
+    const handleOtherLanguage = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        let newLanguage = event.target.value;
+
+        if (newLanguage.length > 0) {
+            newLanguage = newLanguage.charAt(0).toUpperCase() + newLanguage.slice(1);
+        }
+        setOtherLanguage(newLanguage);
+
+        if (isOtherLanguageSelected) {
+            setPrefLanguages(prevLanguages => {
+                const filteredLanguages = prevLanguages.filter(l => l !== otherLanguage);
+                return newLanguage ? [...filteredLanguages, newLanguage] : filteredLanguages;
+            });
+        }
     };
 
     const handlePrevExpChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -94,9 +131,54 @@ const PatientQuestionnaire = () => {
     const handlePrevExpTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
         setPrevExpTime(event.target.value);
     }
-    const handleConcernsChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setConcerns(event.target.value);
-    }
+
+    const handleConcerns = (event: ChangeEvent<HTMLInputElement>) => {
+        const concern = event.target.value;
+
+        if (concern === "Other") {
+            setIsOtherConcernSelected(!isOtherConcernSelected);
+            setCheckConcerns({
+                ...checkedConcerns,
+                Other: !isOtherConcernSelected,
+            });
+            if (!isOtherConcernSelected && otherConcern) {
+                setConcerns(prevConcerns => {
+                    const filteredConcerns = prevConcerns.filter(c => c !== otherConcern);
+                    return [...filteredConcerns, otherConcern];
+                });
+            } else {
+                setConcerns(prevConcerns => prevConcerns.filter(c => c !== otherConcern));
+            }
+        } else {
+            const newCheckedConcerns = {
+                ...checkedConcerns,
+                [concern]: !checkedConcerns[concern]
+            };
+            setCheckConcerns(newCheckedConcerns);
+
+            if (newCheckedConcerns[concern]) {
+                setConcerns(prevConcerns => [...prevConcerns, concern]);
+            } else {
+                setConcerns(prevConcerns => prevConcerns.filter(element => element !== concern));
+            }
+        }
+    };
+
+    const handleOtherConcern = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        let newConcern = event.target.value;
+
+        if (newConcern.length > 0) {
+            newConcern = newConcern.charAt(0).toUpperCase() + newConcern.slice(1);
+        }
+        setOtherConcern(newConcern);
+
+        if (isOtherConcernSelected) {
+            setConcerns(prevConcerns => {
+                const filteredConcerns = prevConcerns.filter(c => c !== otherConcern);
+                return newConcern ? [...filteredConcerns, newConcern] : filteredConcerns;
+            });
+        }
+    };
 
     const goBack = () => {
         if (currentStep > 1) {
@@ -122,8 +204,13 @@ const PatientQuestionnaire = () => {
             return;
         }
 
-        else if (currentStep === 2 && (languages.length === 0)) {
-            alert("Please select your language(s).");
+        else if (currentStep === 2 && (prefLanguages.length === 0)) {
+            alert("Please select your preferred language(s).");
+            return;
+        }
+
+        else if (currentStep === 2 && (isOtherLanguageSelected && otherLanguage === "")) {
+            alert("You selected 'Other' for language(s) you speak. Please type in the other language(s).");
             return;
         }
 
@@ -132,36 +219,47 @@ const PatientQuestionnaire = () => {
         }
 
         if (currentStep === 3) {
-            console.log("adding to database");
-            try {
-                await signUpWithGoogle(
-                    "patient",
-                    firstName,
-                    lastName,
-                    "", //position
-                    image,
-                    [], //availability
-                    gender,
-                    "", //location
-                    languages,
-                    [], //specialty
-                    "", //description
-                    "", //website
-                    concerns,
-                    prevExp,
-                    prevExpTime,
-                    age, //ageRange
-                    languages, //prefLanguages
-                    [], //savedPsychiatrists
-                );
-                router.push('/loading?init=true');
-            } catch (error) {
-                console.error('Error signing in:', error);
-                logout();
+            if (prevExp === "" || prevExpTime === "") {
+                alert("Please fill out the required question(s).")
+            }
+            else if (concerns.length === 0) {
+                alert("Please select the concern(s) you would like to discuss.")
+            } else if (isOtherConcernSelected && otherConcern === "") {
+                alert("You selected 'Other' for concern(s). Please type in the other concern(s).");
+                return;
+            }
+            else {
+                console.log("adding to database");
+                try {
+                    await signUpWithGoogle(
+                        "patient",
+                        firstName,
+                        lastName,
+                        "", //position
+                        image,
+                        gender,
+                        "", //location
+                        [], //language
+                        [], //weeklyAvailability
+                        {}, //workingHours
+                        [], //specialty
+                        "", //description
+                        concerns,
+                        age,
+                        prevExpTime,
+                        prevExp, //ageRange
+                        prefLanguages, //prefLanguages
+                        gender, //genderPref
+                        [], //savedPsychiatrists
+                    );
+                    router.push('/loading?init=true');
+                } catch (error) {
+                    console.error('Error signing in:', error);
+                    logout();
+                }
             }
         }
     };
-
 
     return (
         <div className={'flex flex-col bg-off-white'}>
@@ -178,20 +276,25 @@ const PatientQuestionnaire = () => {
             {currentStep === 2 &&
                 <AgeLanguageQuestionnaire
                     age={age}
-                    languages={languages}
-                    setLanguages={setLanguages}
-                    checked={checked}
-                    setChecked={setChecked}
+                    checkedLanguages={checkedLanguages}
+                    isOtherLanguageSelected={isOtherLanguageSelected}
+                    otherLanguage={otherLanguage}
+                    handleOtherLanguage={handleOtherLanguage}
                     handleAge={handleAgeChange}
-                    handleCheck={handleCheck}
+                    handleLanguages={handleLanguages}
                 />}
             {currentStep === 3 && <HistoryQuestionnaire
                 prevExp={prevExp}
                 prevExpTime={prevExpTime}
-                concerns={concerns}
+                checkedConcerns={checkedConcerns}
+                isOtherConcernSelected={isOtherConcernSelected}
+                otherConcern={otherConcern}
+                handleOtherConcern={handleOtherConcern}
+                setConcerns={setConcerns}
                 handlePrevExp={handlePrevExpChange}
                 handlePrevExpTime={handlePrevExpTimeChange}
-                handleConcerns={handleConcernsChange} />}
+                handleConcerns={handleConcerns}
+            />}
             {!isMobile && (
                 <>
                     <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3 mb-4`}>
