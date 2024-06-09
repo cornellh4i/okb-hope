@@ -70,7 +70,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
           where('patient_id', '==', patientId)
         );
         const reportSnapshot = await getDocs(reportsQuery);
-        setReportExists(!reportSnapshot.empty);
+        // setReportExists(!reportSnapshot.empty);
 
         const fetchedReports: IReport[] = reportSnapshot.docs.map(doc => ({
           ...doc.data() as IReport,
