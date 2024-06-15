@@ -69,7 +69,7 @@ const fetchUnreportedProfessionals = async (patient_id: string): Promise<IPsychi
 const fetchPatientReports = async (patient_id) => {
   try {
     const reportCollectionRef = collection(db, 'reports');
-    const q = query(reportCollectionRef, where('patient_id', '==', patient_id));
+    const q = query(reportCollectionRef, where('patient_id', '==', patient_id), where('reporter_type', '==', 'patient'));
     const querySnapshot = await getDocs(q);
     const fetchedReports: IReport[] = querySnapshot.docs.map(doc => ({
       ...doc.data() as IReport,

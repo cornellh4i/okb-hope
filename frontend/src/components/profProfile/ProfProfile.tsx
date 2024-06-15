@@ -173,6 +173,7 @@ const ProfProfile = () => {
             try {
                 const reportData = {
                     description: reportText,
+                    reporter_type: 'patient',
                     patient_id: user.uid,
                     psych_id: professional.uid,
                     psych_name: professional.firstName + ' ' + professional.lastName,

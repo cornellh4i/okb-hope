@@ -4,14 +4,23 @@ import MessageList from './MessageList';
 import MessageComposer from './MessageComposer';
 import Ellipses from '../../assets/ellipses';
 import okb_colors from '@/colors';
+import { IPatient, IReport } from '../../schema';
+import Close from '@/assets/close.svg';
+
 import router, { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
-import { collection, onSnapshot, writeBatch, query, where, doc, getDoc, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, onSnapshot, writeBatch, query, where, doc, getDoc, getDocs, updateDoc, deleteDoc, addDoc, Timestamp } from "firebase/firestore";
 import { auth, db } from "../../../firebase/firebase";
 import DeleteModal from './DeleteModal';
 import { getFirestore } from 'firebase/firestore';
 import { fetchRole } from '../../../firebase/firebase';
-
+import Cancel from '@/assets/cancel_report.svg';
+import { IPsychiatrist } from '../../schema';
+// import { addDoc, collection, Timestamp } from 'firebase/firestore';
+import CheckCircle from '../../assets/check_circle.svg';
+import Continue from '@/assets/continue.svg';
+import Submit from '@/assets/submit.svg';
+import { Button } from '@mui/material';
 
 
 interface NameAreaType {
@@ -29,6 +38,68 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   const q = query(conversationsRef);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
+  const [showReportPopup, setShowReportPopup] = useState(false);
+  const [showReportCardPopup, setShowReportCardPopup] = useState(false);
+  const [reportText, setReportText] = useState('');
+  const { user } = useAuth();
+  const [patient, setPatient] = useState<IPatient | null>(null);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [reportExists, setReportExists] = useState(false);
+  const [fetchedReport, setFetchedReport] = useState<IReport[]>([]);
+  const [reportSubmittedAt, setReportSubmittedAt] = useState("");
+  const [reportDescription, setReportDescription] = useState("");
+
+  useEffect(() => {
+    const fetchPatient = async () => {
+      if (patientId) {
+        const data = await fetchPatientDetails(patientId);
+        setPatient(data);
+        console.log("updated patient!")
+      }
+    };
+    fetchPatient();
+  }, [patientId]);
+
+  // Fetch the report status for the patient
+  useEffect(() => {
+    const fetchReportStatus = async () => {
+      try {
+        const reportsQuery = query(
+          collection(db, 'reports'),
+          where('psych_id', '==', uid),
+          where('patient_id', '==', patientId),
+          where('reporter_type', '==', 'psychiatrist')
+        );
+        const reportSnapshot = await getDocs(reportsQuery);
+        setReportExists(!reportSnapshot.empty);
+
+        const fetchedReports: IReport[] = reportSnapshot.docs.map(doc => ({
+          ...doc.data() as IReport,
+          id: doc.id
+        }));
+        setFetchedReport(fetchedReports);
+      } catch (error) {
+        console.error("Error fetching reports: ", error);
+      }
+    };
+
+    if (uid && patientId) {
+      fetchReportStatus();
+    }
+  }, [uid, patientId, reportExists]);
+
+  useEffect(() => {
+    if (reportExists) {
+      const formattedDate = fetchedReport[0].submittedAt.toDate().toLocaleString();
+      setReportSubmittedAt(formattedDate);
+      setReportDescription(fetchedReport[0].description)
+    }
+  }, [fetchedReport])
+
+
+  const handleReportTextChange = (event) => {
+    setReportText(event.target.value);
+  };
 
   const openDeleteModal = () => {
     setIsDeleteModalOpen(true);
@@ -106,6 +177,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
     } else if (patient_name) {
       setPatientId(patient_id as string);
       setPsychiatristId(uid as string);
+
     }
   }, [router.query]);
 
@@ -136,11 +208,118 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
     }
   };
 
+  const reportPatient = (event) => {
+    event.preventDefault();
+    setShowReportPopup(true);
+  };
+
+  const viewReport = (event) => {
+    event.preventDefault();
+    setShowReportCardPopup(true);
+  }
+
   const toggleDropdown = (event) => {
     event.preventDefault();
-    console.log("Dropdown toggle clicked");
     setOpenDropdown(prev => !prev);
   };
+
+
+  const overlayStyle: React.CSSProperties = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000,
+  };
+
+  const popupStyle: React.CSSProperties = {
+    backgroundColor: '#fff',
+    padding: 24,
+    borderRadius: '10px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    display: 'flex',
+    flexDirection: 'column',
+    maxWidth: '500px', // maximum width of the popup
+    zIndex: 1001,
+    alignItems: 'center', // Center items vertically
+
+  };
+
+  const cardStyle: React.CSSProperties = {
+    background: 'white',
+    // borderRadius: '10px',
+    // border: '1px solid #519AEB',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    padding: '12px 24px',
+    margin: '0 0 12px 0',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+  };
+
+  // const formattedDate = report.submittedAt.toDate().toLocaleString();
+
+  const textareaStyle: React.CSSProperties = {
+    width: '100%',
+    height: '150px', // Increased height for more text
+    margin: '10px 0 20px 0', // Added some margin top and bottom
+    borderWidth: '2px',
+    borderColor: '#ddd', // Light grey border color
+    padding: '10px', // Padding inside the textarea
+    fontSize: 14,
+  };
+
+  const buttonsContainerStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'flex-end', // Aligns the buttons to the right
+    gap: '8px',
+  };
+
+  const handleCloseReport = () => {
+    setShowReportPopup(false);
+  };
+
+  const handleContinue = () => {
+    setShowSuccessPopup(false);
+    // router.push(`/patient/${user?.uid}/discover`);
+  };
+
+  const handleSubmitReport = async () => {
+    if (user?.userType === "psychiatrist" && patient) {
+      try {
+        const reportData = {
+          description: reportText,
+          reporter_type: 'psychiatrist',
+          psych_id: user.uid,
+          patient_id: patient.uid,
+          patient_name: patient.firstName + ' ' + patient.lastName,
+          submittedAt: Timestamp.now(),
+          priority: '',
+          reporter_name: user.displayName,
+        };
+        const docRef = await addDoc(collection(db, 'reports'), reportData);
+        console.log('Report submitted with ID: ', docRef.id);
+        await updateDoc(doc(db, 'reports', docRef.id), {
+          report_id: docRef.id,
+        });
+        setShowSuccessPopup(true);
+        setShowReportPopup(false);
+        setReportText('');
+        setReportExists(true);
+        setOpenDropdown(false);
+      } catch (error) {
+        console.error('Error submitting the report: ', error);
+      }
+    } else {
+      console.error('No user or patient found');
+    }
+  };
+
 
   return (
     <div className='name-area flex py-4 px-6 justify-between items-center shrink-0 w-full page-background border-b-solid border-b-2 border-[#DEDEDE]'>
@@ -154,6 +333,13 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
             {role === 'psychiatrist' && (
               <>
                 <button onClick={markAsUnread}>Mark as Unread</button>
+
+                {reportExists ? (
+                  <button onClick={viewReport}>View Report</button>
+                ) : (
+                  <button onClick={reportPatient}>Report Patient</button>
+                )}
+
                 <button onClick={openDeleteModal}>Delete Message Thread</button>
               </>
             )}
@@ -168,9 +354,75 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
         )}
       </div>
       <DeleteModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onDelete={handleDelete} />
+
+      {showReportPopup && (
+        <div style={overlayStyle}>
+          <div style={popupStyle}>
+            <h3 className="font-montserrat font-bold" style={{ marginBottom: '15px' }}>
+              Report {name}?
+            </h3>
+            <p className="font-montserrat" style={{ fontSize: 14, marginBottom: '15px' }}>
+              We are committed to ensuring your right to privacy and safety. If you feel like any of these rights have been violated by a patient that you are seeing, please fill out the report form below.
+            </p>
+            <textarea
+              className="font-montserrat"
+              style={textareaStyle}
+              placeholder={'Please provide a detailed description of your situation here.'}
+              value={reportText}
+              onChange={handleReportTextChange}
+            ></textarea>
+            <div style={buttonsContainerStyle}>
+              <Cancel onClick={handleCloseReport} style={{ cursor: 'pointer' }} />
+              <Submit onClick={handleSubmitReport} style={{ cursor: 'pointer' }} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showReportCardPopup && (
+        <div className="modal modal-open" style={overlayStyle}>
+          <div className="modal-box " style={{ position: 'relative', display: 'flex', flexDirection: 'column', maxHeight: '50%', gap: 12, padding: 24, alignItems: 'center' }}>
+            <Close className="modal-action" onClick={() => setShowReportCardPopup(false)} style={{ position: 'absolute', top: 0, right: 12, cursor: 'pointer' }} />
+            <div className="text-xl font-bold font-montserrat" style={{ margin: '0 auto', fontSize: 15 }}>Report Information</div>
+            <div className="space-y-4" style={{ width: '100%', height: '100%', overflowY: 'auto', background: 'white', borderRadius: 10, flexDirection: 'column', justifyContent: 'flex-start', gap: 12, display: 'flex' }}>
+              <div style={{ borderRadius: '10px', border: '1px solid #519AEB', padding: '12px 24px' }}>
+                <div>
+                  <p className="font-montserrat" style={{ fontSize: 14, paddingBottom: 5 }}>
+                    The following report for {name} was submitted on: {reportSubmittedAt}
+                  </p>
+                </div>
+                <p className="font-montserrat" style={{ fontSize: 14, paddingBottom: 7 }}>
+                  Report Log
+                </p>
+                <div>
+                  <p className="font-montserrat" style={{ fontSize: 14, border: '1px solid #9A9A9A', color: '#000000', padding: '8px 20px' }}>
+                    {reportDescription}
+                  </p>
+                </div>
+                <p className="font-montserrat" style={{ fontSize: 14, textAlign: 'left', paddingTop: 10 }}>
+                  Report Status: Verified on {reportSubmittedAt}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showSuccessPopup && (
+        <div style={overlayStyle}>
+          <div style={{ ...popupStyle, gap: '12px' }}>
+            <CheckCircle style={{ top: 20 }} />
+            <div style={{ display: 'inline-flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 14 }}>
+              <h3 className="font-montserrat" style={{ fontWeight: 'bold', marginBottom: '15px', fontSize: 14 }}>You have successfully reported {name}.</h3>
+              <Continue style={{ cursor: 'pointer' }} onClick={handleContinue} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
 
 const ChatArea = () => {
   const { user } = useAuth();
@@ -228,8 +480,6 @@ const ChatArea = () => {
 
   useEffect(() => {
     const uid = user?.uid
-    console.log("role")
-    console.log(role)
 
     if (uid) {
       const conversationsQuery = role === "psychiatrist" ?
