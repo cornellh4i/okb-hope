@@ -14,7 +14,7 @@ import { auth, db } from "../../../firebase/firebase";
 import DeleteModal from './DeleteModal';
 import { getFirestore } from 'firebase/firestore';
 import { fetchRole } from '../../../firebase/firebase';
-import Cancel from '@/assets/cancel.svg';
+import Cancel from '@/assets/cancel_report.svg';
 import { IPsychiatrist } from '../../schema';
 // import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import CheckCircle from '../../assets/check_circle.svg';
@@ -67,10 +67,11 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
         const reportsQuery = query(
           collection(db, 'reports'),
           where('psych_id', '==', uid),
-          where('patient_id', '==', patientId)
+          where('patient_id', '==', patientId),
+          where('reporter_type', '==', 'psychiatrist')
         );
         const reportSnapshot = await getDocs(reportsQuery);
-        // setReportExists(!reportSnapshot.empty);
+        setReportExists(!reportSnapshot.empty);
 
         const fetchedReports: IReport[] = reportSnapshot.docs.map(doc => ({
           ...doc.data() as IReport,
@@ -334,7 +335,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
                 <button onClick={markAsUnread}>Mark as Unread</button>
 
                 {reportExists ? (
-                  <button onClick={viewReport}>View Reports</button>
+                  <button onClick={viewReport}>View Report</button>
                 ) : (
                   <button onClick={reportPatient}>Report Patient</button>
                 )}
@@ -412,7 +413,7 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
           <div style={{ ...popupStyle, gap: '12px' }}>
             <CheckCircle style={{ top: 20 }} />
             <div style={{ display: 'inline-flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 14 }}>
-              <h3 className="font-montserrat" style={{ fontWeight: 'bold', marginBottom: '15px', fontSize: 14 }}>You have successfully reported Dr. {name}.</h3>
+              <h3 className="font-montserrat" style={{ fontWeight: 'bold', marginBottom: '15px', fontSize: 14 }}>You have successfully reported {name}.</h3>
               <Continue style={{ cursor: 'pointer' }} onClick={handleContinue} />
             </div>
           </div>

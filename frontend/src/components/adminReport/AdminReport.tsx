@@ -433,8 +433,6 @@ const AdminReport = () => {
               </ul>
             </div>
           )}
-          {showPatientsReports && returnReportsByPriority("", "psychiatrist")}
-          {showPsychiatristsReports && returnReportsByPriority("", "patient")}
         </div>
       </div >
     );
@@ -459,8 +457,10 @@ const AdminReport = () => {
             {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '5%' }}>Subject</div>}
             {!shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '4%', paddingRight: '4%' }}>Submitted By</div>}
             {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '6%' }}>Submitted By</div>}
-            {!shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '1%', paddingRight: '1%' }}>Person Reported</div>}
-            {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center' }}>Person Reported</div>}
+            {!shouldDisplayTimeSubmitted() && showPatientsReports && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '1%', paddingRight: '1%' }}>Patient Reported</div>}
+            {shouldDisplayTimeSubmitted() && showPatientsReports && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center' }}>Patient Reported</div>}
+            {!shouldDisplayTimeSubmitted() && showPsychiatristsReports && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center', paddingLeft: '1%', paddingRight: '1%' }}>Professional Reported</div>}
+            {shouldDisplayTimeSubmitted() && showPsychiatristsReports && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center' }}>Professional Reported</div>}
             {shouldDisplayTimeSubmitted() && <div className="font-montserrat" style={{ color: 'black', fontSize: 16, fontWeight: '700', wordWrap: 'break-word', textAlign: 'center' }}>Time Submitted</div>}
           </div>
           <div style={{ alignSelf: 'stretch', height: 0, border: '1.5px black solid' }}></div>
