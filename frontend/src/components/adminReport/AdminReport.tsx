@@ -321,14 +321,13 @@ const AdminReport = () => {
     const buttonsContainerStyle = {
       display: 'flex',
       justifyContent: 'center',
-      gap: '8px',
-      marginTop: '20px'
+      gap: '8px'
     };
 
     const cancelButtonStyle = {
       backgroundColor: 'white',
       color: okb_colors.dark_gray,
-      padding: '8px',
+      padding: '8px 12px',
       borderRadius: '10px',
       border: '3px solid #519AEB',
       cursor: 'pointer',
@@ -389,23 +388,25 @@ const AdminReport = () => {
     return (
       <div>
         <div className="modal modal-open">
-          <div className="modal-box" style={{ maxHeight: '50%', position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-            <Close className="modal-action" onClick={handleClosePopup} style={{ position: 'absolute', top: 12, right: 12, cursor: 'pointer' }} />
-            <h1 className="text-xl font-semibold font-montserrat" style={{ margin: '0 auto', fontSize: 20, paddingBottom: '10px' }}>Report Information</h1>
+          <div className="flex flex-col gap-3 modal-box p-6" style={{ maxHeight: '50%', position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+            <div className='flex flex-row justify-between'>
+              <h1 className="flex text-xl font-semibold font-montserrat" style={{ fontSize: 20 }}>Report Information</h1>
+              <Close className="flex" onClick={handleClosePopup} style={{ cursor: 'pointer' }} />
+            </div>
             <div className="space-y-4">
               <ReportPopup key={selectedReport?.report_id} report={selectedReport} showPatientsReports={showPatientsReports} />
             </div>
             <div style={buttonsContainerStyle}>
               <button
                 style={cancelButtonStyle}
-                className='font-montserrat'
+                className='font-montserrat font-semibold'
                 onClick={handleClosePopup}
               >Cancel</button>
               <button
                 id="assign-priority-button"
                 onClick={toggleDropdown}
                 style={assignPriorityButtonStyle}
-                className='font-montserrat'
+                className='font-montserrat font-semibold'
               >
                 Assign Priority {isOpen ? <ChevronUp color='white' /> : <ChevronDown color='white' />}
               </button>
@@ -425,7 +426,7 @@ const AdminReport = () => {
                     }}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
-                    className='font-montserrat'
+                    className='font-montserrat font-semibold'
                   >
                     {priority !== "Spam" ? priority + " Priority" : priority}
                   </li>
