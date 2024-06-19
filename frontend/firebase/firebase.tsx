@@ -68,6 +68,7 @@ const signUpWithGoogle = async (
   prefLanguages: string[],
   genderPref: GenderOrUndefined,
   savedPsychiatrists: string[],
+  calendlyLink: string
 ) => {
   return new Promise<void>(async (resolve, reject) => {
     try {

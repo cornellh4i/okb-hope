@@ -32,15 +32,15 @@ interface QuestionnaireProps {
     handleWorkingHoursChange;
     handlePosition: (event: ChangeEvent<HTMLInputElement>) => void;
     handleLanguages: (event: ChangeEvent<HTMLInputElement>) => void;
-    // calendlyLink: string;
-    // handleCalendly: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+    calendlyLink: string;
+    handleCalendly: (event: ChangeEvent<HTMLTextAreaElement>) => void;
 
 }
 //2nd page of questionnaire
 const PositionLocationQuestionnaire = ({ position, setPosition, isOtherPositionSelected, otherPosition,
     handleOtherPosition, location, handleLocation, aboutYourself, handleAboutYourself,
     checkedLanguages, setCheckedLanguages, isOtherLanguageSelected, otherLanguage, handleOtherLanguage,
-    checkedAvailability, handleWeeklyAvailability, workingHours, handleWorkingHoursChange, handlePosition, handleLanguages }: QuestionnaireProps) => {
+    checkedAvailability, handleWeeklyAvailability, workingHours, handleWorkingHoursChange, handlePosition, handleLanguages, calendlyLink, handleCalendly }: QuestionnaireProps) => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -144,7 +144,7 @@ const PositionLocationQuestionnaire = ({ position, setPosition, isOtherPositionS
             </div>
 
             {/* Calendly Link */}
-            {/* <div className='flex flex-col gap-y-3'>
+            <div className='flex flex-col gap-y-3'>
                 <span className={`text-lg font-semibold font-montserrat`}>What is your Calendly link?</span>
                 <div className='flex items-center justify-start w-full gap-3'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="50" viewBox="0 0 4 140" fill="none">
@@ -161,7 +161,7 @@ const PositionLocationQuestionnaire = ({ position, setPosition, isOtherPositionS
                         }}
                     />
                 </div>
-            </div> */}
+            </div>
 
             {/* Languages Spoken */}
             <FormGroup className='gap-y-3'>

@@ -42,6 +42,7 @@ const PsychQuestionnaire = () => {
     const [location, setLocation] = useState<string>("");
     const [patient, setPatient] = useState<boolean>(false);
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
+    const [url, setUrl] = useState<string>("");
     const [isMobile, setIsMobile] = useState(false);
     const router = useRouter();
 
@@ -60,6 +61,10 @@ const PsychQuestionnaire = () => {
 
     const handleLastNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setLastName(event.target.value);
+    }
+
+    const handleUrlChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setUrl(event.target.value);
     }
 
     const handleGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -244,6 +249,11 @@ const PsychQuestionnaire = () => {
             return;
         }
 
+        else if (currentStep === 3 && (url === "")) {
+            alert("Please insert your Calendly link.")
+            return;
+        }
+
         else if (currentStep === 3 && (languages.length === 0)) {
             alert("Please select your language(s).");
             return;
@@ -298,6 +308,7 @@ const PsychQuestionnaire = () => {
                     [], //prefLanguages
                     gender, //genderPref
                     [], //savedPsychiatrists
+                    "", // calendlyLink
                 )
                 router.push('/loading?init=true');
             } catch (error) {
@@ -346,6 +357,8 @@ const PsychQuestionnaire = () => {
                     handleWorkingHoursChange={handleWorkingHoursChange}
                     handlePosition={handlePosition}
                     handleLanguages={handleLanguages}
+                    handleCalendly={handleUrlChange}
+                    calendlyLink={url}
                 />}
             {!isMobile && (
                 <>

@@ -9,8 +9,9 @@ import Edit from '../../assets/edit.svg';
 import Analytics from '../../assets/analytics.svg';
 import Photo from '../../assets/dummy_photo.jpg';
 import { useRouter } from 'next/router';
-import Bookings from "../Booking";
 import { workerData } from 'worker_threads';
+import dynamic from "next/dynamic";
+const InlineWidget = dynamic(() => import("react-calendly").then(mod => mod.InlineWidget), { ssr: false });
 
 
 interface ProfProfileProps {
@@ -35,6 +36,7 @@ const DummyPsychiatrist: IPsychiatrist = {
     her psychiatry residency training at the Korle Bu Teaching Hospital in Accra. 
     Dr. Gloria Shi is passionate about providing quality mental health care to her 
     patients and has a specialization in the treatment of anxiety and mood disorders.`,
+  calendlyLink: "https://calendly.com/bl583"
 }
 
 const AdminProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
@@ -126,7 +128,7 @@ const AdminProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
         </div>
       </div>
       <h2 className={`text-bold text-2xl`}>Availability</h2>
-      <Availability weeklyAvailability={professional?.weeklyAvailability} workingHours={professional?.workingHours}/>
+      <Availability weeklyAvailability={professional?.weeklyAvailability} workingHours={professional?.workingHours} />
 
       {/* <div className={`flex flex-row justify-center content-center`}> */}
       {/* Book Appointment button, action undefined but should lead to calendly */}
@@ -137,7 +139,7 @@ const AdminProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
           Book Appointment
         </button>
       </div> */}
-      <Bookings url="https://calendly.com/bl583/30min" />
+      <InlineWidget url={professional.calendlyLink} />
     </div>
   );
 };

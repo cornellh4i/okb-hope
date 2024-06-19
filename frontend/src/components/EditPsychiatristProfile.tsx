@@ -22,6 +22,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
   const [position, setPosition] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
+  const [calendlyLink, setCalendlyLink] = useState('');
   const [languages, setLanguages] = useState<{ [key: string]: boolean }>({
     English: false,
     Ga: false,
@@ -47,7 +48,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
   const [isPositionDropdownOpen, setIsPositionDropdownOpen] = useState(false);
   const [isGenderDropdownOpen, setIsGenderDropdownOpen] = useState(false);
 
-  const positions = ["Psychiatrist", "Psychologist", "Mental Health Nurse", "Counselor"];
+  const positions = ["Psychiatrist", "Psychologist", "Mental Health Nurse", "Counselor", "Other"];
   const predefinedLanguages = ["English", "Ga", "Twi", "Hausa", "Fante", "Ewe"];
   const genderList = ["Male", "Female", "Other"];
   const availability = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -96,6 +97,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
           }
         });
         setLanguages(updatedLanguages);
+        setCalendlyLink(data.calendlyLink)
       }
     }
     fetchUser();
@@ -188,6 +190,10 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
     return true;
   };
 
+  const handleCalendlyLinkChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setCalendlyLink(event.target.value);
+  }
+
   const handleCancel = () => {
     router.push(`/psychiatrist/${uid}/psych_dashboard`);
   }
@@ -211,7 +217,8 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
       description: description,
       language: selectedLanguages.includes('Other') && otherLanguage ? [...selectedLanguages.filter(lang => lang !== 'Other'), otherLanguage] : selectedLanguages,
       weeklyAvailability: weeklyAvailability,
-      workingHours: workingHours
+      workingHours: workingHours,
+      calendlyLink: calendlyLink
     })
     router.push(`/psychiatrist/${uid}/psych_dashboard`);
   };
@@ -267,7 +274,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
                     </div>
                   </div>
                   <div id="chevron" className="flex flex-col absolute items-center justify-center align-center transform translate-x-8">
-                    <Chevron_down ></Chevron_down>
+                    <Chevron_down />
                   </div>
                 </div>
               </div>
@@ -336,7 +343,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
                     </div>
                   </div>
                   <div id="chevron" className="flex flex-col absolute items-center justify-center align-center transform translate-x-8">
-                    <Chevron_down></Chevron_down>
+                    <Chevron_down />
                   </div>
                 </div>
               </div>
@@ -494,6 +501,20 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
               ))}
             </div>
           </div>
+
+          {/* Calendly link */}
+          <div tabIndex={0} className="flex form-control w-full mr-10">
+            <div className="label-container">
+              <label className="label">
+                <span className="text-lg font-montserrat font-semibold">Calendly Link (Required)</span>
+              </label>
+            </div>
+            <div className="flex items-center">
+              <Vertical_line className=""></Vertical_line>
+              <input type="text" value={calendlyLink} placeholder="Type here" className={`input input-bordered w-full rounded-xl border-2 ml-3 font-montserrat`} style={{ borderColor: okb_colors.light_blue, color: okb_colors.dark_gray }} onChange={handleCalendlyLinkChange} />
+            </div>
+          </div>
+
 
           <div className="card-actions justify-end pt-10">
             <Cancel onClick={handleCancel} style={{ cursor: 'pointer' }} />

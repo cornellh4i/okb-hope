@@ -24,11 +24,6 @@ import colors from '@/colors';
 import dynamic from "next/dynamic";
 const InlineWidget = dynamic(() => import("react-calendly").then(mod => mod.InlineWidget), { ssr: false });
 
-// interface ProfProfileProps {
-//     firstName: string;
-//     lastName: string;
-// }
-
 const overlayStyle: React.CSSProperties = {
     position: 'fixed',
     top: 0,
@@ -248,7 +243,8 @@ const ProfProfile = () => {
             {showBooking && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
                     <div className="absolute inset-0 bg-black bg-opacity-50">
-                        <InlineWidget url="https://calendly.com/bl583/30min" />
+                        {/* Brianna's edit: generalize this to all Professionals */}
+                        <InlineWidget url={professional.calendlyLink} />
                         <button onClick={() => handleBookingClose()} className="absolute top-0 right-0 m-4 text-white">X</button>
                     </div>
                 </div>

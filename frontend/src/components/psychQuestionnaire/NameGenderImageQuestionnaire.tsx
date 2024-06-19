@@ -22,7 +22,7 @@ interface QuestionnaireProps {
 
 // 1st page of the Questionnaire
 const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, handleFirstName, handleLastName, handleGender }: QuestionnaireProps) => {
-    
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
