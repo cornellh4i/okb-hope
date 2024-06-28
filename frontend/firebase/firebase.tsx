@@ -4,6 +4,7 @@ import { addDoc, collection, getDocs, getFirestore, query, where, doc, getDoc, s
 import { FacebookAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { Gender, IUser } from "@/schema";
 import router, { useRouter } from 'next/router';
+import { getStorage } from "firebase/storage";
 
 
 
@@ -68,6 +69,7 @@ const signUpWithGoogle = async (
   prefLanguages: string[],
   savedPsychiatrists: string[],
   status: string,
+  weeklyAvailability: string[],
 ) => {
   return new Promise<void>(async (resolve, reject) => {
     try {
@@ -102,6 +104,7 @@ const signUpWithGoogle = async (
             specialty: specialty,
             description: description,
             website: website,
+            weeklyAvailability: weeklyAvailability,
             status: status
           });
           console.log("Added psych")
@@ -207,6 +210,6 @@ const updateUser = async (userId: string, data: any) => {
   await setDoc(userRef, data, { merge: true });
 };
 
-
+export const storage = getStorage(app);
 export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses };
 

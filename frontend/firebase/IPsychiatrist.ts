@@ -2,6 +2,8 @@ import { db } from './firebase';
 import { getDoc, where, getDocs, collection, addDoc, updateDoc, deleteDoc, doc, QueryConstraint, query } from "firebase/firestore";
 import { IPsychiatrist } from '@/schema';
 
+
+
 // export interface IPsychiatrist {
 //     uid: string;
 //     firstName: string;
