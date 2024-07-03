@@ -21,6 +21,8 @@ export interface IPsychiatrist {
     website: string;
     weeklyAvailability: string[];
     status: string;
+    profileName: string; 
+    fileNames: string[];
 }
 
 export interface IPatient {

@@ -1,6 +1,7 @@
 import NameGenderImageQuestionnaire from "./NameGenderImageQuestionnaire";
 import PositionLanguageQuestionnaire from "./PositionLanguageQuestionnaire";
 import SelectionQuestionnaire from "./SelectionQuestionnaire";
+import { v4 } from "uuid";
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -8,8 +9,9 @@ import { Gender, IPatient, IUser } from "@/schema";
 import ProgressBar0 from '../../assets/progressbar0.svg';
 import ProgressBar33 from '../../assets/progressbar33.svg';
 import ProgressBar67 from '../../assets/progressbar67.svg';
-import { db, signUpWithGoogle, logout } from "../../../firebase/firebase";
+import { db, signUpWithGoogle, logout, storage } from "../../../firebase/firebase";
 import { useAuth } from "../../../contexts/AuthContext";
+import { ref, uploadBytes } from 'firebase/storage';
 
 const PsychQuestionnaire = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -17,6 +19,10 @@ const PsychQuestionnaire = () => {
     const [lastName, setLastName] = useState<string>("");
     const [gender, setGender] = useState<Gender>();
     const [image, setImage] = useState<string>("");
+    const [profile, setProfile] = useState<File>();
+    const [profileName, setProfileName] = useState<string>("");
+    const [files, setFiles] = useState<File[]>([]);
+    const [fileNames, setFileNames] = useState<string[]>([]);
     const [position, setPosition] = useState<string>("");
     const [checked, setChecked] = useState<{ [key: string]: boolean }>(
         { 'English': false, 'Twi': false, 'Fante': false, 'Ewe': false, 'Ga': false, 'Other': false });
@@ -140,7 +146,7 @@ const PsychQuestionnaire = () => {
         }
 
         if (currentStep === 3) {
-            console.log("adding to database");
+            console.log("adding to database" + profileName + fileNames);
             try {
                 await signUpWithGoogle(
                     "psychiatrist",
@@ -161,8 +167,29 @@ const PsychQuestionnaire = () => {
                     "",
                     [],
                     [],
+                    "",
+                    [], 
+                    profileName, 
+                    fileNames
                 )
                 router.push('/loading?init=true');
+
+                if (files == null)
+                    return;
+                for (const data of files){
+                    const fileRef = ref(storage, `resume_files/${v4()}`);
+                    uploadBytes(fileRef, data).then(() => {
+                        alert("Files Uploaded")
+                    })
+                }
+
+                if (profile == null)
+                    return;
+                const imageRef = ref(storage, `profile_pictures/${v4()}`);
+                uploadBytes(imageRef, profile).then(() => {
+                    alert("Image Uploaded")
+                })
+                
             } catch (error) {
                 console.error('Error signing in:', error);
                 logout();
@@ -186,7 +213,14 @@ const PsychQuestionnaire = () => {
                     handleFirstName={handleFirstNameChange}
                     handleLastName={handleLastNameChange}
                     handleGender={handleGenderChange}
-                />}
+                    profileLabel={profile?.name ?? ""}
+                    setProfile={setProfile}
+                    files={files}
+                    setFiles={setFiles}
+                    setProfileName={setProfileName}
+                    setFileNames={setFileNames}
+                />
+            }
             {currentStep === 3 &&
                 <PositionLanguageQuestionnaire
                     setPosition={position}

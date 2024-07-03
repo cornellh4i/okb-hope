@@ -211,5 +211,6 @@ const updateUser = async (userId: string, data: any) => {
 };
 
 export const storage = getStorage(app);
+
 export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses };
 
