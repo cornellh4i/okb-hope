@@ -70,6 +70,8 @@ const signUpWithGoogle = async (
   savedPsychiatrists: string[],
   status: string,
   weeklyAvailability: string[],
+  profileName: string,
+  fileNames: string[]
 ) => {
   return new Promise<void>(async (resolve, reject) => {
     try {
@@ -105,7 +107,9 @@ const signUpWithGoogle = async (
             description: description,
             website: website,
             weeklyAvailability: weeklyAvailability,
-            status: status
+            status: status,
+            profileName: profileName,
+            fileNames: fileNames
           });
           console.log("Added psych")
         }

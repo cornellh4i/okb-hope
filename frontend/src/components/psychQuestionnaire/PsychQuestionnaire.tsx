@@ -172,23 +172,61 @@ const PsychQuestionnaire = () => {
                     profileName, 
                     fileNames
                 )
-                router.push('/loading?init=true');
 
-                if (files == null)
+                if (files == null){
+                        console.log('file is null')
+                        return; 
+                    }
+                    // for (const data of files){
+                    //     console.log('storing files')
+                    //     const fileRef = ref(storage, `resume_files/${v4()}`);
+                    //     uploadBytes(fileRef, data).then(() => {
+                    //         alert("Files Uploaded")
+                    //     })
+                    // }
+                    for (let i = 0; i < files.length; i++) {
+                        const fileRef = ref(storage, `resume_files/${fileNames[i]}`);
+                        uploadBytes(fileRef, files[i]).then(() => {
+                            alert("Files Uploaded")
+                        })
+                    }
+            
+                if (profile == null){
+                    console.log('profile is null')
                     return;
-                for (const data of files){
-                    const fileRef = ref(storage, `resume_files/${v4()}`);
-                    uploadBytes(fileRef, data).then(() => {
-                        alert("Files Uploaded")
-                    })
                 }
-
-                if (profile == null)
-                    return;
-                const imageRef = ref(storage, `profile_pictures/${v4()}`);
+                const imageRef = ref(storage, `profile_pictures/${profileName}`);
                 uploadBytes(imageRef, profile).then(() => {
+                    console.log('storing profile')
                     alert("Image Uploaded")
                 })
+
+                console.log('all files + profile uploaded')
+
+                router.push('/loading?init=true');
+                
+                
+                // if (files == null){
+                //     console.log('file is null')
+                //     return; 
+                // }
+                // for (const data of files){
+                //     console.log('storing files')
+                //     const fileRef = ref(storage, `resume_files/${v4()}`);
+                //     uploadBytes(fileRef, data).then(() => {
+                //         alert("Files Uploaded")
+                //     })
+                // }
+
+                // if (profile == null){
+                //     console.log('profile is null')
+                //     return;
+                // }
+                // const imageRef = ref(storage, `profile_pictures/${v4()}`);
+                // uploadBytes(imageRef, profile).then(() => {
+                //     console.log('storing profile')
+                //     alert("Image Uploaded")
+                // })
                 
             } catch (error) {
                 console.error('Error signing in:', error);

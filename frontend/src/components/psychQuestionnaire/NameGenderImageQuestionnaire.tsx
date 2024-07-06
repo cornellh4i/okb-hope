@@ -3,12 +3,17 @@ import Vertical_line from "@/assets/vertical_line.svg";
 import { Gender } from "@/schema";
 import okb_colors from "@/colors";
 import Upload from "@/assets/upload.svg";
+import { v4 } from "uuid";
+
 
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { useAuth } from "../../../contexts/AuthContext";
+import { ref, uploadBytes } from 'firebase/storage';
+import { storage } from "../../../firebase/firebase";
 
 
 interface QuestionnaireProps {
@@ -36,7 +41,7 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
         const fileList = e.target.files;
         if (fileList) {
             setProfile(fileList[0]);
-            setProfileName(fileList[0].name)
+            setProfileName(v4())
         }
     };
 
@@ -45,10 +50,9 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
         if (fileList) {
             const fileArray = Array.from(fileList);
             setFiles(fileArray);
-            setFileNames(fileArray.map(file => file.name));
+            setFileNames(fileArray.map(file => file.name + v4()));
         }
     };
-
 
     
     return (
@@ -129,8 +133,7 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                                 <span className={`absolute top-0 left-0 right-0 bottom-0 border-2 rounded-lg flex items-center justify-center`} style={{ borderColor: okb_colors.light_blue, height: 200 }}></span>
                                 <input type="file" onChange={(event) => {handleProfileChange(event)}} accept="image/*" id="profile" name="profile" placeholder="image/" className={`input input-bordered border-2 opacity-0`} style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }} />
                             </div>
-                            {/* <button onClick={uploadImage} > Upload Image </button> */}
-
+                            {/* <button onClick={uploadProfile} > Upload Image </button> */}
                         </div>
                     </div>
                 </div>
@@ -153,7 +156,7 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                                 <span className={`absolute top-0 left-0 right-0 bottom-0 border-2 rounded-lg flex items-center justify-center`} style={{ borderColor: okb_colors.light_blue, height: 200 }}></span>
                                 <input type="file" onChange={(event) => {handleFileChange(event)}} id="file" name="files[]" multiple placeholder="file/" className={`input input-bordered border-2 opacity-0`} style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }} />
                             </div>
-                            {/* <button onClick={uploadFile} > Upload Files </button> */}
+                            {/* <button onClick={uploadFiles} > Upload Files </button>  */}
                         </div>
                     </div>
                 </div>
