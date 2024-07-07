@@ -148,6 +148,24 @@ const PsychQuestionnaire = () => {
         if (currentStep === 3) {
             console.log("adding to database" + profileName + fileNames);
             try {
+                if (files == null){
+                    return; 
+                }
+                for (let i = 0; i < files.length; i++) {
+                    const fileRef = ref(storage, `resume_files/${fileNames[i]}`);
+                    uploadBytes(fileRef, files[i]).then(() => {
+                        // alert("Files Uploaded")
+                    })
+                }
+        
+                if (profile == null){
+                    return;
+                }
+                const imageRef = ref(storage, `profile_pictures/${profileName}`);
+                uploadBytes(imageRef, profile).then(() => {
+                // alert("Image Uploaded")
+                })
+            
                 await signUpWithGoogle(
                     "psychiatrist",
                     firstName,
@@ -173,60 +191,7 @@ const PsychQuestionnaire = () => {
                     fileNames
                 )
 
-                if (files == null){
-                        console.log('file is null')
-                        return; 
-                    }
-                    // for (const data of files){
-                    //     console.log('storing files')
-                    //     const fileRef = ref(storage, `resume_files/${v4()}`);
-                    //     uploadBytes(fileRef, data).then(() => {
-                    //         alert("Files Uploaded")
-                    //     })
-                    // }
-                    for (let i = 0; i < files.length; i++) {
-                        const fileRef = ref(storage, `resume_files/${fileNames[i]}`);
-                        uploadBytes(fileRef, files[i]).then(() => {
-                            alert("Files Uploaded")
-                        })
-                    }
-            
-                if (profile == null){
-                    console.log('profile is null')
-                    return;
-                }
-                const imageRef = ref(storage, `profile_pictures/${profileName}`);
-                uploadBytes(imageRef, profile).then(() => {
-                    console.log('storing profile')
-                    alert("Image Uploaded")
-                })
-
-                console.log('all files + profile uploaded')
-
-                router.push('/loading?init=true');
-                
-                
-                // if (files == null){
-                //     console.log('file is null')
-                //     return; 
-                // }
-                // for (const data of files){
-                //     console.log('storing files')
-                //     const fileRef = ref(storage, `resume_files/${v4()}`);
-                //     uploadBytes(fileRef, data).then(() => {
-                //         alert("Files Uploaded")
-                //     })
-                // }
-
-                // if (profile == null){
-                //     console.log('profile is null')
-                //     return;
-                // }
-                // const imageRef = ref(storage, `profile_pictures/${v4()}`);
-                // uploadBytes(imageRef, profile).then(() => {
-                //     console.log('storing profile')
-                //     alert("Image Uploaded")
-                // })
+            router.push('/loading?init=true');
                 
             } catch (error) {
                 console.error('Error signing in:', error);

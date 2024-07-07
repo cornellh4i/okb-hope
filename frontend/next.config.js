@@ -13,6 +13,9 @@ const nextConfig = {
 
     return config;
   },
+  images : {
+    domains : ['firebasestorage.googleapis.com', 'localhost'] // <== Domain name
+  },
 }
 
 module.exports = nextConfig

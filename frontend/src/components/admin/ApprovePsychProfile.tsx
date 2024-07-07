@@ -13,7 +13,7 @@ import CheckCircle from '../../assets/check_circle.svg'
 import { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db, logInWithGoogle, signUpWithGoogle } from '../../../firebase/firebase';
+import { db, logInWithGoogle, signUpWithGoogle, storage } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
 import { addDoc, collection, getDoc } from 'firebase/firestore';
 import { Timestamp } from "firebase/firestore";
@@ -24,6 +24,8 @@ import Availability from '../profProfile/Availability';
 import WarningHover from './WarningHover';
 import { ToastContainer, toast, Bounce} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 
 interface ProfProfileProps {
   firstName: string;
@@ -138,12 +140,14 @@ const ProfProfile = () => {
   const [reportText, setReportText] = useState('');
   const [approval, setApproved] = useState(false);
   const [psychId, setPsychId] = useState('');
+  const [profileName, setProfileName] = useState('');
+  const [fileNames, setFileNames] = useState<string[]>([]);
   // Set the initial state of professional to null instead of DummyPsychiatrist 
   // to avoid the initial rendering of the component with DummyPsychiatrist 
   // before fetching and updating with the real data
   const [professional, setProfessional] = useState<IPsychiatrist | null>(null);
   const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
-
+  const [profileSrc, setProfileSrc] = useState('');
   const router = useRouter();
 
   // Effect for fetching and updating professional data based on query parameters.
@@ -160,6 +164,8 @@ const ProfProfile = () => {
         setProfessional(data);
         setApproved(data.status === "approved");
         setPsychId(psych_uid);
+        setProfileName(data.profileName);
+        setFileNames(data.fileNames);
       }
     };
     fetchProfessional();
@@ -178,6 +184,73 @@ const ProfProfile = () => {
     }
     fetchDocId();
   }, [docId]);
+
+  const profileStorageRef = ref(storage, `profile_pictures/${profileName}`)
+  
+  const profileURL = async () => {
+    try {
+      const url = await getDownloadURL(profileStorageRef);
+      console.log(url);
+      setProfileSrc(url);
+      // You can use the URL here for image rendering or any other purpose
+    } catch (error) {
+      console.error('Error getting download URL:', error);
+      // Handle the error appropriately
+    }
+  };
+
+  profileURL();
+
+  /////////
+  // const downloadFile2 = async () => {
+  //   for (const fileName in fileNames){
+  //     const url = getDownloadURL(ref(storage, `resume_files/${fileName}`))
+  //     .then((url) => {
+  //     // `url` is the download URL for 'images/stars.jpg'
+
+  //     // This can be downloaded directly:
+  //     console.log("Executing XMLHttpRequest")
+  //     const xhr = new XMLHttpRequest();
+  //     xhr.responseType = 'blob';
+  //     xhr.onload = (event) => {
+  //       const blob = xhr.response;
+  //     };
+  //     xhr.open('GET', url);
+  //     xhr.send();
+  //   })
+  //   .catch((error) => {
+  //     console.log("Error with downloading files")
+  //   });
+  //   }
+  // }
+
+  /////////
+
+  const urls = new Array(fileNames.length)
+
+  const downloadFile = async () => {
+    console.log(fileNames)
+    for (let i = 0; i < fileNames.length; i++){
+      try {
+        const fileStorageRef = ref(storage, `resume_files/${fileNames[i]}`)
+        const url = await getDownloadURL(fileStorageRef);
+        urls[i] = url;
+      } catch (error) {
+        console.error('Error getting download URL:', error);
+      }
+      console.log(urls)
+    }
+    for (let i = 0; i < fileNames.length; i++){
+      // Create an anchor element and programmatically click it to download the file
+      const link = document.createElement('a');
+      link.href = urls[i];
+      link.target = "_blank";
+      // link.download = fileNames[i]; // You can set the desired file name here
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
 
   const handleSave = async (event: React.MouseEvent, psychiatrist) => {
     if (!user) {
@@ -398,14 +471,13 @@ const ProfProfile = () => {
         </div>
       )}
 
-
       <div className={`flex flex-row`}>
         {/* Back arrow to return to go back to Discover Professionals */}
         <figure className={`cursor-pointer`} onClick={handleGoToDatabase}><Arrow /></figure>
       </div>
       <div className={`flex flex-col lg:flex-row gap-10 justify-center`}>
         <div className={`flex justify-center items-center md:justify-start md:items-start lg:shrink`}>
-          <Image src={Photo} alt="Photo" className={`w-1200 h-600`} />
+          <Image src={profileSrc} alt="Profile Image" width={299} height={299} className={`rounded-3xl aspect-square object-cover`} />
         </div>
         <div className={`flex flex-col lg:w-2/3 gap-4 justify-center`}>
           <div className={`flex flex-col md:flex-row gap-4 justify-between`}>
@@ -428,9 +500,9 @@ const ProfProfile = () => {
               
               {/* Download button, action is currently undefined */}
               <div className={`shrink`}>
-                <div className={`font-montserrat px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold flex-end`}>
+                <button onClick = {downloadFile} className={`font-montserrat px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold flex-end`}>
                   Download
-                </div>
+                </button>
               </div>
             </div>
           </div>
@@ -444,15 +516,18 @@ const ProfProfile = () => {
                 {speciality}
               </div>
             ))}
-            {professional.language.map((langauge, index) => (
+            {professional.language.map((language, index) => (
               <div className={`font-montserrat px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
-                {langauge}
+                {language}
               </div>
             ))}
-            <div className={`font-montserrat px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
-              {professional.location}
-            </div>
-
+              <div>
+                {professional.location && (
+                <div className="font-montserrat px-3 py-2 border-2 rounded-[20px] border-light-blue">
+                {professional.location}
+              </div>
+              )}
+              </div>
           </div>
           <div className={`font-montserrat font-light text-center md:text-start text-base`}>
             {professional.description}
