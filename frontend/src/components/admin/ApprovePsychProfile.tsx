@@ -25,6 +25,7 @@ import WarningHover from './WarningHover';
 import { ToastContainer, toast, Bounce} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import DownloadMenu from './downloadMenu'
 
 
 interface ProfProfileProps {
@@ -201,56 +202,6 @@ const ProfProfile = () => {
 
   profileURL();
 
-  /////////
-  // const downloadFile2 = async () => {
-  //   for (const fileName in fileNames){
-  //     const url = getDownloadURL(ref(storage, `resume_files/${fileName}`))
-  //     .then((url) => {
-  //     // `url` is the download URL for 'images/stars.jpg'
-
-  //     // This can be downloaded directly:
-  //     console.log("Executing XMLHttpRequest")
-  //     const xhr = new XMLHttpRequest();
-  //     xhr.responseType = 'blob';
-  //     xhr.onload = (event) => {
-  //       const blob = xhr.response;
-  //     };
-  //     xhr.open('GET', url);
-  //     xhr.send();
-  //   })
-  //   .catch((error) => {
-  //     console.log("Error with downloading files")
-  //   });
-  //   }
-  // }
-
-  /////////
-
-  const urls = new Array(fileNames.length)
-
-  const downloadFile = async () => {
-    console.log(fileNames)
-    for (let i = 0; i < fileNames.length; i++){
-      try {
-        const fileStorageRef = ref(storage, `resume_files/${fileNames[i]}`)
-        const url = await getDownloadURL(fileStorageRef);
-        urls[i] = url;
-      } catch (error) {
-        console.error('Error getting download URL:', error);
-      }
-      console.log(urls)
-    }
-    for (let i = 0; i < fileNames.length; i++){
-      // Create an anchor element and programmatically click it to download the file
-      const link = document.createElement('a');
-      link.href = urls[i];
-      link.target = "_blank";
-      // link.download = fileNames[i]; // You can set the desired file name here
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  };
 
   const handleSave = async (event: React.MouseEvent, psychiatrist) => {
     if (!user) {
@@ -497,13 +448,16 @@ const ProfProfile = () => {
             </div>
             <div className='flex flex-row gap-4 justify-center items-center md:justify-start md:items-start'>
               {/* Report button, action is currently undefined */}
-              
+              <div className={`shrink flex-end`}>
               {/* Download button, action is currently undefined */}
-              <div className={`shrink`}>
+              <DownloadMenu fileNames={fileNames}/>
+              </div>
+
+              {/* <div className={`shrink`}>
                 <button onClick = {downloadFile} className={`font-montserrat px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold flex-end`}>
                   Download
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* <div className={`text-normal text-xl italic text-dark-grey`}>
