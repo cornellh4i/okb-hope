@@ -19,12 +19,22 @@ const OnboardingPage: React.FC = () => {
     setIsLoading(true);
     setError(null);
     try {
+     
       // TODO: Implement the API call to the Quote API here
       // Use fetch or axios to make a GET request to a Quote API
-      // Endpoint: https://api.quotable.io/quotes/random
+      // Endpoint: https://api.quotable.io/quotes/random DONE
 
       // Once you have the response, update the state with the quote
-      // setQuote({ text: 'Quote text from API', author: 'Author name from API' });
+      // setQuote({ text: 'Quote text from API', author: 'Author name from API' }); DONE
+
+      const res = await fetch("https://api.quotable.io/random");
+      if (!res.ok) {
+        throw new Error();
+      }
+      const quote = await res.json();
+      
+      setQuote({ text: quote.content, author: quote.author});
+      
     } catch (error) {
       console.error('Error fetching quote:', error);
       setError('Failed to fetch quote. Please try again.');
