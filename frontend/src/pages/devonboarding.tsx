@@ -25,6 +25,14 @@ const OnboardingPage: React.FC = () => {
 
       // Once you have the response, update the state with the quote
       // setQuote({ text: 'Quote text from API', author: 'Author name from API' });
+      const r = await fetch('https://api.quotable.io/random');
+      if (!r.ok) {
+        throw new Error();
+      }
+
+      const data = await r.json();
+      setQuote({ text: data.content, author: data.author });
+      
     } catch (error) {
       console.error('Error fetching quote:', error);
       setError('Failed to fetch quote. Please try again.');
