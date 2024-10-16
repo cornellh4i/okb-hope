@@ -1,14 +1,18 @@
 // FilterUserTable.tsx
-import { useState } from "react";
+import { useState, useEffect} from "react";
+import AdminView from "../admin/AdminView";
+import NoSavedPsychComponent from '../psychiatrists/NoSavedPsych';
+
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 import FilterCard from "./FilterCard";
+import { fetchAllUsers, fetchPatientDetails, fetchProfessionalData } from '../../../firebase/fetchData';
 import { IUser } from "../../../src/schema";
 
 
 const FilterUserTable = ({ currentRecords, onDelete, selectedUsers }) => {
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
-
+  const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
   const handleCheckChange = (userId, isChecked) => {
     if (isChecked) {
       setSelectedUserIds((prevSelectedUserIds) => [...prevSelectedUserIds, userId]);
@@ -18,9 +22,31 @@ const FilterUserTable = ({ currentRecords, onDelete, selectedUsers }) => {
       selectedUsers((prevSelectedUserIds) => prevSelectedUserIds.filter((id) => id !== userId))
     }
   };
-
-
-
+  const AdminRouter = ({user}) => {
+    useEffect(() => {
+      
+      const fetchUser = async () => {
+        if (user && user.userType == "admin") {
+          const data = await fetchPatientDetails(user.uid);
+          setSavedPsychiatrists(data.savedPsychiatrists)
+        }
+      }
+      fetchUser();
+    }, []);
+    const content = savedPsychiatrists.length
+    return (
+      content === 0 ? (
+        <NoSavedPsychComponent />
+      ) : (
+        savedPsychiatrists.map((psych_uid: any) => (
+          <div className="psychiatrist justify-center items-center content-center">
+            <AdminView
+              key={psych_uid} 
+            />
+          </div>
+        ))
+      ))
+  }
 
   return (
     <div className="overflow-x-auto">
@@ -44,7 +70,10 @@ const FilterUserTable = ({ currentRecords, onDelete, selectedUsers }) => {
               <div>
                 <FilterCard key={index} name={name} username={username} created={"N/A"} active={"N/A"} isChecked={selectedUserIds.includes(user.id)}
                   onCheckChange={(isChecked) => handleCheckChange(user.id, isChecked)} />
+                {AdminRouter(user)}
               </div>
+              
+              
             );
           })}
         </div>
