@@ -7,6 +7,6 @@ const Bookings = ({psych_uid}) => {
         <AdminView psych_uid={psych_uid} />
       </div>
     );
-  }
+}
   
   export default Bookings
