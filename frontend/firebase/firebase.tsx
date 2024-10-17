@@ -102,6 +102,7 @@ const signUpWithGoogle = async (
             weeklyAvailability: weeklyAvailability,
             workingHours: workingHours,
             specialty: specialty,
+            status: "pending"
           });
           console.log("Added psych")
         }
