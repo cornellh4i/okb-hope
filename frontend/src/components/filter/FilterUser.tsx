@@ -1,3 +1,5 @@
+import "firebase/firestore";
+
 import { useEffect, useState } from "react";
 import { collection, getDocs, Timestamp } from "firebase/firestore";
 import chevron_left from "@/assets/chevron_left";

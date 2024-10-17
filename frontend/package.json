@@ -40,7 +40,7 @@
     "google-spreadsheet": "^4.1.1",
     "http-proxy-middleware": "^2.0.6",
     "infisical-node": "^1.4.3",
-    "next": "^14.1.4",
+    "next": "^14.2.15",
     "peer": "^1.0.0",
     "peerjs": "^1.4.7",
     "postcss": "^8.4.21",
