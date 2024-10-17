@@ -13,6 +13,7 @@ const FilterBarTwo = ({ onDelete, userList }) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const statuses = ["Pending", "Approved"];
 
     const handleSearch = (newSearchTerm: string) => {
         setSearchTerm(newSearchTerm);
@@ -78,6 +79,15 @@ const FilterBarTwo = ({ onDelete, userList }) => {
                     <label tabIndex={0} className="text-neutral-400 flex gap-5 m-1 text-base font-normal">Gender<ChevronDown color={okb_colors.med_gray} /></label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
                         {genders.map((e) => <li key={e}>{e}</li>)}
+                    </ul>
+                </div>
+            </div>
+
+            <div className="h-12 px-6 py-3 bg-white rounded-lg border border-zinc-600 justify-between items-center inline-flex">
+                <div className="dropdown">
+                    <label tabIndex={0} className="text-neutral-400 flex gap-5 m-1 text-base font-normal">Status<ChevronDown color={okb_colors.med_gray} /></label>
+                    <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                        {statuses.map((e) => <li key={e}>{e}</li>)}
                     </ul>
                 </div>
             </div>
