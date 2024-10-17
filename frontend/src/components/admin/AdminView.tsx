@@ -1,16 +1,10 @@
-import AdminProfProfile from '../adminProfProfile/AdminProfProfile';
+import ProfProfile from '@/components/profProfile/ProfProfile';
 import { IPsychiatrist } from '@/schema';
 
-const AdminView = ({professional}) => {
+const AdminView = ({psych_uid}) => {
     return (
         <div>
-            <h1>
-                Dr. {professional.firstName} {professional.lastName}
-            </h1>
-            <AdminProfProfile 
-                firstName={professional.firstName} 
-                lastName={professional.lastName} 
-            />
+            <ProfProfile />
         </div>
     );
 }

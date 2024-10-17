@@ -41,8 +41,7 @@ const FilterUserTable = ({ currentRecords, onDelete, selectedUsers }) => {
         savedPsychiatrists.map((psych_uid: any) => (
           <div className="psychiatrist justify-center items-center content-center">
             <AdminView
-              key={psych_uid} 
-            />
+              psych_uid={psych_uid} />
           </div>
         ))
       ))
