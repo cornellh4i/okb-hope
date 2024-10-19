@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchDocumentId, fetchPatientDetails, fetchProfessionalData } from '../../../firebase/fetchData';
 import { IPsychiatrist } from '../../schema';
-import Availability from './Availability';
+import Availability from '../profProfile/Availability';
 import Image from 'next/image';
 import Link from '../../assets/link.svg';
 import Arrow from '../../assets/return_arrow.svg';
