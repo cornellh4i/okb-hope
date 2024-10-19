@@ -2,11 +2,12 @@ import AdminView from '@/components/admin/AdminView';
 import { IPsychiatrist } from '@/schema';
 import StatusIcon from '@/components/filter/StatusIcon'
 import ApproveAccount from './ApproveAccount'
+import { fetchProfessionalData } from '../../../../firebase/fetchData';
 
 const PsychiatristProfile = ({ psychiatrist }) => {
     return (
-      <div className="flex justify-center items-center">
-        <div className="w-full max-w-3xl bg-white p-6 rounded-md shadow-md">
+      <div className="w-full max-w-6xl flex justify-center items-center">
+        <div className="w-full bg-white p-6 rounded-md shadow-md">
           <div className="flex items-center">
             {/* Profile Picture */}
             <img src={psychiatrist.profileImage} alt="Profile" className="rounded-full w-32 h-32 mr-6" />
@@ -43,7 +44,7 @@ const PsychiatristProfile = ({ psychiatrist }) => {
   };
   
   const Bookings = () => {
-    // Example psychiatrist data
+    // UPDATE
     const psychiatrist = {
       name: 'Dr. Gloria Shi',
       profileImage: '/path/to/image.jpg',
@@ -54,11 +55,53 @@ const PsychiatristProfile = ({ psychiatrist }) => {
     };
   
     return (
-      <div className="flex justify-center">
-        <AdminView />
+      <div className="w-full min-h-screen flex justify-center">
+        {/* <AdminView /> */}
         <PsychiatristProfile psychiatrist={psychiatrist} />
       </div>
     );
   };
+
+//   const Bookings = ({ psych_uid }) => {
+//     const [psychiatrist, setPsychiatrist] = useState(null); // State to hold fetched data
+//     const [loading, setLoading] = useState(true); // State to handle loading
+//     const [error, setError] = useState(null); // State to handle errors
+  
+//     useEffect(() => {
+//       // Fetch data on component mount
+//       const fetchData = async () => {
+//         try {
+//           const data = await fetchProfessionalData(psych_uid); // Fetch psychiatrist data using psych_uid
+//           setPsychiatrist(data);
+//           setLoading(false);
+//         } catch (error) {
+//           console.error('Error fetching psychiatrist data:', error);
+//           setError(error.message);
+//           setLoading(false);
+//         }
+//       };
+  
+//       fetchData();
+//     }, [psych_uid]);
+  
+//     if (loading) {
+//       return <p>Loading...</p>; // Render loading state
+//     }
+  
+//     if (error) {
+//       return <p>Error: {error}</p>; // Render error message if fetch fails
+//     }
+  
+//     if (!psychiatrist) {
+//       return <p>No data available</p>; // Render if no data is available
+//     }
+  
+//     return (
+//       <div className="w-full min-h-screen bg-gray-100">
+//         <AdminView />
+//         <PsychiatristProfile psychiatrist={psychiatrist} />
+//       </div>
+//     );
+//   };
   
   export default Bookings;
