@@ -1,9 +1,9 @@
 import AdminView from '@/components/admin/AdminView';
 import { IPsychiatrist } from '@/schema';
 import StatusIcon from '@/components/filter/StatusIcon'
-import ApproveAccount from '@/pages/admin/[admin_id]/ApproveAccount'
+import ApproveAccount from './ApproveAccount'
 
-const PsychiatristProfile: React.FC<PsychiatristProfileProps> = ({ psychiatrist }) => {
+const PsychiatristProfile = ({ psychiatrist }) => {
     return (
       <div className="flex justify-center items-center">
         <div className="w-full max-w-3xl bg-white p-6 rounded-md shadow-md">
@@ -28,9 +28,9 @@ const PsychiatristProfile: React.FC<PsychiatristProfileProps> = ({ psychiatrist 
   
           {/* Download Button */}
           <div className="mt-6">
-            <Button variant="contained" color="primary">
+            <button id="download" color="primary">
               Download
-            </Button>
+            </button>
           </div>
   
           {/* Approve Account Component */}
@@ -40,16 +40,16 @@ const PsychiatristProfile: React.FC<PsychiatristProfileProps> = ({ psychiatrist 
         </div>
       </div>
     );
-  };  
-
-const Bookings = () => {
-    const psychiatrist: IPsychiatrist = {
-      // Example data; you'll fetch this from your backend
+  };
+  
+  const Bookings = () => {
+    // Example psychiatrist data
+    const psychiatrist = {
       name: 'Dr. Gloria Shi',
       profileImage: '/path/to/image.jpg',
       title: 'Psychiatrist at Wohohame Hospital',
       description: 'Dr. Gloria Shi is a psychiatrist based in Accra, Ghana...',
-      status: 'requires_approval', // Use this to manage status logic
+      status: 'requires_approval', // Assuming a status is passed
       website: 'https://www.mentalhealthsite.com'
     };
   
@@ -60,5 +60,5 @@ const Bookings = () => {
       </div>
     );
   };
-
-export default Bookings
+  
+  export default Bookings;
