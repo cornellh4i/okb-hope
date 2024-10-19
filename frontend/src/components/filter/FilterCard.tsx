@@ -6,30 +6,13 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { fetchPsychiatrist } from "../../../firebase/IPsychiatrist";
 
 
-const FilterCard = ({ name, username, created, active, isChecked, onCheckChange }) => {
-  let pysch_uid = '';
+const FilterCard = ({ name, username, created, active, isChecked, onCheckChange,user_id}) => {
   const {user} = useAuth();
 
   const handleOnChange = () => {
     onCheckChange(!isChecked);
   };
 
-
-  const getPsych_uid = async (name: string) =>{
-    let firstname = '';
-    let lastname = '';
-    let i = 0;
-    while(name[i] != " "){
-      firstname = firstname + name[i];
-      i = i+1;
-    }
-    lastname = name.substring(i+1,name.length-1);
-    const pysch = await fetchPsychiatrist(firstname,lastname);
-    if(pysch){
-      pysch_uid = pysch.uid;
-    }
-    
-  }
 
  
   const cardStyle = {
@@ -65,8 +48,8 @@ const FilterCard = ({ name, username, created, active, isChecked, onCheckChange 
             <StatusIcon status={status} />
             <button 
               onClick={() => {
-                getPsych_uid(name);
-                handleGoToProfProfile(pysch_uid)}} 
+                handleGoToProfProfile(user_id)
+                }} 
               className="btn w-9/12 bg-okb-blue border-transparent">
               View Profile
           </button>
