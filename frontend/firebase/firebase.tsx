@@ -1,14 +1,14 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-import { addDoc, collection, getDocs, getFirestore, query, where, doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, updateDoc, collection, getDocs, getFirestore, query, where, doc, getDoc, setDoc } from "firebase/firestore";
 import { FacebookAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { Gender, IUser } from "@/schema";
 import router, { useRouter } from 'next/router';
-
-
+import React, { useState } from 'react'; // Import useState from React
 
 const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_SERVICE_ACCOUNT!);
 // Initialize Firebase
+
 const app = initializeApp(firebaseConfig);
 
 // Initialize Cloud Firestore through Firebase
@@ -77,7 +77,6 @@ const signUpWithGoogle = async (
       console.log("user:", user);
       const q = query(collection(db, "users"), where("uid", "==", user.uid));
       const docs = await getDocs(q);
-
       if (docs.docs.length === 0) {
         console.log("not yet exists")
         await addDoc(collection(db, "users"), {
@@ -102,6 +101,7 @@ const signUpWithGoogle = async (
             weeklyAvailability: weeklyAvailability,
             workingHours: workingHours,
             specialty: specialty,
+            status: "pending"
           });
           console.log("Added psych")
         }
@@ -209,5 +209,108 @@ const updateUser = async (userId: string, data: any) => {
 };
 
 
-export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses };
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage } from 'firebase/storage';
+import { getApp } from "firebase/app";
 
+const firebaseApp = getApp();
+const storage = getStorage(firebaseApp, "gs://okb-hope.appspot.com");
+
+const ImageUpload: React.FC = () => {
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState<boolean>(false);
+    const [message, setMessage] = useState<string | null>(null);
+    const [downloadURL, setDownloadURL] = useState<string | null>(null);
+
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = event.target.files?.[0];
+        if (selectedFile) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setSelectedImage(reader.result as string);
+            };
+            reader.readAsDataURL(selectedFile);
+            setFile(selectedFile);
+        }
+    };
+
+    const handleUpload = async () => {
+        if (file) {
+            setUploading(true);
+            setMessage(null); // Reset message
+            try {
+                const storageRef = ref(storage, `images/${file.name}`); 
+                await uploadBytes(storageRef, file);
+                const url = await getDownloadURL(storageRef);
+                setDownloadURL(url);
+                setMessage('Upload successful!');
+            } catch (error) {
+                console.error('Upload failed:', error);
+                setMessage('Upload failed. Please try again.');
+            } finally {
+                setUploading(false);
+            }
+        }
+    };
+
+    return (
+        <div>
+            <label htmlFor="file-upload">Upload Image:</label>
+            <input
+                id="file-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+            />
+            {selectedImage && (
+                <div>
+                    <h3>Preview:</h3>
+                    <img src={selectedImage} alt="Selected" style={{ maxWidth: '300px', maxHeight: '300px' }} />
+                </div>
+            )}
+            <button onClick={handleUpload} disabled={!file || uploading}>
+                {uploading ? 'Uploading...' : 'Upload'}
+            </button>
+            {message && <p>{message}</p>} {/* Display upload message */}
+            {downloadURL && (
+                <div>
+                    <h3>Download URL:</h3>
+                    <a href={downloadURL} target="_blank" rel="noopener noreferrer">
+                        {downloadURL}
+                    </a>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default ImageUpload;
+
+const uploadPsychiatristProfilePic = async (file: File, psychiatristUID: string) => {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error("User is not authenticated.");
+  }
+ 
+  try {
+    const storageRef = ref(storage, `psychiatrists/${psychiatristUID}.png`);
+   
+    await uploadBytes(storageRef, file);
+   
+    const downloadURL = await getDownloadURL(storageRef);
+   
+    const psychiatristDocRef = doc(db, "psychiatrists", psychiatristUID);
+   
+    await updateDoc(psychiatristDocRef, {
+      profile_pic: downloadURL
+    });
+    console.log("Profile picture uploaded successfully!");
+    return downloadURL;  // Return the URL for further use if needed
+  } catch (error) {
+    console.error("Error uploading profile picture:", error);
+    throw new Error("Error uploading profile picture.");
+  }
+ };
+ 
+export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses, ImageUpload, uploadPsychiatristProfilePic };

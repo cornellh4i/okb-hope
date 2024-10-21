@@ -20,9 +20,11 @@ const OnboardingPage: React.FC = () => {
     setError(null);
     try {
       const response = await fetch('https://api.quotable.io/quotes/random');
-      const data = await response.json();
-      const quoteData = data[0];
-      setQuote({ text: quoteData.content, author: quoteData.author });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const quoteData = await response.json();
+      setQuote({ text: quoteData[0].content, author: quoteData[0].author });
     } catch (error) {
       console.error('Error fetching quote:', error);
       setError('Failed to fetch quote. Please try again.');
