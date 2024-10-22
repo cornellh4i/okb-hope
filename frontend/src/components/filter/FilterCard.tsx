@@ -1,7 +1,7 @@
 import { useState } from "react";
 import StatusIcon from './StatusIcon';
 
-const FilterCard = ({ name, username, created, active, isChecked, onCheckChange }) => {
+const FilterCard = ({ name, username, created, active, isChecked, onCheckChange, status }) => {
   const handleOnChange = () => {
     onCheckChange(!isChecked);
   };
@@ -10,8 +10,6 @@ const FilterCard = ({ name, username, created, active, isChecked, onCheckChange 
     backgroundColor: isChecked ? '#D0DBEA' : 'transparent',
     border: isChecked ? 'sky-700' : 'gray-300'
   };
-
-  const status = 'pending'; // or 'approved
 
   return (
 
@@ -30,7 +28,7 @@ const FilterCard = ({ name, username, created, active, isChecked, onCheckChange 
             </div>
             <div style={{ width: "135px", marginLeft: "20px" }}>{name}</div>
             <div style={{ width: "300px", marginLeft: "10px" }}>
-            <StatusIcon status={status} />
+              <StatusIcon status={status} />
           </div>
             <div style={{ width: "150px", marginLeft: "180px" }}>{username}</div>
             <div style={{ width: "150px", marginLeft: "520px" }}>{created}</div>

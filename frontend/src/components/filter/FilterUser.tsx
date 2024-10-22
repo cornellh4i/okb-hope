@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs, Timestamp } from "firebase/firestore";
+import { collection, getDocs, Timestamp, doc, getDoc } from "firebase/firestore";
 import chevron_left from "@/assets/chevron_left";
 import chevron_right from "@/assets/chevron_right";
 import FilterBar from "./FilterBar";
@@ -7,7 +7,7 @@ import FilterBar from "./FilterBar";
 import FilterUserTable from "./FilterUserTable";
 import FilterBarTwo from "./FilterBarTwo";
 import FilterCard from "./FilterCard";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 
 export interface UserType {
@@ -17,6 +17,7 @@ export interface UserType {
     patient: boolean;
     username: string;
     id: string;
+    status: 'pending' | 'approved' | '';
 }
 
 const FilterUser = () => {
@@ -37,15 +38,36 @@ const FilterUser = () => {
                 return {
                     ...data,
                     id: doc.id,
+                    status: '', // Initialize status as empty for all users
                 } as UserType;
             });
             setUserData(users);
 
             // Calculate the number of pages based on all user records
             setNumPages(Math.ceil(users.length / recordsPerPage));
+
+            // Fetch psychiatrist statuses
+            const psychiatrists = users.filter(user => !user.patient);
+            await fetchPsychiatristStatuses(psychiatrists);
         }
         fetchUsers();
     }, [recordsPerPage]);
+
+    async function fetchPsychiatristStatuses(psychiatrists: UserType[]) {
+        const psychiatristStatuses = await Promise.all(
+            psychiatrists.map(async (psych) => {
+                const statusDoc = await getDoc(doc(db, "psychiatristStatuses", psych.id));
+                return { id: psych.id, status: statusDoc.exists() ? statusDoc.data().status : '' };
+            })
+        );
+
+        setUserData(prevUsers => 
+            prevUsers.map(user => {
+                const statusUpdate = psychiatristStatuses.find(s => s.id === user.id);
+                return statusUpdate ? { ...user, status: statusUpdate.status } : user;
+            })
+        );
+    }
 
     // Pagination logic to calculate currentRecords based on currentPage
     const indexOfLastRecord = currentPage * recordsPerPage;
