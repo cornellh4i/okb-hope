@@ -4,7 +4,7 @@ import { addDoc, updateDoc, collection, getDocs, getFirestore, query, where, doc
 import { FacebookAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { Gender, IUser } from "@/schema";
 import router, { useRouter } from 'next/router';
-import React, { useState } from 'react'; // Import useState from React
+import React, { useState, useRef } from 'react'; // Import useState from React
 
 const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_SERVICE_ACCOUNT!);
 // Initialize Firebase
@@ -216,82 +216,82 @@ import { getApp } from "firebase/app";
 const firebaseApp = getApp();
 const storage = getStorage(firebaseApp, "gs://okb-hope.appspot.com");
 
-const ImageUpload: React.FC = () => {
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const [file, setFile] = useState<File | null>(null);
-    const [uploading, setUploading] = useState<boolean>(false);
-    const [message, setMessage] = useState<string | null>(null);
-    const [downloadURL, setDownloadURL] = useState<string | null>(null);
-
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = event.target.files?.[0];
-        if (selectedFile) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSelectedImage(reader.result as string);
-            };
-            reader.readAsDataURL(selectedFile);
-            setFile(selectedFile);
-        }
-    };
-
-    const handleUpload = async () => {
-        if (file) {
-            setUploading(true);
-            setMessage(null); // Reset message
-            try {
-                const storageRef = ref(storage, `images/${file.name}`); 
-                await uploadBytes(storageRef, file);
-                const url = await getDownloadURL(storageRef);
-                setDownloadURL(url);
-                setMessage('Upload successful!');
-            } catch (error) {
-                console.error('Upload failed:', error);
-                setMessage('Upload failed. Please try again.');
-            } finally {
-                setUploading(false);
-            }
-        }
-    };
-
-    return (
-        <div>
-            <label htmlFor="file-upload">Upload Image:</label>
-            <input
-                id="file-upload"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-            />
-            {selectedImage && (
-                <div>
-                    <h3>Preview:</h3>
-                    <img src={selectedImage} alt="Selected" style={{ maxWidth: '300px', maxHeight: '300px' }} />
-                </div>
-            )}
-            <button onClick={handleUpload} disabled={!file || uploading}>
-                {uploading ? 'Uploading...' : 'Upload'}
-            </button>
-            {message && <p>{message}</p>} {/* Display upload message */}
-            {downloadURL && (
-                <div>
-                    <h3>Download URL:</h3>
-                    <a href={downloadURL} target="_blank" rel="noopener noreferrer">
-                        {downloadURL}
-                    </a>
-                </div>
-            )}
+const FileUploader: React.FC = () => {
+  // State to hold the selected file
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // Reference to the hidden file input element
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  // Function to handle when a file is selected
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      setSelectedFile(files[0]);
+    }
+  };
+  // Function to trigger the file input click
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+  return (
+    <div style={styles.container}>
+      <button style={styles.button} onClick={handleButtonClick}>Select a file</button>
+      
+      {/* Hidden file input element */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
+      {/* Display the selected file name */}
+      {selectedFile && (
+        <div style={styles.fileInfo}>
+          <p>Selected file: {selectedFile.name}</p>
         </div>
-    );
+      )}
+    </div>
+  );
 };
+// CSS styles for centering and button styling
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column' as 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh', // Full page height
+  },
+  button: {
+    padding: '10px 20px',
+    fontSize: '16px',
+    cursor: 'pointer',
+    border: '2px solid #007BFF', // Visible blue outline
+    borderRadius: '5px',
+    backgroundColor: 'white',
+    color: '#007BFF',
+    outline: 'none',
+    transition: 'background-color 0.3s, color 0.3s',
+  },
+  buttonHover: {
+    backgroundColor: '#007BFF',
+    color: 'white',
+  },
+  fileInfo: {
+    marginTop: '20px',
+    fontSize: '16px',
+  },
+};
+export default FileUploader;
 
-export default ImageUpload;
 
 const uploadPsychiatristProfilePic = async (file: File, psychiatristUID: string) => {
   const user = auth.currentUser;
   if (!user) {
     throw new Error("User is not authenticated.");
   }
+ 
  
   try {
     const storageRef = ref(storage, `psychiatrists/${psychiatristUID}.png`);
@@ -313,4 +313,4 @@ const uploadPsychiatristProfilePic = async (file: File, psychiatristUID: string)
   }
  };
  
-export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses, ImageUpload, uploadPsychiatristProfilePic };
+export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses, FileUploader, uploadPsychiatristProfilePic };

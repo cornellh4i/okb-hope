@@ -1,7 +1,7 @@
 // test_page.tsx
 
 import React from 'react';
-import { ImageUpload } from '../../firebase/firebase'; // Import your function
+import { FileUploader } from '../../firebase/firebase'; // Import your function
 
 const TestPage: React.FC = () => {
     const handleUpload = () => {
@@ -13,7 +13,7 @@ const TestPage: React.FC = () => {
     return (
         <div>
             <h1>Test Page</h1>
-            <button onClick={handleUpload}>Upload Image</button>
+            <button onClick={handleUpload}>Upload</button>
         </div>
     );
 };
