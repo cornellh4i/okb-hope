@@ -3,6 +3,7 @@ import { IPsychiatrist } from '@/schema';
 import StatusIcon from '@/components/filter/StatusIcon'
 import ApproveAccount from './ApproveAccount'
 import { fetchProfessionalData } from '../../../../firebase/fetchData';
+import React, {useState, useEffect} from 'react';
 
 const PsychiatristProfile = ({ psychiatrist }) => {
     return (
@@ -43,65 +44,80 @@ const PsychiatristProfile = ({ psychiatrist }) => {
     );
   };
   
-  const Bookings = () => {
-    // UPDATE
-    const psychiatrist = {
-      name: 'Dr. Gloria Shi',
-      profileImage: '/path/to/image.jpg',
-      title: 'Psychiatrist at Wohohame Hospital',
-      description: 'Dr. Gloria Shi is a psychiatrist based in Accra, Ghana...',
-      status: 'requires_approval', // Assuming a status is passed
-      website: 'https://www.mentalhealthsite.com'
-    };
+  // const Bookings = () => {
+  //   // UPDATE
+  //   const psychiatrist = {
+  //     name: 'Dr. Gloria Shi',
+  //     profileImage: '/path/to/image.jpg',
+  //     title: 'Psychiatrist at Wohohame Hospital',
+  //     description: 'Dr. Gloria Shi is a psychiatrist based in Accra, Ghana...',
+  //     status: 'requires_approval', // Assuming a status is passed
+  //     website: 'https://www.mentalhealthsite.com'
+  //   };
+  
+  //   return (
+  //     <div className="w-full min-h-screen flex justify-center">
+  //       {/* <AdminView /> */}
+  //       <PsychiatristProfile psychiatrist={psychiatrist} />
+  //     </div>
+  //   );
+  // };
+
+  const Bookings = ({ psych_uid }) => {
+    const [psychiatrist, setPsychiatrist] = useState<IPsychiatrist | null>(null); // Allow both IPsychiatrist and null
+    const [loading, setLoading] = useState(true); // State to handle loading
+    const [error, setError] = useState<string | null>(null); // State to handle errors
+  
+    useEffect(() => {
+      // Fetch data on component mount
+      if (!psych_uid) {
+        console.error('Error: psych_uid is undefined or null');
+        setError('Invalid psychiatrist ID.');
+        setLoading(false);
+        return;
+      }
+  
+      // Log psych_uid to verify it's being passed correctly
+      console.log('Fetching data for psych_uid:', psych_uid);
+      const fetchData = async () => {
+        try {
+          const data = await fetchProfessionalData(psych_uid); // Fetch psychiatrist data using psych_uid
+          setPsychiatrist(data);
+          setLoading(false);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            // Handle the error as an Error object
+            console.error('Error fetching psychiatrist data:', error.message);
+            setError(error.message);
+          } else {
+            // Fallback for other error types
+            console.error('Unknown error:', error);
+            setError('An unknown error occurred.');
+          }
+          setLoading(false);
+      };}
+  
+      fetchData();
+    }, [psych_uid]);
+  
+    if (loading) {
+      return <p>Loading...</p>; // Render loading state
+    }
+  
+    if (error) {
+      return <p>Error: {error}</p>; // Render error message if fetch fails
+    }
+  
+    if (!psychiatrist) {
+      return <p>No data available</p>; // Render if no data is available
+    }
   
     return (
-      <div className="w-full min-h-screen flex justify-center">
-        {/* <AdminView /> */}
+      <div className="w-full min-h-screen bg-gray-100">
+        <AdminView />
         <PsychiatristProfile psychiatrist={psychiatrist} />
       </div>
     );
   };
-
-//   const Bookings = ({ psych_uid }) => {
-//     const [psychiatrist, setPsychiatrist] = useState(null); // State to hold fetched data
-//     const [loading, setLoading] = useState(true); // State to handle loading
-//     const [error, setError] = useState(null); // State to handle errors
-  
-//     useEffect(() => {
-//       // Fetch data on component mount
-//       const fetchData = async () => {
-//         try {
-//           const data = await fetchProfessionalData(psych_uid); // Fetch psychiatrist data using psych_uid
-//           setPsychiatrist(data);
-//           setLoading(false);
-//         } catch (error) {
-//           console.error('Error fetching psychiatrist data:', error);
-//           setError(error.message);
-//           setLoading(false);
-//         }
-//       };
-  
-//       fetchData();
-//     }, [psych_uid]);
-  
-//     if (loading) {
-//       return <p>Loading...</p>; // Render loading state
-//     }
-  
-//     if (error) {
-//       return <p>Error: {error}</p>; // Render error message if fetch fails
-//     }
-  
-//     if (!psychiatrist) {
-//       return <p>No data available</p>; // Render if no data is available
-//     }
-  
-//     return (
-//       <div className="w-full min-h-screen bg-gray-100">
-//         <AdminView />
-//         <PsychiatristProfile psychiatrist={psychiatrist} />
-//       </div>
-//     );
-//   };
   
   export default Bookings;
