@@ -22,6 +22,7 @@ import Submit from '@/assets/submit.svg';
 import Continue from '@/assets/continue.svg';
 import colors from '@/colors';
 import dynamic from "next/dynamic";
+import ApprovalPrompt from './ApprovalPrompt';
 const InlineWidget = dynamic(() => import("react-calendly").then(mod => mod.InlineWidget), { ssr: false });
 
 // interface ProfProfileProps {
@@ -79,6 +80,8 @@ const buttonStyle: React.CSSProperties = {
     fontWeight: 'normal', // Resets button text to normal weight
 };
 
+
+
 const AdminView = () => {
     const { user } = useAuth(); // Get the user information from the context
     const [docId, setDocId] = useState<string | undefined>(undefined);
@@ -86,10 +89,13 @@ const AdminView = () => {
     const [showReportPopup, setShowReportPopup] = useState(false);
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [showBooking, setShowBooking] = useState(false);
+    const [status, setStatus] = useState<'pending' | 'approved' | null>('pending');
     const [reportText, setReportText] = useState('');
     const [professional, setProfessional] = useState<IPsychiatrist | null>(null);
     const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
     const router = useRouter();
+    const [showApprovalPrompt, setShowApprovalPrompt] = useState(true);
+
 
     useEffect(() => {
         const fetchProfessional = async () => {
@@ -122,6 +128,16 @@ const AdminView = () => {
         };
         fetchDocId();
     }, [user]);
+    const handleApprove = () => {
+        setStatus('approved');
+        setShowApprovalPrompt(false);
+      };
+    
+    
+      const handleReject = () => {
+        setStatus(null); // Mark as rejected (or handle as needed)
+        setShowApprovalPrompt(false);
+      };
 
     const handleSave = async (event: React.MouseEvent, psychiatrist) => {
         if (!user) {
@@ -375,7 +391,12 @@ const AdminView = () => {
                     </div> */}
                 </div>
             </div>
-            <h2 className={`text-center lg:text-start text-bold text-2xl font-montserrat font-bold`}>Working Hours</h2>
+            {showApprovalPrompt ? (
+          <ApprovalPrompt onApprove={handleApprove} onReject={handleReject} />
+        ) : (
+          status === 'approved' && (
+            <>
+              <h2 className={`text-center lg:text-start text-bold text-2xl font-montserrat font-bold`}>Working Hours</h2>
             <Availability
                 weeklyAvailability={professional?.weeklyAvailability || []}
                 workingHours={professional?.workingHours}
@@ -389,6 +410,10 @@ const AdminView = () => {
                     Book Appointment
                 </button>
             </div>
+            </>
+          )
+        )}
+           
         </div>
     );
 };
