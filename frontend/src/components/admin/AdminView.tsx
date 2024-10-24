@@ -24,6 +24,7 @@ import colors from '@/colors';
 import dynamic from "next/dynamic";
 import ApprovalPrompt from './ApprovalPrompt';
 import StatusIcon from '../filter/StatusIcon';
+import { deletePsychiatrist, updatePsychiatrist } from '../../../firebase/IPsychiatrist';
 const InlineWidget = dynamic(() => import("react-calendly").then(mod => mod.InlineWidget), { ssr: false });
 
 const overlayStyle: React.CSSProperties = {
@@ -86,14 +87,14 @@ const AdminView = () => {
     const [showReportPopup, setShowReportPopup] = useState(false);
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [showBooking, setShowBooking] = useState(false);
+    const [professional, setProfessional] = useState<IPsychiatrist | null>(null);
     const [status, setStatus] = useState<'pending' | 'approved' | null>('pending');
     const [reportText, setReportText] = useState('');
-    const [professional, setProfessional] = useState<IPsychiatrist | null>(null);
     const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
     const router = useRouter();
     const [showApprovalPrompt, setShowApprovalPrompt] = useState(true);
 
-
+   
     useEffect(() => {
         const fetchProfessional = async () => {
             const userId = user?.uid;
@@ -104,6 +105,7 @@ const AdminView = () => {
             }
         };
         fetchProfessional();
+        console.log(professional?.status)
     }, [router.query.psych_uid, user]);
 
     useEffect(() => {
@@ -125,15 +127,45 @@ const AdminView = () => {
         };
         fetchDocId();
     }, [user]);
-    const handleApprove = () => {
+
+    //give status of pending if psych doesn't have a set status
+
+    useEffect(()=>{
+        if(professional){
+            if(professional.status === undefined){
+                professional.status = 'pending';
+            }
+        }
+    },[professional])
+
+    //update the status state with psych status 
+    useEffect(() => {
+        const updatePsych = async () => {
+            if (professional) {
+                await updatePsychiatrist(professional.uid, professional);
+            }
+        };
+        updatePsych();
+    }, [status])
+
+    const handleApprove = async() => {
         setStatus('approved');
         setShowApprovalPrompt(false);
+        if(professional){
+            professional.status = 'approved';
+            console.log(professional);
+        }
       };
-    
-    
+      
+      
+     
       const handleReject = () => {
         setStatus(null); // Mark as rejected (or handle as needed)
         setShowApprovalPrompt(false);
+        
+        if(professional){
+            deletePsychiatrist(professional.uid)
+        }
       };
 
     const handleSave = async (event: React.MouseEvent, psychiatrist) => {
@@ -292,7 +324,7 @@ const AdminView = () => {
                 {/* Close Button */}
                 <button
                     onClick={handleClose}
-                    className="ml-auto top-2 right-2 text-black font-bold text-xxxl"
+                    className="ml-auto top-2 right-2 text-black font-bold text-xxxxl"
                     aria-label="Close"
                 > 
                 X
