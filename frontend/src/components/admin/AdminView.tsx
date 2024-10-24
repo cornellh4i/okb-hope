@@ -321,6 +321,30 @@ const AdminView = () => {
               </div>
             </div>
           </div>
+          {showApprovalPrompt ? (
+          <ApprovalPrompt onApprove={handleApprove} onReject={handleReject} />
+        ) : (
+          status === 'approved' && (
+            <>
+            <div className="flex flex-col items-center">
+                <h2 className={`text-center lg:text-start text-bold text-2xl font-montserrat font-bold`}>Working Hours</h2>
+                <Availability
+                    weeklyAvailability={professional?.weeklyAvailability || []}
+                    workingHours={professional?.workingHours}
+                />
+                <div className={`flex flex-row justify-center content-center`}>
+                    <button
+                        className={`bg-okb-blue font-montserrat text-okb-white active:bg-gray-500 font-semibold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
+                        type="button"
+                        onClick={handleBookAppointment}
+                    >
+                        Book Appointment
+                    </button>
+                </div>
+            </div>
+            </>
+          )
+        )}
         </div>
       );
 };
