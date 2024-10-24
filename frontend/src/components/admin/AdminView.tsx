@@ -81,6 +81,7 @@ const buttonStyle: React.CSSProperties = {
 const AdminView = () => {
     const { user } = useAuth(); // Get the user information from the context
     const [docId, setDocId] = useState<string | undefined>(undefined);
+    const [hasbeenClosed,setHasBeenClosed] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [showReportPopup, setShowReportPopup] = useState(false);
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -251,10 +252,10 @@ const AdminView = () => {
         return <div>Loading...</div>;
     }
 
-    const handleBookingClose = () => {
-        setShowPopup(false);
-        setShowBooking(false);
-    };
+
+    const handleClose = () => {
+        setHasBeenClosed(true);
+      };
 
     return (
         <div className={`w-full max-w-screen-xl mx-auto h-full flex flex-wrap flex-col justify-center content-center gap-5 pb-4`}>
@@ -277,12 +278,35 @@ const AdminView = () => {
             </div>
     
             {/* Right section: Details */}
+
             <div className={`flex flex-col lg:w-2/3 gap-4 justify-start`}>
+            {/* Status Bar */}
+            {(status === 'approved' || status === null) && (!hasbeenClosed)  &&(
+                <div className={`p-4 mb-4 flex row text-black border-2 p-4  ${status === 'approved' ? 'border-green-700 bg-green-400' : 'border-red-700 bg-red-400'} rounded-lg`}>
+
+                <p>
+                    {status === 'approved'
+                    ? `✅ The psychiatrist is now approved`
+                    : '❌ The psychiatrist has been rejected'}
+                </p>
+                {/* Close Button */}
+                <button
+                    onClick={handleClose}
+                    className="ml-auto top-2 right-2 text-black font-bold text-xxxl"
+                    aria-label="Close"
+                > 
+                X
+                    
+                </button>
+                </div>
+            )}
               <div className={`flex flex-col md:flex-row gap-4 justify-between`}>
                 {/* Name and Title */}
                 <div className='flex gap-x-4 justify-center items-center md:justify-start md:items-start flex-col'>
-                  <div className={`text-3xl text-bold font-montserrat font-bold`}>
+                  <div className={`flex flex-row text-3xl text-bold font-montserrat font-bold`}>
                     {professional.firstName + ' ' + professional.lastName}
+                    <hr />
+                    <StatusIcon status={status ? status : 'pending'}></StatusIcon>
                   </div>
                   <div className={`text-normal text-xl italic text-dark-grey font-montserrat`}>
                     {professional.position}
@@ -319,7 +343,33 @@ const AdminView = () => {
               <div className={`text-normal text-center md:text-start text-base font-montserrat`}>
                 {professional.description}
               </div>
+              <div>
+              {showApprovalPrompt ? (
+          <ApprovalPrompt onApprove={handleApprove} onReject={handleReject} />
+        ) : (
+          status === 'approved' && (
+            <>
+              <h2 className={`text-center lg:text-start text-bold text-2xl font-montserrat font-bold`}> Availability </h2>
+                <Availability
+                    weeklyAvailability={professional?.weeklyAvailability || []}
+                    workingHours={professional?.workingHours}
+                />
+                <hr />
+            <div className={`flex flex-row justify-center content-center`}>
+                <button
+                    className={`bg-okb-blue font-montserrat text-okb-white active:bg-gray-500 font-semibold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
+                    type="button"
+                    onClick={handleBookAppointment}
+                >
+                    Book Appointment
+                </button>
+                </div>
+                </>
+          )
+        )}
+              </div>
             </div>
+            
           </div>
         </div>
       );
