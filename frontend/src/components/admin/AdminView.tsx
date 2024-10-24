@@ -139,14 +139,7 @@ const AdminView = () => {
     },[professional])
 
     //update the status state with psych status 
-    useEffect(() => {
-        const updatePsych = async () => {
-            if (professional) {
-                await updatePsychiatrist(professional.uid, professional);
-            }
-        };
-        updatePsych();
-    }, [status])
+
 
     const handleApprove = async() => {
         setStatus('approved');
@@ -154,6 +147,7 @@ const AdminView = () => {
         if(professional){
             professional.status = 'approved';
             console.log(professional);
+            updatePsychiatrist(professional.uid, professional);
         }
       };
       
@@ -164,6 +158,8 @@ const AdminView = () => {
         setShowApprovalPrompt(false);
         
         if(professional){
+            console.log(professional);
+
             deletePsychiatrist(professional.uid)
         }
       };
