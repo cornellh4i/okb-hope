@@ -38,20 +38,23 @@ const FilterUser = () => {
                 return {
                     ...data,
                     id: doc.id,
+                    patient: data.userType === "patient",
                     status: '', // Initialize status as empty for all users
                 } as UserType;
             });
-            setUserData(users);
 
-            // Calculate the number of pages based on all user records
+            const patients = users.filter(user => user.patient);
+            const psychiatrists = users.filter(user => !user.patient);
+
+            setUserData(clientView ? patients : psychiatrists);
             setNumPages(Math.ceil(users.length / recordsPerPage));
 
-            // Fetch psychiatrist statuses
-            const psychiatrists = users.filter(user => !user.patient);
-            await fetchPsychiatristStatuses(psychiatrists);
+            if (!clientView) {
+                await fetchPsychiatristStatuses(psychiatrists);
+            }
         }
         fetchUsers();
-    }, [recordsPerPage]);
+    }, [recordsPerPage, clientView]);
 
     async function fetchPsychiatristStatuses(psychiatrists: UserType[]) {
         const psychiatristStatuses = await Promise.all(
