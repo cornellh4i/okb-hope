@@ -23,12 +23,8 @@ import Continue from '@/assets/continue.svg';
 import colors from '@/colors';
 import dynamic from "next/dynamic";
 import ApprovalPrompt from './ApprovalPrompt';
+import StatusIcon from '../filter/StatusIcon';
 const InlineWidget = dynamic(() => import("react-calendly").then(mod => mod.InlineWidget), { ssr: false });
-
-// interface ProfProfileProps {
-//     firstName: string;
-//     lastName: string;
-// }
 
 const overlayStyle: React.CSSProperties = {
     position: 'fixed',
@@ -261,161 +257,72 @@ const AdminView = () => {
     };
 
     return (
-        <div className={`w-2/3 h-full flex flex-wrap flex-col justify-center content-center gap-5 pb-4`}>
-            {showBooking && (
-                <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="absolute inset-0 bg-black bg-opacity-50">
-                        <InlineWidget url="https://calendly.com/bl583/30min" />
-                        <button onClick={() => handleBookingClose()} className="absolute top-0 right-0 m-4 text-white">X</button>
-                    </div>
-                </div>
-            )}
-            {showPopup && (
-                <LoginPopup
-                    onClose={() => setShowPopup(false)}
-                    logInWithGoogleAndRedirect={logInWithGoogleAndRedirect}
-                    signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect}
-                />
-            )}
-            {showReportPopup && (
-                <div style={overlayStyle}>
-                    <div style={popupStyle}>
-                        <h3 className="font-montserrat font-bold" style={{ marginBottom: '15px' }}>
-                            Report Dr. {professional.firstName} {professional.lastName}?
-                        </h3>
-                        <p className="font-montserrat" style={{ fontSize: 14, marginBottom: '15px' }}>
-                            We are committed to ensuring your right to privacy and safety. If you feel like any of these rights have been violated by a psychiatrist that you are seeing, please fill out the report form below.
-                        </p>
-                        <textarea
-                            className="font-montserrat"
-                            style={textareaStyle}
-                            placeholder={'Please provide a detailed description of your situation here.'}
-                            value={reportText}
-                            onChange={handleReportTextChange}
-                        ></textarea>
-                        <div style={buttonsContainerStyle}>
-                            <Cancel onClick={handleCloseReport} style={{ cursor: 'pointer' }} />
-                            <Submit onClick={handleSubmitReport} style={{ cursor: 'pointer' }} />
-                        </div>
-                    </div>
-                </div>
-            )}
-            {showSuccessPopup && (
-                <div style={overlayStyle}>
-                    <div style={{ ...popupStyle, gap: '12px' }}>
-                        <CheckCircle style={{ top: 20 }} />
-                        <div style={{ display: 'inline-flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 14 }}>
-                            <h3 className="font-montserrat" style={{ fontWeight: 'bold', marginBottom: '15px', fontSize: 14 }}>You have successfully reported Dr. {professional.firstName} {professional.lastName}.</h3>
-                            <p className="font-montserrat" style={{ marginBottom: '15px', fontSize: 13 }}>
-                                Dr. {professional.firstName} {professional.lastName}'s profile will be removed from your view and you will now be redirected back to the list of available psychiatrists. If you'd like to access your reported psychiatrists, check out the report section in your profile.
-                            </p>
-                            <Continue style={{ cursor: 'pointer' }} onClick={handleContinue} />
-                        </div>
-                    </div>
-                </div>
-            )}
-            <div className={`flex flex-row pt-5`}>
-                <figure className={`cursor-pointer`} onClick={router.back}><Arrow /></figure>
+        <div className={`w-full max-w-screen-xl mx-auto h-full flex flex-wrap flex-col justify-center content-center gap-5 pb-4`}>
+          {/* Back Arrow */}
+          <div className={`flex flex-row pt-5`}>
+            <figure className={`cursor-pointer`} onClick={router.back}>
+              <Arrow />
+            </figure>
+          </div>
+    
+          {/* Main Profile Section */}
+          <div className={`gap-4 w-full flex flex-col lg:flex-row gap-10 justify-center`}>
+            {/* Left section: Profile Picture */}
+            <div className={`flex justify-center items-center md:justify-start md:items-start lg:shrink`}>
+              <img
+                src={professional.profile_pic || '/path/to/placeholder.jpg'}
+                alt="Profile"
+                className="rounded-full w-32 h-32 object-cover"
+              />
             </div>
-            <div className={`flex flex-col lg:flex-row gap-10 justify-center`}>
-                <div className={`flex justify-center items-center md:justify-start md:items-start lg:shrink`}>
-                    <div style={{ width: 300, height: 300, backgroundColor: colors.okb_blue, objectFit: 'cover' }} className={`text-9xl font-normal text-white flex items-center justify-center`}>
-                        {professional.firstName?.charAt(0).toUpperCase()}
-                    </div>
+    
+            {/* Right section: Details */}
+            <div className={`flex flex-col lg:w-2/3 gap-4 justify-start`}>
+              <div className={`flex flex-col md:flex-row gap-4 justify-between`}>
+                {/* Name and Title */}
+                <div className='flex gap-x-4 justify-center items-center md:justify-start md:items-start flex-col'>
+                  <div className={`text-3xl text-bold font-montserrat font-bold`}>
+                    {professional.firstName + ' ' + professional.lastName}
+                  </div>
+                  <div className={`text-normal text-xl italic text-dark-grey font-montserrat`}>
+                    {professional.position}
+                  </div>
                 </div>
-                <div className={`flex flex-col lg:w-2/3 gap-4 justify-start`}>
-                    <div className={`flex flex-col md:flex-row gap-4 justify-between`}>
-                        <div className='flex gap-x-4 justify-center items-center md:justify-start md:items-start flex-col'>
-                            <div className={`text-3xl text-bold font-montserrat font-bold`}>
-                                {professional.firstName + ' ' + professional.lastName}
-                            </div>
-                            <div className={`text-normal text-xl italic text-dark-grey font-montserrat`}>
-                                {professional.position}
-                            </div>
-                        </div>
-                        <div className='flex flex-row gap-4 justify-center items-center md:justify-start md:items-start'>
-                            {user && user.userType === 'patient' && (
-                                <div className={`shrink`} >
-                                    <button onClick={handleReport} className={` rounded-s-2xl rounded-[12px] transition cursor-pointer text-okb-white flex flex-row gap-2`}>
-                                        <ReportIcon className="object-cover" />
-                                    </button>
-                                </div>
-                            )}
-                            <div className='flex flex-row gap-4 justify-center items-center md:justify-start md:items-start'>
-                                <div className={`shrink`}>
-                                    <div onClick={(event) => handleSave(event, professional)} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 text-semibold font-montserrat`}>
-                                        <figure className="object-cover">{savedPsychiatrists.includes(professional.uid) ? <SavedBookmark /> : <Bookmark />}</figure>Save
-                                    </div>
-                                </div>
-                                <div className={`shrink`} >
-                                    <div onClick={handleSendMessage} className={`px-4 py-2 rounded-s-2xl rounded-[12px] bg-okb-blue hover:bg-light-blue transition cursor-pointer text-okb-white flex flex-row gap-2 font-montserrat`}>
-                                        <figure className="object-cover"><Chat /></figure>Message
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={`flex flex-row flex-wrap justify-center items-center md:justify-start md:items-start gap-2 font-montserrat`}>
-                        {professional.specialty.map((speciality, index) => (
-                            <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`} key={index}>
-                                {speciality}
-                            </div>
-                        ))}
-                        {professional.language.map((language, index) => (
-                            <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`} key={index}>
-                                {language}
-                            </div>
-                        ))}
-                        {professional.location && (
-                            <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
-                                {professional.location}
-                            </div>)
-                        }
-                    </div>
-                    <div className={`text-normal text-center md:text-start text-base font-montserrat`}>
-                        {professional.description ? professional.description : 'No description available.'}
-                    </div>
-                    {/* Website (Removed for now) */}
-                    {/* <div className={`flex flex-row justify-center items-center md:justify-start md:items-start`}>
-                        <div className="px-4 py-2 border-2 rounded-s-2xl rounded-[20px] border-light-blue bg-lightest-blue hover:shadow-xl transition cursor-pointer flex flex-row gap-2">
-                            <a
-                                href="https://www.wohohiame.com/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center font-montserrat"
-                            >
-                                <figure className="object-cover"><Link /></figure>
-                                <span className="ml-2">www.mentalhealthsite.com</span>
-                            </a>
-                        </div>
-                    </div> */}
+    
+                <div className='flex flex-row gap-4 justify-center items-center md:justify-start md:items-start'>
+                  <button className="bg-blue-500 text-white px-8 py-2 rounded-md hover:bg-blue-600 transition duration-150">Download</button>
                 </div>
+              </div>
+    
+              {/* Tags for Gender, Languages, and Specialties */}
+              <div className={`flex flex-row flex-wrap justify-center items-center md:justify-start md:items-start gap-2 font-montserrat`}>
+                {/* Gender Enum Mapping */}
+                <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`}>
+                    {professional.gender === 1
+                    ? 'Female'
+                    : professional.gender === 2
+                    ? 'Male'
+                    : 'Other'}
+                </div>
+                {professional.language.map((language, index) => (
+                  <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`} key={index}>
+                    {language}
+                  </div>
+                ))}
+                {professional.specialty.map((speciality, index) => (
+                  <div className={`px-3 py-2 border-2 rounded-[20px] border-light-blue`} key={index}>
+                    {speciality}
+                  </div>
+                ))}
+              </div>
+              {/* Description */}
+              <div className={`text-normal text-center md:text-start text-base font-montserrat`}>
+                {professional.description}
+              </div>
             </div>
-            {showApprovalPrompt ? (
-          <ApprovalPrompt onApprove={handleApprove} onReject={handleReject} />
-        ) : (
-          status === 'approved' && (
-            <>
-              <h2 className={`text-center lg:text-start text-bold text-2xl font-montserrat font-bold`}>Working Hours</h2>
-            <Availability
-                weeklyAvailability={professional?.weeklyAvailability || []}
-                workingHours={professional?.workingHours}
-            />
-            <div className={`flex flex-row justify-center content-center`}>
-                <button
-                    className={`bg-okb-blue font-montserrat text-okb-white active:bg-gray-500 font-semibold px-12 py-4 rounded-xl shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
-                    type="button"
-                    onClick={handleBookAppointment}
-                >
-                    Book Appointment
-                </button>
-            </div>
-            </>
-          )
-        )}
-           
+          </div>
         </div>
-    );
+      );
 };
 
 export default AdminView;
