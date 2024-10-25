@@ -1,18 +1,33 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import StatusIcon from './StatusIcon';
+import { useRouter } from 'next/navigation';
+import router from 'next/router';
+import { useAuth } from '../../../contexts/AuthContext';
+import { fetchPsychiatrist } from "../../../firebase/IPsychiatrist";
 
-const FilterCard = ({ name, username, created, active, isChecked, onCheckChange }) => {
+
+const FilterCard = ({ name, username, created, active, isChecked, onCheckChange,user_id}) => {
+  const {user} = useAuth();
+
   const handleOnChange = () => {
     onCheckChange(!isChecked);
   };
 
+
+ 
   const cardStyle = {
     backgroundColor: isChecked ? '#D0DBEA' : 'transparent',
     border: isChecked ? 'sky-700' : 'gray-300'
   };
-
+    //hello
   const status = 'pending'; // or 'approved
-
+  function handleGoToProfProfile(psych_uid: string) {
+    router.push({
+      pathname: `/${user?.userType}/${user?.uid}/admin_view`,
+      query: { psych_uid: psych_uid }
+    })
+  }
+  
   return (
 
       <div className="flex items-center mx-36">
@@ -31,7 +46,15 @@ const FilterCard = ({ name, username, created, active, isChecked, onCheckChange 
             <div style={{ width: "135px", marginLeft: "20px" }}>{name}</div>
             <div style={{ width: "300px", marginLeft: "10px" }}>
             <StatusIcon status={status} />
+            <button 
+              onClick={() => {
+                handleGoToProfProfile(user_id)
+                }} 
+              className="btn w-9/12 bg-okb-blue border-transparent">
+              View Profile
+          </button>
           </div>
+
             <div style={{ width: "150px", marginLeft: "180px" }}>{username}</div>
             <div style={{ width: "150px", marginLeft: "520px" }}>{created}</div>
             <div style={{ width: "150px", marginLeft: "560px" }}>{active}</div>

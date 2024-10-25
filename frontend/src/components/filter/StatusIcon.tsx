@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface StatusIconProps {
-    status: 'pending' | 'approved';
+    status: 'pending' | 'approved' ;
 }
 
 const StatusIcon: React.FC<StatusIconProps> = ({ status }) => {
