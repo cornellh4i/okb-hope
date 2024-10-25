@@ -14,7 +14,7 @@ import CheckCircle from '../../assets/check_circle.svg';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
-import { db, logInWithGoogle, signUpWithGoogle } from '../../../firebase/firebase';
+import { db, logInWithGoogle, signUpWithGoogle, updateUser } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
 import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import Cancel from '@/assets/cancel_report.svg';
@@ -24,7 +24,7 @@ import colors from '@/colors';
 import dynamic from "next/dynamic";
 import ApprovalPrompt from './ApprovalPrompt';
 import StatusIcon from '../filter/StatusIcon';
-import { deletePsychiatrist, updatePsychiatrist } from '../../../firebase/IPsychiatrist';
+import { deletePsychiatrist, fetchPsychiatrist, updatePsychiatrist } from '../../../firebase/IPsychiatrist';
 const InlineWidget = dynamic(() => import("react-calendly").then(mod => mod.InlineWidget), { ssr: false });
 
 const overlayStyle: React.CSSProperties = {
@@ -105,7 +105,6 @@ const AdminView = () => {
             }
         };
         fetchProfessional();
-        console.log(professional?.status)
     }, [router.query.psych_uid, user]);
 
     useEffect(() => {
@@ -140,27 +139,23 @@ const AdminView = () => {
 
     //update the status state with psych status 
 
-
-    const handleApprove = async() => {
+      const handleApprove = async () => {
         setStatus('approved');
         setShowApprovalPrompt(false);
-        if(professional){
+        if(professional ){
             professional.status = 'approved';
-            console.log(professional);
-            updatePsychiatrist(professional.uid, professional);
+            await updatePsychiatrist(professional.uid, professional);
         }
       };
       
-      
      
-      const handleReject = () => {
+      const handleReject  = async () => {
         setStatus(null); // Mark as rejected (or handle as needed)
         setShowApprovalPrompt(false);
         
         if(professional){
             console.log(professional);
-
-            deletePsychiatrist(professional.uid)
+            await deletePsychiatrist(professional.uid)
         }
       };
 
@@ -297,7 +292,7 @@ const AdminView = () => {
           {/* Main Profile Section */}
           <div className={`gap-4 w-full flex flex-col lg:flex-row gap-10 justify-center`}>
             {/* Left section: Profile Picture */}
-            <div className={`flex justify-center items-center md:justify-start md:items-start lg:shrink`}>
+            <div className={`flex justify-center  items-center md:justify-start md:items-start lg:shrink`}>
               <img
                 src={professional.profile_pic || '/path/to/placeholder.jpg'}
                 alt="Profile"
