@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs, Timestamp, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, Timestamp, doc, getDoc, setDoc} from "firebase/firestore";
 import chevron_left from "@/assets/chevron_left";
 import chevron_right from "@/assets/chevron_right";
 import FilterBar from "./FilterBar";
@@ -9,6 +9,7 @@ import FilterBarTwo from "./FilterBarTwo";
 import FilterCard from "./FilterCard";
 import { deleteDoc } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
+import { fetchDocumentId } from "../../../firebase/fetchData";
 
 export interface UserType {
     active: Timestamp;
@@ -20,6 +21,38 @@ export interface UserType {
     status: 'pending' | 'approved' | '';
 }
 
+// Function to fetch the psychiatrist's status
+const fetchPsychiatristStatus = async (psychiatristUID: string) => {
+    const documentId = await fetchDocumentId("psychiatrists", psychiatristUID);
+    console.log(documentId)
+    const docRef = doc(db, "psychiatrists", documentId ?? "");
+    console.log(docRef)
+    const docSnap = await getDoc(docRef);
+
+
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        const status = data.status;
+        if (status === "approved" || status === "pending") {
+            return status;
+        } else {
+            console.warn(`Invalid status for psychiatrist with ID: ${psychiatristUID}. Defaulting to 'pending'.`);
+            return "pending"; // Default to 'pending' if the status is not valid
+        }
+    } else {
+        console.log(`No such psychiatrist document for ID: ${psychiatristUID}`);
+        return "pending"; // Default to 'pending' if the document doesn't exist
+    }
+};
+
+// Function to update the psychiatrist's status
+// const updatePsychiatristStatus = async (userId: string, status: "approved" | "pending") => {
+//     const userRef = doc(db, "psychiatrists", userId);
+//     await setDoc(userRef, { status }, { merge: true });
+//     console.log(`Status for psychiatrist with ID: ${userId} updated to ${status}`);
+// };
+
+
 const FilterUser = () => {
     const [patientView, setPatientView] = useState<boolean>(true);
     const [clientView, setClientView] = useState(true);
@@ -30,6 +63,14 @@ const FilterUser = () => {
     const [numPages, setNumPages] = useState(1);
     const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 
+   
+    // const userId = "psychiatrist"; // Replace with the actual user ID
+    // getUserStatusById(userId).then((result) => {
+    //     console.log(`User ID: ${result.id}, Status: ${result.status}`);
+    // });
+    
+    
+
     useEffect(() => {
         async function fetchUsers() {
             const userSnapshot = await getDocs(collection(db, "users"));
@@ -37,24 +78,35 @@ const FilterUser = () => {
                 const data = doc.data();
                 return {
                     ...data,
-                    id: doc.id,
+                    id: data.uid,
                     patient: data.userType === "patient",
-                    status: data.userType === "patient" ? '': '', // Set default status for psychiatrists
+                    status: data.userType === "patient" ? '' : '', // Set default status for psychiatrists
                 } as UserType;
             });
-
+    
             const patients = users.filter(user => user.patient);
             const psychiatrists = users.filter(user => !user.patient);
-
+    
             if (!clientView) {
-                await fetchPsychiatristStatuses(psychiatrists);
+                // Fetch psychiatrist statuses
+                const psychiatristStatuses = await Promise.all(
+                    psychiatrists.map(async (psych) => {
+                        const status = await fetchPsychiatristStatus(psych.id);
+                        return { ...psych, status };
+                    })
+                );
+    
+                setUserData(psychiatristStatuses);
+            } else {
+                setUserData(patients);
             }
-
-            setUserData(clientView ? patients : psychiatrists);
+    
             setNumPages(Math.ceil((clientView ? patients : psychiatrists).length / recordsPerPage));
         }
+    
         fetchUsers();
     }, [recordsPerPage, clientView]);
+    
 
     // Original function commented out
     /*
@@ -77,48 +129,6 @@ const FilterUser = () => {
         );
     }
     */
-
-    // New function with error checking
-    async function fetchPsychiatristStatuses(psychiatrists: UserType[]) {
-        const psychiatristStatuses = await Promise.all(
-            psychiatrists.map(async (psych) => {
-                try {
-                    const psychiatristDoc = await getDoc(doc(db, "psychiatrists", psych.id));
-                    if (!psychiatristDoc.exists()) {
-                        console.warn(`No document found for psychiatrist with ID: ${psych.id}`);
-                        return { id: psych.id, status: 'pending', error: 'Document not found' };
-                    }
-                    const status = psychiatristDoc.data().status;
-                    if (status !== 'approved' && status !== 'pending') {
-                        console.warn(`Invalid status for psychiatrist with ID: ${psych.id}. Status: ${status}`);
-                        return { id: psych.id, status: 'pending', error: 'Invalid status' };
-                    }
-                    return { id: psych.id, status: status };
-                } catch (error) {
-                    console.error(`Error fetching status for psychiatrist with ID: ${psych.id}`, error);
-                    return { id: psych.id, status: 'pending', error: 'Fetch error' };
-                }
-            })
-        );
-
-        setUserData(prevUsers => 
-            prevUsers.map(user => {
-                const statusUpdate = psychiatristStatuses.find(s => s.id === user.id);
-                if (statusUpdate) {
-                    if (statusUpdate.error) {
-                        console.warn(`Error for psychiatrist ${user.id}: ${statusUpdate.error}`);
-                    }
-                    return { ...user, status: statusUpdate.status };
-                }
-                return user;
-            })
-        );
-
-        // Log summary of status updates
-        const successfulUpdates = psychiatristStatuses.filter(s => !s.error).length;
-        const failedUpdates = psychiatristStatuses.filter(s => s.error).length;
-        console.log(`Status update summary: ${successfulUpdates} successful, ${failedUpdates} failed`);
-    }
 
     // Pagination logic to calculate currentRecords based on currentPage
     const indexOfLastRecord = currentPage * recordsPerPage;
@@ -209,5 +219,6 @@ const FilterUser = () => {
         </div>
     );
 };
+
 
 export default FilterUser;
