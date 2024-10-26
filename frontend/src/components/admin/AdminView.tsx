@@ -130,12 +130,21 @@ const AdminView = () => {
     //give status of pending if psych doesn't have a set status
 
     useEffect(()=>{
+
         if(professional){
             if(professional.status === undefined){
                 professional.status = 'pending';
             }
+            if(professional.status === 'approved') {
+                setStatus('approved');
+                setHasBeenClosed(true);
+                setShowApprovalPrompt(false);
+            }
+            
+
         }
     },[professional])
+
 
     //update the status state with psych status 
 
@@ -144,7 +153,9 @@ const AdminView = () => {
         setShowApprovalPrompt(false);
         if(professional ){
             professional.status = 'approved';
-            await updatePsychiatrist(professional.uid, professional);
+            //firebase id
+            const documentId = await fetchDocumentId('psychiatrists', professional.uid);
+            await updatePsychiatrist(documentId, professional);
         }
       };
       
@@ -155,7 +166,10 @@ const AdminView = () => {
         
         if(professional){
             console.log(professional);
-            await deletePsychiatrist(professional.uid)
+            //firebase id
+            const documentId = await fetchDocumentId('psychiatrists', professional.uid);
+            await deletePsychiatrist(documentId);
+            router.push(`/admin/${user?.uid}/database`);
         }
       };
 
