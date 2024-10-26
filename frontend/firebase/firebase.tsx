@@ -322,16 +322,15 @@ const uploadPsychiatristProfilePic = async (file: File, psychiatristUID: string)
     const downloadURL = await getDownloadURL(storageRef);
     console.log("Download URL:", downloadURL);
 
-    // const documentId = await fetchDocumentId("psychiatrists", psychiatristUID);
+    const documentId = await fetchDocumentId("psychiatrists", psychiatristUID);
   
-
     // Reference to the psychiatrist's document in Firestore
-    const psychRef = doc(db, "psychiatrists", psychiatristUID);
+    const psychRef = doc(db, "psychiatrists", documentId ?? "");
 
     // Update the Firestore document with the profile picture URL
     await updateDoc(psychRef, {
       profile_pic: downloadURL
-    }, { merge: true });
+    });
 
     return downloadURL;  // Return the URL for further use if needed
   } catch (error) {
