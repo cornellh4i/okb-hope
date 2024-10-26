@@ -33,9 +33,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               router.push(`/psychiatrist/${user.uid}/messages`);
             else if (router.pathname == "/edit_psych" || router.pathname == `/psychiatrist/[psychiatrist_id]/edit_psych`)
               router.push(`/psychiatrist/${user.uid}/edit_psych`);
-            else {
-              router.push(`/psychiatrist/${user.uid}/psych_dashboard`);
-            }
+            // else {
+            //   router.push(`/psychiatrist/${user.uid}/psych_dashboard`);
+            // }
           }
           else if (user.userType == "patient") {
             if (router.pathname == "/dashboard" || router.pathname == `/patient/[patient_id]/dashboard`)
@@ -48,8 +48,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               router.push(`/patient/${user.uid}/edit_profile`);
             else if (router.pathname == "/report_history" || router.pathname == `/patient/[patient_id]/report_history`)
               router.push(`/patient/${user.uid}/report_history`);
-            else
-              router.push(`/patient/${user.uid}/dashboard`);
+            // else
+            //   router.push(`/patient/${user.uid}/dashboard`);
           }
           else if (user.userType == "admin") {
             if (router.pathname == "/database" || router.pathname == `/admin/[admin_id]/database`)
