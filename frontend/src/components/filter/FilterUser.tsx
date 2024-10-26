@@ -39,28 +39,33 @@ const FilterUser = () => {
                     ...data,
                     id: doc.id,
                     patient: data.userType === "patient",
-                    status: '', // Initialize status as empty for all users
+                    status: data.userType === "patient" ? '': '', // Set default status for psychiatrists
                 } as UserType;
             });
 
             const patients = users.filter(user => user.patient);
             const psychiatrists = users.filter(user => !user.patient);
 
-            setUserData(clientView ? patients : psychiatrists);
-            setNumPages(Math.ceil(users.length / recordsPerPage));
-
             if (!clientView) {
                 await fetchPsychiatristStatuses(psychiatrists);
             }
+
+            setUserData(clientView ? patients : psychiatrists);
+            setNumPages(Math.ceil((clientView ? patients : psychiatrists).length / recordsPerPage));
         }
         fetchUsers();
     }, [recordsPerPage, clientView]);
 
+    // Original function commented out
+    /*
     async function fetchPsychiatristStatuses(psychiatrists: UserType[]) {
         const psychiatristStatuses = await Promise.all(
             psychiatrists.map(async (psych) => {
-                const statusDoc = await getDoc(doc(db, "psychiatristStatuses", psych.id));
-                return { id: psych.id, status: statusDoc.exists() ? statusDoc.data().status : '' };
+                const psychiatristDoc = await getDoc(doc(db, "psychiatrists", psych.id));
+                return { 
+                    id: psych.id, 
+                    status: psychiatristDoc.exists() ? psychiatristDoc.data().status : 'pending'
+                };
             })
         );
 
@@ -70,6 +75,49 @@ const FilterUser = () => {
                 return statusUpdate ? { ...user, status: statusUpdate.status } : user;
             })
         );
+    }
+    */
+
+    // New function with error checking
+    async function fetchPsychiatristStatuses(psychiatrists: UserType[]) {
+        const psychiatristStatuses = await Promise.all(
+            psychiatrists.map(async (psych) => {
+                try {
+                    const psychiatristDoc = await getDoc(doc(db, "psychiatrists", psych.id));
+                    if (!psychiatristDoc.exists()) {
+                        console.warn(`No document found for psychiatrist with ID: ${psych.id}`);
+                        return { id: psych.id, status: 'pending', error: 'Document not found' };
+                    }
+                    const status = psychiatristDoc.data().status;
+                    if (status !== 'approved' && status !== 'pending') {
+                        console.warn(`Invalid status for psychiatrist with ID: ${psych.id}. Status: ${status}`);
+                        return { id: psych.id, status: 'pending', error: 'Invalid status' };
+                    }
+                    return { id: psych.id, status: status };
+                } catch (error) {
+                    console.error(`Error fetching status for psychiatrist with ID: ${psych.id}`, error);
+                    return { id: psych.id, status: 'pending', error: 'Fetch error' };
+                }
+            })
+        );
+
+        setUserData(prevUsers => 
+            prevUsers.map(user => {
+                const statusUpdate = psychiatristStatuses.find(s => s.id === user.id);
+                if (statusUpdate) {
+                    if (statusUpdate.error) {
+                        console.warn(`Error for psychiatrist ${user.id}: ${statusUpdate.error}`);
+                    }
+                    return { ...user, status: statusUpdate.status };
+                }
+                return user;
+            })
+        );
+
+        // Log summary of status updates
+        const successfulUpdates = psychiatristStatuses.filter(s => !s.error).length;
+        const failedUpdates = psychiatristStatuses.filter(s => s.error).length;
+        console.log(`Status update summary: ${successfulUpdates} successful, ${failedUpdates} failed`);
     }
 
     // Pagination logic to calculate currentRecords based on currentPage

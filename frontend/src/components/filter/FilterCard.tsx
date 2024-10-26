@@ -28,7 +28,7 @@ const FilterCard = ({ name, username, created, active, isChecked, onCheckChange,
             </div>
             <div style={{ width: "135px", marginLeft: "20px" }}>{name}</div>
             <div style={{ width: "300px", marginLeft: "10px" }}>
-              <StatusIcon status={status} />
+            {status && <StatusIcon status={status} />} {/* Only render if status is not empty */}
           </div>
             <div style={{ width: "150px", marginLeft: "180px" }}>{username}</div>
             <div style={{ width: "150px", marginLeft: "520px" }}>{created}</div>
