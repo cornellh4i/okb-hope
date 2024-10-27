@@ -24,9 +24,7 @@ export interface UserType {
 // Function to fetch the psychiatrist's status
 const fetchPsychiatristStatus = async (psychiatristUID: string) => {
     const documentId = await fetchDocumentId("psychiatrists", psychiatristUID);
-    console.log(documentId)
     const docRef = doc(db, "psychiatrists", documentId ?? "");
-    console.log(docRef)
     const docSnap = await getDoc(docRef);
 
 
@@ -79,7 +77,7 @@ const FilterUser = () => {
                 return {
                     ...data,
                     id: data.uid,
-                    patient: data.userType === "patient",
+                    patient: data.userType !== "psychiatrist",
                     status: data.userType === "patient" ? '' : '', // Set default status for psychiatrists
                 } as UserType;
             });
