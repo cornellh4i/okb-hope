@@ -19,6 +19,7 @@ export interface IPsychiatrist {
     weeklyAvailability: string[];
     workingHours: object;
     specialty: string[];
+    status: string;
 }
 
 export interface IPatient {

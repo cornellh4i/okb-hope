@@ -48,7 +48,7 @@ const FilterUserTable = ({ currentRecords, onDelete, selectedUsers }) => {
                   created={"N/A"}
                   active={"N/A"}
                   isChecked={selectedUserIds.includes(user.id)}
-                  onCheckChange={(isChecked) => handleCheckChange(user.id, isChecked)}
+                  onCheckChange={(isChecked) => handleCheckChange(user.id, isChecked)} user_id ={user.uid}
                   status={user.status}
                 />
               </div>
