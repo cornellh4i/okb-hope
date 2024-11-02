@@ -1,5 +1,5 @@
 import { useState, ChangeEvent } from 'react';
-import { uploadPsychiatristProfilePic } from '../../firebase/firebase';
+import { uploadProfilePic } from '../../firebase/firebase';
 
 
 interface TestResult {
@@ -28,7 +28,7 @@ const TestPage: React.FC = () => {
 
    try {
      // Replace this with your actual test function
-     const result = await uploadPsychiatristProfilePic(selectedFile, "jg8cvuLmvtNMZKNn15M3PyzR6Ih1", false);
+     const result = await uploadProfilePic(selectedFile, "jg8cvuLmvtNMZKNn15M3PyzR6Ih1", false);
      setTestResult({
        message: "Test completed successfully!",
        success: true
