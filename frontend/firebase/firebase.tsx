@@ -308,31 +308,26 @@ const styles = {
 export default FileUploader;
 
 
-const uploadPsychiatristProfilePic = async (file: File, psychiatristUID: string) => {
+const uploadProfilePic = async (file: File, uID: string, is_psychiatrist: boolean): Promise<string> => {
   const db = getFirestore(); // Ensure Firestore is initialized
 
   try {
-    // Reference to the file in the profile_pictures folder
-    const storageRef = ref(storage, `profile_pictures/${psychiatristUID}.png`);
+    let psychiatrist_or_patient: string = is_psychiatrist ? "psychiatrists" : "patients";
 
-    // Upload the file
+    const storageRef = ref(storage, `profile_pictures/${uID}.png`);
+
     await uploadBytes(storageRef, file);
-    
-    // Get the download URL for the uploaded file
+
     const downloadURL = await getDownloadURL(storageRef);
-    console.log("Download URL:", downloadURL);
 
-    const documentId = await fetchDocumentId("psychiatrists", psychiatristUID);
-  
-    // Reference to the psychiatrist's document in Firestore
-    const psychRef = doc(db, "psychiatrists", documentId ?? "");
+    const documentId = await fetchDocumentId(psychiatrist_or_patient, uID);
+    const docRef = doc(db, psychiatrist_or_patient, documentId ?? "");
 
-    // Update the Firestore document with the profile picture URL
-    await updateDoc(psychRef, {
+    await updateDoc(docRef, {
       profile_pic: downloadURL
     });
 
-    return downloadURL;  // Return the URL for further use if needed
+    return downloadURL;
   } catch (error) {
     console.error("Error uploading profile picture:", error);
     throw new Error("Error uploading profile picture.");
@@ -340,4 +335,5 @@ const uploadPsychiatristProfilePic = async (file: File, psychiatristUID: string)
 };
 
 
-export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses, FileUploader, uploadPsychiatristProfilePic };
+
+export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses, FileUploader, uploadProfilePic };

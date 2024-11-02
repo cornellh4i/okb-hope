@@ -12,6 +12,7 @@ import { fetchDocumentId, fetchProfessionalData } from '../../firebase/fetchData
 import Cancel from "@/assets/cancel.svg";
 import SaveChanges from "@/assets/save_changes.svg";
 import { Checkbox, FormControlLabel, FormGroup, TextField } from '@mui/material';
+import { uploadProfilePic } from "../../firebase/firebase";
 
 const EditPsychiatristProfile = ({ psychiatrist }) => {
   const uid = auth.currentUser?.uid;
@@ -108,6 +109,26 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
   const handleLastNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setLastName(event.target.value);
   }
+
+  const [file, setFile] = useState(null);
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (file) {
+      try {
+        const uploadUID = uid || ""; 
+        const downloadURL = await uploadProfilePic(file, uploadUID, true);
+        console.log("Uploaded successfully:", downloadURL);
+      } catch (error) {
+        console.error("Upload failed:", error);
+      }
+    }
+  };
 
   const handleGenderChange = (value) => {
     const newGender = value === "Male" ? 0 : (value === "Female" ? 1 : 2);
@@ -292,28 +313,35 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
             </div>
           </div>
 
-          {/* Profile Image */}
+        {/* Profile Image */}
           <div tabIndex={0} className="form-control w-full flex flex-col items-start">
             <label className="label">
-              <span className="text-lg font-montserrat font-semibold">Profile Image</span>
+              <span className="text-lg font-montserrat font-semibold">Profile Image (Required)</span>
             </label>
             <div id="Frame542" className="flex items-center justify-center w-full gap-3">
               <svg xmlns="http://www.w3.org/2000/svg" width="4" height="204" viewBox="0 0 4 204" fill="none">
-                <path d="M2 2L2.00001 202" stroke="#519AEB" stroke-width="3" stroke-linecap="round" />
+                <path d="M2 2L2.00001 202" stroke="#519AEB" strokeWidth="3" strokeLinecap="round" />
               </svg>
               <div className="flex flex-col items-start w-full gap-2.5">
-                <div className="flex w-full justify-center align-center" >
+                <div className="flex w-full justify-center align-center">
                   <div id="Frame278" className="flex flex-col absolute items-center justify-center align-center left-1/2 transform translate-x-[-50%] translate-y-[50%]">
-                    <Upload ></Upload>
+                    <Upload />
                     <label>
-                      <span className="font-montserrat text-xs italic" style={{ color: okb_colors.dark_gray }}>Upload Image</span>
+                      <span className="font-montserrat text-xs font-montserrat italic" style={{ color: okb_colors.dark_gray }}>Upload Image</span>
                     </label>
                   </div>
-                  <div className="input-container w-full relative" >
-                    <span className="absolute top-0 left-0 right-0 bottom-0 border-2 rounded-lg flex items-center justify-center" style={{ borderColor: okb_colors.light_blue, height: 200 }}></span>  {/* to hide the Choose File */}
-                    <input type="file" placeholder="image/" className="input input-bordered border-2 opacity-0" style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }} />
+                  <div className="input-container w-full relative">
+                    <span className="absolute top-0 left-0 right-0 bottom-0 border-2 rounded-xl flex items-center justify-center" style={{ borderColor: okb_colors.light_blue, height: 200 }}></span> {/* to hide the Choose File */}
+                    <input
+                      type="file"
+                      placeholder="image/"
+                      className="input input-bordered border-2 opacity-0"
+                      style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }}
+                      onChange={handleFileChange} // Call handleFileChange when a file is selected
+                    />
                   </div>
                 </div>
+                <button onClick={handleUpload} className="btn btn-primary mt-2">Upload Profile Picture</button> {/* Button to trigger upload */}
               </div>
             </div>
           </div>
@@ -397,7 +425,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
             </label>
             <div className="flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="4" height="144" viewBox="0 0 4 144" fill="none">
-                <path d="M2 2L2.00001 142" stroke="#519AEB" stroke-width="3" stroke-linecap="round" />
+                <path d="M2 2L2.00001 142" stroke="#519AEB" strokeWidth="3" strokeLinecap="round" />
               </svg>
               <div id="Frame412" className="flex flex-col items-center w-full gap-2.5">
                 <div id="Frame407" className="flex w-full justify-center align-center" >

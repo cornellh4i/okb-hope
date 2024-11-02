@@ -26,10 +26,9 @@ const TestPage: React.FC = () => {
      return;
    }
 
-
    try {
      // Replace this with your actual test function
-     const result = await uploadPsychiatristProfilePic(selectedFile, "zCrQQIeSpdbNHBZdktxkJPApzoA3");
+     const result = await uploadPsychiatristProfilePic(selectedFile, "jg8cvuLmvtNMZKNn15M3PyzR6Ih1", false);
      setTestResult({
        message: "Test completed successfully!",
        success: true
