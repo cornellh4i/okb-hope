@@ -31,6 +31,7 @@ const TestPage: React.FC = () => {
         success: true
       };
       setTestResults(testCompleted);
+      console.log(result);
     } catch (error) {
       const testCompleted: TestResults = {
         message: `Error during test: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -49,6 +50,7 @@ const TestPage: React.FC = () => {
             <p className="mb-4 text-gray-500">Upload Files</p>
             <input
               type="file"
+              multiple // Allow multiple file selection
               onChange={handleFileChange}
               className="block w-full text-sm text-gray-500
                 file:mr-4 file:py-2 file:px-4

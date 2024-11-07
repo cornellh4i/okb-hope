@@ -216,16 +216,16 @@ const updateUser = async (userId: string, data: any) => {
   await setDoc(userRef, data, { merge: true });
 };
 
-const uploadPsychiatristFile = async (files: File[], uID: string): Promise<String []> => {
+const uploadPsychiatristFile = async (files: File[], uID: string): Promise<string []> => {
   const db = getFirestore(); // Ensure Firestore is initialized
-  const user = getAuth();
+  const user = getAuth(app);
   const filenames : string[] = [];
   try {
-    if(user!){
+    if(user == null){
       throw Error('User not Authenticated');
     }
     for (const file of files) {
-      const storageRef = ref(storage, `/psychiatrist-files/${uID}.pdf`);
+      const storageRef = ref(storage, `resume_files/${uID}.pdf`);
       await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(storageRef);
       filenames.push(downloadURL);
