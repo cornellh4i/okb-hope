@@ -38,7 +38,7 @@ const TestPage: React.FC = () => {
         success: false
       };
       setTestResults(testCompleted);
-    }
+    } 
   };
 
   return (
