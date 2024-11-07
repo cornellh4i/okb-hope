@@ -1,12 +1,16 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-import { addDoc, collection, getDocs, getFirestore, query, where, doc, getDoc, setDoc } from "firebase/firestore";
-import { FacebookAuthProvider, TwitterAuthProvider } from "firebase/auth";
+import { addDoc, updateDoc, collection, getDocs, getFirestore, query, where, doc, getDoc, setDoc } from "firebase/firestore";import { FacebookAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { Gender, IUser } from "@/schema";
 import router, { useRouter } from 'next/router';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage} from 'firebase/storage';
+import { getApp } from "firebase/app"
+import { fetchDocumentId } from './fetchData';
+import React, { useState, useRef } from 'react'; // Import useState from React
 
-
-
+const firebaseApp = getApp();
+const storage = getStorage(firebaseApp, "gs://okb-hope.appspot.com");
 const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_SERVICE_ACCOUNT!);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -209,6 +213,27 @@ const updateUser = async (userId: string, data: any) => {
   await setDoc(userRef, data, { merge: true });
 };
 
-
-export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses };
+const uploadPsychiatristFile = async (files: File[], uID: string): Promise<String []> => {
+  const db = getFirestore(); // Ensure Firestore is initialized
+  const user = getAuth();
+  const filenames : string[] = [];
+  try {
+    if(user!){
+      throw Error('User not Authenticated');
+    }
+    for (const file of files) {
+      const storageRef = ref(storage, `profile_pictures/${uID}.png`);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      filenames.push(downloadURL);
+      
+    }
+    return filenames;
+   
+  } catch (error) {
+    console.error("Error Uploading Psychiatrist files:", error);
+    throw new Error("Error Uploading Psychiatrist files.");
+  }
+ };
+export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses, uploadPsychiatristFile };
 
