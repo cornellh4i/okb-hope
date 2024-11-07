@@ -15,6 +15,8 @@ const app = initializeApp(firebaseConfig);
 
 const firebaseApp = getApp();
 const storage = getStorage(firebaseApp, "gs://okb-hope.appspot.com");
+const folderRef = ref(storage, 'psychiatrist-files/'); 
+
 
 // Initialize Cloud Firestore through Firebase
 const db = getFirestore(app);
@@ -223,7 +225,7 @@ const uploadPsychiatristFile = async (files: File[], uID: string): Promise<Strin
       throw Error('User not Authenticated');
     }
     for (const file of files) {
-      const storageRef = ref(storage, `profile_pictures/${uID}.png`);
+      const storageRef = ref(storage, `/psychiatrist-files/${uID}.pdf`);
       await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(storageRef);
       filenames.push(downloadURL);
