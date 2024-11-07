@@ -9,11 +9,12 @@ import { getApp } from "firebase/app"
 import { fetchDocumentId } from './fetchData';
 import React, { useState, useRef } from 'react'; // Import useState from React
 
-const firebaseApp = getApp();
-const storage = getStorage(firebaseApp, "gs://okb-hope.appspot.com");
 const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_SERVICE_ACCOUNT!);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+const firebaseApp = getApp();
+const storage = getStorage(firebaseApp, "gs://okb-hope.appspot.com");
 
 // Initialize Cloud Firestore through Firebase
 const db = getFirestore(app);

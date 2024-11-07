@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react';
 import React from 'react';
-import { uploadPsychiatristFile } from "./firebase";
+import { uploadPsychiatristFile } from "../../firebase/firebase";
 
 interface TestResults {
   message: string;
@@ -46,7 +46,7 @@ const TestPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold mb-4">File Test Page</h2>
           <div className="flex flex-col items-center p-6 border-2 border-dashed rounded-lg border-gray-300 hover:border-gray-400">
-            <p className="mb-4 text-gray-500">Upload File</p>
+            <p className="mb-4 text-gray-500">Upload Files</p>
             <input
               type="file"
               onChange={handleFileChange}
