@@ -3,7 +3,6 @@ import { collection, getDocs, Timestamp, doc, getDoc, setDoc} from "firebase/fir
 import chevron_left from "@/assets/chevron_left";
 import chevron_right from "@/assets/chevron_right";
 import FilterBar from "./FilterBar";
-
 import FilterUserTable from "./FilterUserTable";
 import FilterBarTwo from "./FilterBarTwo";
 import FilterCard from "./FilterCard";
@@ -20,7 +19,13 @@ export interface UserType {
     id: string;
     status: 'pending' | 'approved' | '';
 }
-
+export interface PatientType {
+    id: string;
+    name: string;
+    active: Timestamp;
+    created: Timestamp;
+    username: string;
+}
 // Function to fetch the psychiatrist's status
 const fetchPsychiatristStatus = async (psychiatristUID: string) => {
     const documentId = await fetchDocumentId("psychiatrists", psychiatristUID);
@@ -43,19 +48,12 @@ const fetchPsychiatristStatus = async (psychiatristUID: string) => {
     }
 };
 
-// Function to update the psychiatrist's status
-// const updatePsychiatristStatus = async (userId: string, status: "approved" | "pending") => {
-//     const userRef = doc(db, "psychiatrists", userId);
-//     await setDoc(userRef, { status }, { merge: true });
-//     console.log(`Status for psychiatrist with ID: ${userId} updated to ${status}`);
-// };
-
-
 const FilterUser = () => {
     const [patientView, setPatientView] = useState<boolean>(true);
     const [clientView, setClientView] = useState(true);
     const [psychiatristView, setPsychiatristView] = useState(false);
     const [userData, setUserData] = useState<UserType[]>([]);
+    const [patientData, setPatientData] = useState<PatientType[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(10);
     const [numPages, setNumPages] = useState(1);
@@ -105,28 +103,51 @@ const FilterUser = () => {
         fetchUsers();
     }, [recordsPerPage, clientView]);
     
+    useEffect(() => {
+        async function fetchPatients() {
+            // Step 1: Fetch all users
+            const userSnapshot = await getDocs(collection(db, "users"));
+            const users: UserType[] = userSnapshot.docs.map((doc) => {
+                const data = doc.data();
+                return {
+                    ...data,
+                    id: data.uid,
+                    patient: data.userType === "patient",
+                } as UserType;
+            });
 
-    // Original function commented out
-    /*
-    async function fetchPsychiatristStatuses(psychiatrists: UserType[]) {
-        const psychiatristStatuses = await Promise.all(
-            psychiatrists.map(async (psych) => {
-                const psychiatristDoc = await getDoc(doc(db, "psychiatrists", psych.id));
-                return { 
-                    id: psych.id, 
-                    status: psychiatristDoc.exists() ? psychiatristDoc.data().status : 'pending'
-                };
-            })
-        );
+            // Step 2: Filter out only patients' UIDs
+            const patientUIDs = users
+                .filter(user => user.patient)
+                .map(user => user.id);
 
-        setUserData(prevUsers => 
-            prevUsers.map(user => {
-                const statusUpdate = psychiatristStatuses.find(s => s.id === user.id);
-                return statusUpdate ? { ...user, status: statusUpdate.status } : user;
-            })
-        );
-    }
-    */
+            // Step 3: Fetch full patient data for each patient UID
+            const patientDataPromises = patientUIDs.map(async (uid) => {
+                const patientDoc = await getDoc(doc(db, "users", uid));
+                if (patientDoc.exists()) {
+                    const data = patientDoc.data();
+                    return {
+                        id: uid,
+                        name: data.name,
+                        active: data.active,
+                        created: data.created,
+                        username: data.username,
+                    } as PatientType;
+                }
+                return null;
+            });
+
+            // Step 4: Resolve promises and filter out any null values
+            const patients = (await Promise.all(patientDataPromises)).filter((patient) => patient !== null) as PatientType[];
+
+            // Set the patient data to state
+            setPatientData(patients);
+            setNumPages(Math.ceil(patients.length / recordsPerPage));
+        }
+
+        fetchPatients();
+    }, [recordsPerPage, clientView]);
+
 
     // Pagination logic to calculate currentRecords based on currentPage
     const indexOfLastRecord = currentPage * recordsPerPage;
