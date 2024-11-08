@@ -87,7 +87,8 @@ export const createTest = async () => {
         location: "chicago",
         language: ["english"],
         specialty: [],
-        description: "fake psych"
+        description: "fake psych",
+        status: "pending"
     }
 
     const newPsych2: IPsychiatrist = {
@@ -102,7 +103,8 @@ export const createTest = async () => {
         location: "Jersey",
         language: ["english"],
         specialty: [],
-        description: "fake psych"
+        description: "fake psych",
+        status: "pending"
     }
 
     const newPatient: IPatient = {
@@ -175,6 +177,7 @@ export const createTest = async () => {
         language: ["english"],
         specialty: [],
         description: "fake psych",
+        status: 'pending'
     }
 
     const updatedPatient: IPatient = {
