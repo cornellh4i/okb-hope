@@ -41,9 +41,16 @@ const FilterUserTable = ({ currentRecords, onDelete, selectedUsers }) => {
             const name = user.name;
             const username = user.email;
             return (
-              <div>
-                <FilterCard key={index} name={name} username={username} created={"N/A"} active={"N/A"} isChecked={selectedUserIds.includes(user.id)}
-                  onCheckChange={(isChecked) => handleCheckChange(user.id, isChecked)} />
+              <div key={index}>
+                <FilterCard
+                  name={name}
+                  username={username}
+                  created={"N/A"}
+                  active={"N/A"}
+                  isChecked={selectedUserIds.includes(user.id)}
+                  onCheckChange={(isChecked) => handleCheckChange(user.id, isChecked)} user_id ={user.uid}
+                  status={user.status}
+                />
               </div>
             );
           })}
