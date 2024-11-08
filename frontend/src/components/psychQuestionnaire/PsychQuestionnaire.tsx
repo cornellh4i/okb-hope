@@ -1,7 +1,7 @@
 import NameGenderImageQuestionnaire from "./NameGenderImageQuestionnaire";
 import PositionLocationQuestionnaire from "./PositionLocationQuestionnaire";
 import SelectionQuestionnaire from "./SelectionQuestionnaire";
-
+import { auth } from '../../../firebase/firebase';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Gender, IPatient, IUser } from "@/schema";
@@ -10,8 +10,10 @@ import ProgressBar33 from '../../assets/progressbar33.svg';
 import ProgressBar67 from '../../assets/progressbar67.svg';
 import { db, signUpWithGoogle, logout } from "../../../firebase/firebase";
 import { useAuth } from "../../../contexts/AuthContext";
+import { uploadProfilePic } from "../../../firebase/firebase";
 
 const PsychQuestionnaire = () => {
+    const uid = auth.currentUser?.uid;
     const [currentStep, setCurrentStep] = useState(1);
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
@@ -210,6 +212,48 @@ const PsychQuestionnaire = () => {
         }
     };
 
+    const [file, setFile] = useState<File | null>(null);
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = event.target.files?.[0];
+        if (selectedFile) {
+            // Validate file type (e.g., only accept image files)
+            if (!selectedFile.type.startsWith('image/')) {
+                alert('Please select an image file.');
+                return;
+            }
+            // Optional: Validate file size (e.g., limit to 5MB)
+            if (selectedFile.size > 5 * 1024 * 1024) { // 5MB
+                alert('File size exceeds 5MB. Please select a smaller file.');
+                return;
+            }
+            setFile(selectedFile);
+            setUploadError(null);  // Clear any previous errors
+        }
+    };
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadError, setUploadError] = useState<string | null>(null);
+    const handleUpload = async () => {
+        if (!file) {
+            alert('No file selected.');
+            return;
+        }
+    setIsUploading(true);  // Start the upload process
+    setUploadError(null);   // Clear any previous errors
+    try {
+        // Assuming `uploadProfilePic` is your function for uploading the image
+        const uploadUID = uid || ''; // Ensure you have a valid UID if needed
+        const downloadURL = await uploadProfilePic(file, uploadUID, true);
+        console.log('Uploaded successfully:', downloadURL);
+        // Set the image URL after successful upload
+        setImage(downloadURL);
+    } catch (error) {
+        console.error('Upload failed:', error);
+        setUploadError('Upload failed. Please try again later.');
+    } finally {
+        setIsUploading(false); // Set uploading state to false after the process finishes
+    }
+ };
+
     const goNext = async () => {
         if (currentStep === 1 && (patient === false && psychiatrist === false)) {
             alert("Please select either patient or psychiatrist");
@@ -309,22 +353,48 @@ const PsychQuestionnaire = () => {
 
     return (
         <div className={'flex flex-col bg-off-white gap-y-6 md:gap-y-9'}>
-            {currentStep === 1 && <SelectionQuestionnaire
-                patient={patient}
-                psychiatrist={psychiatrist}
-                onChange={handleOptionChange}
-            />}
-            {currentStep === 2 &&
-                <NameGenderImageQuestionnaire
-                    firstName={firstName}
-                    lastName={lastName}
-                    gender={gender}
-                    image={image}
-                    handleFirstName={handleFirstNameChange}
-                    handleLastName={handleLastNameChange}
-                    handleGender={handleGenderChange}
-                />}
-            {currentStep === 3 &&
+            {currentStep === 1 && (
+                <SelectionQuestionnaire
+                    patient={patient}
+                    psychiatrist={psychiatrist}
+                    onChange={handleOptionChange}
+                />
+            )}
+    
+            {currentStep === 2 && (
+                <>
+                    <NameGenderImageQuestionnaire
+                        firstName={firstName}
+                        lastName={lastName}
+                        gender={gender}
+                        image={image}
+                        handleFirstName={handleFirstNameChange}
+                        handleLastName={handleLastNameChange}
+                        handleGender={handleGenderChange}
+                    />
+                    {/* File Upload Section */}
+                    <div className="mt-4">
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="file-input"
+                        />
+                        <div className="mt-2">
+                            {isUploading ? (
+                                <p>Uploading...</p>
+                            ) : (
+                                <button onClick={handleUpload} className="btn-upload">
+                                    Upload Profile Picture
+                                </button>
+                            )}
+                            {uploadError && <p className="text-red-500 mt-2">{uploadError}</p>}
+                        </div>
+                    </div>
+                </>
+            )}
+    
+            {currentStep === 3 && (
                 <PositionLocationQuestionnaire
                     position={position}
                     setPosition={setPosition}
@@ -346,42 +416,59 @@ const PsychQuestionnaire = () => {
                     handleWorkingHoursChange={handleWorkingHoursChange}
                     handlePosition={handlePosition}
                     handleLanguages={handleLanguages}
-                />}
+                />
+            )}
+    
+            {/* Navigation for Desktop */}
             {!isMobile && (
-                <>
-                    <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3 mb-4`}>
-                        <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>
-                            <div className={`text-zinc-600 text-[14px] font-semibold font-montserrat`}>Go Back</div>
-                        </div>
+                <div className="flex flex-row w-full content-center justify-center items-center gap-4 pb-3 mb-4">
+                    <div
+                        className="px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex"
+                        onClick={goBack}
+                    >
+                        <div className="text-zinc-600 text-[14px] font-semibold font-montserrat">Go Back</div>
+                    </div>
+                    {currentStep === 1 && <ProgressBar0 />}
+                    {currentStep === 2 && <ProgressBar33 />}
+                    {currentStep === 3 && <ProgressBar67 />}
+                    <div
+                        className="px-4 py-2 bg-blue-400 rounded-[10px] justify-start items-start inline-flex"
+                        onClick={goNext}
+                    >
+                        <div className="text-white text-base font-semibold font-montserrat">Next</div>
+                    </div>
+                </div>
+            )}
+    
+            {/* Navigation for Mobile */}
+            {isMobile && (
+                <div className="flex flex-col w-full content-center justify-center items-center gap-4 pb-3">
+                    <div className="flex justify-center">
                         {currentStep === 1 && <ProgressBar0 />}
                         {currentStep === 2 && <ProgressBar33 />}
                         {currentStep === 3 && <ProgressBar67 />}
-                        <div className={`px-4 py-2 bg-blue-400 rounded-[10px] justify-start items-start inline-flex`} onClick={goNext}>
-                            <div className={`text-white text-base font-semibold font-montserrat`}>Next</div>
-                        </div>
-                    </div></>
-            )}
-            {isMobile && (
-                <>
-                    <div className={`flex flex-col w-full content-center justify-center items-center gap-4 pb-3`}>
-                        <div className="flex justify-center">
-                            {currentStep === 1 && <ProgressBar0 />}
-                            {currentStep === 2 && <ProgressBar33 />}
-                            {currentStep === 3 && <ProgressBar67 />}
-                        </div>
-                        <div className="flex gap-x-4 mb-4">
-                            <div className={`px-4 py-1 rounded-[10px] border-2 border-blue-400 items-center inline-flex`} onClick={goBack}>
-                                <div className={`text-zinc-600 text-[10px] md:text-[16px] font-semibold font-montserrat`}>Go Back</div>
+                    </div>
+                    <div className="flex gap-x-4 mb-4">
+                        <div
+                            className="px-4 py-1 rounded-[10px] border-2 border-blue-400 items-center inline-flex"
+                            onClick={goBack}
+                        >
+                            <div className="text-zinc-600 text-[10px] md:text-[16px] font-semibold font-montserrat">
+                                Go Back
                             </div>
-                            <div className={`px-4 py-2 bg-blue-400 rounded-[10px] items-center inline-flex`} onClick={goNext}>
-                                <div className={`text-white text-[10px] font-semibold font-montserrat`}>Next</div>
-                            </div>
+                        </div>
+                        <div
+                            className="px-4 py-2 bg-blue-400 rounded-[10px] items-center inline-flex"
+                            onClick={goNext}
+                        >
+                            <div className="text-white text-[10px] font-semibold font-montserrat">Next</div>
                         </div>
                     </div>
-                </>
+                </div>
             )}
         </div>
-    )
-};
-
-export default PsychQuestionnaire
+    );
+    };
+    
+    export default PsychQuestionnaire;
+    

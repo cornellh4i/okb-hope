@@ -1,11 +1,11 @@
 import NameGenderImageQuestionnaire from "./NameGenderImageQuestionnaire";
 import AgeLanguageQuestionnaire from "./AgeLanguageQuestionnaire";
 import HistoryQuestionnaire from "./HistoryQuestionnaire";
-
+import { auth } from '../../../firebase/firebase';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Gender } from "@/schema";
 import { useRouter } from 'next/router';
-
+import { uploadProfilePic } from "../../../firebase/firebase";
 import { signUpWithGoogle, logout } from "../../../firebase/firebase";
 
 import ProgressBar25 from '../../assets/progressbar25.svg';
@@ -14,6 +14,7 @@ import ProgressBar75 from '../../assets/progressbar75.svg';
 import { useAuth } from "../../../contexts/AuthContext";
 
 const PatientQuestionnaire = () => {
+    const uid = auth.currentUser?.uid;
     const [currentStep, setCurrentStep] = useState(1);
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
@@ -55,6 +56,48 @@ const PatientQuestionnaire = () => {
     const handleLastNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setLastName(event.target.value);
     }
+
+    const [file, setFile] = useState<File | null>(null);
+   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+       const selectedFile = event.target.files?.[0];
+       if (selectedFile) {
+           // Validate file type (e.g., only accept image files)
+           if (!selectedFile.type.startsWith('image/')) {
+               alert('Please select an image file.');
+               return;
+           }
+           // Optional: Validate file size (e.g., limit to 5MB)
+           if (selectedFile.size > 5 * 1024 * 1024) { // 5MB
+               alert('File size exceeds 5MB. Please select a smaller file.');
+               return;
+           }
+           setFile(selectedFile);
+           setUploadError(null);  // Clear any previous errors
+       }
+   };
+   const [isUploading, setIsUploading] = useState(false);
+   const [uploadError, setUploadError] = useState<string | null>(null);
+   const handleUpload = async () => {
+       if (!file) {
+           alert('No file selected.');
+           return;
+       }
+   setIsUploading(true);  // Start the upload process
+   setUploadError(null);   // Clear any previous errors
+   try {
+       // Assuming `uploadProfilePic` is your function for uploading the image
+       const uploadUID = uid || ''; // Ensure you have a valid UID if needed
+       const downloadURL = await uploadProfilePic(file, uploadUID, false);
+       console.log('Uploaded successfully:', downloadURL);
+       // Set the image URL after successful upload
+       setImage(downloadURL);
+   } catch (error) {
+       console.error('Upload failed:', error);
+       setUploadError('Upload failed. Please try again later.');
+   } finally {
+       setIsUploading(false); // Set uploading state to false after the process finishes
+   }
+};
 
     const handleGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedValue = event.target.value;
@@ -263,52 +306,94 @@ const PatientQuestionnaire = () => {
 
     return (
         <div className={'flex flex-col bg-off-white'}>
-            {currentStep === 1 &&
-                <NameGenderImageQuestionnaire
-                    firstName={firstName}
-                    lastName={lastName}
-                    gender={gender}
-                    image={image}
-                    handleFirstName={handleFirstNameChange}
-                    handleLastName={handleLastNameChange}
-                    handleGender={handleGenderChange}
-                />}
-            {currentStep === 2 &&
-                <AgeLanguageQuestionnaire
-                    age={age}
-                    checkedLanguages={checkedLanguages}
-                    isOtherLanguageSelected={isOtherLanguageSelected}
-                    otherLanguage={otherLanguage}
-                    handleOtherLanguage={handleOtherLanguage}
-                    handleAge={handleAgeChange}
-                    handleLanguages={handleLanguages}
-                />}
-            {currentStep === 3 && <HistoryQuestionnaire
-                prevExp={prevExp}
-                prevExpTime={prevExpTime}
-                checkedConcerns={checkedConcerns}
-                isOtherConcernSelected={isOtherConcernSelected}
-                otherConcern={otherConcern}
-                handleOtherConcern={handleOtherConcern}
-                setConcerns={setConcerns}
-                handlePrevExp={handlePrevExpChange}
-                handlePrevExpTime={handlePrevExpTimeChange}
-                handleConcerns={handleConcerns}
-            />}
+            {currentStep === 1 && (
+                <>
+                    <NameGenderImageQuestionnaire
+                        firstName={firstName}
+                        lastName={lastName}
+                        gender={gender}
+                        image={image}
+                        handleFirstName={handleFirstNameChange}
+                        handleLastName={handleLastNameChange}
+                        handleGender={handleGenderChange}
+                    />
+                </>
+            )}
+    
+            {currentStep === 2 && (
+                <>
+                    <div>
+                        {/* Age and Language Questionnaire */}
+                        <AgeLanguageQuestionnaire
+                            age={age}
+                            checkedLanguages={checkedLanguages}
+                            isOtherLanguageSelected={isOtherLanguageSelected}
+                            otherLanguage={otherLanguage}
+                            handleOtherLanguage={handleOtherLanguage} // Assuming this function is defined elsewhere
+                            handleAge={handleAgeChange}
+                            handleLanguages={handleLanguages}
+                        />
+                        {/* File Upload Section */}
+                        <div className="mt-4">
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                                className="file-input"
+                            />
+                            <div className="mt-2">
+                                {isUploading ? (
+                                    <p>Uploading...</p>
+                                ) : (
+                                    <button onClick={handleUpload} className="btn-upload">
+                                        Upload Profile Picture
+                                    </button>
+                                )}
+                                {uploadError && <p className="text-red-500 mt-2">{uploadError}</p>}
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
+    
+            {currentStep === 3 && (
+                <HistoryQuestionnaire
+                    prevExp={prevExp}
+                    prevExpTime={prevExpTime}
+                    checkedConcerns={checkedConcerns}
+                    isOtherConcernSelected={isOtherConcernSelected}
+                    otherConcern={otherConcern}
+                    handleOtherConcern={handleOtherConcern}
+                    setConcerns={setConcerns}
+                    handlePrevExp={handlePrevExpChange}
+                    handlePrevExpTime={handlePrevExpTimeChange}
+                    handleConcerns={handleConcerns}
+                />
+            )}
+    
+            {/* Navigation buttons */}
             {!isMobile && (
                 <>
                     <div className={`flex flex-row w-full content-center justify-center items-center gap-4 pb-3 mb-4`}>
-                        <div className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`} onClick={goBack}>
+                        <div
+                            className={`px-6 py-2 rounded-[10px] border-2 border-blue-400 items-start inline-flex`}
+                            onClick={goBack}
+                        >
                             <div className={`text-zinc-600 text-[14px] font-semibold font-montserrat`}>Go Back</div>
                         </div>
                         {currentStep === 1 && <ProgressBar25 />}
                         {currentStep === 2 && <ProgressBar50 />}
                         {currentStep === 3 && <ProgressBar75 />}
-                        <div className={`px-4 py-2 bg-blue-400 rounded-[10px] justify-start items-start inline-flex`} onClick={goNext}>
+                        <div
+                            className={`px-4 py-2 bg-blue-400 rounded-[10px] justify-start items-start inline-flex`}
+                            onClick={goNext}
+                        >
                             <div className={`text-white text-base font-semibold font-montserrat`}>Next</div>
                         </div>
                     </div>
-                </>)}
+                </>
+            )}
+    
             {isMobile && (
                 <>
                     <div className={`flex flex-col w-full content-center justify-center items-center gap-4 pb-3`}>
@@ -318,17 +403,27 @@ const PatientQuestionnaire = () => {
                             {currentStep === 3 && <ProgressBar75 />}
                         </div>
                         <div className="flex gap-x-4 mb-4">
-                            <div className={`px-4 py-1 rounded-[10px] border-2 border-blue-400 items-center inline-flex`} onClick={goBack}>
-                                <div className={`text-zinc-600 text-[10px] md:text-[16px] font-semibold font-montserrat`}>Go Back</div>
+                            <div
+                                className={`px-4 py-1 rounded-[10px] border-2 border-blue-400 items-center inline-flex`}
+                                onClick={goBack}
+                            >
+                                <div className={`text-zinc-600 text-[10px] md:text-[16px] font-semibold font-montserrat`}>
+                                    Go Back
+                                </div>
                             </div>
-                            <div className={`px-4 py-2 bg-blue-400 rounded-[10px] items-center inline-flex`} onClick={goNext}>
+                            <div
+                                className={`px-4 py-2 bg-blue-400 rounded-[10px] items-center inline-flex`}
+                                onClick={goNext}
+                            >
                                 <div className={`text-white text-[10px] font-semibold font-montserrat`}>Next</div>
                             </div>
                         </div>
                     </div>
-                </>)}
+                </>
+            )}
         </div>
-    )
-};
-
-export default PatientQuestionnaire
+    );
+    };
+    
+    export default PatientQuestionnaire;
+    
