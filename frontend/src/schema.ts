@@ -20,6 +20,7 @@ export interface IPsychiatrist {
     workingHours: object;
     specialty: string[];
     status: string;
+    calendly: string;
 }
 
 export interface IPatient {

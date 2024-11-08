@@ -43,6 +43,7 @@ const PsychQuestionnaire = () => {
     const [patient, setPatient] = useState<boolean>(false);
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [calendly, setCalendly] = useState<string>("");
     const router = useRouter();
 
     useEffect(() => {
@@ -204,6 +205,10 @@ const PsychQuestionnaire = () => {
         }
     }
 
+    const handleCalendly = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setCalendly(event.target.value);
+    }
+
     const goBack = () => {
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
@@ -298,6 +303,7 @@ const PsychQuestionnaire = () => {
                     [], //prefLanguages
                     gender, //genderPref
                     [], //savedPsychiatrists
+                    calendly
                 )
                 router.push('/loading?init=true');
             } catch (error) {
@@ -346,6 +352,8 @@ const PsychQuestionnaire = () => {
                     handleWorkingHoursChange={handleWorkingHoursChange}
                     handlePosition={handlePosition}
                     handleLanguages={handleLanguages}
+                    calendlyLink={calendly}
+                    handleCalendly={handleCalendly}
                 />}
             {!isMobile && (
                 <>

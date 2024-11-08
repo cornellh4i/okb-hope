@@ -249,7 +249,7 @@ const ProfProfile = () => {
             {showBooking && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
                     <div className="absolute inset-0 bg-black bg-opacity-50">
-                        <InlineWidget url="https://calendly.com/bl583/30min" />
+                        <InlineWidget url= {professional.calendly ?? "https://calendly.com/hubert-minghao-he/30min"} />
                         <button onClick={() => handleBookingClose()} className="absolute top-0 right-0 m-4 text-white">X</button>
                     </div>
                 </div>

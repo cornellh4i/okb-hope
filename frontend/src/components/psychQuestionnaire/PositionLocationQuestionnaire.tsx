@@ -1,4 +1,3 @@
-// 2nd page of the Questionnaire
 import { ChangeEvent, useEffect, useState } from 'react';
 import okb_colors from "@/colors";
 
@@ -32,15 +31,14 @@ interface QuestionnaireProps {
     handleWorkingHoursChange;
     handlePosition: (event: ChangeEvent<HTMLInputElement>) => void;
     handleLanguages: (event: ChangeEvent<HTMLInputElement>) => void;
-    // calendlyLink: string;
-    // handleCalendly: (event: ChangeEvent<HTMLTextAreaElement>) => void;
-
+    calendlyLink: string;
+    handleCalendly: (event: ChangeEvent<HTMLTextAreaElement>) => void;
 }
-//2nd page of questionnaire
+
 const PositionLocationQuestionnaire = ({ position, setPosition, isOtherPositionSelected, otherPosition,
     handleOtherPosition, location, handleLocation, aboutYourself, handleAboutYourself,
     checkedLanguages, setCheckedLanguages, isOtherLanguageSelected, otherLanguage, handleOtherLanguage,
-    checkedAvailability, handleWeeklyAvailability, workingHours, handleWorkingHoursChange, handlePosition, handleLanguages }: QuestionnaireProps) => {
+    checkedAvailability, handleWeeklyAvailability, workingHours, handleWorkingHoursChange, handlePosition, handleLanguages, calendlyLink, handleCalendly }: QuestionnaireProps) => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -143,26 +141,6 @@ const PositionLocationQuestionnaire = ({ position, setPosition, isOtherPositionS
                 </div>
             </div>
 
-            {/* Calendly Link */}
-            {/* <div className='flex flex-col gap-y-3'>
-                <span className={`text-lg font-semibold font-montserrat`}>What is your Calendly link?</span>
-                <div className='flex items-center justify-start w-full gap-3'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="50" viewBox="0 0 4 140" fill="none">
-                        <path d="M2 2L2.00001 202" stroke="#519AEB" strokeWidth="9" strokeLinecap="round" />
-                    </svg>
-                    <textarea
-                        value={calendlyLink}
-                        onChange={handleCalendly}
-                        placeholder="Type here"
-                        className={`input input-bordered resize-none w-full md:w-3/4 lg:w-1/2 border-2 rounded-2xl italic py-3 px-6`}
-                        style={{
-                            borderColor: okb_colors.light_blue,
-                            height: 50,
-                        }}
-                    />
-                </div>
-            </div> */}
-
             {/* Languages Spoken */}
             <FormGroup className='gap-y-3'>
                 <div className={`flex flex-row`}>
@@ -216,6 +194,26 @@ const PositionLocationQuestionnaire = ({ position, setPosition, isOtherPositionS
                 )}
             </FormGroup>
 
+            {/* Calendly Link */}
+            <div className='flex flex-col gap-y-3'>
+                <span className={`text-lg font-semibold font-montserrat`}>What is your Calendly link? <span className={`text-lg text-red-600`}>*</span></span>
+                <div className='flex items-center justify-start w-full gap-3'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="4" height="50" viewBox="0 0 4 50" fill="none">
+                        <path d="M2 2L2.00001 202" stroke="#519AEB" stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                    <textarea
+                        value={calendlyLink}
+                        onChange={handleCalendly}
+                        placeholder="Type here"
+                        className={`input input-bordered resize-none w-full md:w-3/4 lg:w-1/2 border-2 rounded-2xl font-montserrat placeholder:italic py-2.5 px-6`}
+                        style={{
+                            borderColor: okb_colors.light_blue,
+                            height: 50,
+                        }}
+                    />
+                </div>
+            </div>
+
             {/* Working Hours */}
             <div className='flex flex-col gap-y-3'>
                 <span className={`text-lg font-semibold font-montserrat`}>What are your working hour(s)? <span className={`text-lg text-red-600`}>*</span></span>
@@ -234,7 +232,7 @@ const PositionLocationQuestionnaire = ({ position, setPosition, isOtherPositionS
                                     value={workingHours[day]?.start || ''}
                                     onChange={(e) => handleWorkingHoursChange(day, 'start', e.target.value)}
                                     InputLabelProps={{ shrink: true, className: 'font-montserrat' }}
-                                    inputProps={{ step: 300 }} // 5 min
+                                    inputProps={{ step: 300 }}
                                 />
                                 <TextField
                                     label="End Time"
@@ -242,14 +240,14 @@ const PositionLocationQuestionnaire = ({ position, setPosition, isOtherPositionS
                                     value={workingHours[day]?.end || ''}
                                     onChange={(e) => handleWorkingHoursChange(day, 'end', e.target.value)}
                                     InputLabelProps={{ shrink: true, className: 'font-montserrat' }}
-                                    inputProps={{ step: 300 }} // 5 min
+                                    inputProps={{ step: 300 }}
                                 />
                             </div>
                         )}
                     </div>
                 ))}
             </div>
-        </div >
+        </div>
     )
 };
 

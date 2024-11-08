@@ -73,6 +73,7 @@ const signUpWithGoogle = async (
   prefLanguages: string[],
   genderPref: GenderOrUndefined,
   savedPsychiatrists: string[],
+  calendly: string
 ) => {
   return new Promise<void>(async (resolve, reject) => {
     try {
@@ -107,7 +108,8 @@ const signUpWithGoogle = async (
             weeklyAvailability: weeklyAvailability,
             workingHours: workingHours,
             specialty: specialty,
-            status: "pending"
+            status: "pending",
+            calendly: calendly
           });
           console.log("Added psych")
         }
