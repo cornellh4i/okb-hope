@@ -24,6 +24,7 @@ export interface UserType {
 // Function to fetch the psychiatrist's status
 const fetchPsychiatristStatus = async (psychiatristUID: string) => {
     const documentId = await fetchDocumentId("psychiatrists", psychiatristUID);
+    // console.log("UID IS: " + psychiatristUID + " DOCID IS: " + documentId)
     const docRef = doc(db, "psychiatrists", documentId ?? "");
     const docSnap = await getDoc(docRef);
 

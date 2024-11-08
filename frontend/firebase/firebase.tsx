@@ -1,9 +1,14 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-import { addDoc, collection, getDocs, getFirestore, query, where, doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, updateDoc, collection, getDocs, getFirestore, query, where, doc, getDoc, setDoc } from "firebase/firestore";
 import { FacebookAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { Gender, IUser } from "@/schema";
 import router, { useRouter } from 'next/router';
+import { fetchDocumentId } from './fetchData';
+import React, { useState, useRef } from 'react'; // Import useState from React
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage } from 'firebase/storage';
+import { getApp } from "firebase/app";
 
 
 
@@ -208,6 +213,42 @@ const updateUser = async (userId: string, data: any) => {
   const userRef = doc(db, "users", userId);
   await setDoc(userRef, data, { merge: true });
 };
+
+
+const firebaseApp = getApp();
+const storage = getStorage(firebaseApp, "gs://okb-hope.appspot.com");
+
+const uploadPsychiatristProfilePic = async (file: File, psychiatristUID: string) => {
+  const db = getFirestore(); // Ensure Firestore is initialized
+
+  try {
+    // Reference to the file in the profile_pictures folder
+    const storageRef = ref(storage, `profile_pictures/${psychiatristUID}.png`);
+
+    // Upload the file
+    await uploadBytes(storageRef, file);
+
+    // Get the download URL for the uploaded file
+    const downloadURL = await getDownloadURL(storageRef);
+    console.log("Download URL:", downloadURL);
+
+    const documentId = await fetchDocumentId("psychiatrists", psychiatristUID);
+
+    // Reference to the psychiatrist's document in Firestore
+    const psychRef = doc(db, "psychiatrists", documentId ?? "");
+
+    // Update the Firestore document with the profile picture URL
+    await updateDoc(psychRef, {
+      profile_pic: downloadURL
+    });
+
+    return downloadURL;  // Return the URL for further use if needed
+  } catch (error) {
+    console.error("Error uploading profile picture:", error);
+    throw new Error("Error uploading profile picture.");
+  }
+};
+
 
 
 export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses };

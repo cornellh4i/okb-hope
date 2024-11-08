@@ -13,7 +13,7 @@ import ReportIcon from '../../assets/report.svg';
 import CheckCircle from '../../assets/check_circle.svg';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
-import { doc, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db, logInWithGoogle, signUpWithGoogle, updateUser } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
 import { addDoc, collection, Timestamp } from 'firebase/firestore';
@@ -167,8 +167,13 @@ const AdminView = () => {
         if(professional){
             console.log(professional);
             //firebase id
-            const documentId = await fetchDocumentId('psychiatrists', professional.uid);
-            await deletePsychiatrist(documentId);
+            const psychDocumentId = await fetchDocumentId('psychiatrists', professional.uid);
+            await deletePsychiatrist(psychDocumentId);
+
+            const userDocumentId = await fetchDocumentId('users', professional.uid);
+            const userRef = doc(db, "users", userDocumentId ?? "");
+            await deleteDoc(userRef);
+
             router.push(`/admin/${user?.uid}/database`);
         }
       };
