@@ -35,6 +35,7 @@ const DummyPsychiatrist: IPsychiatrist = {
     her psychiatry residency training at the Korle Bu Teaching Hospital in Accra. 
     Dr. Gloria Shi is passionate about providing quality mental health care to her 
     patients and has a specialization in the treatment of anxiety and mood disorders.`,
+  status: "approved"
 }
 
 const AdminProfProfile = ({ firstName, lastName }: ProfProfileProps) => {
