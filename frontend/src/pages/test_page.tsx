@@ -1,5 +1,5 @@
 import { useState, ChangeEvent } from 'react';
-import { uploadProfilePic, fetchProfilePic} from '../../firebase/firebase';
+import { uploadProfilePic, fetchProfilePic, fetchRole} from '../../firebase/firebase';
 
 interface TestResult {
   message: string;
@@ -43,22 +43,35 @@ const TestPage: React.FC = () => {
       setTestResult({ message: "Please enter a UID", success: false });
       return;
     }
-
+  
     try {
-      const url = await fetchProfilePic(uid, true);
-      setProfilePicUrl(url); // Set profile picture URL
-      setTestResult({
-        message: "Profile picture fetched successfully!",
-        success: true
-      });
+      const url = await fetchProfilePic(uid);
       console.log(url)
+      if (url) {
+        setProfilePicUrl(url);
+         // Set profile picture URL
+        setTestResult({
+          message: "Profile picture fetched successfully!",
+          success: true
+        });
+        
+      } else {
+        // If URL is null, set an error message
+        setTestResult({
+          message: "No profile picture found for this UID.",
+          success: false
+        });
+        setProfilePicUrl(null); // Clear any previous profile picture
+      }
     } catch (error) {
       setTestResult({
         message: `Error fetching profile picture: ${error instanceof Error ? error.message : 'Unknown error'}`,
         success: false
       });
+      setProfilePicUrl(null); // Clear any previous profile picture
     }
   };
+  
 
   return (
     <div className="p-4 max-w-xl mx-auto">
