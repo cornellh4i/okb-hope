@@ -333,6 +333,26 @@ const uploadProfilePic = async (file: File, uID: string, is_psychiatrist: boolea
     throw new Error("Error uploading profile picture.");
   }
 };
+export async function fetchProfilePic(uid: string, isPsychiatrist: boolean): Promise<string | null> {
+  try {
+    // Determine the collection based on whether the user is a psychiatrist or a patient
+    const collectionName = isPsychiatrist ? 'psychiatrists' : 'patients';
+    const userDocRef = doc(db, collectionName, uid); // Reference to the user document
+    const userDoc = await getDoc(userDocRef); // Fetch the document
+
+    if (userDoc.exists()) {
+      // Retrieve the profile_pic field
+      const profilePicUrl = userDoc.data().profile_pic;
+      return profilePicUrl || null; // Return the URL if it exists, otherwise null
+    } else {
+      console.warn(`Document not found for UID: ${uid}`);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching profile picture URL:", error);
+    return null;
+  }
+}
 
 
 
