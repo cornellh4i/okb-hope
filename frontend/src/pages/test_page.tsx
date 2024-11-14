@@ -47,7 +47,7 @@ const TestPage: React.FC = () => {
     try {
       const url = await fetchProfilePic(uid);
       console.log(url)
-      if (url) {
+      if (url) { 
         setProfilePicUrl(url);
          // Set profile picture URL
         setTestResult({
