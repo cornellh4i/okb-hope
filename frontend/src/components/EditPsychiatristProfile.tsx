@@ -118,14 +118,22 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
     }
   };
 
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
   const handleUpload = async () => {
     if (file) {
+      setUploading(true);  // Set uploading to true when upload starts
       try {
-        const uploadUID = uid || ""; 
+        const uploadUID = uid || "";
         const downloadURL = await uploadProfilePic(file, uploadUID, true);
         console.log("Uploaded successfully:", downloadURL);
+        setUploadSuccess(true);  // Set uploadSuccess to true when upload is successful
       } catch (error) {
         console.error("Upload failed:", error);
+        setUploadSuccess(false);  // Set uploadSuccess to false if there's an error
+      } finally {
+        setUploading(false);  // Set uploading to false after upload completes (whether success or failure)
       }
     }
   };
@@ -241,7 +249,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
     <div className="flex justify-center">
       <div className="card md:w-2/3 w-full">
         <div className="card-body flex gap-4">
-          <text className="card-title font-montserrat text-4xl">Edit Profile</text>
+          <div className="card-title font-montserrat text-4xl">Edit Profile</div>
           {/* Text input fields */}
 
           <div className="flex flex-col md:flex-row justify-between">
@@ -331,7 +339,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
                     </label>
                   </div>
                   <div className="input-container w-full relative">
-                    <span className="absolute top-0 left-0 right-0 bottom-0 border-2 rounded-xl flex items-center justify-center" style={{ borderColor: okb_colors.light_blue, height: 200 }}></span> {/* to hide the Choose File */}
+                    <span className="absolute top-0 left-0 right-0 bottom-0 border-2 rounded-xl flex items-center justify-center" style={{ borderColor: okb_colors.light_blue, height: 200 }}></span>
                     <input
                       type="file"
                       placeholder="image/"
@@ -341,9 +349,25 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
                     />
                   </div>
                 </div>
-                <button onClick={handleUpload} className="btn btn-primary mt-2">Upload Profile Picture</button> {/* Button to trigger upload */}
+                <button onClick={handleUpload} className="btn btn-primary mt-2">
+                  {uploading ? "Uploading..." : "Upload Profile Picture"}
+                </button> {/* Button to trigger upload */}
+
+                {/* Conditional rendering for success message and checkmark */}
+                {uploadSuccess && !uploading && (
+                  <div className="flex items-center gap-2 mt-3 text-green-600">
+                    <span className="font-montserrat text-md">Profile picture uploaded successfully!</span>
+                  </div>
+                )}
+                {uploading && !uploadSuccess && (
+                  <div className="mt-3 text-gray-600">Uploading your profile picture...</div>
+                )}
+                {!uploading && uploadSuccess === false && (
+                  <div className="mt-3 text-red-600">Upload failed. Please try again.</div>
+                )}
               </div>
             </div>
+          </div>
           </div>
 
           {/* Current Position */}
@@ -529,7 +553,6 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
           </div>
         </div>
       </div>
-    </div>
   )
 }
 
