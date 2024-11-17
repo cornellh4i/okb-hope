@@ -22,6 +22,7 @@ import Submit from '@/assets/submit.svg';
 import Continue from '@/assets/continue.svg';
 import colors from '@/colors';
 import dynamic from "next/dynamic";
+import DoctorIcon from '@/assets/doctor_icon.svg';
 const InlineWidget = dynamic(() => import("react-calendly").then(mod => mod.InlineWidget), { ssr: false });
 
 // interface ProfProfileProps {
@@ -246,96 +247,168 @@ const ProfProfileBox = () => {
     };
 
     return (
-        <div
-            className="min-h-screen w-full flex flex-col"
-            style={{ backgroundColor: "rgba(247, 247, 245, 1)" }}
-        >
-            <div className="gap-4 w-full flex flex-col lg:flex-row gap-10 justify-center px-6 lg:px-16">
-                <div className="flex flex-col gap-8 w-full lg:w-2/3 bg-white shadow-md rounded-lg p-8">
-                    <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
-                        <div className="flex-shrink-0">
+        <div className="flex flex-col lg:flex-row gap-8">
+            {/* Main Content */}
+            <div className="w-full lg:w-2/3 bg-white shadow-md rounded-lg p-8">
+                {/* Header with Image and Info */}
+                <div className="flex gap-6 items-start mb-8">
+                    {/* Profile Image */}
+                    <div className="w-32 h-32 rounded-lg overflow-hidden flex-shrink-0">
+                        {professional?.profile_pic ? (
                             <img
-                                src={professional.profile_pic || '/path/to/placeholder.jpg'}
+                                src={professional.profile_pic}
                                 alt="Profile"
-                                className="rounded-full w-40 h-40 object-cover"
+                                className="w-full h-full object-cover"
                             />
-                        </div>
-                        <div className="flex flex-col gap-6 w-full">
-                            <div>
-                                <h2 className="text-3xl font-bold text-gray-900">
-                                    {professional.firstName} {professional.lastName}
-                                </h2>
-                                <p className="text-lg italic text-gray-600">
-                                    Psychiatrist at {professional.location || "Cornell Hospital"}
-                                </p>
+                        ) : (
+                            <div 
+                                style={{ 
+                                    width: '100%', 
+                                    height: '100%', 
+                                    backgroundColor: colors.okb_blue 
+                                }} 
+                                className="text-4xl font-normal text-white flex items-center justify-center"
+                            >
+                                {professional?.firstName?.charAt(0).toUpperCase()}
                             </div>
-                            <div className="flex gap-6">
-                                <button
-                                    onClick={handleBookAppointment}
-                                    className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white text-lg rounded-lg hover:bg-blue-700 transition"
-                                >
-                                    Book Appointment
-                                </button>
-                                <button
-                                    onClick={handleSendMessage}
-                                    className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white text-lg rounded-lg hover:bg-blue-700 transition"
-                                >
-                                    <figure>
-                                        <Chat />
-                                    </figure>
-                                    Send Message
-                                </button>
-                                <button
-                                    onClick={(event) => handleSave(event, professional)}
-                                    className={`flex items-center gap-2 px-6 py-3 text-lg rounded-lg ${
-                                        savedPsychiatrists.includes(professional.uid)
-                                            ? "bg-green-600"
-                                            : "bg-blue-600"
-                                    } text-white hover:bg-blue-700 transition`}
-                                >
-                                    <figure>
-                                        {savedPsychiatrists.includes(professional.uid) ? (
-                                            <SavedBookmark />
-                                        ) : (
-                                            <Bookmark />
-                                        )}
-                                    </figure>
-                                    {savedPsychiatrists.includes(professional.uid) ? "Saved" : "Save"}
-                                </button>
-                            </div>
-                        </div>
+                        )}
                     </div>
-                    <div className="mt-6">
-                        <h3 className="text-2xl font-semibold text-gray-800">About Me</h3>
-                        <p className="text-lg text-gray-600">
-                            {professional.description || "No description available."}
-                        </p>
-                    </div>
-                    <div className="mt-6">
-                        <h3 className="text-2xl font-semibold text-gray-800">Languages</h3>
-                        <div className="flex flex-wrap gap-3 mt-4">
-                            {professional.language.map((language, index) => (
-                                <div
-                                    key={index}
-                                    className="px-4 py-2 bg-blue-100 text-blue-600 text-lg rounded-lg"
-                                >
-                                    {language}
-                                </div>
-                            ))}
+
+                    {/* Name and Title */}
+                    <div className="flex flex-col">
+                        <h1 className="text-2xl font-bold font-montserrat mb-2">
+                            Dr. {professional?.firstName} {professional?.lastName}
+                        </h1>
+                        <div className="flex items-center gap-2 text-gray-600 font-montserrat">
+                            <DoctorIcon className="w-5 h-5" />
+                            <p>Psychiatrist at {professional?.location}</p>
                         </div>
                     </div>
                 </div>
-                <div className="w-full lg:w-1/3 bg-white shadow-md rounded-lg p-8">
-                    <h3 className="text-2xl font-semibold text-gray-800 mb-4">Similar Psychiatrists</h3>
-                    <p className="text-lg text-gray-600">This section is under development.</p>
+
+                {/* Action Buttons */}
+                <div className="flex gap-4 mb-8">
+                    <button
+                        onClick={handleBookAppointment}
+                        className="flex-1 py-3 bg-okb-blue text-white rounded-lg font-montserrat hover:bg-light-blue transition"
+                    >
+                        Book online appointment
+                    </button>
+                    <button
+                        onClick={handleSendMessage}
+                        className="flex-1 py-3 border border-okb-blue text-okb-blue rounded-lg font-montserrat hover:bg-gray-50 transition"
+                    >
+                        Send a message
+                    </button>
+                    <button
+                        onClick={(event) => handleSave(event, professional)}
+                        className="flex-1 py-3 border border-okb-blue text-okb-blue rounded-lg font-montserrat hover:bg-gray-50 transition flex items-center justify-center gap-2"
+                    >
+                        <div className="flex items-center justify-center gap-0">
+                            {savedPsychiatrists.includes(professional?.uid) ? 
+                                <SavedBookmark /> : 
+                                <Bookmark />
+                            }
+                            <span>Save Psychiatrist</span>
+                        </div>
+                    </button>
+                </div>
+
+                {/* About Section */}
+                <div className="mb-8">
+                    <h2 className="text-xl font-semibold font-montserrat mb-4">About me</h2>
+                    <p className="text-gray-600 font-montserrat">
+                        {professional?.description || "No description available."}
+                    </p>
+                </div>
+
+                {/* Languages Section */}
+                <div>
+                    <h2 className="text-xl font-semibold font-montserrat mb-4">Languages</h2>
+                    <div className="flex flex-wrap gap-3">
+                        {professional?.language.map((language, index) => (
+                            <div
+                                key={index}
+                                className="px-4 py-2 rounded-full border border-gray-300 text-gray-600 font-montserrat"
+                            >
+                                {language}
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
+
+            {/* Similar Psychiatrists Section */}
+            <div className="w-full lg:w-1/3 bg-white shadow-md rounded-lg p-8">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4 font-montserrat">
+                    Similar Psychiatrists
+                </h3>
+                <p className="text-gray-600 font-montserrat">
+                    This section is under development.
+                </p>
+            </div>
+
+            {/* Modals */}
+            {showBooking && (
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="absolute inset-0 bg-black bg-opacity-50">
+                        <InlineWidget url="https://calendly.com/bl583/30min" />
+                        <button onClick={() => handleBookingClose()} className="absolute top-0 right-0 m-4 text-white">
+                            X
+                        </button>
+                    </div>
+                </div>
+            )}
+            
+            {showPopup && (
+                <LoginPopup
+                    onClose={() => setShowPopup(false)}
+                    logInWithGoogleAndRedirect={logInWithGoogleAndRedirect}
+                    signUpWithGoogleAndRedirect={signUpWithGoogleAndRedirect}
+                />
+            )}
+            
+            {showReportPopup && (
+                <div style={overlayStyle}>
+                    <div style={popupStyle}>
+                        <h3 className="font-montserrat font-bold mb-4">
+                            Report Dr. {professional?.firstName} {professional?.lastName}?
+                        </h3>
+                        <p className="font-montserrat text-sm mb-4">
+                            We are committed to ensuring your right to privacy and safety. If you feel like any of these rights have been violated by a psychiatrist that you are seeing, please fill out the report form below.
+                        </p>
+                        <textarea
+                            className="font-montserrat w-full p-3 border rounded-lg"
+                            placeholder="Please provide a detailed description of your situation here."
+                            value={reportText}
+                            onChange={handleReportTextChange}
+                        />
+                        <div className="flex justify-end gap-4 mt-4">
+                            <Cancel onClick={handleCloseReport} className="cursor-pointer" />
+                            <Submit onClick={handleSubmitReport} className="cursor-pointer" />
+                        </div>
+                    </div>
+                </div>
+            )}
+            
+            {showSuccessPopup && (
+                <div style={overlayStyle}>
+                    <div style={popupStyle}>
+                        <CheckCircle className="mb-4" />
+                        <div className="text-center">
+                            <h3 className="font-montserrat font-bold mb-4">
+                                You have successfully reported Dr. {professional?.firstName} {professional?.lastName}.
+                            </h3>
+                            <p className="font-montserrat text-sm mb-4">
+                                Dr. {professional?.firstName} {professional?.lastName}'s profile will be removed from your view and you will now be redirected back to the list of available psychiatrists. If you'd like to access your reported psychiatrists, check out the report section in your profile.
+                            </p>
+                            <Continue onClick={handleContinue} className="cursor-pointer" />
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
-    
-    
-      
-    
 };
 
 export default ProfProfileBox;
