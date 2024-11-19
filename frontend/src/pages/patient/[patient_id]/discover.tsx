@@ -51,13 +51,40 @@ const DiscoverPage: React.FC = () => {
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
   const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
 
+  async function checkIfPsychiatristIsPending(psychiatristUid: string): Promise<boolean> {
+  try {
+    // Get a reference to the psychiatrist document by UID
+    const psychiatristRef = doc(firestore, 'psychiatrists', psychiatristUid);
+    
+    // Fetch the document snapshot
+    const docSnapshot = await getDoc(psychiatristRef);
+
+    if (docSnapshot.exists()) {
+      // Access the data from the document
+      const psychiatristData = docSnapshot.data();
+
+      // Check if the 'status' field exists and is 'pending'
+      if (psychiatristData && psychiatristData.status === 'pending') {
+        return true; // Psychiatrist is pending
+      } else {
+        return false; // Psychiatrist is not pending (i.e., approved or other status)
+      }
+    } else {
+      throw new Error('Psychiatrist not found');
+    }
+  } catch (error) {
+    console.error('Error checking pending status:', error);
+    return false; // Return false in case of any error
+  }
+}
   // Get all psychiatrists from the database
   useEffect(() => {
     async function fetchData() {
       try {
         if (user) {
           const fetchedPsychiatrists: IPsychiatrist[] = await fetchUnreportedProfessionals(user.uid);
-          setPsychiatrists(fetchedPsychiatrists);
+          const approvedPsychiatrists = fetchedPsychiatrists.filter(psychiatrist => checkIfPsychiatristIsPending);
+          setPsychiatrists(approvedPsychiatrists);
         }
       } catch (err: any) {
         console.error(err.message);
