@@ -2,11 +2,10 @@ import { useState, useEffect } from 'react';
 import { IPsychiatrist } from '@/schema';
 import { useRouter } from 'next/router';
 import { fetchUnreportedProfessionals } from '../../../firebase/fetchData';
-import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
 import { useAuth } from '../../../contexts/AuthContext';
+import SimilarPsychCard from '@/components/profProfile/SimilarPsychCard';
 
 const SimilarPsychiatristsDisplay: React.FC = () => {
-  const router = useRouter();
   const { user } = useAuth();
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
 
@@ -24,11 +23,15 @@ const SimilarPsychiatristsDisplay: React.FC = () => {
     fetchData();
   }, [user]);
 
+  const topPsychiatrists = psychiatrists.slice(0, 4);
+
   return (
     <div className="flex flex-col px-23 pt-9 pb-14">
       <div className="flex justify-center pb-8">
-        {psychiatrists.length > 0 ? (
-          <PsychiatristList results={psychiatrists} buttonType={'discover'} />
+        {topPsychiatrists.length > 0 ? (
+          topPsychiatrists.map((psychiatrist) => (
+            <SimilarPsychCard key={psychiatrist.uid} psychiatrist={psychiatrist} />
+          ))
         ) : (
           <div className="text-center my-10">
             <p className="mb-4">No Psychiatrists found.</p>
