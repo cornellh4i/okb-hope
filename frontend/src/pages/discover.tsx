@@ -2,12 +2,16 @@ import { useState, useMemo, useEffect } from 'react';
 import Fuse from 'fuse.js';
 import { IAvailability, IPsychiatrist } from '@/schema';
 import colors from "@/colors";
-import { collection, getDocs } from 'firebase/firestore';
+// import { collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import SearchBar from '@/components/SearchBar';
 import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
 import { useAuth } from '../../contexts/AuthContext';
 import { fetchAllProfessionals, fetchAvailability } from '../../firebase/fetchData';
+import { db } from "../../firebase/firebase";
+import { fetchDocumentId } from "../../firebase/fetchData"
+import { collection, getDocs, Timestamp, doc, getDoc, setDoc} from "firebase/firestore";
+
 
 // options for fuzzy search. currently only searches by name and title
 const fuseOptions = {
@@ -56,6 +60,7 @@ const DiscoverPage: React.FC = () => {
     async function fetchData() {
       try {
         const fetchedPsychiatrists: IPsychiatrist[] = await fetchAllProfessionals();
+        
         setPsychiatrists(fetchedPsychiatrists);
       } catch (err: any) {
         console.error(err.message);
@@ -63,6 +68,30 @@ const DiscoverPage: React.FC = () => {
     }
     fetchData();
   }, []);
+
+  // Function to fetch the psychiatrist's status
+const fetchPsychiatristStatus = async (psychiatristUID: string) => {
+  const documentId = await fetchDocumentId("psychiatrists", psychiatristUID);
+  // console.log("UID IS: " + psychiatristUID + " DOCID IS: " + documentId)
+  const docRef = doc(db, "psychiatrists", documentId ?? "");
+  const docSnap = await getDoc(docRef);
+
+
+  if (docSnap.exists()) {
+      const data = docSnap.data();
+      const status = data.status;
+      if (status === "approved") {
+          return true;
+      } else {
+          return false
+      }
+  } else {
+      console.log(`No such psychiatrist document for ID: ${psychiatristUID}`);
+      return false
+  }
+  
+};
+
 
   // // Processes all psychiatrists availabilities to a dictionary mapping each psychiatrist's uid to their availabilities in the form of the days of the week
   // useEffect(() => {
