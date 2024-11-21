@@ -137,7 +137,7 @@ const Navbar = () => {
           )}
           {!user || (user.userType === 'patient' || user.userType === 'psychiatrist') ? (
             <li className={`h-full ${router.pathname === '/about' ? 'underline-offset-1 custom-active' : ''}`}>
-              <Link href="https://www.wohohiame.com/about-us" className="flex w-full justify-center lg:justify-end h-full">
+              <Link href="https://www.wohohiame.org/about-us" className="flex w-full justify-center lg:justify-end h-full">
                 <div className="text-[18px] text-[#195BA5] font-montserrat font-medium">About</div>
               </Link>
             </li>
