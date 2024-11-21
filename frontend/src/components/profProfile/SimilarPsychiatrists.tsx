@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { IPsychiatrist } from '@/schema';
-import { useRouter } from 'next/router';
 import { fetchUnreportedProfessionals } from '../../../firebase/fetchData';
 import { useAuth } from '../../../contexts/AuthContext';
 import SimilarPsychCard from '@/components/profProfile/SimilarPsychCard';
