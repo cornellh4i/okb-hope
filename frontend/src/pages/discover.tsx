@@ -8,6 +8,7 @@ import SearchBar from '@/components/SearchBar';
 import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
 import { useAuth } from '../../contexts/AuthContext';
 import { fetchAllProfessionals, fetchAvailability } from '../../firebase/fetchData';
+import DiscoverFilter from './DiscoverFilter';
 
 // options for fuzzy search. currently only searches by name and title
 const fuseOptions = {
@@ -179,33 +180,52 @@ const DiscoverPage: React.FC = () => {
   const searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
 
   return (
-    <div className={'flex flex-col px-23 pt-9'}>
-      <div className='flex justify-start justify-center pb-8'>
-        <SearchBar
-          searchTerm={searchTerm} setSearchTerm={setSearchTerm}
-          submittedSearchTerm={submittedSearchTerm} setSubmittedSearchTerm={setSubmittedSearchTerm}
-          filters={filters} setFilters={setFilters}
-          submittedFilters={submittedFilters} setSubmittedFilters={setSubmittedFilters}
-          monday={monday} setMonday={setMonday}
-          tuesday={tuesday} setTuesday={setTuesday}
-          wednesday={wednesday} setWednesday={setWednesday}
-          thursday={thursday} setThursday={setThursday}
-          friday={friday} setFriday={setFriday}
-          saturday={saturday} setSaturday={setSaturday}
-          sunday={sunday} setSunday={setSunday}
-          allDays={allDays} setAllDays={setAllDays}
-          english={english} setEnglish={setEnglish}
-          twi={twi} setTwi={setTwi}
-          fante={fante} setFante={setFante}
-          ewe={ewe} setEwe={setEwe}
-          ga={ga} setGa={setGa}
-          hausa={hausa} setHausa={setHausa}
-          allLanguages={allLanguages} setAllLanguages={setAllLanguages}
-          male={male} setMale={setMale}
-          female={female} setFemale={setFemale}
-          otherGender={otherGender} setOtherGender={setOtherGender}
-          allGenders={allGenders} setAllGenders={setAllGenders} />
+    <div className="flex flex-row px-23 pt-9">
+      <div className="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow">
+        <DiscoverFilter
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          monday={monday}
+          setMonday={setMonday}
+          tuesday={tuesday}
+          setTuesday={setTuesday}
+          wednesday={wednesday}
+          setWednesday={setWednesday}
+          thursday={thursday}
+          setThursday={setThursday}
+          friday={friday}
+          setFriday={setFriday}
+          saturday={saturday}
+          setSaturday={setSaturday}
+          sunday={sunday}
+          setSunday={setSunday}
+          allDays={allDays}
+          setAllDays={setAllDays}
+          english={english}
+          setEnglish={setEnglish}
+          twi={twi}
+          setTwi={setTwi}
+          fante={fante}
+          setFante={setFante}
+          ewe={ewe}
+          setEwe={setEwe}
+          ga={ga}
+          setGa={setGa}
+          hausa={hausa}
+          setHausa={setHausa}
+          allLanguages={allLanguages}
+          setAllLanguages={setAllLanguages}
+          male={male}
+          setMale={setMale}
+          female={female}
+          setFemale={setFemale}
+          otherGender={otherGender}
+          setOtherGender={setOtherGender}
+          allGenders={allGenders}
+          setAllGenders={setAllGenders}
+        />
       </div>
+      <div>
       {searchFilterResults.length > 0 ? (
         <PsychiatristList results={searchFilterResults} buttonType={'discover'} />
       ) : (
@@ -219,8 +239,10 @@ const DiscoverPage: React.FC = () => {
           </button>
         </div>
       )}
+      </div>
     </div>
   );
 };
+
 
 export default DiscoverPage;
