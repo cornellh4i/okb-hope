@@ -3,7 +3,7 @@ import BookmarkIcon from '@/assets/bookmark.svg'
 import PsychiatristIcon from '@/assets/psychiatrist.svg'
 import PsychiatristPhoto from '@/assets/dummy_photo.jpg';
 import { IPsychiatrist, IUser } from '@/schema';
-import { fetchAllUsers, fetchDocumentId, fetchPatientDetails, fetchProfessionalData } from '../../../firebase/fetchData';
+import { fetchAllUsers, fetchDocumentId, fetchPatientDetails, fetchProfessionalData, fetchProfilePic } from '../../../firebase/fetchData';
 import { useAuth } from '../../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase/firebase';
@@ -12,7 +12,7 @@ import router from 'next/router';
 import Image from 'next/image';
 import colors from '@/colors';
 
-const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
+const PsychiatristCard = ({ psychiatrist, buttonType = "discover" }) => {
   const { user } = useAuth();
 
   // Toggles whether to show psychiatrist profile or not
@@ -21,6 +21,7 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
   const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
   const [docId, setDocId] = useState<string | undefined>(undefined);
   const router_navigation = useRouter();
+  const [profilePicUrl, setProfilePicUrl] = useState<string | null>(null);
 
   const handleClick = event => {
     setIsShown(!isShown);
@@ -29,9 +30,9 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
   useEffect(() => {
     const fetchProfessional = async () => {
       // Check if both first name and last name are defined
-      if (psych_uid) {
+      if (psychiatrist?.uid) {
         // Fetch professional data based on psychiatrist's uid
-        const data = await fetchProfessionalData(psych_uid);
+        const data = await fetchProfessionalData(psychiatrist.uid);
         setProfessional(data);
       }
     };
@@ -62,6 +63,16 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
     }
     fetchDocId();
   }, [docId]);
+
+  useEffect(() => {
+    const loadProfilePic = async () => {
+      if (psychiatrist?.uid) {
+        const picUrl = await fetchProfilePic(psychiatrist.uid);
+        setProfilePicUrl(picUrl);
+      }
+    };
+    loadProfilePic();
+  }, [psychiatrist]);
 
   const handleUnsave = async (event: React.MouseEvent, psychiatrist) => {
     if (user) {
@@ -97,24 +108,34 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
   }
 
   // Render the psychiatrist card only if it's in the list of saved psychiatrists
-  if (!savedPsychiatrists.includes(psych_uid)) {
+  if (!savedPsychiatrists.includes(psychiatrist.uid)) {
     return null;
   }
 
   return (
     <div className="card w-11/12 bg-base-100 shadow-xl m-3 border-[3px]">
       <div className="card-body items-center p-4">
-        {/* image of psychiatrist */}
-        {/* <Image src={PsychiatristPhoto} alt="Photo" className={`w-1200 h-600`} /> */}
-        <div style={{ width: 200, height: 200, backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`text-7xl font-normal text-white flex items-center justify-center`}>
-          {professional?.firstName?.charAt(0).toUpperCase()}
+        <div className={`flex items-center justify-center flex-shrink-0 mb-4 lg:mb-0`}>
+          {profilePicUrl ? (
+            <img 
+              src={profilePicUrl}
+              alt={`${psychiatrist.firstName} ${psychiatrist.lastName}`}
+              className="w-36 h-36 object-cover rounded-lg"
+            />
+          ) : (
+            <div 
+              style={{ backgroundColor: colors.okb_blue }} 
+              className="w-36 h-36 rounded-lg text-6xl font-normal text-white flex items-center justify-center"
+            >
+              {psychiatrist.firstName?.charAt(0).toUpperCase()}
+            </div>
+          )}
         </div>
-        {/* <PsychiatristIcon /> */}
         <h2 className="card-title font-montserrat font-semibold">{professional?.firstName} {professional?.lastName}</h2>
         {/* <h2 className="font-[400] italic mb-0">{p_certifications}</h2> */}
         {/* view profile button */}
         <div className="card-actions flex w-full mt-2 justify-left font-inter font-normal text-xs">
-          <button onClick={() => handleGoToProfProfile(psych_uid)} className="btn w-9/12 bg-okb-blue border-transparent">View Profile</button>
+          <button onClick={() => handleGoToProfProfile(psychiatrist.uid)} className="btn w-9/12 bg-okb-blue border-transparent">View Profile</button>
 
           <button className="btn w-2/12 p-0 glass object-cover bg-contain" onClick={(event) => handleUnsave(event, professional)}>
             <BookmarkIcon />

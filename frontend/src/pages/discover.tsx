@@ -48,6 +48,7 @@ const DiscoverPage: React.FC = () => {
   const [female, setFemale] = useState(false);
   const [otherGender, setOtherGender] = useState(false);
   const [allGenders, setAllGenders] = useState(false);
+  const [profilePicsCache, setProfilePicsCache] = useState<Record<string, string | null>>({});
 
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
   const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
@@ -208,7 +209,7 @@ const DiscoverPage: React.FC = () => {
           allGenders={allGenders} setAllGenders={setAllGenders} />
       </div>
       {searchFilterResults.length > 0 ? (
-        <PsychiatristList results={searchFilterResults} buttonType={'discover'} />
+        <PsychiatristList results={searchFilterResults} buttonType={'discover'} profilePicsCache={profilePicsCache} setProfilePicsCache={setProfilePicsCache} />
       ) : (
         <div className="text-center my-10">
           <p className="mb-4">No Psychiatrists found based on your filters.</p>

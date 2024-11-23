@@ -14,7 +14,7 @@ import CheckCircle from '../../assets/check_circle.svg';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
-import { db, logInWithGoogle, signUpWithGoogle } from '../../../firebase/firebase';
+import { db, logInWithGoogle, signUpWithGoogle, fetchProfilePic } from '../../../firebase/firebase';
 import { LoginPopup } from '../LoginPopup';
 import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import Cancel from '@/assets/cancel_report.svg';
@@ -90,6 +90,7 @@ const ProfProfile = () => {
     const [professional, setProfessional] = useState<IPsychiatrist | null>(null);
     const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
     const router = useRouter();
+    const [profilePicUrl, setProfilePicUrl] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchProfessional = async () => {
@@ -122,6 +123,16 @@ const ProfProfile = () => {
         };
         fetchDocId();
     }, [user]);
+
+    useEffect(() => {
+        const loadProfilePic = async () => {
+            if (professional?.uid) {
+                const picUrl = await fetchProfilePic(professional.uid);
+                setProfilePicUrl(picUrl);
+            }
+        };
+        loadProfilePic();
+    }, [professional]);
 
     const handleSave = async (event: React.MouseEvent, psychiatrist) => {
         if (!user) {
@@ -303,9 +314,21 @@ const ProfProfile = () => {
             </div>
             <div className={`flex flex-col lg:flex-row gap-10 justify-center`}>
                 <div className={`flex justify-center items-center md:justify-start md:items-start lg:shrink`}>
-                    <div style={{ width: 300, height: 300, backgroundColor: colors.okb_blue, objectFit: 'cover' }} className={`text-9xl font-normal text-white flex items-center justify-center`}>
-                        {professional.firstName?.charAt(0).toUpperCase()}
-                    </div>
+                    {profilePicUrl ? (
+                        <img 
+                            src={profilePicUrl}
+                            alt={`${professional.firstName} ${professional.lastName}`}
+                            style={{ width: 300, height: 300 }}
+                            className="object-cover"
+                        />
+                    ) : (
+                        <div 
+                            style={{ width: 300, height: 300, backgroundColor: colors.okb_blue }} 
+                            className={`text-9xl font-normal text-white flex items-center justify-center`}
+                        >
+                            {professional.firstName?.charAt(0).toUpperCase()}
+                        </div>
+                    )}
                 </div>
                 <div className={`flex flex-col lg:w-2/3 gap-4 justify-start`}>
                     <div className={`flex flex-col md:flex-row gap-4 justify-between`}>
