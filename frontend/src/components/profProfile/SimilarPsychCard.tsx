@@ -1,5 +1,3 @@
-// File: frontend/src/components/profProfile/SimilarPsychCard.tsx
-
 import React from 'react';
 import { IPsychiatrist } from '@/schema';
 
@@ -8,17 +6,16 @@ interface SimilarPsychCardProps {
 }
 
 const SimilarPsychCard: React.FC<SimilarPsychCardProps> = ({ psychiatrist }) => {
+  console.log('Psychiatrist Data:', psychiatrist); // Debugging line
+
   return (
-    <div className="flex items-center gap-4 py-3 border-b last:border-none">
-      {/* Profile Image */}
+    <div className="py-3 border-b last:border-none">
       <img
         src={psychiatrist.profile_pic || '/default-avatar.png'}
         alt={`${psychiatrist.lastName}'s profile`}
-        className="w-12 h-12 rounded-full object-cover"
+        className="w-16 h-16 object-cover border border-gray-300"
       />
-
-      {/* Psychiatrist Details */}
-      <div>
+      <div className="mt-2">
         <h4 className="text-sm font-semibold text-gray-800">
           {psychiatrist.lastName}
         </h4>

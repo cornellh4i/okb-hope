@@ -25,8 +25,8 @@ const SimilarPsychiatristsDisplay: React.FC = () => {
   const topPsychiatrists = psychiatrists.slice(0, 4);
 
   return (
-    <div className="flex flex-col px-23 pt-9 pb-14">
-      <div className="flex justify-center pb-8">
+    <div className="w-full flex justify-end">
+      <div className="w-64 pr-4">
         {topPsychiatrists.length > 0 ? (
           topPsychiatrists.map((psychiatrist) => (
             <SimilarPsychCard key={psychiatrist.uid} psychiatrist={psychiatrist} />
