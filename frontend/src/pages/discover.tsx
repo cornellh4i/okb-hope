@@ -8,6 +8,7 @@ import SearchBar from '@/components/SearchBar';
 import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
 import { useAuth } from '../../contexts/AuthContext';
 import { fetchAllProfessionals, fetchAvailability } from '../../firebase/fetchData';
+import { uploadProfilePic, fetchProfilePic, fetchRole} from '../../firebase/firebase';
 
 // options for fuzzy search. currently only searches by name and title
 const fuseOptions = {
