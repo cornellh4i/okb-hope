@@ -222,7 +222,7 @@ const DiscoverPage: React.FC = () => {
           otherGender={otherGender}
           setOtherGender={setOtherGender}
           allGenders={allGenders}
-          setAllGenders={setAllGenders}
+          setAllGenders={setAllGenders} 
         />
       </div>
       <div>
