@@ -23,6 +23,7 @@ import Continue from '@/assets/continue.svg';
 import colors from '@/colors';
 import dynamic from "next/dynamic";
 import DoctorIcon from '@/assets/doctor_icon.svg';
+import SimilarPsychiatristsDisplay from './SimilarPsychiatrists';
 const InlineWidget = dynamic(() => import("react-calendly").then(mod => mod.InlineWidget), { ssr: false });
 
 // interface ProfProfileProps {
@@ -344,7 +345,7 @@ const ProfProfileBox = () => {
                     Similar Psychiatrists
                 </h3>
                 <p className="text-gray-600 font-montserrat">
-                    This section is under development.
+                    < SimilarPsychiatristsDisplay/>
                 </p>
             </div>
 
