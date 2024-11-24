@@ -2,12 +2,14 @@ import { useState, useMemo, useEffect } from 'react';
 import Fuse from 'fuse.js';
 import { IAvailability, IPsychiatrist } from '@/schema';
 import colors from "@/colors";
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDoc, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import { fetchUnreportedProfessionals, fetchAvailability } from '../../../../firebase/fetchData';
 import SearchBar from '@/components/SearchBar';
 import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
 import { useAuth } from '../../../../contexts/AuthContext';
+import { uploadProfilePic, fetchProfilePic, fetchRole} from '../../../../firebase/firebase';
+
 
 // options for fuzzy search. currently only searches by name and title
 const fuseOptions = {
@@ -47,9 +49,16 @@ const DiscoverPage: React.FC = () => {
   const [female, setFemale] = useState(false);
   const [otherGender, setOtherGender] = useState(false);
   const [allGenders, setAllGenders] = useState(false);
+  const [profilePicsCache, setProfilePicsCache] = useState<Record<string, string | null>>({});
+
 
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
   const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
+
+  function checkPsychStatus(psych: IPsychiatrist) {
+    return psych.status === "approved";
+  }
+
 
   // Get all psychiatrists from the database
   useEffect(() => {
@@ -57,6 +66,7 @@ const DiscoverPage: React.FC = () => {
       try {
         if (user) {
           const fetchedPsychiatrists: IPsychiatrist[] = await fetchUnreportedProfessionals(user.uid);
+          const approvedPsychiatrists = fetchedPsychiatrists.filter(checkPsychStatus);
           setPsychiatrists(fetchedPsychiatrists);
         }
       } catch (err: any) {
@@ -182,7 +192,7 @@ const DiscoverPage: React.FC = () => {
           allGenders={allGenders} setAllGenders={setAllGenders} />
       </div>
       {searchFilterResults.length > 0 ? (
-        <PsychiatristList results={searchFilterResults} buttonType={'discover'} />
+        <PsychiatristList results={searchFilterResults} buttonType={'discover'} profilePicsCache={profilePicsCache} setProfilePicsCache={setProfilePicsCache} />
       ) : (
         <div className="text-center my-10">
           <p className="mb-4">No Psychiatrists found based on your filters.</p>
