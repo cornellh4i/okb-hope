@@ -6,7 +6,7 @@ import { IPsychiatrist, IUser } from '@/schema';
 import { fetchAllUsers, fetchDocumentId, fetchPatientDetails, fetchProfessionalData } from '../../../firebase/fetchData';
 import { useAuth } from '../../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../../firebase/firebase';
+import { db, fetchProfilePic  } from '../../../firebase/firebase';
 import { useRouter } from 'next/navigation';
 import router from 'next/router';
 import Image from 'next/image';
@@ -21,6 +21,7 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
   const [savedPsychiatrists, setSavedPsychiatrists] = useState<string[]>([]);
   const [docId, setDocId] = useState<string | undefined>(undefined);
   const router_navigation = useRouter();
+  const [profilePicUrl, setProfilePicUrl] = useState<string | null>(null);
 
   const handleClick = event => {
     setIsShown(!isShown);
@@ -63,6 +64,16 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
     fetchDocId();
   }, [docId]);
 
+  useEffect(() => {
+    const loadProfilePic = async () => {
+      if (psych_uid) {
+        const picUrl = await fetchProfilePic(psych_uid);
+        setProfilePicUrl(picUrl);
+      }
+    };
+    loadProfilePic();
+  }, [psych_uid]);
+
   const handleUnsave = async (event: React.MouseEvent, psychiatrist) => {
     if (user) {
       try {
@@ -104,10 +115,21 @@ const PsychiatristCard = ({ psych_uid }: { psych_uid: string }) => {
   return (
     <div className="card w-11/12 bg-base-100 shadow-xl m-3 border-[3px]">
       <div className="card-body items-center p-4">
-        {/* image of psychiatrist */}
-        {/* <Image src={PsychiatristPhoto} alt="Photo" className={`w-1200 h-600`} /> */}
-        <div style={{ width: 200, height: 200, backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`text-7xl font-normal text-white flex items-center justify-center`}>
-          {professional?.firstName?.charAt(0).toUpperCase()}
+      <div className={`flex items-center justify-center flex-shrink-0 mb-4 lg:mb-0`}>
+          {profilePicUrl ? (
+            <img 
+              src={profilePicUrl}
+              alt={`${professional?.firstName} ${professional?.lastName}`}
+              className="w-36 h-36 object-cover rounded-lg"
+            />
+          ) : (
+            <div 
+              style={{ backgroundColor: colors.okb_blue }} 
+              className="w-36 h-36 rounded-lg text-6xl font-normal text-white flex items-center justify-center"
+            >
+              {professional?.firstName?.charAt(0).toUpperCase()}
+            </div>
+          )}
         </div>
         {/* <PsychiatristIcon /> */}
         <h2 className="card-title font-montserrat font-semibold">{professional?.firstName} {professional?.lastName}</h2>
