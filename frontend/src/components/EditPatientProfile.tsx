@@ -15,6 +15,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import Cancel from "@/assets/cancel.svg";
 import SaveChanges from "@/assets/save_changes.svg";
 import { Checkbox, FormControlLabel } from '@mui/material';
+import { uploadProfilePic } from "../../firebase/firebase";
 
 const EditPatientProfile = () => {
   const { user } = useAuth();
@@ -146,6 +147,27 @@ const EditPatientProfile = () => {
     setConcerns(updatedConcerns);
   };
 
+  
+  const [file, setFile] = useState(null);
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (file) {
+      try {
+        const uploadUID = uid || ""; 
+        const downloadURL = await uploadProfilePic(file, uploadUID, false);
+        console.log("Uploaded successfully:", downloadURL);
+      } catch (error) {
+        console.error("Upload failed:", error);
+      }
+    }
+  };
+
   const handleOtherConcernChange = (event: ChangeEvent<HTMLInputElement>) => {
     setOtherConcern(event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1));
   };
@@ -182,7 +204,7 @@ const EditPatientProfile = () => {
     <div className="flex justify-center">
       <div className="card md:w-2/3 w-full">
         <div className="card-body flex gap-4">
-          <text className="card-title text-4xl font-montserrat">Edit Profile</text>
+          <span className="card-title text-4xl font-montserrat">Edit Profile</span>
           {/* Text input fields */}
           <div className="flex flex-col md:flex-row justify-between">
             {/* First Name */}
@@ -260,21 +282,28 @@ const EditPatientProfile = () => {
             </label>
             <div id="Frame542" className="flex items-center justify-center w-full gap-3">
               <svg xmlns="http://www.w3.org/2000/svg" width="4" height="204" viewBox="0 0 4 204" fill="none">
-                <path d="M2 2L2.00001 202" stroke="#519AEB" stroke-width="3" stroke-linecap="round" />
+                <path d="M2 2L2.00001 202" stroke="#519AEB" strokeWidth="3" strokeLinecap="round" />
               </svg>
               <div className="flex flex-col items-start w-full gap-2.5">
                 <div className="flex w-full justify-center align-center" >
                   <div id="Frame278" className="flex flex-col absolute items-center justify-center align-center left-1/2 transform translate-x-[-50%] translate-y-[50%]">
-                    <Upload ></Upload>
+                    <Upload />
                     <label>
                       <span className="font-montserrat text-xs font-montserrat italic" style={{ color: okb_colors.dark_gray }}>Upload Image</span>
                     </label>
                   </div>
-                  <div className="input-container w-full relative" >
-                    <span className="absolute top-0 left-0 right-0 bottom-0 border-2 rounded-xl flex items-center justify-center" style={{ borderColor: okb_colors.light_blue, height: 200 }}></span>  {/* to hide the Choose File */}
-                    <input type="file" placeholder="image/" className="input input-bordered border-2 opacity-0" style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }} />
+                  <div className="input-container w-full relative">
+                    <span className="absolute top-0 left-0 right-0 bottom-0 border-2 rounded-xl flex items-center justify-center" style={{ borderColor: okb_colors.light_blue, height: 200 }}></span> {/* to hide the Choose File */}
+                    <input
+                      type="file"
+                      placeholder="image/"
+                      className="input input-bordered border-2 opacity-0"
+                      style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }}
+                      onChange={handleFileChange} // Call handleFileChange when a file is selected
+                    />
                   </div>
                 </div>
+                <button onClick={handleUpload} className="btn btn-primary mt-2">Upload Profile Picture</button>
               </div>
             </div>
           </div>
