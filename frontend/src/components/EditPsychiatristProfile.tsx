@@ -6,7 +6,7 @@ import Upload from "@/assets/upload.svg";
 import okb_colors from "@/colors";
 import router from 'next/router';
 import { useAuth } from '../../contexts/AuthContext';
-import { auth, db } from '../../firebase/firebase';
+import { auth, db, uploadProfilePic } from '../../firebase/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { fetchDocumentId, fetchProfessionalData } from '../../firebase/fetchData';
 import Cancel from "@/assets/cancel.svg";
@@ -22,6 +22,10 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
   const [position, setPosition] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
+  const [calendlyLink, setCalendlyLink] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileName, setFileName] = useState<string>('');
+
   const [languages, setLanguages] = useState<{ [key: string]: boolean }>({
     English: false,
     Ga: false,
@@ -72,6 +76,7 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
         setPosition(data.position);
         setLocation(data.location);
         setDescription(data.description);
+        setCalendlyLink(data.calendly || '');
 
         setWeeklyAvailability(data.weeklyAvailability);
         const initialCheckedAvailability = {
@@ -177,6 +182,18 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
     }));
   };
 
+  const handleCalendlyLinkChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setCalendlyLink(event.target.value);
+  };
+
+  const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setFileName(file.name);
+    }
+  };
+
   const isWorkingHoursValid = () => {
     for (const day in workingHours) {
       if (checkedAvailability[day]) {
@@ -201,6 +218,11 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
       alert("Please enter both start and end time for selected days.");
       return;
     }
+
+    if (selectedFile && uid) {
+      await uploadProfilePic(selectedFile, uid, true);
+    }
+
     const userRef = doc(db, "psychiatrists", docId ?? "");
     await updateDoc(userRef, {
       firstName: firstName,
@@ -211,7 +233,8 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
       description: description,
       language: selectedLanguages.includes('Other') && otherLanguage ? [...selectedLanguages.filter(lang => lang !== 'Other'), otherLanguage] : selectedLanguages,
       weeklyAvailability: weeklyAvailability,
-      workingHours: workingHours
+      workingHours: workingHours,
+      calendly: calendlyLink
     })
     router.push(`/psychiatrist/${uid}/psych_dashboard`);
   };
@@ -302,16 +325,27 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
                 <path d="M2 2L2.00001 202" stroke="#519AEB" stroke-width="3" stroke-linecap="round" />
               </svg>
               <div className="flex flex-col items-start w-full gap-2.5">
-                <div className="flex w-full justify-center align-center" >
-                  <div id="Frame278" className="flex flex-col absolute items-center justify-center align-center left-1/2 transform translate-x-[-50%] translate-y-[50%]">
-                    <Upload ></Upload>
+                <div className="flex w-full justify-center align-center relative" >
+                  <div id="Frame278" className="flex flex-col absolute items-center justify-center align-center left-1/2 transform translate-x-[-50%] translate-y-[50%] z-10">
+                    <Upload />
                     <label>
-                      <span className="font-montserrat text-xs italic" style={{ color: okb_colors.dark_gray }}>Upload Image</span>
+                      <span className="font-montserrat text-xs italic" style={{ color: okb_colors.dark_gray }}>
+                        {fileName || 'Upload Image'}
+                      </span>
                     </label>
                   </div>
                   <div className="input-container w-full relative" >
-                    <span className="absolute top-0 left-0 right-0 bottom-0 border-2 rounded-lg flex items-center justify-center" style={{ borderColor: okb_colors.light_blue, height: 200 }}></span>  {/* to hide the Choose File */}
-                    <input type="file" placeholder="image/" className="input input-bordered border-2 opacity-0" style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }} />
+                    <span 
+                      className="absolute top-0 left-0 right-0 bottom-0 border-2 rounded-lg flex items-center justify-center" 
+                      style={{ borderColor: okb_colors.light_blue, height: 200 }}
+                    />
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      className="input input-bordered border-2 opacity-0" 
+                      style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }} 
+                    />
                   </div>
                 </div>
               </div>
@@ -387,6 +421,26 @@ const EditPsychiatristProfile = ({ psychiatrist }) => {
             <div className="flex items-center">
               <Vertical_line className=""></Vertical_line>
               <input type="text" value={location} placeholder="Type here" className={`input input-bordered w-full rounded-xl border-2 ml-3 font-montserrat`} style={{ borderColor: okb_colors.light_blue, color: okb_colors.dark_gray }} onChange={handleLocationChange} />
+            </div>
+          </div>
+
+          {/* Calendly Link */}
+          <div tabIndex={0} className="flex form-control w-full mr-10">
+            <div className="label-container">
+              <label className="label">
+                <span className="text-lg font-montserrat font-semibold">Calendly Link</span>
+              </label>
+            </div>
+            <div className="flex items-center">
+              <Vertical_line className=""></Vertical_line>
+              <input 
+                type="text" 
+                value={calendlyLink} 
+                placeholder="Enter your Calendly link" 
+                className={`input input-bordered w-full rounded-xl border-2 ml-3 font-montserrat`} 
+                style={{ borderColor: okb_colors.light_blue, color: okb_colors.dark_gray }} 
+                onChange={handleCalendlyLinkChange} 
+              />
             </div>
           </div>
 
