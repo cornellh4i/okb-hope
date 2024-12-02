@@ -1,13 +1,15 @@
-// import { useState, useMemo, useEffect } from 'react';
-// import Fuse from 'fuse.js';
-// import { IAvailability, IPsychiatrist } from '@/schema';
-// import colors from "@/colors";
-// import { collection, getDocs } from 'firebase/firestore';
-// import { useRouter } from 'next/router';
-// import { fetchUnreportedProfessionals, fetchAvailability } from '../../../../firebase/fetchData';
-// import SearchBar from '@/components/SearchBar';
-// import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
-// import { useAuth } from '../../../../contexts/AuthContext';
+import { useState, useMemo, useEffect } from 'react';
+import Fuse from 'fuse.js';
+import { IAvailability, IPsychiatrist } from '@/schema';
+import colors from "@/colors";
+import { collection, getDoc, getDocs } from 'firebase/firestore';
+import { useRouter } from 'next/router';
+import { fetchUnreportedProfessionals, fetchAvailability } from '../../../../firebase/fetchData';
+import SearchBar from '@/components/SearchBar';
+import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
+import { useAuth } from '../../../../contexts/AuthContext';
+import { uploadProfilePic, fetchProfilePic, fetchRole} from '../../../../firebase/firebase';
+
 
 // // options for fuzzy search. currently only searches by name and title
 // const fuseOptions = {
@@ -24,74 +26,55 @@
 //   const { user } = useAuth();
 //   const { userId } = router.query;
 
-//   const [searchTerm, setSearchTerm] = useState("");
-//   const [submittedSearchTerm, setSubmittedSearchTerm] = useState("");
-//   const [filters, setFilters] = useState([]);
-//   const [submittedFilters, setSubmittedFilters] = useState({});
-//   const [monday, setMonday] = useState(false);
-//   const [tuesday, setTuesday] = useState(false);
-//   const [wednesday, setWednesday] = useState(false);
-//   const [thursday, setThursday] = useState(false);
-//   const [friday, setFriday] = useState(false);
-//   const [saturday, setSaturday] = useState(false);
-//   const [sunday, setSunday] = useState(false);
-//   const [allDays, setAllDays] = useState(false);
-//   const [english, setEnglish] = useState(false);
-//   const [twi, setTwi] = useState(false);
-//   const [fante, setFante] = useState(false);
-//   const [ewe, setEwe] = useState(false);
-//   const [ga, setGa] = useState(false);
-//   const [hausa, setHausa] = useState(false);
-//   const [allLanguages, setAllLanguages] = useState(false);
-//   const [male, setMale] = useState(false);
-//   const [female, setFemale] = useState(false);
-//   const [otherGender, setOtherGender] = useState(false);
-//   const [allGenders, setAllGenders] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [submittedSearchTerm, setSubmittedSearchTerm] = useState("");
+  const [filters, setFilters] = useState([]);
+  const [submittedFilters, setSubmittedFilters] = useState({});
+  const [monday, setMonday] = useState(false);
+  const [tuesday, setTuesday] = useState(false);
+  const [wednesday, setWednesday] = useState(false);
+  const [thursday, setThursday] = useState(false);
+  const [friday, setFriday] = useState(false);
+  const [saturday, setSaturday] = useState(false);
+  const [sunday, setSunday] = useState(false);
+  const [allDays, setAllDays] = useState(false);
+  const [english, setEnglish] = useState(false);
+  const [twi, setTwi] = useState(false);
+  const [fante, setFante] = useState(false);
+  const [ewe, setEwe] = useState(false);
+  const [ga, setGa] = useState(false);
+  const [hausa, setHausa] = useState(false);
+  const [allLanguages, setAllLanguages] = useState(false);
+  const [male, setMale] = useState(false);
+  const [female, setFemale] = useState(false);
+  const [otherGender, setOtherGender] = useState(false);
+  const [allGenders, setAllGenders] = useState(false);
+  const [profilePicsCache, setProfilePicsCache] = useState<Record<string, string | null>>({});
 
-//   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
-//   const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
 
-//   async function checkIfPsychiatristIsPending(psychiatristUid: string): Promise<boolean> {
-//   try {
-//     // Get a reference to the psychiatrist document by UID
-//     const psychiatristRef = doc(firestore, 'psychiatrists', psychiatristUid);
-    
-//     // Fetch the document snapshot
-//     const docSnapshot = await getDoc(psychiatristRef);
+  const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
+  const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
 
-//     if (docSnapshot.exists()) {
-//       // Access the data from the document
-//       const psychiatristData = docSnapshot.data();
+  function checkPsychStatus(psych: IPsychiatrist) {
+    return psych.status === "approved";
+  }
 
-//       // Check if the 'status' field exists and is 'pending'
-//       if (psychiatristData && psychiatristData.status === 'pending') {
-//         return true; // Psychiatrist is pending
-//       } else {
-//         return false; // Psychiatrist is not pending (i.e., approved or other status)
-//       }
-//     } else {
-//       throw new Error('Psychiatrist not found');
-//     }
-//   } catch (error) {
-//     console.error('Error checking pending status:', error);
-//     return false; // Return false in case of any error
-//   }
-// }
-//   // Get all psychiatrists from the database
-//   useEffect(() => {
-//     async function fetchData() {
-//       try {
-//         if (user) {
-//           const fetchedPsychiatrists: IPsychiatrist[] = await fetchUnreportedProfessionals(user.uid);
-//           const approvedPsychiatrists = fetchedPsychiatrists.filter(psychiatrist => checkIfPsychiatristIsPending);
-//           setPsychiatrists(approvedPsychiatrists);
-//         }
-//       } catch (err: any) {
-//         console.error(err.message);
-//       }
-//     }
-//     fetchData();
-//   }, [router]);
+
+  // Get all psychiatrists from the database
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        if (user) {
+          const fetchedPsychiatrists: IPsychiatrist[] = await fetchUnreportedProfessionals(user.uid);
+          const approvedPsychiatrists = fetchedPsychiatrists.filter(checkPsychStatus);
+          setPsychiatrists(fetchedPsychiatrists);
+        }
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    }
+    fetchData();
+  }, [router]);
 
 //   const fuse = useMemo(() => new Fuse(psychiatrists, fuseOptions), []);
 
@@ -180,49 +163,49 @@
 //   // Else, return all psychiatrists
 //   const searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
 
-//   return (
-//     <div className={'flex flex-col px-23 pt-9 pb-14'}>
-//       <div className='flex justify-start justify-center pb-8'>
-//         <SearchBar
-//           searchTerm={searchTerm} setSearchTerm={setSearchTerm}
-//           submittedSearchTerm={submittedSearchTerm} setSubmittedSearchTerm={setSubmittedSearchTerm}
-//           filters={filters} setFilters={setFilters}
-//           submittedFilters={submittedFilters} setSubmittedFilters={setSubmittedFilters}
-//           monday={monday} setMonday={setMonday}
-//           tuesday={tuesday} setTuesday={setTuesday}
-//           wednesday={wednesday} setWednesday={setWednesday}
-//           thursday={thursday} setThursday={setThursday}
-//           friday={friday} setFriday={setFriday}
-//           saturday={saturday} setSaturday={setSaturday}
-//           sunday={sunday} setSunday={setSunday}
-//           allDays={allDays} setAllDays={setAllDays}
-//           english={english} setEnglish={setEnglish}
-//           twi={twi} setTwi={setTwi}
-//           fante={fante} setFante={setFante}
-//           ewe={ewe} setEwe={setEwe}
-//           ga={ga} setGa={setGa}
-//           hausa={hausa} setHausa={setHausa}
-//           allLanguages={allLanguages} setAllLanguages={setAllLanguages}
-//           male={male} setMale={setMale}
-//           female={female} setFemale={setFemale}
-//           otherGender={otherGender} setOtherGender={setOtherGender}
-//           allGenders={allGenders} setAllGenders={setAllGenders} />
-//       </div>
-//       {searchFilterResults.length > 0 ? (
-//         <PsychiatristList results={searchFilterResults} buttonType={'discover'} />
-//       ) : (
-//         <div className="text-center my-10">
-//           <p className="mb-4">No Psychiatrists found based on your filters.</p>
-//           <button
-//             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-//             onClick={resetSearchBar}
-//           >
-//             See all psychiatrists
-//           </button>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
+  return (
+    <div className={'flex flex-col px-23 pt-9 pb-14'}>
+      <div className='flex justify-start justify-center pb-8'>
+        <SearchBar
+          searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+          submittedSearchTerm={submittedSearchTerm} setSubmittedSearchTerm={setSubmittedSearchTerm}
+          filters={filters} setFilters={setFilters}
+          submittedFilters={submittedFilters} setSubmittedFilters={setSubmittedFilters}
+          monday={monday} setMonday={setMonday}
+          tuesday={tuesday} setTuesday={setTuesday}
+          wednesday={wednesday} setWednesday={setWednesday}
+          thursday={thursday} setThursday={setThursday}
+          friday={friday} setFriday={setFriday}
+          saturday={saturday} setSaturday={setSaturday}
+          sunday={sunday} setSunday={setSunday}
+          allDays={allDays} setAllDays={setAllDays}
+          english={english} setEnglish={setEnglish}
+          twi={twi} setTwi={setTwi}
+          fante={fante} setFante={setFante}
+          ewe={ewe} setEwe={setEwe}
+          ga={ga} setGa={setGa}
+          hausa={hausa} setHausa={setHausa}
+          allLanguages={allLanguages} setAllLanguages={setAllLanguages}
+          male={male} setMale={setMale}
+          female={female} setFemale={setFemale}
+          otherGender={otherGender} setOtherGender={setOtherGender}
+          allGenders={allGenders} setAllGenders={setAllGenders} />
+      </div>
+      {searchFilterResults.length > 0 ? (
+        <PsychiatristList results={searchFilterResults} buttonType={'discover'} profilePicsCache={profilePicsCache} setProfilePicsCache={setProfilePicsCache} />
+      ) : (
+        <div className="text-center my-10">
+          <p className="mb-4">No Psychiatrists found based on your filters.</p>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={resetSearchBar}
+          >
+            See all psychiatrists
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // export default DiscoverPage;

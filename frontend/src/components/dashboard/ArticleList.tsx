@@ -12,7 +12,7 @@ const ArticleList = () => {
       <div className="card-body">
         <h1 className="card-title pt-1/15 text-[32px] font-montserrat">Additional Resources</h1>
         {/*not changing color of text to blue from the config so manually added */}
-        <p className="text-[#195ba5] text-[20px] font-[600] font-montserrat">More information can be found at <a href="https://www.wohohiame.com/" className='underline'>wohohiame.com</a>.</p>
+        <p className="text-[#195ba5] text-[20px] font-[600] font-montserrat">More information can be found at <a href="https://www.wohohiame.org/" className='underline'>wohohiame.com</a>.</p>
         <div className="grid lg:grid-cols-3 h-auto gap-6 pb-1/12 mt-[24px] shrink items-center">
           {/* map each JSON object to each individual ArticleCard*/}
           {articlesArr.map(article => (

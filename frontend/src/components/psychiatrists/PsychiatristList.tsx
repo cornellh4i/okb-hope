@@ -5,7 +5,7 @@ import Message from '@/assets/message.svg'
 import ViewReport from '@/assets/view_reports.svg'
 import Link from 'next/link';
 import { useAuth } from '../../../contexts/AuthContext';
-import { db, logInWithGoogle } from '../../../firebase/firebase';
+import { db, logInWithGoogle, fetchProfilePic } from '../../../firebase/firebase';
 import { useRouter } from 'next/router';
 import { LoginPopup } from '../LoginPopup';
 import { IPsychiatrist, IUser } from '@/schema';
@@ -16,10 +16,12 @@ import colors from '@/colors';
 
 interface PsychiatristListProps {
   results: IPsychiatrist[];
-  buttonType: string;
+  buttonType?: string;
+  profilePicsCache: Record<string, string | null>;
+  setProfilePicsCache: (cache: Record<string, string | null>) => void;
 }
 
-const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType = "discover" }) => {
+const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType = "discover", profilePicsCache, setProfilePicsCache }) => {
   const { user } = useAuth();
   const uid = user?.uid;
   const [docId, setDocId] = useState<string | undefined>(undefined);
@@ -31,6 +33,7 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
 
 
   const [showReportHistoryPopup, setShowReportHistoryPopup] = useState(false);
+  const [profilePics, setProfilePics] = useState<Record<string, string | null>>({});
 
   const overlayStyle: React.CSSProperties = {
     position: 'fixed',
@@ -138,6 +141,30 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
     }
     fetchUser();
   }, [savedPsychiatrists, user]);
+
+  useEffect(() => {
+    const loadProfilePics = async () => {
+      const pics: Record<string, string | null> = {};
+      for (const psychiatrist of results) {
+        const id: string = psychiatrist.uid;
+        if (!profilePicsCache[id]) {  // Check cache first
+          const picUrl = await fetchProfilePic(psychiatrist.uid);
+          pics[psychiatrist.uid] = picUrl;
+        }
+      }
+      if (Object.keys(pics).length > 0) {
+        const newCache = {
+          ...profilePicsCache,
+          ...pics
+        };
+        setProfilePicsCache(newCache);
+        setProfilePics(newCache);
+      } else {
+        setProfilePics(profilePicsCache);
+      }
+    };
+    loadProfilePics();
+  }, [results, profilePicsCache]);
 
   const handleSendMessage = (event: React.MouseEvent, psychiatrist) => {
     event.stopPropagation();
@@ -294,9 +321,20 @@ const PsychiatristList: React.FC<PsychiatristListProps> = ({ results, buttonType
               {/* Display the psychiatrist's information here */}
               <div className={`card card-side flex flex-col lg:flex-row justify-center lg:justify-between items-center lg:items-start gap-2.5 rounded-lg bg-[${okb_colors.white}] shadow-[0_0px_5px_0px_rgb(0,0,0,0.15)] gap-x-6 hover:brightness-90 p-6 w-full`}>
                 <div className={`flex items-center justify-center flex-shrink-0 mb-4 lg:mb-0`}>
-                  <div style={{ backgroundColor: colors.okb_blue, objectFit: "cover" }} className={`w-36 h-36 text-6xl font-normal text-white flex items-center justify-center`}>
-                    {psychiatrist.firstName?.charAt(0).toUpperCase()}
-                  </div>
+                {profilePics[psychiatrist.uid] ? (
+                    <img 
+                      src={profilePics[psychiatrist.uid]!}
+                      alt={`${psychiatrist.firstName} ${psychiatrist.lastName}`}
+                      className="w-36 h-36 object-cover"
+                    />
+                  ) : (
+                    <div 
+                      style={{ backgroundColor: colors.okb_blue }} 
+                      className={`w-36 h-36 text-6xl font-normal text-white flex items-center justify-center`}
+                    >
+                      {psychiatrist.firstName?.charAt(0).toUpperCase()}
+                    </div>
+                  )}
                 </div>
                 <div className={`flex flex-col flex-1 gap-4 w-full h-auto`}>
                   {/* Grid (to enable easier organization of columns) w/ psychiatrist name + buttons */}
