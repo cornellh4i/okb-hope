@@ -1,5 +1,4 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import Bookmark from '@/assets/bookmark.svg';
 import SavedBookmark from '@/assets/saved_bookmark.svg';
 import Message from '@/assets/message.svg';
@@ -20,84 +19,85 @@ const DiscoverCard: React.FC<DiscoverCardProps> = ({
   handleSendMessage,
   handleGoToProfProfile,
 }) => {
-  const router = useRouter();
-
   return (
-    <div
-      className="flex flex-col sm:flex-row border border-gray-300 rounded-lg shadow-md p-4 bg-white hover:shadow-lg transition-shadow"
-      onClick={() => handleGoToProfProfile(psychiatrist.uid)}
-    >
+    <div className="flex flex-col sm:flex-row border border-gray-300 rounded-md shadow-md p-6 bg-white hover:shadow-lg transition-shadow">
       {/* Profile Picture */}
       <div className="flex-shrink-0">
-        <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-3xl font-semibold text-white overflow-hidden">
+        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-md bg-gray-200 overflow-hidden">
           {psychiatrist.profile_pic ? (
-            <img src={psychiatrist.profile_pic} alt={`${psychiatrist.firstName} ${psychiatrist.lastName}`} className="w-full h-full object-cover" />
+            <img
+              src={psychiatrist.profile_pic}
+              alt={`${psychiatrist.firstName} ${psychiatrist.lastName}`}
+              className="w-full h-full object-cover"
+            />
           ) : (
-            psychiatrist.firstName.charAt(0).toUpperCase()
+            <div className="flex items-center justify-center h-full text-lg font-semibold text-gray-500">
+              {psychiatrist.firstName.charAt(0).toUpperCase()}
+            </div>
           )}
         </div>
       </div>
 
       {/* Information Section */}
-      <div className="flex flex-1 flex-col sm:ml-4">
+      <div className="flex flex-1 flex-col sm:ml-6">
         {/* Name and Position */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between">
           <div>
-            <h2 className="text-lg font-semibold">{psychiatrist.firstName} {psychiatrist.lastName}</h2>
+            <h2 className="text-lg font-semibold">
+              {psychiatrist.firstName} {psychiatrist.lastName}
+            </h2>
             <p className="text-sm text-gray-600">{psychiatrist.position} at {psychiatrist.location}</p>
           </div>
         </div>
 
-        {/* Languages */}
-        <p className="mt-2 text-sm text-gray-500">Languages: {psychiatrist.language.join(', ')}</p>
+         {/* Languages */}
+         <p className="mt-2 text-sm text-gray-500">Languages: {psychiatrist.language.join(', ')}</p>
 
-        {/* Specialty Tags */}
+        {/* Specialties */}
         <div className="mt-2 flex flex-wrap gap-2">
           {psychiatrist.specialty.map((spec, index) => (
             <span
               key={index}
-              className="bg-gray-200 text-sm text-gray-700 py-1 px-2 rounded-md"
+              className=" text-sm text-gray-700 py-1 px-3 rounded-md border-2"
             >
               {spec}
             </span>
           ))}
         </div>
-        <div>
+
         {/* Description */}
         <p className="mt-2 text-sm text-gray-700 line-clamp-3">
           {psychiatrist.description || "No description available."}
         </p>
-        </div>
-        {/* Buttons */}
-        <div className="mt-4 flex gap-4">
-          {/* Send Message Button */}
-          <button
-            className="flex-1 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-            onClick={(event) => {
-              event.stopPropagation();
-              handleSendMessage(event, psychiatrist);
-            }}
-          >
-            <div className="flex items-center justify-center gap-2">
-              <Message />
-              Send Message
-            </div>
-          </button>
+      </div>
 
-          {/* Save Button */}
-          <button
-            className={`flex-1 py-2 px-4 border rounded-lg ${savedPsychiatrists.includes(psychiatrist.uid) ? 'border-blue-500 text-blue-500' : 'border-gray-300 text-gray-700'} hover:bg-gray-100`}
-            onClick={(event) => {
-              event.stopPropagation();
-              handleSave(event, psychiatrist);
-            }}
-          >
-            <div className="flex items-center justify-center gap-2">
-              {savedPsychiatrists.includes(psychiatrist.uid) ? <SavedBookmark /> : <Bookmark />}
-              {savedPsychiatrists.includes(psychiatrist.uid) ? 'Saved' : 'Save'}
-            </div>
-          </button>
-        </div>
+      {/* Action Buttons */}
+      <div className="flex flex-col gap-2 mt-4 sm:mt-0 sm:ml-4 sm:justify-center">
+        {/* Send Message Button */}
+        <button
+          className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+          onClick={(event) => {
+            event.stopPropagation();
+            handleSendMessage(event, psychiatrist);
+          }}
+        >
+          Send a message
+        </button>
+
+        {/* Save Button */}
+        <button
+          className={`py-2 px-4 border rounded-md ${
+            savedPsychiatrists.includes(psychiatrist.uid)
+              ? 'border-blue-500 text-blue-500'
+              : 'border-gray-300 text-gray-700'
+          } hover:bg-gray-100`}
+          onClick={(event) => {
+            event.stopPropagation();
+            handleSave(event, psychiatrist);
+          }}
+        >
+          {savedPsychiatrists.includes(psychiatrist.uid) ? 'Save' : 'Saved'}
+        </button>
       </div>
     </div>
   );
