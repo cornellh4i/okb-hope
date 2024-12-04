@@ -80,7 +80,6 @@ const DiscoverCardList: React.FC<DiscoverCardListProps> = ({ results, buttonType
               handleSave={handleSave}
               handleSendMessage={handleSendMessage}
               handleGoToProfProfile={handleGoToProfProfile}
-              buttonType={buttonType}
             />
           ))}
         </div>

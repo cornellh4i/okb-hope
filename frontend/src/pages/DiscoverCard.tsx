@@ -3,9 +3,6 @@ import { useRouter } from 'next/router';
 import Bookmark from '@/assets/bookmark.svg';
 import SavedBookmark from '@/assets/saved_bookmark.svg';
 import Message from '@/assets/message.svg';
-import ViewReport from '@/assets/view_reports.svg';
-import okb_colors from "@/colors";
-import colors from '@/colors';
 import { IPsychiatrist } from '@/schema';
 
 interface DiscoverCardProps {
@@ -14,7 +11,6 @@ interface DiscoverCardProps {
   handleSave: (event: React.MouseEvent, psychiatrist: IPsychiatrist) => void;
   handleSendMessage: (event: React.MouseEvent, psychiatrist: IPsychiatrist) => void;
   handleGoToProfProfile: (psych_uid: string) => void;
-  buttonType: string;
 }
 
 const DiscoverCard: React.FC<DiscoverCardProps> = ({
@@ -23,83 +19,84 @@ const DiscoverCard: React.FC<DiscoverCardProps> = ({
   handleSave,
   handleSendMessage,
   handleGoToProfProfile,
-  buttonType
 }) => {
   const router = useRouter();
 
-  const renderButtons = () => {
-    if (buttonType === "report") {
-      return (
-        <button onClick={() => alert('View Report Popup')}><ViewReport /></button>
-      );
-    } else {
-      return (
-        <>
-          <button
-            className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[#195BA5] text-[${okb_colors.white}] text-[16px]`}
-            onClick={(event) => handleSave(event, psychiatrist)}
-          >
-            {savedPsychiatrists.includes(psychiatrist.uid) ? <SavedBookmark /> : <Bookmark />}
-            <div className='font-montserrat font-semibold'>Save</div>
-          </button>
-          <button
-            className={`btn flex py-2 px-4 justify-center items-center gap-3 rounded-lg bg-[${okb_colors.okb_blue}] text-[${okb_colors.white}] text-[16px]`}
-            onClick={(event) => handleSendMessage(event, psychiatrist)}
-          >
-            <Message />
-            <div className='font-montserrat font-semibold'>Message</div>
-          </button>
-        </>
-      );
-    }
-  };
-
   return (
     <div
-      key={psychiatrist.uid}
-      className="psychiatrist w-full"
+      className="flex flex-col sm:flex-row border border-gray-300 rounded-lg shadow-md p-4 bg-white hover:shadow-lg transition-shadow"
       onClick={() => handleGoToProfProfile(psychiatrist.uid)}
     >
-      <div
-        className={`card card-side flex flex-col lg:flex-row justify-center lg:justify-between items-center lg:items-start gap-2.5 rounded-lg bg-[${okb_colors.white}] shadow-[0_0px_5px_0px_rgb(0,0,0,0.15)] p-6 w-full`}
-      >
-        <div
-          className="flex items-center justify-center flex-shrink-0 mb-4 lg:mb-0"
-        >
-          <div
-            style={{ backgroundColor: colors.okb_blue, objectFit: "cover" }}
-            className={`w-36 h-36 text-6xl font-normal text-white flex items-center justify-center`}
-          >
-            {psychiatrist.firstName?.charAt(0).toUpperCase()}
+      {/* Profile Picture */}
+      <div className="flex-shrink-0">
+        <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-3xl font-semibold text-white overflow-hidden">
+          {psychiatrist.profile_pic ? (
+            <img src={psychiatrist.profile_pic} alt={`${psychiatrist.firstName} ${psychiatrist.lastName}`} className="w-full h-full object-cover" />
+          ) : (
+            psychiatrist.firstName.charAt(0).toUpperCase()
+          )}
+        </div>
+      </div>
+
+      {/* Information Section */}
+      <div className="flex flex-1 flex-col sm:ml-4">
+        {/* Name and Position */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-lg font-semibold">{psychiatrist.firstName} {psychiatrist.lastName}</h2>
+            <p className="text-sm text-gray-600">{psychiatrist.position} at {psychiatrist.location}</p>
           </div>
         </div>
-        <div className={`flex flex-col flex-1 gap-4 w-full h-auto`}>
-          <div className={`flex flex-col lg:flex-row justify-between items-center w-full`}>
-            <div className={`flex flex-col justify-center lg:items-start items-center gap-2`}>
-              <h2 className={`card-title text-[24px] font-montserrat font-semibold`}>
-                {psychiatrist.firstName} {psychiatrist.lastName}
-              </h2>
-              <p className={`text-[16px] font-montserrat font-semibold`}>
-                {psychiatrist.position} at {psychiatrist.location}
-              </p>
-            </div>
-            <div className={`flex justify-center lg:justify-end items-center gap-4 w-full lg:w-auto mt-4 lg:mt-0`}>
-              {renderButtons()}
-            </div>
-          </div>
-          <div className={`flex w-full justify-center lg:justify-start items-center min-h-[4rem] mt-4 lg:mt-0`}>
-            <p
-              className={`text-[12px] font-montserrat font-normal overflow-hidden overflow-ellipsis`}
-              style={{
-                display: '-webkit-box',
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: 'vertical',
-                textAlign: 'left'
-              }}
+
+        {/* Languages */}
+        <p className="mt-2 text-sm text-gray-500">Languages: {psychiatrist.language.join(', ')}</p>
+
+        {/* Specialty Tags */}
+        <div className="mt-2 flex flex-wrap gap-2">
+          {psychiatrist.specialty.map((spec, index) => (
+            <span
+              key={index}
+              className="bg-gray-200 text-sm text-gray-700 py-1 px-2 rounded-md"
             >
-              {psychiatrist.description || "No description available."}
-            </p>
-          </div>
+              {spec}
+            </span>
+          ))}
+        </div>
+        <div>
+        {/* Description */}
+        <p className="mt-2 text-sm text-gray-700 line-clamp-3">
+          {psychiatrist.description || "No description available."}
+        </p>
+        </div>
+        {/* Buttons */}
+        <div className="mt-4 flex gap-4">
+          {/* Send Message Button */}
+          <button
+            className="flex-1 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            onClick={(event) => {
+              event.stopPropagation();
+              handleSendMessage(event, psychiatrist);
+            }}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <Message />
+              Send Message
+            </div>
+          </button>
+
+          {/* Save Button */}
+          <button
+            className={`flex-1 py-2 px-4 border rounded-lg ${savedPsychiatrists.includes(psychiatrist.uid) ? 'border-blue-500 text-blue-500' : 'border-gray-300 text-gray-700'} hover:bg-gray-100`}
+            onClick={(event) => {
+              event.stopPropagation();
+              handleSave(event, psychiatrist);
+            }}
+          >
+            <div className="flex items-center justify-center gap-2">
+              {savedPsychiatrists.includes(psychiatrist.uid) ? <SavedBookmark /> : <Bookmark />}
+              {savedPsychiatrists.includes(psychiatrist.uid) ? 'Saved' : 'Save'}
+            </div>
+          </button>
         </div>
       </div>
     </div>
