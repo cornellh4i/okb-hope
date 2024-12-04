@@ -5,7 +5,7 @@ import colors from "@/colors";
 import { collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import SearchBar from '@/components/SearchBar';
-import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
+import DiscoverCardList from './DiscoverCardList';
 import { useAuth } from '../../contexts/AuthContext';
 import { fetchAllProfessionals, fetchAvailability } from '../../firebase/fetchData';
 import DiscoverFilter from './DiscoverFilter';
@@ -227,7 +227,7 @@ const DiscoverPage: React.FC = () => {
       </div>
       <div>
       {searchFilterResults.length > 0 ? (
-        <PsychiatristList results={searchFilterResults} buttonType={'discover'} />
+        <DiscoverCardList results={searchFilterResults} buttonType={'discover'} />
       ) : (
         <div className="text-center my-10">
           <p className="mb-4">No Psychiatrists found based on your filters.</p>
