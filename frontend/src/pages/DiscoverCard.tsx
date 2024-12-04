@@ -96,7 +96,7 @@ const DiscoverCard: React.FC<DiscoverCardProps> = ({
             handleSave(event, psychiatrist);
           }}
         >
-          {savedPsychiatrists.includes(psychiatrist.uid) ? 'Save' : 'Saved'}
+          {savedPsychiatrists.includes(psychiatrist.uid) ? 'Saved' : 'Save'}
         </button>
       </div>
     </div>
