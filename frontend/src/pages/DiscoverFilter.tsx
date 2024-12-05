@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+interface Filters {
+  [key: string]: any; 
+}
 
 interface DiscoverFilterProps {
   monday: boolean;
@@ -41,9 +44,13 @@ interface DiscoverFilterProps {
   setAllGenders: React.Dispatch<React.SetStateAction<boolean>>;
   searchTerm:string,
   setSearchTerm:React.Dispatch<React.SetStateAction<string>>
+  submittedFilters: Filters;
+  setSubmittedFilters: React.Dispatch<React.SetStateAction<Filters>>;
 }
 
 const DiscoverFilter: React.FC<DiscoverFilterProps> = ({
+  submittedFilters,
+  setSubmittedFilters,
   monday,
   setMonday,
   tuesday,
@@ -84,6 +91,7 @@ const DiscoverFilter: React.FC<DiscoverFilterProps> = ({
   setAllGenders,
   searchTerm,
   setSearchTerm
+  
 }) => {
   const [genderOpen, setGenderOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
@@ -113,6 +121,58 @@ const DiscoverFilter: React.FC<DiscoverFilterProps> = ({
   };
 
 
+  // Automatically update submittedFilters whenever any filter changes
+  useEffect(() => {
+    const days = [
+      sunday && 'Sunday',
+      monday && 'Monday',
+      tuesday && 'Tuesday',
+      wednesday && 'Wednesday',
+      thursday && 'Thursday',
+      friday && 'Friday',
+      saturday && 'Saturday',
+    ].filter(Boolean);
+
+    const languages = [
+      english && 'English',
+      twi && 'Twi',
+      fante && 'Fante',
+      ewe && 'Ewe',
+      ga && 'Ga',
+      hausa && 'Hausa',
+    ].filter(Boolean);
+
+    const genders:number[] = [];
+    if (male) genders.push(0);
+    if (female) genders.push(1);
+    if (otherGender) genders.push(2);
+
+    setSubmittedFilters({
+      searchTerm,
+      days,
+      languages,
+      genders,
+    });
+  }, [
+    searchTerm,
+    sunday,
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday,
+    english,
+    twi,
+    fante,
+    ewe,
+    ga,
+    hausa,
+    male,
+    female,
+    otherGender,
+    setSubmittedFilters,
+  ]);
 
   return (
     <div className="filter-container">

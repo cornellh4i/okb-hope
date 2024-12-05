@@ -133,7 +133,7 @@ const DiscoverPage: React.FC = () => {
   // Filters psychiatrists by search and/or selected filters
   const processSearchFilter = () => {
 
-    const terms = submittedSearchTerm.trim().split(/\s+/);
+    const terms = searchTerm.trim().split(/\s+/);
     let results = psychiatrists;
 
     // Updates result by search term (first names, last names, and/or titles)
@@ -174,73 +174,82 @@ const DiscoverPage: React.FC = () => {
     setFilters([])
     setSubmittedFilters({})
   }
-
+  console.log(submittedFilters)
   // If there is a search term or there are filters selected, process the search/filter
   // Else, return all psychiatrists
   const searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
 
   return (
-    <div className="flex flex-row px-23 pt-9">
-      <div className="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow">
-        <DiscoverFilter
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          monday={monday}
-          setMonday={setMonday}
-          tuesday={tuesday}
-          setTuesday={setTuesday}
-          wednesday={wednesday}
-          setWednesday={setWednesday}
-          thursday={thursday}
-          setThursday={setThursday}
-          friday={friday}
-          setFriday={setFriday}
-          saturday={saturday}
-          setSaturday={setSaturday}
-          sunday={sunday}
-          setSunday={setSunday}
-          allDays={allDays}
-          setAllDays={setAllDays}
-          english={english}
-          setEnglish={setEnglish}
-          twi={twi}
-          setTwi={setTwi}
-          fante={fante}
-          setFante={setFante}
-          ewe={ewe}
-          setEwe={setEwe}
-          ga={ga}
-          setGa={setGa}
-          hausa={hausa}
-          setHausa={setHausa}
-          allLanguages={allLanguages}
-          setAllLanguages={setAllLanguages}
-          male={male}
-          setMale={setMale}
-          female={female}
-          setFemale={setFemale}
-          otherGender={otherGender}
-          setOtherGender={setOtherGender}
-          allGenders={allGenders}
-          setAllGenders={setAllGenders} 
-        />
+    <div className="flex flex-row px-6 pt-9 gap-4">
+  {/* Left Panel: DiscoverFilter */}
+  <div className="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow">
+    <DiscoverFilter
+      submittedFilters={submittedFilters}
+      setSubmittedFilters={setSubmittedFilters}
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+      monday={monday}
+      setMonday={setMonday}
+      tuesday={tuesday}
+      setTuesday={setTuesday}
+      wednesday={wednesday}
+      setWednesday={setWednesday}
+      thursday={thursday}
+      setThursday={setThursday}
+      friday={friday}
+      setFriday={setFriday}
+      saturday={saturday}
+      setSaturday={setSaturday}
+      sunday={sunday}
+      setSunday={setSunday}
+      allDays={allDays}
+      setAllDays={setAllDays}
+      english={english}
+      setEnglish={setEnglish}
+      twi={twi}
+      setTwi={setTwi}
+      fante={fante}
+      setFante={setFante}
+      ewe={ewe}
+      setEwe={setEwe}
+      ga={ga}
+      setGa={setGa}
+      hausa={hausa}
+      setHausa={setHausa}
+      allLanguages={allLanguages}
+      setAllLanguages={setAllLanguages}
+      male={male}
+      setMale={setMale}
+      female={female}
+      setFemale={setFemale}
+      otherGender={otherGender}
+      setOtherGender={setOtherGender}
+      allGenders={allGenders}
+      setAllGenders={setAllGenders}
+    />
+  </div>
+
+  {/* Divider */}
+  <div className="hidden lg:block w-px "></div>
+
+  {/* Right Panel: DiscoverCardList */}
+  <div className="w-full lg:w-3/4 bg-white p-6 rounded-lg shadow">
+    {searchFilterResults.length > 0 ? (
+      <DiscoverCardList results={searchFilterResults} buttonType={'discover'} />
+    ) : (
+      <div className="text-center my-10">
+        <p className="mb-4">No Psychiatrists found based on your filters.</p>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={resetSearchBar}
+        >
+          See all psychiatrists
+        </button>
       </div>
-      <div>
-      {searchFilterResults.length > 0 ? (
-        <DiscoverCardList results={searchFilterResults} buttonType={'discover'} />
-      ) : (
-        <div className="text-center my-10">
-          <p className="mb-4">No Psychiatrists found based on your filters.</p>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={resetSearchBar}
-          >
-            See all psychiatrists
-          </button>
-        </div>
-      )}
-      </div>
-    </div>
+    )}
+  </div>
+</div>
+
   );
 };
 
