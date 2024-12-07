@@ -19,38 +19,33 @@ const SimilarPsychiatristsDisplay: React.FC = () => {
 
 
  useEffect(() => {
-   async function fetchData() {
-    
-     if (!user ) return;
+  async function fetchData() {
+    if (!user) return;
 
+    try {
+      const fetchedPsychiatrists: IPsychiatrist[] = await fetchUnreportedProfessionals(user.uid);
 
-     try {
-       const fetchedPsychiatrists: IPsychiatrist[] = await fetchUnreportedProfessionals(user.uid);
+      // Identify the current psychiatrist
+      const current = fetchedPsychiatrists.find(
+        (psych) => psych.uid === currentPsychiatristId
+      );
 
+      setCurrentPsychiatrist(current || null);
 
-       const current = fetchedPsychiatrists.find(
-         (psych) => psych.uid === currentPsychiatristId
-       );
+      // Filter out the current psychiatrist
+      const others = fetchedPsychiatrists.filter(
+        (psych) => psych.uid !== currentPsychiatristId
+      );
 
+      setPsychiatrists(others);
+    } catch (err: any) {
+      console.error("Error fetching psychiatrists:", err.message);
+    }
+  }
 
-       setCurrentPsychiatrist(current || null);
+  fetchData();
+}, [user, currentPsychiatristId]);
 
-
-       const others = fetchedPsychiatrists.filter(
-         (psych) => psych.uid !== currentPsychiatristId
-       );
-       setPsychiatrists(others);
-     } catch (err: any) {
-       console.error("Error fetching psychiatrists:", err.message);
-     }
-   }
-
-
-  
-
-
-   fetchData();
-  }, [user, currentPsychiatristId]);
 
 
   const sortedPsychiatrists = currentPsychiatrist
@@ -70,8 +65,8 @@ const SimilarPsychiatristsDisplay: React.FC = () => {
 
 
     return (
-      <div className="w-full flex justify-center">
-        <div className="w-full max-w-2xl px-4">
+      <div className="w-full flex justify-end"> {/* Changed justify-center to justify-end */}
+        <div className="w-full max-w-md px-4"> {/* Adjust width to fit the right-aligned content */}
           {topPsychiatrists.length > 0 ? (
             topPsychiatrists.map((psychiatrist) => (
               <SimilarPsychCard key={psychiatrist.uid} psychiatrist={psychiatrist} />
@@ -84,7 +79,7 @@ const SimilarPsychiatristsDisplay: React.FC = () => {
         </div>
       </div>
     );
-   };
+  }    
    
    
    export default SimilarPsychiatristsDisplay;
