@@ -11,20 +11,20 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import { uploadProfilePic, fetchProfilePic, fetchRole} from '../../../../firebase/firebase';
 
 
-// options for fuzzy search. currently only searches by name and title
-const fuseOptions = {
-  keys: ['firstName', 'lastName', 'position'],
-  threshold: 0.5,
-  findAllMatches: true,
-  distance: 5,
-  ignoreLocation: true,
-  useExtendedSearch: true,
-};
+// // options for fuzzy search. currently only searches by name and title
+// const fuseOptions = {
+//   keys: ['firstName', 'lastName', 'position'],
+//   threshold: 0.5,
+//   findAllMatches: true,
+//   distance: 5,
+//   ignoreLocation: true,
+//   useExtendedSearch: true,
+// };
 
-const DiscoverPage: React.FC = () => {
-  const router = useRouter();
-  const { user } = useAuth();
-  const { userId } = router.query;
+// const DiscoverPage: React.FC = () => {
+//   const router = useRouter();
+//   const { user } = useAuth();
+//   const { userId } = router.query;
 
   const [searchTerm, setSearchTerm] = useState("");
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState("");
@@ -76,92 +76,92 @@ const DiscoverPage: React.FC = () => {
     fetchData();
   }, [router]);
 
-  const fuse = useMemo(() => new Fuse(psychiatrists, fuseOptions), []);
+//   const fuse = useMemo(() => new Fuse(psychiatrists, fuseOptions), []);
 
-  // Returns true if arr1 contains every element in arr2
-  function containsAll(arr1: string[], arr2: string[]): boolean {
-    if (arr1 && arr2) {
-      return arr2.every(item => arr1.includes(item))
-    }
-    else if (!arr2) { return true }
-    else { return false }
-  }
+//   // Returns true if arr1 contains every element in arr2
+//   function containsAll(arr1: string[], arr2: string[]): boolean {
+//     if (arr1 && arr2) {
+//       return arr2.every(item => arr1.includes(item))
+//     }
+//     else if (!arr2) { return true }
+//     else { return false }
+//   }
 
-  // Returns true if arr1 contains at least one element in arr2
-  function containsOneOf(arr1: string[], arr2: string[]): boolean {
-    if (arr1 && arr2) {
-      if (arr2.length === 0) { return true }
-      return arr2.some(item => arr1.includes(item))
-    }
-    else if (!arr2) { return true }
-    else { return false }
-  }
+//   // Returns true if arr1 contains at least one element in arr2
+//   function containsOneOf(arr1: string[], arr2: string[]): boolean {
+//     if (arr1 && arr2) {
+//       if (arr2.length === 0) { return true }
+//       return arr2.some(item => arr1.includes(item))
+//     }
+//     else if (!arr2) { return true }
+//     else { return false }
+//   }
 
-  // Returns true if gender is contained in genderArray
-  function containsGender(gender: number, genderArray: number[]): boolean {
-    if (genderArray) {
-      if (genderArray.includes(gender) || genderArray.length === 0)
-        return true
-      else
-        return false
-    }
-    return true
-  }
+//   // Returns true if gender is contained in genderArray
+//   function containsGender(gender: number, genderArray: number[]): boolean {
+//     if (genderArray) {
+//       if (genderArray.includes(gender) || genderArray.length === 0)
+//         return true
+//       else
+//         return false
+//     }
+//     return true
+//   }
 
-  const matchesTerm = (psychiatrist: any, term: string) => {
-    return psychiatrist.firstName?.toLowerCase().includes(term.toLowerCase()) ||
-      psychiatrist.lastName?.toLowerCase().includes(term.toLowerCase()) ||
-      psychiatrist.position?.toLowerCase().includes(term.toLowerCase());
-  };
+//   const matchesTerm = (psychiatrist: any, term: string) => {
+//     return psychiatrist.firstName?.toLowerCase().includes(term.toLowerCase()) ||
+//       psychiatrist.lastName?.toLowerCase().includes(term.toLowerCase()) ||
+//       psychiatrist.position?.toLowerCase().includes(term.toLowerCase());
+//   };
 
-  // Filters psychiatrists by search and/or selected filters
-  const processSearchFilter = () => {
+//   // Filters psychiatrists by search and/or selected filters
+//   const processSearchFilter = () => {
 
-    const terms = submittedSearchTerm.trim().split(/\s+/);
-    let results = psychiatrists;
+//     const terms = submittedSearchTerm.trim().split(/\s+/);
+//     let results = psychiatrists;
 
-    // Updates result by search term (first names, last names, and/or titles)
-    // Handles searches with three terms
-    if (terms.length === 3) {
-      const [firstTerm, secondTerm, thirdTerm] = terms;
-      results = psychiatrists.filter((psychiatrist) =>
-        matchesTerm(psychiatrist, firstTerm) &&
-        matchesTerm(psychiatrist, secondTerm) &&
-        matchesTerm(psychiatrist, thirdTerm));
-    }
-    // Handles searches with two terms
-    if (terms.length === 2) {
-      const [firstTerm, secondTerm] = terms;
-      results = psychiatrists.filter((psychiatrist) =>
-        matchesTerm(psychiatrist, firstTerm) &&
-        matchesTerm(psychiatrist, secondTerm));
-    }
-    // Handles searches with one term
-    else if (terms.length === 1) {
-      const [firstTerm] = terms;
-      results = psychiatrists.filter((psychiatrist) => matchesTerm(psychiatrist, firstTerm));
-    }
+//     // Updates result by search term (first names, last names, and/or titles)
+//     // Handles searches with three terms
+//     if (terms.length === 3) {
+//       const [firstTerm, secondTerm, thirdTerm] = terms;
+//       results = psychiatrists.filter((psychiatrist) =>
+//         matchesTerm(psychiatrist, firstTerm) &&
+//         matchesTerm(psychiatrist, secondTerm) &&
+//         matchesTerm(psychiatrist, thirdTerm));
+//     }
+//     // Handles searches with two terms
+//     if (terms.length === 2) {
+//       const [firstTerm, secondTerm] = terms;
+//       results = psychiatrists.filter((psychiatrist) =>
+//         matchesTerm(psychiatrist, firstTerm) &&
+//         matchesTerm(psychiatrist, secondTerm));
+//     }
+//     // Handles searches with one term
+//     else if (terms.length === 1) {
+//       const [firstTerm] = terms;
+//       results = psychiatrists.filter((psychiatrist) => matchesTerm(psychiatrist, firstTerm));
+//     }
 
-    // Updates results by the selected filters
-    const filterResults = results.filter((psychiatrist) => {
-      return containsOneOf(psychiatrist.weeklyAvailability, submittedFilters['days']) &&
-        containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
-        containsGender(psychiatrist.gender, submittedFilters['genders'])
-    });
+//     // Updates results by the selected filters
+//     const filterResults = results.filter((psychiatrist) => {
+//       return containsOneOf(psychiatrist.weeklyAvailability, submittedFilters['days']) &&
+//         containsOneOf(psychiatrist.language, submittedFilters['languages']) &&
+//         containsGender(psychiatrist.gender, submittedFilters['genders'])
+//     });
 
-    return filterResults;
-  };
+//     return filterResults;
+//   };
 
-  const resetSearchBar = () => {
-    setSearchTerm("")
-    setSubmittedSearchTerm("")
-    setFilters([])
-    setSubmittedFilters({})
-  }
+//   const resetSearchBar = () => {
+//     setSearchTerm("")
+//     setSubmittedSearchTerm("")
+//     setFilters([])
+//     setSubmittedFilters({})
+//   }
 
-  // If there is a search term or there are filters selected, process the search/filter
-  // Else, return all psychiatrists
-  const searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
+//   // If there is a search term or there are filters selected, process the search/filter
+//   // Else, return all psychiatrists
+//   const searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
 
   return (
     <div className={'flex flex-col px-23 pt-9 pb-14'}>
@@ -208,4 +208,4 @@ const DiscoverPage: React.FC = () => {
   );
 };
 
-export default DiscoverPage;
+// export default DiscoverPage;
