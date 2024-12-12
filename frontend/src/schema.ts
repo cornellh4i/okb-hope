@@ -13,7 +13,7 @@ export interface IPsychiatrist {
     gender: Gender;
     position: string;
     location: string;
-    profile_pic: null;
+    profile_pic: string;
     description: string;
     language: string[];
     weeklyAvailability: string[];
