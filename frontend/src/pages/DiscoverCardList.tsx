@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { IPsychiatrist, IUser } from '@/schema';
 import DiscoverCard from './DiscoverCard';
-import { fetchAllUsers,fetchPatientDetails, fetchDocumentId } from '../../firebase/fetchData';
+import { fetchAllUsers, fetchPatientDetails, fetchDocumentId } from '../../firebase/fetchData';
 import { useAuth } from '../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
@@ -12,7 +12,7 @@ interface DiscoverCardListProps {
   buttonType: string;
 }
 
-const DiscoverCardList: React.FC<DiscoverCardListProps> = ({ results, buttonType = "discover" }) => {
+const DiscoverCardList: React.FC<DiscoverCardListProps> = ({ results = [], buttonType = "discover" }) => {
   const { user } = useAuth();
   const uid = user?.uid;
   const router = useRouter();
@@ -22,7 +22,7 @@ const DiscoverCardList: React.FC<DiscoverCardListProps> = ({ results, buttonType
 
   useEffect(() => {
     const fetchDocId = async () => {
-      if (user) {
+      if (user?.uid) {
         const documentId = await fetchDocumentId("patients", user.uid);
         setDocId(documentId);
       }
@@ -32,9 +32,9 @@ const DiscoverCardList: React.FC<DiscoverCardListProps> = ({ results, buttonType
 
   useEffect(() => {
     const fetchSavedPsychiatrists = async () => {
-      if (user) {
+      if (user?.uid) {
         const data = await fetchPatientDetails(user.uid);
-        setSavedPsychiatrists(data.savedPsychiatrists);
+        setSavedPsychiatrists(data?.savedPsychiatrists || []);
       }
     };
     fetchSavedPsychiatrists();
@@ -42,28 +42,35 @@ const DiscoverCardList: React.FC<DiscoverCardListProps> = ({ results, buttonType
 
   const handleSave = async (event: React.MouseEvent, psychiatrist: IPsychiatrist) => {
     event.stopPropagation();
-    if (user) {
-      const updatedSavedPsychiatrists = savedPsychiatrists.includes(psychiatrist.uid)
-        ? savedPsychiatrists.filter((id) => id !== psychiatrist.uid)
-        : [...savedPsychiatrists, psychiatrist.uid];
+    if (user && psychiatrist?.uid) {
+      const updatedSavedPsychiatrists = savedPsychiatrists?.includes(psychiatrist.uid)
+        ? savedPsychiatrists?.filter((id) => id !== psychiatrist.uid)
+        : [...(savedPsychiatrists || []), psychiatrist.uid];
 
       setSavedPsychiatrists(updatedSavedPsychiatrists);
-      await updateDoc(doc(db, "patients", docId || ""), { savedPsychiatrists: updatedSavedPsychiatrists });
+      if (docId) {
+        await updateDoc(doc(db, "patients", docId), { savedPsychiatrists: updatedSavedPsychiatrists });
+      }
     }
   };
 
   const handleSendMessage = (event: React.MouseEvent, psychiatrist: IPsychiatrist) => {
     event.stopPropagation();
-    if (user) {
+    if (user?.uid && psychiatrist?.uid) {
       router.push({
         pathname: `/patient/${user.uid}/messages`,
-        query: { psych_id: psychiatrist.uid, psych_name: `${psychiatrist.firstName} ${psychiatrist.lastName}` }
+        query: { 
+          psych_id: psychiatrist.uid, 
+          psych_name: `${psychiatrist?.firstName || ''} ${psychiatrist?.lastName || ''}`
+        }
       });
     }
   };
 
   const handleGoToProfProfile = (psych_uid: string) => {
-    router.push(user
+    if (!psych_uid) return;
+    
+    router.push(user?.userType && user?.uid
       ? `/${user.userType}/${user.uid}/prof_profile?psych_uid=${psych_uid}`
       : `/prof_profile?psych_uid=${psych_uid}`);
   };
@@ -72,15 +79,17 @@ const DiscoverCardList: React.FC<DiscoverCardListProps> = ({ results, buttonType
     <div className="px-4 lg:px-24 pt-9">
       <div className="pb-8">
         <div className="psychiatrist-list flex flex-col items-stretch gap-6 w-full">
-          {results.map((psychiatrist) => (
-            <DiscoverCard
-              key={psychiatrist.uid}
-              psychiatrist={psychiatrist}
-              savedPsychiatrists={savedPsychiatrists}
-              handleSave={handleSave}
-              handleSendMessage={handleSendMessage}
-              handleGoToProfProfile={handleGoToProfProfile}
-            />
+          {results?.map((psychiatrist) => (
+            psychiatrist?.uid && (
+              <DiscoverCard
+                key={psychiatrist.uid}
+                psychiatrist={psychiatrist}
+                savedPsychiatrists={savedPsychiatrists || []}
+                handleSave={handleSave}
+                handleSendMessage={handleSendMessage}
+                handleGoToProfProfile={handleGoToProfProfile}
+              />
+            )
           ))}
         </div>
       </div>
