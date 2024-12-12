@@ -8,7 +8,7 @@ import { Gender, IPatient, IUser } from "@/schema";
 import ProgressBar0 from '../../assets/progressbar0.svg';
 import ProgressBar33 from '../../assets/progressbar33.svg';
 import ProgressBar67 from '../../assets/progressbar67.svg';
-import { db, signUpWithGoogle, logout } from "../../../firebase/firebase";
+import { db, signUpWithGoogle, logout, uploadProfilePic, getUidByName } from "../../../firebase/firebase";
 import { useAuth } from "../../../contexts/AuthContext";
 
 const PsychQuestionnaire = () => {
@@ -44,6 +44,8 @@ const PsychQuestionnaire = () => {
     const [psychiatrist, setPsychiatrist] = useState<boolean>(false);
     const [isMobile, setIsMobile] = useState(false);
     const [calendly, setCalendly] = useState<string>("");
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [fileName, setFileName] = useState<string>('');
     const router = useRouter();
 
     useEffect(() => {
@@ -209,6 +211,14 @@ const PsychQuestionnaire = () => {
         setCalendly(event.target.value);
     }
 
+    const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+          setSelectedFile(file);
+          setFileName(file.name);
+        }
+      };
+
     const goBack = () => {
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
@@ -304,7 +314,14 @@ const PsychQuestionnaire = () => {
                     gender, //genderPref
                     [], //savedPsychiatrists
                     calendly
-                )
+                );
+
+                const uid = await getUidByName(firstName, lastName);
+
+                if (selectedFile && uid) {
+                    await uploadProfilePic(selectedFile, uid, true);
+                }
+                
                 router.push('/loading?init=true');
             } catch (error) {
                 console.error('Error signing in:', error);
@@ -325,7 +342,9 @@ const PsychQuestionnaire = () => {
                     firstName={firstName}
                     lastName={lastName}
                     gender={gender}
-                    image={image}
+                    selectedFile = {selectedFile}
+                    fileName = {fileName}
+                    handleFileSelect={handleFileSelect}
                     handleFirstName={handleFirstNameChange}
                     handleLastName={handleLastNameChange}
                     handleGender={handleGenderChange}

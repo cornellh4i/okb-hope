@@ -216,6 +216,21 @@ const updateUser = async (userId: string, data: any) => {
   await setDoc(userRef, data, { merge: true });
 };
 
+const getUidByName = async (firstName: string, lastName: string) => {
+  const q = query(
+    collection(db, "users"),
+    where("name", "==", firstName + " " + lastName)
+  );
+  const response = await getDocs(q);
+  if (!response.empty) {
+    const doc = response.docs[0];
+    const docData = response.docs[0].data();
+    return docData.uid;
+  } else {
+    throw new Error(`No psychiatrist found with the name: ${firstName} ${lastName}`);
+  }
+}
+
 
 const firebaseApp = getApp();
 const storage = getStorage(firebaseApp, "gs://okb-hope.appspot.com");
@@ -292,5 +307,5 @@ const uploadPsychiatristFile = async (files: File[], uID: string): Promise<strin
   }
  };
 
-export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses, uploadProfilePic, uploadPsychiatristFile };
+export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses, uploadProfilePic, uploadPsychiatristFile, getUidByName };
 

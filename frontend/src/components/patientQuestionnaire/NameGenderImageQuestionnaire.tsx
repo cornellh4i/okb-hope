@@ -14,14 +14,16 @@ interface QuestionnaireProps {
     firstName: string;
     lastName: string;
     gender: Gender | undefined;
-    image: string;
+    selectedFile: File | null;
+    fileName: string;
+    handleFileSelect: (event: ChangeEvent<HTMLInputElement>) => void;
     handleFirstName: (event: ChangeEvent<HTMLInputElement>) => void;
     handleLastName: (event: ChangeEvent<HTMLInputElement>) => void;
     handleGender: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 // 1st page of the Questionnaire
-const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, handleFirstName, handleLastName, handleGender }: QuestionnaireProps) => {
+const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, selectedFile, fileName, handleFileSelect, handleFirstName, handleLastName, handleGender }: QuestionnaireProps) => {
     return (
         <div className={`w-full h-full flex flex-wrap flex-col justify-start gap-6 p-8 pb-9`}>
             <div className={`flex text-[26px] md:text-[32px] font-semibold font-montserrat w-full`}>
@@ -79,28 +81,41 @@ const NameGenderImageQuestionnaire = ({ firstName, lastName, gender, image, hand
                     } />
                 </RadioGroup>
             </FormControl>
-            <div tabIndex={0} className={`form-control min-w-[300px] md:min-w-[500px] max-w-[50%] flex flex-col items-start w-full`}>
-                <span className={`text-lg font-semibold font-montserrat mb-2`}>Profile Image</span>
-                <div id="Frame542" className={`flex items-center justify-center w-full gap-3`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="4" height="204" viewBox="0 0 4 204" fill="none">
-                        <path d="M2 2L2.00001 202" stroke="#519AEB" stroke-width="3" stroke-linecap="round" />
-                    </svg>
-                    <div className={`flex flex-col items-start w-full gap-2.5`}>
-                        <div className={`flex w-full justify-center items-center align-center`}>
-                            <div id="Frame278" className={`flex flex-col absolute items-center justify-center align-center z-20`}>
-                                <Upload ></Upload>
-                                <label>
-                                    <span className={`font-montserrat text-xs`} style={{ color: okb_colors.dark_gray }}>Upload Image</span>
-                                </label>
-                            </div>
-                            <div className={`input-container w-full relative z-0`}>
-                                <span className={`absolute top-0 left-0 right-0 bottom-0 border-2 rounded-lg flex items-center justify-center bg-[${okb_colors.white}]`} style={{ borderColor: okb_colors.light_blue, height: 200 }}></span>
-                                <input type="file" placeholder="image/" className={`input input-bordered border-2 opacity-0 w-3/4 sm:w-full`} style={{ borderColor: okb_colors.light_blue, height: 200 }} />
-                            </div>
-                        </div>
-                    </div>
+            <div tabIndex={0} className="form-control min-w-[300px] md:min-w-[500px] max-w-[50%] flex flex-col items-start w-full">
+            <label className="label">
+              <span className="text-lg font-montserrat font-semibold">Profile Image</span>
+            </label>
+            <div id="Frame542" className="flex items-center justify-center w-full gap-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="4" height="204" viewBox="0 0 4 204" fill="none">
+                <path d="M2 2L2.00001 202" stroke="#519AEB" stroke-width="3" stroke-linecap="round" />
+              </svg>
+              <div className="flex flex-col items-start w-full gap-2.5">
+                <div className="flex w-full justify-center align-center relative" >
+                  <div id="Frame278" className="flex flex-col absolute items-center justify-center align-center left-1/2 transform translate-x-[-50%] translate-y-[50%] z-10">
+                    <Upload />
+                    <label>
+                      <span className="font-montserrat text-xs italic" style={{ color: okb_colors.dark_gray }}>
+                        {fileName || 'Upload Image'}
+                      </span>
+                    </label>
+                  </div>
+                  <div className="input-container w-full relative" >
+                    <span 
+                      className="absolute top-0 left-0 right-0 bottom-0 border-2 rounded-lg flex items-center justify-center" 
+                      style={{ borderColor: okb_colors.light_blue, height: 200 }}
+                    />
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      className="input input-bordered border-2 opacity-0" 
+                      style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }} 
+                    />
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
     );
 };
