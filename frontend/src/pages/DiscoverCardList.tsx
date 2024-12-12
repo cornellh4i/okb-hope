@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { IPsychiatrist, IUser } from '@/schema';
-import DiscoverCard from './discoverCard';
+import DiscoverCard from './DiscoverCard';
 import { fetchAllUsers,fetchPatientDetails, fetchDocumentId } from '../../firebase/fetchData';
 import { useAuth } from '../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';

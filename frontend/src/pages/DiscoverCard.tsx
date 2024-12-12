@@ -20,7 +20,7 @@ const DiscoverCard: React.FC<DiscoverCardProps> = ({
   handleGoToProfProfile,
 }) => {
   return (
-    <div className="flex flex-col sm:flex-row border border-gray-300 rounded-md shadow-md p-6 bg-white hover:shadow-lg transition-shadow">
+    <div className="flex flex-col sm:flex-row border border-gray-300 rounded-md shadow-md p-10 bg-white hover:shadow-lg transition-shadow" onClick={() => handleGoToProfProfile(psychiatrist.uid)}>
       {/* Profile Picture */}
       <div className="flex-shrink-0">
         <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-md bg-gray-200 overflow-hidden">
