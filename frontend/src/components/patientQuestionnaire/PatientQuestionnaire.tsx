@@ -6,7 +6,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Gender } from "@/schema";
 import { useRouter } from 'next/router';
 
-import { signUpWithGoogle, logout } from "../../../firebase/firebase";
+import { signUpWithGoogle, logout, uploadProfilePic, getUidByName  } from "../../../firebase/firebase";
 
 import ProgressBar25 from '../../assets/progressbar25.svg';
 import ProgressBar50 from '../../assets/progressbar50.svg';
@@ -37,6 +37,9 @@ const PatientQuestionnaire = () => {
     const [otherConcern, setOtherConcern] = useState("");
 
     const [isMobile, setIsMobile] = useState(false);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [fileName, setFileName] = useState<string>('');
+
     const router = useRouter();
 
     useEffect(() => {
@@ -180,6 +183,14 @@ const PatientQuestionnaire = () => {
         }
     };
 
+    const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+          setSelectedFile(file);
+          setFileName(file.name);
+        }
+      };
+
     const goBack = () => {
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
@@ -253,6 +264,13 @@ const PatientQuestionnaire = () => {
                         [], //savedPsychiatrists
                         "" //empty calendly
                     );
+
+                    const uid = await getUidByName(firstName, lastName);
+
+                    if (selectedFile && uid) {
+                        await uploadProfilePic(selectedFile, uid, true);
+                    }
+
                     router.push('/loading?init=true');
                 } catch (error) {
                     console.error('Error signing in:', error);
@@ -269,7 +287,9 @@ const PatientQuestionnaire = () => {
                     firstName={firstName}
                     lastName={lastName}
                     gender={gender}
-                    image={image}
+                    selectedFile = {selectedFile}
+                    fileName = {fileName}
+                    handleFileSelect={handleFileSelect}
                     handleFirstName={handleFirstNameChange}
                     handleLastName={handleLastNameChange}
                     handleGender={handleGenderChange}

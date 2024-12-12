@@ -10,6 +10,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { fetchAllProfessionals, fetchAvailability } from '../../firebase/fetchData';
 import DiscoverFilter from './DiscoverFilter';
 
+
 // options for fuzzy search. currently only searches by name and title
 const fuseOptions = {
   keys: ['firstName', 'lastName', 'position'],
@@ -48,15 +49,22 @@ const DiscoverPage: React.FC = () => {
   const [female, setFemale] = useState(false);
   const [otherGender, setOtherGender] = useState(false);
   const [allGenders, setAllGenders] = useState(false);
+  const [profilePicsCache, setProfilePicsCache] = useState<Record<string, string | null>>({});
+
 
   const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
   const [psychiatristAvailabilities, setPsychiatristAvailabilities] = useState<Record<string, string[]>>({});
+
+  function checkPsychStatus(psych: IPsychiatrist) {
+    return psych.status === "approved";
+  }
 
   // Get all psychiatrists from the database
   useEffect(() => {
     async function fetchData() {
       try {
         const fetchedPsychiatrists: IPsychiatrist[] = await fetchAllProfessionals();
+        const approvedPsychiatrists = fetchedPsychiatrists.filter(checkPsychStatus);
         setPsychiatrists(fetchedPsychiatrists);
       } catch (err: any) {
         console.error(err.message);
@@ -249,6 +257,7 @@ const DiscoverPage: React.FC = () => {
     )}
   </div>
 </div>
+
 
   );
 };

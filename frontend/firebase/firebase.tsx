@@ -216,42 +216,96 @@ const updateUser = async (userId: string, data: any) => {
   await setDoc(userRef, data, { merge: true });
 };
 
+const getUidByName = async (firstName: string, lastName: string) => {
+  const q = query(
+    collection(db, "users"),
+    where("name", "==", firstName + " " + lastName)
+  );
+  const response = await getDocs(q);
+  if (!response.empty) {
+    const doc = response.docs[0];
+    const docData = response.docs[0].data();
+    return docData.uid;
+  } else {
+    throw new Error(`No psychiatrist found with the name: ${firstName} ${lastName}`);
+  }
+}
+
 
 const firebaseApp = getApp();
 const storage = getStorage(firebaseApp, "gs://okb-hope.appspot.com");
 
-const uploadPsychiatristProfilePic = async (file: File, psychiatristUID: string) => {
+const uploadProfilePic = async (file: File, uID: string, is_psychiatrist: boolean): Promise<string> => {
   const db = getFirestore(); // Ensure Firestore is initialized
 
   try {
-    // Reference to the file in the profile_pictures folder
-    const storageRef = ref(storage, `profile_pictures/${psychiatristUID}.png`);
+    let psychiatrist_or_patient: string = is_psychiatrist ? "psychiatrists" : "patients";
 
-    // Upload the file
+    const storageRef = ref(storage, `profile_pictures/${uID}.png`);
+
     await uploadBytes(storageRef, file);
 
-    // Get the download URL for the uploaded file
     const downloadURL = await getDownloadURL(storageRef);
-    console.log("Download URL:", downloadURL);
 
-    const documentId = await fetchDocumentId("psychiatrists", psychiatristUID);
+    const documentId = await fetchDocumentId(psychiatrist_or_patient, uID);
+    const docRef = doc(db, psychiatrist_or_patient, documentId ?? "");
 
-    // Reference to the psychiatrist's document in Firestore
-    const psychRef = doc(db, "psychiatrists", documentId ?? "");
-
-    // Update the Firestore document with the profile picture URL
-    await updateDoc(psychRef, {
+    await updateDoc(docRef, {
       profile_pic: downloadURL
     });
 
-    return downloadURL;  // Return the URL for further use if needed
+    return downloadURL;
   } catch (error) {
     console.error("Error uploading profile picture:", error);
     throw new Error("Error uploading profile picture.");
   }
 };
 
+export async function fetchProfilePic(uid: string): Promise<string | null> {
+  const collections = ['psychiatrists', 'patients'];
 
+  for (const collectionName of collections) {
+    try {
+      const documentId = await fetchDocumentId(collectionName, uid)
+      const userDocRef = doc(db, collectionName, documentId ?? ""); // Reference to the user document
+      const userDoc = await getDoc(userDocRef); // Fetch the document
 
-export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses };
+      if (userDoc.exists()) {
+        // Retrieve the profile_pic field
+        const profilePicUrl = userDoc.data().profile_pic;
+        return profilePicUrl || null; // Return the URL if it exists, otherwise null
+      }
+    } catch (error) {
+      console.error(`Error fetching from ${collectionName} collection:`, error);
+    }
+  }
+
+  console.warn(`No document found for UID: ${uid} in either collection.`);
+  return null; // If no document found in either collection
+}
+
+const uploadPsychiatristFile = async (files: File[], uID: string): Promise<string []> => {
+  const db = getFirestore(); // Ensure Firestore is initialized
+  const user = getAuth(app);
+  const filenames : string[] = [];
+  try {
+    if(user == null){
+      throw Error('User not Authenticated');
+    }
+    for (const file of files) {
+      const storageRef = ref(storage, `resume_files/${uID}.pdf`);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      filenames.push(downloadURL);
+
+    }
+    return filenames;
+
+  } catch (error) {
+    console.error("Error Uploading Psychiatrist files:", error);
+    throw new Error("Error Uploading Psychiatrist files.");
+  }
+ };
+
+export { auth, db, app, logInWithGoogle, signUpWithGoogle, logout, fetchRole, fetchUser, updateUser, saveResponses, uploadProfilePic, uploadPsychiatristFile, getUidByName };
 
