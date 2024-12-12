@@ -19,6 +19,11 @@ const DiscoverCard: React.FC<DiscoverCardProps> = ({
   handleSendMessage,
   handleGoToProfProfile,
 }) => {
+  // Early return if psychiatrist data is not available
+  if (!psychiatrist) {
+    return <div className="p-4 text-gray-500">Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col sm:flex-row border border-gray-300 rounded-md shadow-md p-10 bg-white hover:shadow-lg transition-shadow" onClick={() => handleGoToProfProfile(psychiatrist.uid)}>
       {/* Profile Picture */}
@@ -27,12 +32,12 @@ const DiscoverCard: React.FC<DiscoverCardProps> = ({
           {psychiatrist.profile_pic ? (
             <img
               src={psychiatrist.profile_pic}
-              alt={`${psychiatrist.firstName} ${psychiatrist.lastName}`}
+              alt={`${psychiatrist?.firstName || ''} ${psychiatrist?.lastName || ''}`}
               className="w-full h-full object-cover"
             />
           ) : (
             <div className="flex items-center justify-center h-full text-lg font-semibold text-gray-500">
-              {psychiatrist.firstName.charAt(0).toUpperCase()}
+              {psychiatrist?.firstName?.charAt(0)?.toUpperCase() || '?'}
             </div>
           )}
         </div>
@@ -46,19 +51,23 @@ const DiscoverCard: React.FC<DiscoverCardProps> = ({
             <h2 className="text-lg font-semibold">
               {psychiatrist.firstName} {psychiatrist.lastName}
             </h2>
-            <p className="text-sm text-gray-600">{psychiatrist.position} at {psychiatrist.location}</p>
+            <p className="text-sm text-gray-600">
+              {psychiatrist.position} {psychiatrist.location && `at ${psychiatrist.location}`}
+            </p>
           </div>
         </div>
 
          {/* Languages */}
-         <p className="mt-2 text-sm text-gray-500">Languages: {psychiatrist.language.join(', ')}</p>
+         <p className="mt-2 text-sm text-gray-500">
+           Languages: {psychiatrist.language?.join(', ') || 'Not specified'}
+         </p>
 
         {/* Specialties */}
         <div className="mt-2 flex flex-wrap gap-2">
-          {psychiatrist.specialty.map((spec, index) => (
+          {psychiatrist.specialty?.map((spec, index) => (
             <span
               key={index}
-              className=" text-sm text-gray-700 py-1 px-3 rounded-md border-2"
+              className="text-sm text-gray-700 py-1 px-3 rounded-md border-2"
             >
               {spec}
             </span>
@@ -87,7 +96,7 @@ const DiscoverCard: React.FC<DiscoverCardProps> = ({
         {/* Save Button */}
         <button
           className={`py-2 px-4 border rounded-md ${
-            savedPsychiatrists.includes(psychiatrist.uid)
+            savedPsychiatrists?.includes(psychiatrist.uid)
               ? 'border-blue-500 text-blue-500'
               : 'border-gray-300 text-gray-700'
           } hover:bg-gray-100`}
@@ -96,7 +105,7 @@ const DiscoverCard: React.FC<DiscoverCardProps> = ({
             handleSave(event, psychiatrist);
           }}
         >
-          {savedPsychiatrists.includes(psychiatrist.uid) ? 'Saved' : 'Save'}
+          {savedPsychiatrists?.includes(psychiatrist.uid) ? 'Saved' : 'Save'}
         </button>
       </div>
     </div>
