@@ -1,7 +1,7 @@
 /** eslint-disable */
 
 import React, { ChangeEvent, use, useEffect, useState } from 'react';
-import { db, auth } from '../../firebase/firebase';
+import { db, auth, uploadProfilePic } from '../../firebase/firebase';
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import Chevron_down from "@/assets/chevron_down.svg";
@@ -24,6 +24,8 @@ const EditPatientProfile = () => {
   const [lastName, setLastName] = useState('');
   const [gender, setGender] = useState(0);
   const [ageRange, setAgeRange] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileName, setFileName] = useState<string>('');
   const [prefLanguages, setPrefLanguages] = useState<{ [key: string]: boolean }>({
     English: false,
     Ga: false,
@@ -150,6 +152,14 @@ const EditPatientProfile = () => {
     setOtherConcern(event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1));
   };
 
+  const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setFileName(file.name);
+    }
+  };
+
   const handleSaveChanges = async () => {
     const selectedLanguages = Object.keys(prefLanguages).filter(lang => prefLanguages[lang]);
     const selectedConcerns = Object.keys(concerns).filter(concern => concerns[concern]);
@@ -160,6 +170,11 @@ const EditPatientProfile = () => {
       alert("You selected 'Other' for concern(s). Please type in the other concern(s).");
       return;
     }
+
+    if (selectedFile && uid) {
+      await uploadProfilePic(selectedFile, uid, false);
+    }
+
     const userRef = doc(db, "patients", docId ?? "");
     await updateDoc(userRef, {
       firstName: firstName,
@@ -256,23 +271,34 @@ const EditPatientProfile = () => {
           {/* Profile Image */}
           <div tabIndex={0} className="form-control w-full flex flex-col items-start">
             <label className="label">
-              <span className="text-lg font-montserrat font-semibold">Profile Image (Required)</span>
+              <span className="text-lg font-montserrat font-semibold">Profile Image</span>
             </label>
             <div id="Frame542" className="flex items-center justify-center w-full gap-3">
               <svg xmlns="http://www.w3.org/2000/svg" width="4" height="204" viewBox="0 0 4 204" fill="none">
                 <path d="M2 2L2.00001 202" stroke="#519AEB" stroke-width="3" stroke-linecap="round" />
               </svg>
               <div className="flex flex-col items-start w-full gap-2.5">
-                <div className="flex w-full justify-center align-center" >
-                  <div id="Frame278" className="flex flex-col absolute items-center justify-center align-center left-1/2 transform translate-x-[-50%] translate-y-[50%]">
-                    <Upload ></Upload>
+                <div className="flex w-full justify-center align-center relative" >
+                  <div id="Frame278" className="flex flex-col absolute items-center justify-center align-center left-1/2 transform translate-x-[-50%] translate-y-[50%] z-10">
+                    <Upload />
                     <label>
-                      <span className="font-montserrat text-xs font-montserrat italic" style={{ color: okb_colors.dark_gray }}>Upload Image</span>
+                      <span className="font-montserrat text-xs italic" style={{ color: okb_colors.dark_gray }}>
+                        {fileName || 'Upload Image'}
+                      </span>
                     </label>
                   </div>
                   <div className="input-container w-full relative" >
-                    <span className="absolute top-0 left-0 right-0 bottom-0 border-2 rounded-xl flex items-center justify-center" style={{ borderColor: okb_colors.light_blue, height: 200 }}></span>  {/* to hide the Choose File */}
-                    <input type="file" placeholder="image/" className="input input-bordered border-2 opacity-0" style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }} />
+                    <span 
+                      className="absolute top-0 left-0 right-0 bottom-0 border-2 rounded-lg flex items-center justify-center" 
+                      style={{ borderColor: okb_colors.light_blue, height: 200 }}
+                    />
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      className="input input-bordered border-2 opacity-0" 
+                      style={{ borderColor: okb_colors.light_blue, height: 200, width: "100%" }} 
+                    />
                   </div>
                 </div>
               </div>
