@@ -2,13 +2,13 @@ import { useState, useMemo, useEffect } from 'react';
 import Fuse from 'fuse.js';
 import { IAvailability, IPsychiatrist } from '@/schema';
 import colors from "@/colors";
-import { collection, getDoc, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { fetchUnreportedProfessionals, fetchAvailability } from '../../../../firebase/fetchData';
 import SearchBar from '@/components/SearchBar';
-import PsychiatristList from '@/components/psychiatrists/PsychiatristList';
+import DiscoverCardList from '../../DiscoverCardList';
 import { useAuth } from '../../../../contexts/AuthContext';
-import { uploadProfilePic, fetchProfilePic, fetchRole} from '../../../../firebase/firebase';
+import { fetchAllProfessionals, fetchAvailability, fetchUnreportedProfessionals } from '../../../../firebase/fetchData';
+import DiscoverFilter from '../../DiscoverFilter';
 
 
 // options for fuzzy search. currently only searches by name and title
@@ -59,22 +59,46 @@ const DiscoverPage: React.FC = () => {
     return psych.status === "approved";
   }
 
-
   // Get all psychiatrists from the database
   useEffect(() => {
     async function fetchData() {
       try {
-        if (user) {
-          const fetchedPsychiatrists: IPsychiatrist[] = await fetchUnreportedProfessionals(user.uid);
-          const approvedPsychiatrists = fetchedPsychiatrists.filter(checkPsychStatus);
-          setPsychiatrists(fetchedPsychiatrists);
-        }
+        const fetchedPsychiatrists: IPsychiatrist[] = await fetchUnreportedProfessionals(userId?.toString() || "");
+        const approvedPsychiatrists = fetchedPsychiatrists.filter(checkPsychStatus);
+        setPsychiatrists(fetchedPsychiatrists);
       } catch (err: any) {
         console.error(err.message);
       }
     }
     fetchData();
-  }, [router]);
+  }, []);
+
+  // // Processes all psychiatrists availabilities to a dictionary mapping each psychiatrist's uid to their availabilities in the form of the days of the week
+  // useEffect(() => {
+  //   // Transforms each item in a psychiatrist's availability array from availability ID to its respective day of the week
+  //   const processAvailabilityToDaysOfWeek = async (psychiatristAvailability: string[]) => {
+  //     const availabilityToDaysOfWeek: string[] = [];
+  //     for (let i = 0; i < psychiatristAvailability.length; i++) {
+  //       const availabilityId = psychiatristAvailability[i];
+  //       const fetchedAvailability: IAvailability = await fetchAvailability(availabilityId);
+  //       const day = fetchedAvailability.startTime.toDate().toLocaleString('default', { weekday: 'long' });
+  //       if (!availabilityToDaysOfWeek.includes(day)) {
+  //         availabilityToDaysOfWeek.push(day);
+  //       }
+  //     }
+  //     return availabilityToDaysOfWeek;
+  //   }
+
+  //   const processPsychiatrists = async () => {
+  //     const promises = psychiatrists.map(async (psychiatrist) => {
+  //       const psychiatristId = psychiatrist.uid;
+  //       const psychiatristAvailabilityToDaysOfWeek = await processAvailabilityToDaysOfWeek(psychiatrist.availability);
+  //       setPsychiatristAvailabilities((prev) => ({ ...prev, [psychiatristId]: psychiatristAvailabilityToDaysOfWeek }));
+  //     });
+  //     await Promise.all(promises);
+  //   };
+  //   processPsychiatrists();
+  // }, [psychiatrists]);
 
   const fuse = useMemo(() => new Fuse(psychiatrists, fuseOptions), []);
 
@@ -117,7 +141,7 @@ const DiscoverPage: React.FC = () => {
   // Filters psychiatrists by search and/or selected filters
   const processSearchFilter = () => {
 
-    const terms = submittedSearchTerm.trim().split(/\s+/);
+    const terms = searchTerm.trim().split(/\s+/);
     let results = psychiatrists;
 
     // Updates result by search term (first names, last names, and/or titles)
@@ -158,54 +182,85 @@ const DiscoverPage: React.FC = () => {
     setFilters([])
     setSubmittedFilters({})
   }
-
+  console.log(submittedFilters)
   // If there is a search term or there are filters selected, process the search/filter
   // Else, return all psychiatrists
   const searchFilterResults = submittedSearchTerm !== "" || submittedFilters ? processSearchFilter() : psychiatrists;
 
   return (
-    <div className={'flex flex-col px-23 pt-9 pb-14'}>
-      <div className='flex justify-start justify-center pb-8'>
-        <SearchBar
-          searchTerm={searchTerm} setSearchTerm={setSearchTerm}
-          submittedSearchTerm={submittedSearchTerm} setSubmittedSearchTerm={setSubmittedSearchTerm}
-          filters={filters} setFilters={setFilters}
-          submittedFilters={submittedFilters} setSubmittedFilters={setSubmittedFilters}
-          monday={monday} setMonday={setMonday}
-          tuesday={tuesday} setTuesday={setTuesday}
-          wednesday={wednesday} setWednesday={setWednesday}
-          thursday={thursday} setThursday={setThursday}
-          friday={friday} setFriday={setFriday}
-          saturday={saturday} setSaturday={setSaturday}
-          sunday={sunday} setSunday={setSunday}
-          allDays={allDays} setAllDays={setAllDays}
-          english={english} setEnglish={setEnglish}
-          twi={twi} setTwi={setTwi}
-          fante={fante} setFante={setFante}
-          ewe={ewe} setEwe={setEwe}
-          ga={ga} setGa={setGa}
-          hausa={hausa} setHausa={setHausa}
-          allLanguages={allLanguages} setAllLanguages={setAllLanguages}
-          male={male} setMale={setMale}
-          female={female} setFemale={setFemale}
-          otherGender={otherGender} setOtherGender={setOtherGender}
-          allGenders={allGenders} setAllGenders={setAllGenders} />
+    <div className="flex flex-row px-6 pt-9 gap-4">
+  {/* Left Panel: DiscoverFilter */}
+  <div className="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow">
+    <DiscoverFilter
+      submittedFilters={submittedFilters}
+      setSubmittedFilters={setSubmittedFilters}
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+      monday={monday}
+      setMonday={setMonday}
+      tuesday={tuesday}
+      setTuesday={setTuesday}
+      wednesday={wednesday}
+      setWednesday={setWednesday}
+      thursday={thursday}
+      setThursday={setThursday}
+      friday={friday}
+      setFriday={setFriday}
+      saturday={saturday}
+      setSaturday={setSaturday}
+      sunday={sunday}
+      setSunday={setSunday}
+      allDays={allDays}
+      setAllDays={setAllDays}
+      english={english}
+      setEnglish={setEnglish}
+      twi={twi}
+      setTwi={setTwi}
+      fante={fante}
+      setFante={setFante}
+      ewe={ewe}
+      setEwe={setEwe}
+      ga={ga}
+      setGa={setGa}
+      hausa={hausa}
+      setHausa={setHausa}
+      allLanguages={allLanguages}
+      setAllLanguages={setAllLanguages}
+      male={male}
+      setMale={setMale}
+      female={female}
+      setFemale={setFemale}
+      otherGender={otherGender}
+      setOtherGender={setOtherGender}
+      allGenders={allGenders}
+      setAllGenders={setAllGenders}
+    />
+  </div>
+
+  {/* Divider */}
+  <div className="hidden lg:block w-px "></div>
+
+  {/* Right Panel: DiscoverCardList */}
+  <div className="w-full lg:w-3/4 bg-white p-6 rounded-lg shadow">
+    {searchFilterResults.length > 0 ? (
+      <DiscoverCardList results={searchFilterResults} buttonType={'discover'} />
+    ) : (
+      <div className="text-center my-10">
+        <p className="mb-4">No Psychiatrists found based on your filters.</p>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={resetSearchBar}
+        >
+          See all psychiatrists
+        </button>
       </div>
-      {searchFilterResults.length > 0 ? (
-        <PsychiatristList results={searchFilterResults} buttonType={'discover'} profilePicsCache={profilePicsCache} setProfilePicsCache={setProfilePicsCache} />
-      ) : (
-        <div className="text-center my-10">
-          <p className="mb-4">No Psychiatrists found based on your filters.</p>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={resetSearchBar}
-          >
-            See all psychiatrists
-          </button>
-        </div>
-      )}
-    </div>
+    )}
+  </div>
+</div>
+
+
   );
 };
+
 
 export default DiscoverPage;

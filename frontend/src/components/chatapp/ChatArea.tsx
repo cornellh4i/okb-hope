@@ -48,13 +48,17 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   const [fetchedReport, setFetchedReport] = useState<IReport[]>([]);
   const [reportSubmittedAt, setReportSubmittedAt] = useState("");
   const [reportDescription, setReportDescription] = useState("");
+  const [concerns, setConcerns] = useState<string[]>([]);
+  const [isPsych, setIsPsych] = useState(false);
 
   useEffect(() => {
     const fetchPatient = async () => {
       if (patientId) {
         const data = await fetchPatientDetails(patientId);
         setPatient(data);
-        console.log("updated patient!")
+        if (data?.concerns) {  // Move this outside the patient check since we have fresh data
+          setConcerns(data.concerns);
+        }
       }
     };
     fetchPatient();
@@ -174,10 +178,11 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
     if (psych_name) {
       setPsychiatristId(psych_id as string);
       setPatientId(uid as string);
+      setIsPsych(false);
     } else if (patient_name) {
       setPatientId(patient_id as string);
       setPsychiatristId(uid as string);
-
+      setIsPsych(true);
     }
   }, [router.query]);
 
@@ -324,6 +329,9 @@ const NameArea = ({ name, credentials, role }: NameAreaType) => {
   return (
     <div className='name-area flex py-4 px-6 justify-between items-center shrink-0 w-full page-background border-b-solid border-b-2 border-[#DEDEDE]'>
       <p className='text-[24px] font-montserrat font-semibold color-black'>{name}</p>
+      <p className='text-[14px] font-montserrat text-[#9A9A9A]'>
+        {isPsych && concerns?.length > 0 && `${name} is concerned about ${concerns.join(', ')}`}
+      </p>
       <div className="dropdown dropdown-click dropdown-bottom dropdown-end">
         <button onClick={toggleDropdown} className={`rounded-full color-[${okb_colors.dark_gray}] hover:bg-gray-200`}>
           {Ellipses}
