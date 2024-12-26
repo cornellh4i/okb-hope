@@ -215,7 +215,7 @@ const PositionLocationQuestionnaire = ({ position, setPosition, isOtherPositionS
             </div>
 
             {/* Working Hours */}
-            <div className='flex flex-col gap-y-3'>
+            {/* <div className='flex flex-col gap-y-3'>
                 <span className={`text-lg font-semibold font-montserrat`}>What are your working hour(s)? <span className={`text-lg text-red-600`}>*</span></span>
                 {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
                     <div key={day} className='flex flex-col gap-3'>
@@ -246,7 +246,7 @@ const PositionLocationQuestionnaire = ({ position, setPosition, isOtherPositionS
                         )}
                     </div>
                 ))}
-            </div>
+            </div> */}
         </div>
     )
 };

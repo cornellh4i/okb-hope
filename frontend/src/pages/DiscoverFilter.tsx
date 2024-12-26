@@ -372,7 +372,7 @@ const DiscoverFilter: React.FC<DiscoverFilterProps> = ({
 
 
     {/* Day of Week Dropdown */}
-    <div className="mb-4">
+    {/* <div className="mb-4">
       <button
         onClick={() => setDayOpen(!dayOpen)}
         className="w-full text-left font-medium px-4 py-2 "
@@ -467,7 +467,7 @@ const DiscoverFilter: React.FC<DiscoverFilterProps> = ({
           </div>
         </div>
       )}
-    </div>
+    </div> */}
     </div>
       );
   };
