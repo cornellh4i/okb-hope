@@ -59,7 +59,7 @@ const DiscoverCardList: React.FC<DiscoverCardListProps> = ({ results = [], butto
         await updateDoc(doc(db, "patients", docId), { savedPsychiatrists: updatedSavedPsychiatrists });
       }
     }
-  };
+  }
 };
 
   const handleSendMessage = (event: React.MouseEvent, psychiatrist: IPsychiatrist) => {
@@ -77,7 +77,7 @@ const DiscoverCardList: React.FC<DiscoverCardListProps> = ({ results = [], butto
         }
       });
     }
-  };
+  }
 };
 
   const handleGoToProfProfile = (psych_uid: string) => {
