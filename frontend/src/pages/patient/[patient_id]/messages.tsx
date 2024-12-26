@@ -58,4 +58,10 @@ const MessagesPage = () => {
   );
 };
 
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
+
 export default MessagesPage;
