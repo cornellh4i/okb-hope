@@ -5,6 +5,8 @@ import { LoginPopup } from '@/components/LoginPopup';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { useRouter } from 'next/router';
 
+export const dynamic = 'force-dynamic';
+
 const MessagesPage = () => {
   const { user, login } = useAuth();
   const [showPopup, setShowPopup] = useState(false);
