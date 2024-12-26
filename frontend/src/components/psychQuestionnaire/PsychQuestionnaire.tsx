@@ -269,22 +269,27 @@ const PsychQuestionnaire = () => {
             return;
         }
 
-        else if (currentStep === 3) {
-            const allDaysUnchecked = Object.values(checkedAvailability).every(checked => !checked);
-            const incompleteHours = Object.entries(workingHours).some(
-                ([day, hours]) => checkedAvailability[day] && (hours.start === '' || hours.end === '')
-            );
-
-            if (allDaysUnchecked) {
-                alert("Please select at least one day for your availability.");
-                return;
-            }
-
-            if (incompleteHours) {
-                alert("Please select your working hour(s) for the selected days.");
-                return;
-            }
+        else if (currentStep === 3 && (calendly  === "")) {
+            alert("Please create a Calendly account and paste in your meeting link.");
+            return;
         }
+
+        // else if (currentStep === 3) {
+        //     const allDaysUnchecked = Object.values(checkedAvailability).every(checked => !checked);
+        //     const incompleteHours = Object.entries(workingHours).some(
+        //         ([day, hours]) => checkedAvailability[day] && (hours.start === '' || hours.end === '')
+        //     );
+
+        //     if (allDaysUnchecked) {
+        //         alert("Please select at least one day for your availability.");
+        //         return;
+        //     }
+
+        //     if (incompleteHours) {
+        //         alert("Please select your working hour(s) for the selected days.");
+        //         return;
+        //     }
+        // }
 
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
