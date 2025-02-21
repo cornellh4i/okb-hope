@@ -25,7 +25,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         // Check if user is available and navigate to dashboard if so
         if (user) {
-          console.log(router.pathname)
           if (user.userType == "psychiatrist") {
             if (router.pathname == "/psych_dashboard" || router.pathname == `/psychiatrist/[psychiatrist_id]/psych_dashboard`)
               router.push(`/psychiatrist/${user.uid}/psych_dashboard`);
@@ -33,6 +32,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               router.push(`/psychiatrist/${user.uid}/messages`);
             else if (router.pathname == "/edit_psych" || router.pathname == `/psychiatrist/[psychiatrist_id]/edit_psych`)
               router.push(`/psychiatrist/${user.uid}/edit_psych`);
+            else if (router.pathname == "/calendly_auth" || router.pathname == `/psychiatrist/[psychiatrist_id]/calendly_auth`)
+              return(null);
             else {
               router.push(`/psychiatrist/${user.uid}/psych_dashboard`);
             }
@@ -48,6 +49,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               router.push(`/patient/${user.uid}/edit_profile`);
             else if (router.pathname == "/report_history" || router.pathname == `/patient/[patient_id]/report_history`)
               router.push(`/patient/${user.uid}/report_history`);
+            else if (router.pathname == "/calendly_auth" || router.pathname == `/patient/[patient_id]/calendly_auth`)
+              return(null);
             else
               router.push(`/patient/${user.uid}/dashboard`);
           }
