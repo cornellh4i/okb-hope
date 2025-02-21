@@ -10,7 +10,6 @@ const SimilarPsychiatristsDisplay: React.FC = () => {
  const router = useRouter();
  const { user } = useAuth();
  const currentPsychiatristId = router.query.psych_uid as string;
- console.log(currentPsychiatristId);
 
  const [psychiatrists, setPsychiatrists] = useState<IPsychiatrist[]>([]);
  const [currentPsychiatrist, setCurrentPsychiatrist] = useState<IPsychiatrist | null>(null);

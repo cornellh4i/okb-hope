@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchDocumentId, fetchPatientDetails, fetchProfessionalData } from '../../../firebase/fetchData';
 import { IPsychiatrist } from '../../schema';
+import { IAppointment } from '../../schema';
 import Availability from './Availability';
 import Image from 'next/image';
 import Link from '../../assets/link.svg';
@@ -24,6 +25,8 @@ import colors from '@/colors';
 import dynamic from "next/dynamic";
 import DoctorIcon from '@/assets/doctor_icon.svg';
 import SimilarPsychiatristsDisplay from './SimilarPsychiatrists';
+import { AuthService } from '../../../calendly/AuthService';
+import { createAppointment } from '../../../firebase/IAppointment';
 const InlineWidget = dynamic(() => import("react-calendly").then(mod => mod.InlineWidget), { ssr: false });
 
 // interface ProfProfileProps {
@@ -216,12 +219,44 @@ const ProfProfileBox = () => {
         }
     };
 
+    const setupCalendlyMonitoring = () => {
+        // Listen for Calendly's message about successful scheduling
+        window.addEventListener('message', async event => {
+          if (event.data.event === 'calendly.event_scheduled') {
+            // The event_uri should be available in the message
+            const eventPayload = event.data.payload;
+            // console.log(eventPayload);
+            const token = AuthService.getAuthToken()?.access_token as string;
+            // console.log(token);
+            const scheduledEvent = await AuthService.getEvent(eventPayload.event.uri, token as string);
+            console.log("event scheduled");
+            console.log(scheduledEvent.resource.start_time, scheduledEvent.resource.end_time);
+
+            const start_time_as_timestamp = Timestamp.fromDate(new Date(scheduledEvent.resource.start_time));
+            const end_time_as_timestamp = Timestamp.fromDate(new Date(scheduledEvent.resource.end_time));
+
+            const appointment: IAppointment = {
+              availId: '',
+              appointId: '',
+              profId: professional?.uid as string,
+              startTime: start_time_as_timestamp,
+              endTime: end_time_as_timestamp,
+              patientId: user?.uid as string,
+            };
+            
+            const newAppointment = await createAppointment(appointment);
+            console.log('Appointment added with ID: ', newAppointment.appointId);
+          }
+        });
+      };
+
     const handleBookAppointment = (event: React.MouseEvent) => {
         if (!user) {
             event.preventDefault();
             setShowPopup(true);
         } else {
             setShowBooking(true);
+            setupCalendlyMonitoring();
         }
     };
 

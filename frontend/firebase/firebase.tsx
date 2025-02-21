@@ -9,6 +9,7 @@ import React, { useState, useRef } from 'react'; // Import useState from React
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getStorage } from 'firebase/storage';
 import { getApp } from "firebase/app";
+import { AuthService } from "../calendly/AuthService";
 
 
 
@@ -42,7 +43,8 @@ const logInWithGoogle = async () => {
       alert("An account with this email does not yet exist. Please sign up for an account first.");
       logout();
     } else {
-      router.push('/');
+      const url = AuthService.getAuthorizationUrl();
+      router.push(url);
     }
   }
   catch (err) {
