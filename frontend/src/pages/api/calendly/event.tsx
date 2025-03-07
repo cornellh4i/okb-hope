@@ -18,7 +18,9 @@ export default async function handler(
       }
     });
 
+    console.log("Response status:", response.status);
     const data = await response.json();
+    console.log("Response data:", data);
 
     res.status(200).json(data);
 

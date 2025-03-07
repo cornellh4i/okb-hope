@@ -229,8 +229,7 @@ const ProfProfileBox = () => {
             const token = AuthService.getAuthToken()?.access_token as string;
             // console.log(token);
             const scheduledEvent = await AuthService.getEvent(eventPayload.event.uri, token as string);
-            console.log("event scheduled");
-            console.log(scheduledEvent.resource.start_time, scheduledEvent.resource.end_time);
+            console.log("event scheduled", scheduledEvent);
 
             const start_time_as_timestamp = Timestamp.fromDate(new Date(scheduledEvent.resource.start_time));
             const end_time_as_timestamp = Timestamp.fromDate(new Date(scheduledEvent.resource.end_time));
